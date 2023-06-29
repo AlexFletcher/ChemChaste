@@ -25,11 +25,11 @@ protected:
 
     std::vector<AbstractMembraneReaction*> mpReactionVector;
 
-    unsigned mNumberOfReactions;
+    unsigned mNumReactions;
 
-    unsigned mNumberOfBulkStates=0;
+    unsigned mNumBulkStates=0;
 
-    unsigned mNumberOfCellStates=0;
+    unsigned mNumCellStates=0;
 
 public:
     AbstractMembraneReactionSystem( AbstractChemistry* bulkChemistry = new AbstractChemistry(), 
@@ -58,7 +58,7 @@ public:
 
     void SetCellChemistry(AbstractChemistry*);
 
-    void SetNumberOfReactions(unsigned);
+    void SetNumReactions(unsigned);
 
 
     // get methods 
@@ -71,11 +71,11 @@ public:
 
     AbstractChemistry* GetCellChemistry();
 
-    unsigned GetNumberOfReactions();
+    unsigned GetNumReactions();
 
-    unsigned GetNumberOfBulkStates();
+    unsigned GetNumBulkStates();
 
-    unsigned GetNumberOfCellStates();
+    unsigned GetNumCellStates();
 
 };
 
@@ -85,9 +85,9 @@ AbstractMembraneReactionSystem::AbstractMembraneReactionSystem( AbstractChemistr
     :   mpBulkChemistry(bulkChemistry),
         mpCellChemistry(cellChemistry),
         mpReactionVector(reactionVector),
-        mNumberOfReactions(reactionVector.size()),
-        mNumberOfBulkStates(bulkChemistry->GetNumberChemicals()),
-        mNumberOfCellStates(cellChemistry->GetNumberChemicals())
+        mNumReactions(reactionVector.size()),
+        mNumBulkStates(bulkChemistry->GetNumberChemicals()),
+        mNumCellStates(cellChemistry->GetNumberChemicals())
 {
 }
 
@@ -96,9 +96,9 @@ AbstractMembraneReactionSystem::AbstractMembraneReactionSystem(const AbstractMem
     mpBulkChemistry = existingReactionSystem.mpBulkChemistry;
     mpCellChemistry = existingReactionSystem.mpCellChemistry;
     mpReactionVector = existingReactionSystem.mpReactionVector;
-    mNumberOfReactions = existingReactionSystem.mNumberOfReactions;
-    mNumberOfCellStates = existingReactionSystem.mNumberOfCellStates;
-    mNumberOfBulkStates = existingReactionSystem.mNumberOfBulkStates;
+    mNumReactions = existingReactionSystem.mNumReactions;
+    mNumCellStates = existingReactionSystem.mNumCellStates;
+    mNumBulkStates = existingReactionSystem.mNumBulkStates;
 }
 
 void AbstractMembraneReactionSystem::ReactSystem(const std::vector<double>& currentBulkConcentration, const std::vector<double>& currentCellConcentration, std::vector<double>& changeBulkConc,std::vector<double>& changeCellConc)
@@ -106,18 +106,18 @@ void AbstractMembraneReactionSystem::ReactSystem(const std::vector<double>& curr
     // update the reaction system if any variables depend on the current system concentrations
     UpdateReactionSystem(currentBulkConcentration,currentCellConcentration);
 
-    std::vector<double> deltaBulkConcentration(mNumberOfBulkStates, 0.0);
-    std::vector<double> deltaCellConcentration(mNumberOfCellStates, 0.0);
+    std::vector<double> deltaBulkConcentration(mNumBulkStates, 0.0);
+    std::vector<double> deltaCellConcentration(mNumCellStates, 0.0);
 
 
-    for(std::vector<AbstractMembraneReaction*>::iterator reaction_iter = mpReactionVector.begin();
+    for (std::vector<AbstractMembraneReaction*>::iterator reaction_iter = mpReactionVector.begin();
             reaction_iter != mpReactionVector.end();
             ++reaction_iter)
     {
         // iterate through the reactions in the system, modify a temporary change of concentration
         // update the system change in concentration
-        deltaBulkConcentration.resize(mNumberOfBulkStates, 0.0);
-        deltaCellConcentration.resize(mNumberOfCellStates, 0.0);
+        deltaBulkConcentration.resize(mNumBulkStates, 0.0);
+        deltaCellConcentration.resize(mNumCellStates, 0.0);
 
         AbstractMembraneReaction *p_system_reaction = static_cast<AbstractMembraneReaction*>(*reaction_iter);
 
@@ -125,12 +125,12 @@ void AbstractMembraneReactionSystem::ReactSystem(const std::vector<double>& curr
 
         // update the change in concentrations
         
-        for(unsigned i=0; i<mNumberOfBulkStates; i++)
+        for (unsigned i=0; i<mNumBulkStates; i++)
         {
             changeBulkConc.at(i) += deltaBulkConcentration.at(i);
         }
 
-        for(unsigned i=0; i<mNumberOfCellStates; i++)
+        for (unsigned i=0; i<mNumCellStates; i++)
         {
             changeCellConc.at(i) += deltaCellConcentration.at(i);
         }    
@@ -150,7 +150,7 @@ void AbstractMembraneReactionSystem::SetReactionVector(std::vector<AbstractMembr
 
 void AbstractMembraneReactionSystem::SetReactionByIndex(AbstractMembraneReaction* reaction, unsigned index)
 {
-    if (index < mNumberOfReactions)
+    if (index < mNumReactions)
     {
         mpReactionVector[index] = reaction;
     }
@@ -159,18 +159,18 @@ void AbstractMembraneReactionSystem::SetReactionByIndex(AbstractMembraneReaction
 void AbstractMembraneReactionSystem::SetBulkChemistry(AbstractChemistry* bulkChemistry)
 {
     mpBulkChemistry = bulkChemistry;
-    mNumberOfBulkStates = bulkChemistry->GetNumberChemicals();
+    mNumBulkStates = bulkChemistry->GetNumberChemicals();
 }
 
 void AbstractMembraneReactionSystem::SetCellChemistry(AbstractChemistry* cellChemistry)
 {
     mpCellChemistry = cellChemistry;
-    mNumberOfCellStates = cellChemistry->GetNumberChemicals();
+    mNumCellStates = cellChemistry->GetNumberChemicals();
 }
 
-void AbstractMembraneReactionSystem::SetNumberOfReactions(unsigned numberOfReactions)
+void AbstractMembraneReactionSystem::SetNumReactions(unsigned numReactions)
 {
-    mNumberOfReactions = numberOfReactions;
+    mNumReactions = numReactions;
 }
 
 std::vector<AbstractMembraneReaction*> AbstractMembraneReactionSystem::GetReactionVector()
@@ -180,7 +180,7 @@ std::vector<AbstractMembraneReaction*> AbstractMembraneReactionSystem::GetReacti
 
 AbstractMembraneReaction* AbstractMembraneReactionSystem::GetReactionByIndex(unsigned index)
 {
-    if (index < mNumberOfReactions)
+    if (index < mNumReactions)
     {
         return mpReactionVector[index];
     }else{
@@ -198,19 +198,19 @@ AbstractChemistry* AbstractMembraneReactionSystem::GetCellChemistry()
     return mpCellChemistry;
 }
 
-unsigned AbstractMembraneReactionSystem::GetNumberOfReactions()
+unsigned AbstractMembraneReactionSystem::GetNumReactions()
 {
-    return mNumberOfReactions;
+    return mNumReactions;
 }
 
-unsigned AbstractMembraneReactionSystem::GetNumberOfBulkStates()
+unsigned AbstractMembraneReactionSystem::GetNumBulkStates()
 {
-    return mNumberOfBulkStates;
+    return mNumBulkStates;
 }
 
-unsigned AbstractMembraneReactionSystem::GetNumberOfCellStates()
+unsigned AbstractMembraneReactionSystem::GetNumCellStates()
 {
-    return mNumberOfCellStates;
+    return mNumCellStates;
 }
 
 #endif

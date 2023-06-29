@@ -38,16 +38,15 @@ public:
 
     std::string RetrieveStateVariableName(unsigned);
 
-    void SetNumberOfStateVariables(unsigned);
+    void SetNumStateVariables(unsigned);
 
-    unsigned GetNumberOfStateVariables();
+    unsigned GetNumStateVariables();
 
     std::vector<unsigned> FindIndicesInThisRegister(StateVariableRegister* );
 
     std::vector<unsigned> FindIndicesInThatRegister(StateVariableRegister* );
 
     std::vector<std::string> FindCommonNamesInRegisters(StateVariableRegister* );
-
 };
 
 #endif

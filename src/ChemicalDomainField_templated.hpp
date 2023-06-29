@@ -89,9 +89,7 @@ public:
     AbstractDiffusiveChemistry* GetChemistry();
 
     std::vector<AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem*> GetOdeSystem();
-
 };
-
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalDomainFieldTemplated(
@@ -123,7 +121,6 @@ ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalDomainF
     std::vector<AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem*> mOdeSystem = std::vector<AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem*>();
     SetUpDomainFromFiles();
 }
-
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetUpDomainFromFiles()
@@ -172,7 +169,7 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::FormReacti
     StateVariableRegister* p_domain_register  = new StateVariableRegister(chemical_names); 
 
     // populate the rest of the nodes
-    for(unsigned node_index =1; node_index<nodeLabels.size(); node_index++)
+    for (unsigned node_index =1; node_index<nodeLabels.size(); node_index++)
     {
 
         std::string reactionFilename = mReactionFileRoot + this->ReturnKeyValueFromNodeLabel(nodeLabels[node_index]);
@@ -191,7 +188,6 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::FormReacti
         mOdeSystem.push_back(p_chemical_ode);
 
         p_domain_register->AddStateVariableVector(chemical_names);
-
     }
 
     SetDomainStateVariableRegister(p_domain_register);
@@ -202,7 +198,7 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::FormReacti
     // edit: this was setting the p_domain_register but as the diffusion register is larger and contains
     // more species which diffuse via pde than chemically react, need to input the diffusion state register
 
-    for(unsigned node_index =0; node_index<nodeLabels.size(); node_index++)
+    for (unsigned node_index =0; node_index<nodeLabels.size(); node_index++)
     {
         mOdeSystem[node_index]->SetDomainStateVariableRegister(this->GetStateVariableVector());
     }
@@ -222,17 +218,17 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::DeriveSyst
 
     // create a diffusive chemistry from the diffusion database
 
-    for(unsigned system_number=0; system_number<mOdeSystem.size(); system_number++)
+    for (unsigned system_number=0; system_number<mOdeSystem.size(); system_number++)
     {
- 
+
         std::vector<AbstractChemical*> ode_chemical_vector = mOdeSystem[system_number]->GetReactionSystem()->GetSystemChemistry()->rGetChemicalVector();
     
         // for each chemical in the reaction system 
-        for(unsigned ode_system_chemical_index=0; ode_system_chemical_index<ode_chemical_vector.size(); ode_system_chemical_index++)
+        for (unsigned ode_system_chemical_index=0; ode_system_chemical_index<ode_chemical_vector.size(); ode_system_chemical_index++)
         {
             // populate their diffusive properties from the labels in the system and the diffusion database
             
-            for(unsigned domain_index=0; domain_index<this.GetNumberOfDomains(); domain_index++)
+            for (unsigned domain_index=0; domain_index<this.GetNumDomains(); domain_index++)
             {
                 std::string domainLabel = this.GetDomainLabelByIndex(domain_index);
 
@@ -248,7 +244,7 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::DeriveSyst
                 // change the pointer of the original chemical to point to the diffusive chemical
                 AbstractDiffusiveChemical *p_chemical = new AbstractDiffusiveChemical(chemicalName,chemicalSize,chemicalMass,chemicalValence);
              
-                for(unsigned record_index=0; record_index<this.mDiffusionDatabase.size(); record_index++)
+                for (unsigned record_index=0; record_index<this.mDiffusionDatabase.size(); record_index++)
                 {
                     if (this.mDiffusionDatabase[record_index][0] == chemicalName)
                     {   
@@ -263,8 +259,7 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::DeriveSyst
                     p_diffusive_chemistry->AddChemical(p_chemical);
                 }
                 ode_chemical_vector[ode_system_chemical_index] = p_chemical;
-            }
-            
+            } 
         }
     }
 
@@ -274,27 +269,26 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::DeriveSyst
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::DeriveExtendedSystemProperties()
 {
-
     // determine the system properties from the read in reaction systems
     AbstractDiffusiveChemistry* p_diffusive_chemistry = new AbstractDiffusiveChemistry();
 
     // each chemical in the system deined in state variable vector, derived from diffusion database
     StateVariableRegister* p_stateVariableVector = this->GetStateVariableVector();
 
-    for(unsigned chem_index=0; chem_index < p_stateVariableVector->GetNumberOfStateVariables(); chem_index++)
+    for (unsigned chem_index=0; chem_index < p_stateVariableVector->GetNumStateVariables(); chem_index++)
     {
         // for each chemical in the diffusion database
         std::string chemicalName = p_stateVariableVector->RetrieveStateVariableName(chem_index);
 
         // for each domain
-        for(unsigned domain_index=0; domain_index<this->GetNumberOfDomains(); domain_index++)
+        for (unsigned domain_index=0; domain_index<this->GetNumDomains(); domain_index++)
         {
             std::string domainLabel = this->GetDomainLabelByIndex(domain_index);
 
             AbstractDiffusiveChemical *p_chemical = new AbstractDiffusiveChemical(chemicalName);
             bool IsInDatabase = false;
             // test whether the chemical and domain match, expecting at least one match
-            for(unsigned record_index=0; record_index<this->GetDiffusionDatabase().size(); record_index++)
+            for (unsigned record_index=0; record_index<this->GetDiffusionDatabase().size(); record_index++)
             {
                 if (this->GetDiffusionDatabase()[record_index][0] == chemicalName)
                 {   
@@ -313,31 +307,26 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::DeriveExte
     }
 }
 
-
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 double ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::GetDiffusionValueBasedOnPoint(const ChastePoint<2>& chastePoint, unsigned stateIndex)
 {
-
     // take in the point and state index then determine the state name and domain label, then determine the diffusion value
-    if (stateIndex<this ->GetStateVariableVector() ->GetNumberOfStateVariables())
+    if (stateIndex<this ->GetStateVariableVector() ->GetNumStateVariables())
     {
-        
         // retrive state name from stateVariableRegister
-        std::string stateName = this ->GetStateVariableVector()-> RetrieveStateVariableName(stateIndex);
+        std::string stateName = this ->GetStateVariableVector()->RetrieveStateVariableName(stateIndex);
 
         // retrieve label from domainLabels
         std::string domainLabel = this->ReturnDomainLabelAtPosition(chastePoint.rGetLocation());
         std::string domainKeyName = this->ReturnDomainKeyFromDomainLabel(domainLabel);
 
         return ReturnDiffusionValueFromStateNameAndDomainLabel(stateName,domainKeyName);
-    
     }
     else
     {
         std::cout<<"Error: ChemicalDomainFieldTemplated::GetDiffusionValueBasedOnPoint: State not in state variable"<<std::endl;
         return 0.0;
     }
-
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
@@ -346,8 +335,7 @@ double ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnDi
     // look for diffusion value (from diffusiondatabase) based on state name and domain label
     if (domainLabel != "")
     {
-
-        return mpDiffusiveChemistry->GetDiffusivityValueByChemicalAndDomainName(stateName,domainLabel);
+        return mpDiffusiveChemistry->GetDiffusivityValueByChemicalAndDomainName(stateName, domainLabel);
     }
     else
     {
@@ -356,13 +344,10 @@ double ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnDi
     }
 }
 
-
-// set methods
-
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
-void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetDomainStateVariableRegister(StateVariableRegister* p_register)
+void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetDomainStateVariableRegister(StateVariableRegister* pRegister)
 {
-    mpDomainRegister = p_register;
+    mpDomainRegister = pRegister;
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
@@ -376,8 +361,6 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetOdeSyst
 {
     mOdeSystem = odeSystem;
 }
-
-// get methods
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 StateVariableRegister* ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::GetDomainStateVariableRegister()
@@ -396,6 +379,5 @@ std::vector<AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem*> ChemicalD
 {
     return mOdeSystem;
 }
-
 
 #endif

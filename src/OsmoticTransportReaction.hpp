@@ -26,6 +26,7 @@ private:
     double mReactionGibbs;
     
     double mRkj = 8.3144598e-3;
+
     double mTemp = 300; // kelvin
 
     bool mIsGibbs;
@@ -41,6 +42,7 @@ private:
     std::string mGibbsDelimiter = "deltaG =";
 
 public:
+
     OsmoticTransportReaction( 
                         std::vector<AbstractChemical*> bulkReactionSpecies = std::vector<AbstractChemical*>(),
                         std::vector<AbstractChemical*> cellReactionSpecies = std::vector<AbstractChemical*>(),
@@ -82,7 +84,6 @@ public:
 
     double GetReactionTemperature();
 
-
     double GetForwardReactionRateConstant();
 
     void SetForwardReactionRateConstant(double);
@@ -94,10 +95,8 @@ public:
     void SetGibbsDelmiter(std::string);
 
     std::string GetGibbsDelimiter();
-
 };
 
-// constructor
 OsmoticTransportReaction::OsmoticTransportReaction(
                         std::vector<AbstractChemical*> bulkReactionSpecies,
                         std::vector<AbstractChemical*> cellReactionSpecies,
@@ -107,17 +106,17 @@ OsmoticTransportReaction::OsmoticTransportReaction(
                         bool IsReversible,
                         double ForwardReactionRateConstant, // takes the form of the gibbs energy
                         double ReverseReactionRateConstant)
-    :   AbstractReversibleTransportReaction(
-                                    bulkReactionSpecies,
-                                    cellReactionSpecies,
-                                    stoichBulk,
-                                    stoichCell,
-                                    ForwardReactionRateConstant,
-                                    ReverseReactionRateConstant),
-        mIsGibbs(IsGibbs),
-        mIsReversible(IsReversible),
-        mForwardReactionRateConstant(ForwardReactionRateConstant),
-        mReverseReactionRateConstant(ReverseReactionRateConstant)
+    : AbstractReversibleTransportReaction(
+          bulkReactionSpecies,
+          cellReactionSpecies,
+          stoichBulk,
+          stoichCell,
+          ForwardReactionRateConstant,
+          ReverseReactionRateConstant),
+      mIsGibbs(IsGibbs),
+      mIsReversible(IsReversible),
+      mForwardReactionRateConstant(ForwardReactionRateConstant),
+      mReverseReactionRateConstant(ReverseReactionRateConstant)
 {
     if (mIsGibbs)
     {
@@ -137,7 +136,6 @@ void OsmoticTransportReaction::UpdateReaction()
 void OsmoticTransportReaction::UpdateReactionRate(AbstractChemistry* systemChemistry, const std::vector<double>& currentBulkConc, const std::vector<double>& currentCellConc)
 {
     // custom inheritence based on reversibility?
-
     double kf = mForwardReactionRateConstant;
     double kr = mReverseReactionRateConstant;
 
@@ -148,18 +146,18 @@ void OsmoticTransportReaction::UpdateReactionRate(AbstractChemistry* systemChemi
 
     //double reaction_quotient = CalculateReactionQuotient(systemChemistry, currentSystemConc);
 
-    double forwardFlux=1.0;
-    double reverseFlux=1.0;
+    double forwardFlux = 1.0;
+    double reverseFlux = 1.0;
 
     std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
     unsigned index = 0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-        for(unsigned j=0; j<mNumberOfBulkSpecies; j++)
+        for (unsigned j=0; j<mNumBulkSpecies; j++)
         {
             if (mpBulkReactionSpecies[j]->GetChemicalName()==p_system_chemical
             GetChemicalName())
@@ -168,7 +166,7 @@ void OsmoticTransportReaction::UpdateReactionRate(AbstractChemistry* systemChemi
                 break;
             }
         }
-        for(unsigned j=0; j<mNumberOfCellSpecies; j++)
+        for (unsigned j=0; j<mNumCellSpecies; j++)
         {
             if (mpCellReactionSpecies[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -184,7 +182,6 @@ void OsmoticTransportReaction::UpdateReactionRate(AbstractChemistry* systemChemi
 
 void OsmoticTransportReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=false)
 {
-    //std::cout<<"Parse mass action"<<std::endl;
     mIsReversible = IsReversible;
 
     if (!mIsReversible)
@@ -215,36 +212,31 @@ void OsmoticTransportReaction::ParseReactionInformation(std::string reaction_inf
             SetForwardReactionRateConstant(GetForwardReactionRate());
             SetReverseReactionRateConstant(GetReverseReactionRate());
         }
-        
     }
-
 }
-
-
-
-// member function sspecific to this reaction class
 
 double OsmoticTransportReaction::CalculateReactionQuotient(AbstractChemistry* systemChemistry, const std::vector<double>& currentBulkConc, const std::vector<double>& currentCellConc)
 {
     double quotient = 1.0;
     
-    if (mNumberOfBulkSpecies ==0 || mNumberOfCellSpecies==0)
+    if (mNumBulkSpecies ==0 || mNumCellSpecies==0)
     {
         quotient = 0.0;
-    }else{
+    }
+    else{
         double products_concentrations = 1.0;
         double substrates_concentrations = 1.0;
         // need to check against the concentration of each chemical in the system
         
         std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
         unsigned index = 0;
-        for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+        for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
                 chem_iter != p_chemical_vector.end();
                 ++chem_iter, ++index)
         {
             AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-            for(unsigned j=0; j<mNumberOfBulkSpecies; j++)
+            for (unsigned j=0; j<mNumBulkSpecies; j++)
             {
                 if (mpBulkReactionSpecies[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
@@ -252,7 +244,7 @@ double OsmoticTransportReaction::CalculateReactionQuotient(AbstractChemistry* sy
                     break;
                 }
             }
-            for(unsigned j=0; j<mNumberOfCellSpecies; j++)
+            for (unsigned j=0; j<mNumCellSpecies; j++)
             {
                 if (mpCellReactionSpecies[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
@@ -262,7 +254,7 @@ double OsmoticTransportReaction::CalculateReactionQuotient(AbstractChemistry* sy
             }
         }    
 
-        quotient=products_concentrations/substrates_concentrations;
+        quotient = products_concentrations/substrates_concentrations;
     }
 
     return quotient;
@@ -333,7 +325,5 @@ std::string OsmoticTransportReaction::GetGibbsDelimiter()
 {
     return mGibbsDelimiter;
 }
-
-
 
 #endif

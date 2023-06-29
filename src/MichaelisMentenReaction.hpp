@@ -24,6 +24,11 @@
  */
 class MichaelisMentenReaction : public SpectatorDependentReaction
 {
+private:
+    using SpectatorDependentReaction::UpdateReactionRate;
+    using SpectatorDependentReaction::GetReactionType;
+    using SpectatorDependentReaction::ParseReactionInformation;
+
 protected:
 
     std::string mMichaelisConstantDelimiter = "Km =";
@@ -35,23 +40,15 @@ protected:
 
     std::string mEnzymeDelimiter = "Enzyme =";
 
-private:
-    using SpectatorDependentReaction::UpdateReactionRate;
-    using SpectatorDependentReaction::GetReactionType;
-    using SpectatorDependentReaction::ParseReactionInformation;
-
 public:
 
-    // constructor
-    MichaelisMentenReaction(    std::vector<AbstractChemical*> substrates = std::vector<AbstractChemical*>(),
-                                std::vector<AbstractChemical*> products = std::vector<AbstractChemical*>(),
-                                std::vector<unsigned> stoichSubstrates = std::vector<unsigned>(),
-                                std::vector<unsigned> stoichProducts = std::vector<unsigned>(),
-                                AbstractChemistry* p_systemChemistry = new AbstractChemistry(),
-                                double reactionRate = 1.0
-                                );
+    MichaelisMentenReaction(std::vector<AbstractChemical*> substrates = std::vector<AbstractChemical*>(),
+                            std::vector<AbstractChemical*> products = std::vector<AbstractChemical*>(),
+                            std::vector<unsigned> stoichSubstrates = std::vector<unsigned>(),
+                            std::vector<unsigned> stoichProducts = std::vector<unsigned>(),
+                            AbstractChemistry* p_systemChemistry = new AbstractChemistry(),
+                            double reactionRate = 1.0);
 
-    // destructor
     virtual ~MichaelisMentenReaction()
     {
     };
@@ -61,8 +58,6 @@ public:
     virtual std::string GetReactionType();
 
     virtual void ParseReactionInformation(std::string, bool);
-
-    // class specific methods
 
     void SetKm(double); 
 
@@ -76,21 +71,19 @@ MichaelisMentenReaction::MichaelisMentenReaction(
                                 std::vector<unsigned> stoichProducts,
                                 AbstractChemistry* p_systemChemistry,
                                 double reactionRate)
-                            : SpectatorDependentReaction(
-                                substrates,
-                                products,
-                                stoichSubstrates,
-                                stoichProducts,
-                                p_systemChemistry,
-                                reactionRate
-                            )
-                            {
-                                // recast upstream class text delimiter to version more in line with Michaeli-Menten 
-                                // terminology
-                                SetSpectatorDelimiter(mEnzymeDelimiter);
-                                SetIrreversibleDelimiter(mCatalyticConstantDelimiter);
-                            }
-
+    : SpectatorDependentReaction(
+        substrates,
+        products,
+        stoichSubstrates,
+        stoichProducts,
+        p_systemChemistry,
+        reactionRate)
+{
+    // recast upstream class text delimiter to version more in line with Michaeli-Menten 
+    // terminology
+    SetSpectatorDelimiter(mEnzymeDelimiter);
+    SetIrreversibleDelimiter(mCatalyticConstantDelimiter);
+}
 
 void MichaelisMentenReaction::UpdateReactionRate(AbstractChemistry* systemChemistry, const std::vector<double>& currentSystemConc)
 {
@@ -102,13 +95,13 @@ void MichaelisMentenReaction::UpdateReactionRate(AbstractChemistry* systemChemis
     // apply non-linear term (x/(Km + x))
     std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
     unsigned index = 0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-        for(unsigned j=0; j<mNumberOfSubstrates; j++)
+        for (unsigned j=0; j<mNumSubstrates; j++)
         {
             if (mpSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -136,8 +129,8 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
     // Michaelis-Menten constant, they can be in any order
     //std::cout<<"MichaelisMentenReaction::ParseReactionInformation( - start"<<std::endl;
     // form the vector of delimiters
-    unsigned numberOfDelimiters = 3;
-    std::vector<std::string> delimiterVector(numberOfDelimiters,"");
+    unsigned numDelimiters = 3;
+    std::vector<std::string> delimiterVector(numDelimiters,"");
     delimiterVector[0] = mSpectatorDelimiter;
     delimiterVector[1] = mCatalyticConstantDelimiter;
     delimiterVector[2] = mMichaelisConstantDelimiter;
@@ -168,7 +161,6 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
         std::cout<<"Error MichaelisMentenReaction::ParseReactionInformation: Michaelis-Menten constant not found"<<std::endl;
     }
 
-
     double reactionRate;
     double Km;
     std::string spectator;
@@ -178,13 +170,13 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
     std::string tempString = reaction_information;
     std::string valueString = "";
 
-    unsigned delimiterIndex=0;
+    unsigned delimiterIndex = 0;
 
-    while(delimiterIndex != numberOfDelimiters)
+    while (delimiterIndex != numDelimiters)
     {
         // find the position of the first delimiter
         delimiterIndex = FindIndexOfLastDelimiterPosition(delimiterVector, tempString);
-        if (delimiterIndex == numberOfDelimiters)
+        if (delimiterIndex == numDelimiters)
         {
             break;
         }
@@ -193,29 +185,31 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
         valueString = reaction_information.substr(delimiterPosition+delimiterVector[delimiterIndex].size()+1,std::string::npos);
         tempString = tempString.erase(delimiterPosition,std::string::npos);
 
-        switch(delimiterIndex)
+        switch (delimiterIndex)
         {
             // part specific to the paresing the particular reaction string
 
             //delimiterVector[0] = mSpectatorDelimiter;
             //delimiterVector[1] = mIrreversibleRateName;
             //delimiterVector[2] = mMichaelisConstantDelimiter;
-            
             case 0:
+            {
                 // spectator
                 spectatorNames.push_back(valueString);
                 break;
-            
+            }            
             case 1:
+            {
                 // reaction rate
                 reactionRate = atof(valueString.c_str());
                 break;
-
+            }
             case 2:
+            {
                 // Michaelis-Menten constant
                 Km = atof(valueString.c_str());
                 break;
-
+            }
             default:
                 break;
         }
@@ -224,17 +218,14 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
         reaction_information = tempString;
         //delimiterIndex++;
     }
-    
 
     SetReactionRateConstant(reactionRate);
     SetKm(Km);
     SetSpectatorNames(spectatorNames);
-    SetNumberOfSpectators(spectatorNames.size());
+    SetNumSpectators(spectatorNames.size());
     UpdateSystemChemistry(spectatorNames);
     //std::cout<<"MichaelisMentenReaction::ParseReactionInformation( - end"<<std::endl;
 }
-
-// class specific methods
 
 void MichaelisMentenReaction::SetKm(double Km)
 {
@@ -245,7 +236,5 @@ double MichaelisMentenReaction::GetKm()
 {
     return mKm;
 }
-
-
 
 #endif

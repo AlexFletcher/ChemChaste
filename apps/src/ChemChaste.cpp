@@ -236,7 +236,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                                     true                                                                    
                                     );
 
-                cells.push_back(p_cell_reader -> GetCellPtr());
+                cells.push_back(p_cell_reader->GetCellPtr());
             }   
 
 
@@ -251,7 +251,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
-            boost::shared_ptr<ChemicalTrackingModifier<spaceDim,elementDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<spaceDim,elementDim>()); //= chemical_structure -> rGetPtrChemicalTrackingModifier();
+            boost::shared_ptr<ChemicalTrackingModifier<spaceDim,elementDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<spaceDim,elementDim>()); //= chemical_structure->rGetPtrChemicalTrackingModifier();
             
             cell_population.AddCellWriter<CellIdWriter>();
             cell_population.AddCellWriter<CellAgesWriter>();
@@ -324,7 +324,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
                     IsFirstCell = false;
                 }
-                cells.push_back(p_cell_reader -> GetCellPtr());
+                cells.push_back(p_cell_reader->GetCellPtr());
             }
 
             // Create a ChasteCuboid on which to base the finite element mesh used to solve the PDE
@@ -418,7 +418,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                                     true                                                                    
                                     );
 
-                cells.push_back(p_cell_reader -> GetCellPtr());
+                cells.push_back(p_cell_reader->GetCellPtr());
             }   
 
 
@@ -433,7 +433,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
-            boost::shared_ptr<ChemicalTrackingModifier<spaceDim,elementDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<spaceDim,elementDim>()); //= chemical_structure -> rGetPtrChemicalTrackingModifier();
+            boost::shared_ptr<ChemicalTrackingModifier<spaceDim,elementDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<spaceDim,elementDim>()); //= chemical_structure->rGetPtrChemicalTrackingModifier();
             
             cell_population.AddCellWriter<CellIdWriter>();
             cell_population.AddCellWriter<CellAgesWriter>();
@@ -507,7 +507,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
                     IsFirstCell = false;
                 }
-                cells.push_back(p_cell_reader -> GetCellPtr());
+                cells.push_back(p_cell_reader->GetCellPtr());
             }
 
             // Create a ChasteCuboid on which to base the finite element mesh used to solve the PDE
@@ -567,16 +567,16 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
 
         TetrahedralMesh<elementDim,spaceDim>* p_mesh = p_field ->rGetDomainFeMesh();
 
-        p_field -> ParseInitialConditionsFromFile(variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>());
+        p_field->ParseInitialConditionsFromFile(variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>());
 
-        Vec initial_condition = PetscTools::CreateVec(p_field -> GetInitialNodeConditions());
+        Vec initial_condition = PetscTools::CreateVec(p_field->GetInitialNodeConditions());
 
         // process boundary conditions
-        p_field -> ParseBoundaryConditionsFromFile(variables_map["domain_file_root"].as<std::string>()+variables_map["boundary_conditions"].as<std::string>());
+        p_field->ParseBoundaryConditionsFromFile(variables_map["domain_file_root"].as<std::string>()+variables_map["boundary_conditions"].as<std::string>());
 
-        std::vector<std::string> boundaryConditionTypes = p_field -> GetBoundaryConditionTypes();
+        std::vector<std::string> boundaryConditionTypes = p_field->GetBoundaryConditionTypes();
 
-        std::vector<double> boundaryConditionValues = p_field -> GetBoundaryConditionValues();
+        std::vector<double> boundaryConditionValues = p_field->GetBoundaryConditionValues();
 
         BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 

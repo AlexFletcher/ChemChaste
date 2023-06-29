@@ -26,7 +26,7 @@ protected:
 
         // std::vector<AbstractTransportReaction*> mpReactionVector;
 
-        // unsigned mNumberOfReactions;
+        // unsigned mNumReactions;
 
     std::string mInputFileName;
     std::string mDomain;
@@ -75,30 +75,26 @@ public:
 
     std::string GetFileName();
 
-
     AbstractMembraneReactionSystem* GetReactionSystem();
 
-    std::vector<std::vector<unsigned>> GetNumberOfSubstrates();
+    std::vector<std::vector<unsigned>> GetNumSubstrates();
 
-    std::vector<std::vector<unsigned>> GetNumberOfProducts();
+    std::vector<std::vector<unsigned>> GetNumProducts();
 
-    void SetNumberOfSubstrates(std::vector<std::vector<unsigned>>);
+    void SetNumSubstrates(std::vector<std::vector<unsigned>>);
 
-    void SetNumberOfProducts(std::vector<std::vector<unsigned>>);
+    void SetNumProducts(std::vector<std::vector<unsigned>>);
 
     std::vector<unsigned> ReturnSubstratesForReactionIndex(unsigned);
 
     std::vector<unsigned> ReturnProductsForReactionIndex(unsigned);
-
 };
 
 MembraneReactionSystemFomFile::MembraneReactionSystemFomFile(std::string InputFileName)
     : mInputFileName(InputFileName)
 {
-    
     std::vector<AbstractMembraneReaction*> mpReactionVector = std::vector<AbstractMembraneReaction*>();
     
-
     SetFileDeliminator();
     std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string>> system = ReactionSystemFromFile();
     
@@ -106,22 +102,22 @@ MembraneReactionSystemFomFile::MembraneReactionSystemFomFile(std::string InputFi
 
     std::vector<std::string> cellChemicalNames;
 
-    unsigned numberOfBulkSubstrates=0;
-    unsigned numberOfCellSubstrates=0;
-    unsigned numberOfBulkProducts=0;
-    unsigned numberOfCellPRoducts=0;
+    unsigned numBulkSubstrates=0;
+    unsigned numCellSubstrates=0;
+    unsigned numBulkProducts=0;
+    unsigned numCellPRoducts=0;
     
     // for each reaction in the system, parse the bulk and cell chemistry
-    for(unsigned reaction=0; reaction<system.size(); reaction++)
+    for (unsigned reaction=0; reaction<system.size(); reaction++)
     {
-        numberOfBulkSubstrates = ReturnSubstratesForReactionIndex(reaction)[0];
-        numberOfBulkProducts = ReturnProductsForReactionIndex(reaction)[0];
-        for(unsigned species=0; species<numberOfBulkSubstrates; species++)
+        numBulkSubstrates = ReturnSubstratesForReactionIndex(reaction)[0];
+        numBulkProducts = ReturnProductsForReactionIndex(reaction)[0];
+        for (unsigned species=0; species<numBulkSubstrates; species++)
         {
             // for the substrates
             bulkChemicalNames.push_back(std::get<2>(system[reaction])[species]);
         }
-        for(unsigned species=0; species<numberOfBulkProducts; species++)
+        for (unsigned species=0; species<numBulkProducts; species++)
         {
             // for the products
             bulkChemicalNames.push_back(std::get<3>(system[reaction])[species]);
@@ -129,14 +125,14 @@ MembraneReactionSystemFomFile::MembraneReactionSystemFomFile(std::string InputFi
         if (mIsCoupledReaction[reaction]==true)
         {
             // also has separate cell chemistry
-            numberOfCellSubstrates = ReturnSubstratesForReactionIndex(reaction)[1];
-            numberOfCellProducts = ReturnProductsForReactionIndex(reaction)[1];
-            for(unsigned species=0; species<numberOfCellSubstrates; species++)
+            numCellSubstrates = ReturnSubstratesForReactionIndex(reaction)[1];
+            numCellProducts = ReturnProductsForReactionIndex(reaction)[1];
+            for (unsigned species=0; species<numCellSubstrates; species++)
             {
                 // for the substrates
                 cellChemicalNames.push_back(std::get<2>(system[reaction])[species]);
             }
-            for(unsigned species=0; species<numberOfCellProducts; species++)
+            for (unsigned species=0; species<numCellProducts; species++)
             {
                 // for the products
                 cellChemicalNames.push_back(std::get<3>(system[reaction])[species]);
@@ -149,7 +145,6 @@ MembraneReactionSystemFomFile::MembraneReactionSystemFomFile(std::string InputFi
     
     // form the vector of membrane reaction systems and initilaise throuigh referencing the membrane tablet
     FormReactionSystemObjectFromTuple(system);
-
 }
 
 void MembraneReactionSystemFomFile::SetFileDeliminator()
@@ -169,14 +164,14 @@ void MembraneReactionSystemFomFile::FormReactionSystemObjectFromTuple(std::vecto
     // for each reaction whose data is in the tuple, form the corresponding reaction class
     // denote in the reaction class the function necessary to parse reaction information
 
-    SetNumberOfReactions(system.size());
+    SetNumReactions(system.size());
 
-    unsigned numberOfBulkSubstrates=0;
-    unsigned numberOfCellSubstrates=0;
-    unsigned numberOfBulkProducts=0;
-    unsigned numberOfCellPRoducts=0;
+    unsigned numBulkSubstrates=0;
+    unsigned numCellSubstrates=0;
+    unsigned numBulkProducts=0;
+    unsigned numCellPRoducts=0;
 
-    for( unsigned reaction =0; reaction<mNumberOfReactions; reaction++)
+    for (unsigned reaction =0; reaction<mNumReactions; reaction++)
     {
         AbstractMembraneReaction* p_reaction = new AbstractMembraneReaction();
 
@@ -189,15 +184,15 @@ void MembraneReactionSystemFomFile::FormReactionSystemObjectFromTuple(std::vecto
         std::vector<std::string> cell_product_name = std::vector<std::string>();
         std::vector<unsigned> cell_product_stoich = std::vector<unsigned>();
 
-        numberOfBulkSubstrates = ReturnSubstratesForReactionIndex(reaction)[0];
-        numberOfBulkProducts = ReturnProductsForReactionIndex(reaction)[0];
+        numBulkSubstrates = ReturnSubstratesForReactionIndex(reaction)[0];
+        numBulkProducts = ReturnProductsForReactionIndex(reaction)[0];
 
-        for(unsigned i=0; i<numberOfBulkSubstrates; i++)
+        for (unsigned i=0; i<numBulkSubstrates; i++)
         {
             bulk_substrate_name.push_back(std::get<2>(system[reaction])[i]);
             bulk_substrate_stoich.push_back(std::get<4>(system[reaction])[i]);
         }
-        for(unsigned i=0; i<numberOfBulkProducts;i++)
+        for (unsigned i=0; i<numBulkProducts;i++)
         {
             bulk_product_name.push_back(std::get<3>(system[reaction])[i]);
             bulk_product_stoich.push_back(std::get<5>(system[reaction])[i]);
@@ -211,24 +206,23 @@ void MembraneReactionSystemFomFile::FormReactionSystemObjectFromTuple(std::vecto
         if (mIsCoupledReaction[reaction]==true)
         {
 
-            numberOfCellSubstrates = ReturnSubstratesForReactionIndex(reaction)[1];
-            numberOfCellProducts = ReturnProductsForReactionIndex(reaction)[1];
+            numCellSubstrates = ReturnSubstratesForReactionIndex(reaction)[1];
+            numCellProducts = ReturnProductsForReactionIndex(reaction)[1];
 
-            for(unsigned i=0; i<numberOfCellSubstrates;i++)
+            for (unsigned i=0; i<numCellSubstrates;i++)
             {
-                cell_substrate_name.push_back(std::get<2>(system[reaction])[i+numberOfBulkSubstrates]);
-                cell_substrate_stoich.push_back(std::get<4>(system[reaction])[i+numberOfBulkSubstrates]);
+                cell_substrate_name.push_back(std::get<2>(system[reaction])[i+numBulkSubstrates]);
+                cell_substrate_stoich.push_back(std::get<4>(system[reaction])[i+numBulkSubstrates]);
             }
-            for(unsigned i=0; i<numberOfCellProducts;i++)
+            for (unsigned i=0; i<numCellProducts;i++)
             {
-                cell_product_name.push_back(std::get<3>(system[reaction])[i+numberOfBulkProducts]);
-                cell_product_stoich.push_back(std::get<5>(system[reaction])[i+numberOfBulkProducts]);
+                cell_product_name.push_back(std::get<3>(system[reaction])[i+numBulkProducts]);
+                cell_product_stoich.push_back(std::get<5>(system[reaction])[i+numBulkProducts]);
             }
             
             cell_substrates_chemical_vector = FromChemicalNameVectorToAbstractChemicalVector(cell_substrate_name);
             cell_products_chemical_vector = FromChemicalNameVectorToAbstractChemicalVector(cell_product_name);
         }
-        
 
         MembraneTablet(p_reaction,std::get<0>(system[reaction]),bulk_substrates_chemical_vector,bulk_products_chemical_vector,cell_substrates_chemical_vector,cell_products_chemical_vector,bulk_substrate_stoich,bulk_product_stoich,cell_substrate_stoich,cell_product_stoich,std::get<6>(system[reaction]),std::get<1>(system[reaction]),mpBulkChemistry,mpCellChemistry);
         
@@ -236,11 +230,10 @@ void MembraneReactionSystemFomFile::FormReactionSystemObjectFromTuple(std::vecto
     }
 }
 
-
 std::vector<AbstractChemical*> MembraneReactionSystemFomFile::FromChemicalNameVectorToAbstractChemicalVector(std::vector<std::string> nameVector)
 {
     std::vector<AbstractChemical*> chemicalVector = std::vector<AbstractChemical*>();
-    for(unsigned i=0; i<nameVector.size(); i++)
+    for (unsigned i=0; i<nameVector.size(); i++)
     {
         chemicalVector.push_back(new AbstractChemical(nameVector[i]));
     }
@@ -250,17 +243,17 @@ std::vector<AbstractChemical*> MembraneReactionSystemFomFile::FromChemicalNameVe
 
 void MembraneReactionSystemFomFile::ParseSystemChemistry(std::vector<std::string> bulk_names, std::vector<std::string> cell_names)
 {
-    // take inthe names of the species in both the bulk and cell and form the necessary chemistries
+    // Take inthe names of the species in both the bulk and cell and form the necessary chemistries
     AbstractChemistry* bulkChemistry = new AbstractChemistry();
     AbstractChemistry* cellChemistry = new AbstractChemistry();
 
-    for(unsigned i =0; i<bulk_names.size(); i++)
+    for (unsigned i =0; i<bulk_names.size(); i++)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(bulk_names[i]);
         bulkChemistry->AddChemical(candidate_chemical);
     }
 
-    for(unsigned i =0; i<cell_names.size(); i++)
+    for (unsigned i =0; i<cell_names.size(); i++)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(cell_names[i]);
         cellChemistry->AddChemical(candidate_chemical);
@@ -272,7 +265,7 @@ void MembraneReactionSystemFomFile::ParseSystemChemistry(std::vector<std::string
 
 std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string>> MembraneReactionSystemFomFile::ReactionSystemFromFile()
 {
-    // read a reaction from the file
+    // Read a reaction from the file
     std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string>>  system;  
 
     std::ifstream inputFile(mInputFileName);
@@ -281,11 +274,11 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
 
     std::vector<std::string> reactionString;
 
-    unsigned numberOfReactions=0;
+    unsigned numReactions = 0;
 
     if (inputFile.is_open())
     {
-        // open the reaction file
+        // Open the reaction file
         while (getline(inputFile,line))
         {
             // for each non-empty reation file line, parse the reactions into
@@ -348,12 +341,11 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                         // reaction type, IsReversible, Substrates, Products, stoichSubstrates, stoichProducts, reaction information
                         // std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string 
                         system.push_back(std::make_tuple(reactionType, IsReversible, std::get<0>(ReactionStringTuple)[0], std::get<0>(ReactionStringTuple)[1], std::get<1>(ReactionStringTuple)[0], std::get<1>(ReactionStringTuple)[1], reactionInfo));
-                        
-                        
-                        
-                        numberOfReactions +=1;
-                    }else{
 
+                        numReactions +=1;
+                    }
+                    else
+                    {
                         // assume the next line is a reaction line, single reaction implies reacts woith membrane
                         mIsCoupledReaction.push_back(false);
                         // point at which the reaction type text and the reaction string deliniate
@@ -372,7 +364,6 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                         
                         // don't want to parse info in this function
                         
-                        
                         // test for reversibility in reaction string
                         bool IsReversible = TestReversibility(react);
         
@@ -384,8 +375,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                         // reaction type, IsReversible, Substrates, Products, stoichSubstrates, stoichProducts, reaction information
                         // std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string 
                         system.push_back(std::make_tuple(reactionType, IsReversible, std::get<0>(ReactionStringTuple)[0], std::get<0>(ReactionStringTuple)[1], std::get<1>(ReactionStringTuple)[0], std::get<1>(ReactionStringTuple)[1], reactionInfo));
-                        numberOfReactions +=1;
-
+                        numReactions += 1;
                     }
                 }
             }
@@ -396,7 +386,6 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
     {
         std::cout<<"Error: Filename not found: "<<mInputFileName<<std::endl;
     }
-    
 
     return system;
 }
@@ -415,7 +404,6 @@ bool MembraneReactionSystemFomFile::TestReversibility(std::string line)
 
 std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsigned>>> MembraneReactionSystemFomFile::ParseReactionString(std::string line)
 {
-    
     std::string tempString;
     std::vector<std::vector<std::string>> species;
     std::vector<std::vector<unsigned>> stoich;
@@ -442,17 +430,15 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             delim = mReverseDelimiter;
         }
     }
-    
 
     // split the reaction string on the deliminator, whether reversible or irreversible
     size_t posC = line.find(delim);
-
 
     complexes.push_back(line.substr(0,posC-1));
     complexes.push_back(line.substr(posC+3,std::string::npos));
 
     // parse complexes based on additon of new molecules
-    for(unsigned complexNumber=0; complexNumber<2; complexNumber++)
+    for (unsigned complexNumber=0; complexNumber<2; complexNumber++)
     {
         std::string str=complexes[complexNumber];
         // posiitons of characters in the reaction string to parse
@@ -467,7 +453,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             str.erase(str.begin());
         }
 
-        while(posSnew != std::string::npos){
+        while (posSnew != std::string::npos){
 
             // update position of character pointer based on species separator " + " default
             posSnew = str.find(mSpeciesSeparator,posSold);
@@ -475,34 +461,40 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             std::string strT = str.substr(posSold,posSnew-posSold);
         
             posSold=posSnew+3;
+
             // determine the stoich ratio value of the species
-
-            unsigned stoichValue=1;
-
-            if (isdigit(strT.c_str()[0])){
-                stoichValue=std::stoul(strT.c_str());
+            unsigned stoichValue = 1;
+            if (isdigit(strT.c_str()[0]))
+            {
+                stoichValue = std::stoul(strT.c_str());
                 
                 unsigned i=0;
-                while(isdigit(strT.c_str()[i])){i++;}
-                    tempString=strT.substr(i,std::string::npos);
-            }else{tempString=strT;}
+                while (isdigit(strT.c_str()[i]))
+                {
+                    i++;
+                }
+                tempString = strT.substr(i, std::string::npos);
+            }
+            else
+            {
+                tempString = strT;
+            }
 
             // remove whitespace and memory container size to ensure like for like comparisons are consistent
             tempString.erase(remove_if (tempString.begin(), tempString.end(), isspace), tempString.end());
 
-            if (stoichValue==0){
+            if (stoichValue==0)
+            {
                 // skip the push_back of the zero entry
             }
             else
             {
                 reactants.push_back(tempString);
                 stoichVector.push_back(stoichValue);
-            }
-            
+            } 
         }
         species.push_back(reactants);
         stoich.push_back(stoichVector);
-
     }
 
     return std::make_tuple(species, stoich);
@@ -528,7 +520,6 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
     return std::make_tuple(species, stoich);
 }
 
-
 std::string MembraneReactionSystemFomFile::ParseReactionInformation(std::string line)
 {
     // at the moment leave empty, populated in the individual reaction classes
@@ -540,22 +531,22 @@ std::string MembraneReactionSystemFomFile::GetFileName()
     return mInputFileName;
 }
 
-std::vector<std::vector<unsigned>> MembraneReactionSystemFomFile::GetNumberOfSubstrates()
+std::vector<std::vector<unsigned>> MembraneReactionSystemFomFile::GetNumSubstrates()
 {
     return mNumberSubstrates;
 }
 
-std::vector<std::vector<unsigned>> MembraneReactionSystemFomFile::GetNumberOfProducts()
+std::vector<std::vector<unsigned>> MembraneReactionSystemFomFile::GetNumProducts()
 {
     return mNumberProducts;
 }
 
-void MembraneReactionSystemFomFile::SetNumberOfSubstrates(std::vector<std::vector<unsigned>> numberSubstrates)
+void MembraneReactionSystemFomFile::SetNumSubstrates(std::vector<std::vector<unsigned>> numberSubstrates)
 {
     mNumberSubstrates = numberSubstrates;
 }
 
-void MembraneReactionSystemFomFile::SetNumberOfProducts(std::vector<std::vector<unsigned>> numberProducts)
+void MembraneReactionSystemFomFile::SetNumProducts(std::vector<std::vector<unsigned>> numberProducts)
 {
     mNumberProducts = numberProducts;
 }
@@ -577,6 +568,5 @@ std::vector<unsigned> MembraneReactionSystemFomFile::ReturnProductsForReactionIn
     }
     return std::vector<unsigned>();
 }
-
 
 #endif

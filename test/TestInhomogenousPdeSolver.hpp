@@ -55,7 +55,7 @@ public:
         StateVariableRegister* register_1_2  = new StateVariableRegister(system_1); 
 
         std::cout<<"Read state variable register:"<<std::endl;
-        for(unsigned i=0; i<register_1_2->GetNumberOfStateVariables(); i++)
+        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
         {
             std::cout<<register_1_2->RetrieveStateVariableName(i)<<std::endl;
         }
@@ -65,7 +65,7 @@ public:
         register_1_2->AddStateVariableVector(system_2);
 
         std::cout<<"Read state variable register:"<<std::endl;
-        for(unsigned i=0; i<register_1_2->GetNumberOfStateVariables(); i++)
+        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
         {
             std::cout<<register_1_2->RetrieveStateVariableName(i)<<std::endl;
         }
@@ -75,7 +75,7 @@ public:
         register_1_2->AddStateVariable("D");
 
         std::cout<<"Read state variable register:"<<std::endl;
-        for(unsigned i=0; i<register_1_2->GetNumberOfStateVariables(); i++)
+        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
         {
             std::cout<<register_1_2->RetrieveStateVariableName(i)<<std::endl;
         }
@@ -83,7 +83,7 @@ public:
         std::cout<<"Read index of variable in state register"<<std::endl;
 
         std::vector<std::string> variable_set = {"A","C"};
-        for(unsigned i=0; i<variable_set.size(); i++)
+        for (unsigned i=0; i<variable_set.size(); i++)
         {
             std::cout<<variable_set[i]<<": "<<register_1_2->RetrieveStateVariableIndex(variable_set[i])<<std::endl;
         }
@@ -94,7 +94,7 @@ public:
         register_1_2->RemoveStateVariable("B");
 
         std::cout<<"Read state variable register:"<<std::endl;
-        for(unsigned i=0; i<register_1_2->GetNumberOfStateVariables(); i++)
+        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
         {
             std::cout<<register_1_2->RetrieveStateVariableName(i)<<std::endl;
         }
@@ -106,7 +106,7 @@ public:
         StateVariableRegister* register_3  = new StateVariableRegister(system_3); 
 
         std::cout<<"Read state variable register_3:"<<std::endl;
-        for(unsigned i=0; i<register_3->GetNumberOfStateVariables(); i++)
+        for (unsigned i=0; i<register_3->GetNumStateVariables(); i++)
         {
             std::cout<<register_3->RetrieveStateVariableName(i)<<std::endl;
         }
@@ -116,19 +116,19 @@ public:
 
         std::cout<<"Common variables: "<<std::endl;
         std::vector<std::string> matchedNames = register_1_2 ->FindCommonNamesInRegisters(register_3);
-        for(unsigned i=0; i<matchedNames.size(); i++)
+        for (unsigned i=0; i<matchedNames.size(); i++)
         {
             std::cout<<matchedNames[i]<<std::endl;
         }
         std::cout<<"System_3 variables locations in systems_1_2: "<<std::endl;
         std::vector<unsigned> matchedIndicesThis = register_1_2 ->FindIndicesInThisRegister(register_3);
-        for(unsigned i=0; i<matchedIndicesThis.size(); i++)
+        for (unsigned i=0; i<matchedIndicesThis.size(); i++)
         {
             std::cout<<matchedIndicesThis[i]<<std::endl;
         }
         std::cout<<"System_1_2 variables locations in systems_3: "<<std::endl;
         std::vector<unsigned> matchedIndicesThat = register_1_2 ->FindIndicesInThatRegister(register_3);
-        for(unsigned i=0; i<matchedIndicesThat.size(); i++)
+        for (unsigned i=0; i<matchedIndicesThat.size(); i++)
         {
             std::cout<<matchedIndicesThat[i]<<std::endl;
         }
@@ -165,11 +165,11 @@ public:
         std::vector<bool> areNeumannBoundaryConditions(probDim, false);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
-        for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
             if (areNeumannBoundaryConditions[pdeDim]==false)
             {
@@ -194,7 +194,7 @@ public:
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
                 init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
             }
@@ -289,12 +289,12 @@ public:
         std::vector<std::string> boundaryTypes = p_field->GetBoundaryConditionTypes();
         
         
-        for(unsigned i=0; i<initialConditions.size();i++)
+        for (unsigned i=0; i<initialConditions.size();i++)
         {
             std::cout<<"init: "<<initialConditions[i]<<std::endl;
         }
 
-        for(unsigned i=0; i<boundaryConditions.size();i++)
+        for (unsigned i=0; i<boundaryConditions.size();i++)
         {
             std::cout<<"value: "<<boundaryConditions[i]<<std::endl;
             std::cout<<"type : "<<boundaryTypes[i]<<std::endl;
@@ -338,8 +338,8 @@ public:
         // get domain variable register
         std::cout<<"Read domain state variable register"<<std::endl;
         StateVariableRegister* chemical_domain_register = p_field->GetDomainStateVariableRegister();
-        std::cout<<"number of state variables: "<<chemical_domain_register->GetNumberOfStateVariables()<<std::endl;
-        for(unsigned index=0; index<chemical_domain_register->GetNumberOfStateVariables(); index++)
+        std::cout<<"number of state variables: "<<chemical_domain_register->GetNumStateVariables()<<std::endl;
+        for (unsigned index=0; index<chemical_domain_register->GetNumStateVariables(); index++)
         {
             std::cout<<"State: "<<index<<" : "<<chemical_domain_register->RetrieveStateVariableName(index)<<std::endl;
         }
@@ -354,14 +354,14 @@ public:
         // run a singlar ode system
         unsigned node_selector = 92;
         AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem* p_ode_system = p_field->GetOdeSystem()[node_selector];
-        std::cout<<"number of Species: "<<p_ode_system->GetNumberOfSpecies()<<std::endl;
-        std::cout<<"number of Reactions: "<<p_ode_system->GetNumberOfReactions()<<std::endl;
-        std::vector<double> rY(p_ode_system->GetNumberOfSpecies(),1.0);
-        std::vector<double> rDY(p_ode_system->GetNumberOfSpecies(),0.0);
+        std::cout<<"number of Species: "<<p_ode_system->GetNumSpecies()<<std::endl;
+        std::cout<<"number of Reactions: "<<p_ode_system->GetNumReactions()<<std::endl;
+        std::vector<double> rY(p_ode_system->GetNumSpecies(),1.0);
+        std::vector<double> rDY(p_ode_system->GetNumSpecies(),0.0);
 
         p_ode_system->EvaluateYDerivatives(1.0,rY,rDY);
 
-        for(unsigned index=0; index < p_ode_system->GetNumberOfSpecies(); index++)
+        for (unsigned index=0; index < p_ode_system->GetNumSpecies(); index++)
         {
             std::cout<<"Species "<<index<<": "<<"rDY: "<<rDY[index]<<std::endl;
         }
@@ -404,11 +404,11 @@ public:
         std::vector<bool> areNeumannBoundaryConditions(probDim, false);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
 
-        for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
             if (areNeumannBoundaryConditions[pdeDim]==false)
             {
@@ -434,7 +434,7 @@ public:
         std::vector<double> init_conds(probDim*p_field->GetDomainMesh()->GetNumNodes());
         for (unsigned i=0; i<p_field->GetDomainMesh()->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
                 init_conds[probDim*i + pdeDim] =fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
             }
@@ -457,7 +457,7 @@ public:
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver>> odeSolverSystem;
         std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
-        for(unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {
             odeSystem.push_back(p_field->GetOdeSystem()[i]);
             boost::shared_ptr<EulerIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
@@ -502,7 +502,7 @@ public:
 
         std::vector<Node<2>*> nodes(num_nodes);
 
-        for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
             vectorConstBCs.push_back(new ConstBoundaryCondition<2>(pdeDim*bcValues[pdeDim]));
         }
         
@@ -510,7 +510,7 @@ public:
         {
             nodes[i] = new Node<2>(i,true,0,0); //Node(unsigned index, bool isBoundaryNode=false, double v1=0, double v2=0, double v3=0);
 
-            for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {
                 bcc.AddDirichletBoundaryCondition(nodes[i], vectorConstBCs[pdeDim], pdeDim);
             }
@@ -521,7 +521,7 @@ public:
         for (unsigned i=0; i<num_nodes; i++)
         {
             
-            for(unsigned j=0; j<probDim;j++)
+            for (unsigned j=0; j<probDim;j++)
             {
                 double value = bcc.GetDirichletBCValue(nodes[i],j);
                 std::cout<<"value node: "<<i<<" "<<value<<std::endl;

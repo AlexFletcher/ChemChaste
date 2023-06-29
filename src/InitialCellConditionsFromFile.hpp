@@ -50,7 +50,6 @@ public:
     std::vector<double> GetConcentrationVector();
 
     std::vector<bool> GetPerturbConcentrationVector();
-
 };
 
 InitialCellConditionsFromFile::InitialCellConditionsFromFile(std::string conditionFilename) 
@@ -64,7 +63,7 @@ InitialCellConditionsFromFile::InitialCellConditionsFromFile(std::string conditi
     conditionsDatabase = ReadMatrix(conditionFilename);
 
     // parse the matrix
-    for(unsigned i=0; i<conditionsDatabase.size(); i++)
+    for (unsigned i=0; i<conditionsDatabase.size(); i++)
     {
         // the first element of the read in database is the identifying names
         chemicalNamesVector.push_back(conditionsDatabase[i][0]);
@@ -90,8 +89,7 @@ InitialCellConditionsFromFile::InitialCellConditionsFromFile(std::string conditi
         }
     }
 
-
-    // store the information
+    // Store the information
     SetChemicalNamesVector(chemicalNamesVector);
     SetConcentrationVector(concentrationVector);
     SetPerturbConcentrationVector(perturbConcentrationVector);
@@ -110,15 +108,17 @@ std::vector<std::vector<std::string>> InitialCellConditionsFromFile::ReadMatrix(
     std::vector<std::vector<std::string>> outputMatrix = std::vector<std::vector<std::string>>();
 
     // check file exists and is openable
-    if (inputFile.is_open()){
+    if (inputFile.is_open())
+    {
         // open the matrix file
-        while (getline(inputFile,line)){
+        while (getline(inputFile,line))
+        {
             // while the file still has lines not read.
             // read line left to right, top to bottom.
-            if (!line.empty()){
+            if (!line.empty())
+            {
                 if (line.at(0)=='#')
                 {
-                    //std::cout<<"Escape line: "<<line<<std::endl;
                 }
                 else
                 {
@@ -149,7 +149,7 @@ std::vector<std::string> InitialCellConditionsFromFile::parseMatrixLineString(st
 
     bool IsEndOfLine = false;
     
-    while(!IsEndOfLine)
+    while (!IsEndOfLine)
     {
         // while not at the end of the file, sample sub strings from the posiiton of the delimiter
         if (posSnew == std::string::npos)
@@ -166,7 +166,7 @@ std::vector<std::string> InitialCellConditionsFromFile::parseMatrixLineString(st
         rowVector.push_back(matrixCell);
 
         // update delimiter position
-        posSnew=line.find(delim);
+        posSnew = line.find(delim);
     }
     return rowVector;
 }
@@ -175,7 +175,7 @@ bool InitialCellConditionsFromFile::StringToBool(std::string test_string)
 {
     // take in a test string and determine if a true character string is present
 
-    for(unsigned i=0; i<mBoolTestDictionary.size(); i++)
+    for (unsigned i=0; i<mBoolTestDictionary.size(); i++)
     {
         if (test_string == mBoolTestDictionary[i])
         {

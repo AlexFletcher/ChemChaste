@@ -81,10 +81,8 @@ public:
     void SetReversibleRateName(std::string);
 
     std::string GetReversibleRateName();
-
 };
 
-// constructor
 AbstractReversibleMembraneReaction::AbstractReversibleMembraneReaction(   
                             std::vector<AbstractChemical*> bulkSubstrates,
                             std::vector<AbstractChemical*> bulkProducts,
@@ -96,13 +94,11 @@ AbstractReversibleMembraneReaction::AbstractReversibleMembraneReaction(
                             std::vector<unsigned> stoichCellProducts,
                             double reactionRate,
                             double reverseReactionRate)
-        :   AbstractMembraneReaction(bulkSubstrates,bulkProducts,cellSubstrates,cellProducts,stoichBulkSubstrates,stoichBulkProducts,stoichCellSubstrates,stoichCellProducts,reactionRate),
-            mReverseReactionRate(reverseReactionRate)
+    : AbstractMembraneReaction(bulkSubstrates,bulkProducts,cellSubstrates,cellProducts,stoichBulkSubstrates,stoichBulkProducts,stoichCellSubstrates,stoichCellProducts,reactionRate),
+      mReverseReactionRate(reverseReactionRate)
 {
 }
 
-
-// copy constructor
 AbstractReversibleMembraneReaction::AbstractReversibleMembraneReaction(const AbstractReversibleMembraneReaction& existingReaction)
     : AbstractMembraneReaction(existingReaction)
 {
@@ -143,7 +139,7 @@ void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry,
     // perform the reaction
     // run through the bulk species
     unsigned index=0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_bulk_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_bulk_chemical_vector.begin();
             chem_iter != p_bulk_chemical_vector.end();
             ++chem_iter, ++index)
     {
@@ -151,7 +147,7 @@ void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry,
         AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         // for each bulk chemical, parse whether it is involved in this reaction.
-        for(unsigned j=0; j<mNumberOfBulkSubstrates; j++)
+        for (unsigned j=0; j<mNumBulkSubstrates; j++)
         {
             if (mpBulkSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -161,7 +157,7 @@ void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry,
             }
         }
         // a reactant may be present on both sides of the reaction and may convert at different functional rates
-        for(unsigned j=0; j<mNumberOfBulkProducts; j++)
+        for (unsigned j=0; j<mNumBulkProducts; j++)
         {
             if (mpBulkProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -173,14 +169,14 @@ void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry,
     }
     // run through the cell species
     index=0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_cell_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_cell_chemical_vector.begin();
             chem_iter != p_cell_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         // for each bulk chemical, parse whether it is involved in this reaction.
-        for(unsigned j=0; j<mNumberOfCellSubstrates; j++)
+        for (unsigned j=0; j<mNumCellSubstrates; j++)
         {
             if (mpCellSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -190,7 +186,7 @@ void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry,
             }
         }
         // a reactant may be present on both sides of the reaction and may convert at different functional rates
-        for(unsigned j=0; j<mNumberOfCellProducts; j++)
+        for (unsigned j=0; j<mNumCellProducts; j++)
         {
             if (mpCellProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -222,8 +218,6 @@ std::string AbstractReversibleMembraneReaction::GetReactionType()
 
 void AbstractReversibleMembraneReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible = true)
 {
-     
-
     if (!IsReversible)
     {
         AbstractMembraneReaction::ParseReactionInformation(reaction_information, false);
@@ -267,8 +261,6 @@ void AbstractReversibleMembraneReaction::ParseReactionInformation(std::string re
         }
     }
 }
-
-// file read functions
 void AbstractReversibleMembraneReaction::SetReversibleDelimiter(std::string delim)
 {
     mReversibleDelimiter = delim;

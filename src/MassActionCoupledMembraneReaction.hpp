@@ -96,7 +96,7 @@ public:
 
     std::string GetGibbsDelimiter();
 };
-// constructor
+
 MassActionCoupledMembraneReaction::MassActionCoupledMembraneReaction(
                         std::vector<AbstractChemical*> bulkSubstrates,
                         std::vector<AbstractChemical*> bulkProducts,
@@ -160,13 +160,13 @@ void MassActionCoupledMembraneReaction::UpdateReactionRate(AbstractChemistry* bu
 
     std::vector<AbstractChemical*> p_chemical_vector = bulkChemistry->rGetChemicalVector();
     unsigned index = 0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
         
-        for(unsigned j=0; j<mNumberOfBulkSubstrates; j++)
+        for (unsigned j=0; j<mNumBulkSubstrates; j++)
         {
             if (mpBulkSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -174,7 +174,7 @@ void MassActionCoupledMembraneReaction::UpdateReactionRate(AbstractChemistry* bu
                 break;
             }
         }
-        for(unsigned j=0; j<mNumberOfBulkProducts; j++)
+        for (unsigned j=0; j<mNumBulkProducts; j++)
         {
             if (mpBulkProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -187,13 +187,13 @@ void MassActionCoupledMembraneReaction::UpdateReactionRate(AbstractChemistry* bu
 
     p_chemical_vector = cellChemistry->rGetChemicalVector();
     index = 0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-        for(unsigned j=0; j<mNumberOfCellSubstrates; j++)
+        for (unsigned j=0; j<mNumCellSubstrates; j++)
         {
             if (mpCellSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -201,7 +201,7 @@ void MassActionCoupledMembraneReaction::UpdateReactionRate(AbstractChemistry* bu
                 break;
             }
         }
-        for(unsigned j=0; j<mNumberOfCellProducts; j++)
+        for (unsigned j=0; j<mNumCellProducts; j++)
         {
             if (mpCellProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -209,7 +209,6 @@ void MassActionCoupledMembraneReaction::UpdateReactionRate(AbstractChemistry* bu
                 break;
             }
         }
-
     }  
 
     SetForwardReactionRate(kf*forwardFlux);
@@ -221,10 +220,8 @@ std::string MassActionCoupledMembraneReaction::GetReactionType()
     return "MassActionCoupledMembraneReaction";
 }
 
-
 void MassActionCoupledMembraneReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=false)
 {
-    //std::cout<<"Parse mass action"<<std::endl;
     mIsReversible = IsReversible;
 
     if (!mIsReversible)
@@ -236,7 +233,6 @@ void MassActionCoupledMembraneReaction::ParseReactionInformation(std::string rea
             size_t pos= reaction_information.find(mIrreversibleRateName);
             mForwardReactionRateConstant = atof(reaction_information.substr(pos+mIrreversibleRateName.size()+1,std::string::npos).c_str());
             mReverseReactionRateConstant = 0.0;
-
         }
     }
     else
@@ -255,34 +251,32 @@ void MassActionCoupledMembraneReaction::ParseReactionInformation(std::string rea
             SetForwardReactionRateConstant(GetForwardReactionRate());
             SetReverseReactionRateConstant(GetReverseReactionRate());
         }
-        
     }
-
 }
-
-// member function sspecific to this reaction class
 
 double MassActionCoupledMembraneReaction::CalculateReactionQuotient(AbstractChemistry* bulkChemistry, AbstractChemistry* cellChemistry, const std::vector<double>& currentBulkConc, const std::vector<double>& currentCellConc)
 {
     double quotient = 1.0;
     
-    if (mNumberOfBulkSubstrates ==0 || mNumberOfBulkProducts==0 || mNumberOfCellSubstrates==0 || mNumberOfCellProducts==0)
+    if (mNumBulkSubstrates ==0 || mNumBulkProducts==0 || mNumCellSubstrates==0 || mNumCellProducts==0)
     {
         quotient = 0.0;
-    }else{
+    }
+    else
+    {
         double products_concentrations = 1.0;
         double substrates_concentrations = 1.0;
+
         // need to check against the concentration of each chemical in the system
-        
         std::vector<AbstractChemical*> p_chemical_vector = bulkChemistry->rGetChemicalVector();
         unsigned index = 0;
-        for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+        for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
                 chem_iter != p_chemical_vector.end();
                 ++chem_iter, ++index)
         {
             AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-            for(unsigned j=0; j<mNumberOfBulkSubstrates; j++)
+            for (unsigned j=0; j<mNumBulkSubstrates; j++)
             {
                 if (mpBulkSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
@@ -290,7 +284,7 @@ double MassActionCoupledMembraneReaction::CalculateReactionQuotient(AbstractChem
                     break;
                 }
             }
-            for(unsigned j=0; j<mNumberOfBulkProducts; j++)
+            for (unsigned j=0; j<mNumBulkProducts; j++)
             {
                 if (mpBulkProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
@@ -301,13 +295,13 @@ double MassActionCoupledMembraneReaction::CalculateReactionQuotient(AbstractChem
         }    
         p_chemical_vector = cellChemistry->rGetChemicalVector();
         index = 0;
-        for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+        for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
                 chem_iter != p_chemical_vector.end();
                 ++chem_iter, ++index)
         {
             AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-            for(unsigned j=0; j<mNumberOfCellSubstrates; j++)
+            for (unsigned j=0; j<mNumCellSubstrates; j++)
             {
                 if (mpCellSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
@@ -315,7 +309,7 @@ double MassActionCoupledMembraneReaction::CalculateReactionQuotient(AbstractChem
                     break;
                 }
             }
-            for(unsigned j=0; j<mNumberOfCellProducts; j++)
+            for (unsigned j=0; j<mNumCellProducts; j++)
             {
                 if (mpCellProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
@@ -325,7 +319,7 @@ double MassActionCoupledMembraneReaction::CalculateReactionQuotient(AbstractChem
             }
         }
 
-        quotient=products_concentrations/substrates_concentrations;
+        quotient = products_concentrations/substrates_concentrations;
     }
 
     return quotient;

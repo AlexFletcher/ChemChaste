@@ -28,7 +28,7 @@ void AbstractChemical::SetChemicalSize(double size)
 
 void AbstractChemical::SetChemicalMass(double Mass)
 {
-    mMass  =Mass;
+    mMass = Mass;
 }
 
 void AbstractChemical::SetChemicalValence(int valence)

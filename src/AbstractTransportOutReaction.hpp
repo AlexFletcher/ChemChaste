@@ -59,10 +59,8 @@ public:
     void SetIrreversibleRateName(std::string );
 
     std::string GetIrreversibleRateName();
-
 };
 
-// constructor
 AbstractTransportOutReaction::AbstractTransportOutReaction(     std::vector<AbstractChemical*> bulkReactionSpecies,
                                                                 std::vector<AbstractChemical*> cellReactionSpecies,
                                                                 std::vector<unsigned> stoichBulk,
@@ -93,14 +91,14 @@ void AbstractTransportOutReaction::React(AbstractChemistry* bulkChemistry, Abstr
 
     // run through the bulk species
     unsigned index=0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_bulk_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_bulk_chemical_vector.begin();
             chem_iter != p_bulk_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_bulk_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         // for each system chemical, parse whether it is involved in this reaction.
-        for(unsigned j=0; j<mNumberOfBulkSpecies; j++)
+        for (unsigned j=0; j<mNumBulkSpecies; j++)
         {
             if (mpBulkReactionSpecies[j]->GetChemicalName()==p_bulk_chemical->GetChemicalName())
             {
@@ -112,14 +110,14 @@ void AbstractTransportOutReaction::React(AbstractChemistry* bulkChemistry, Abstr
 
     // Run through the cell species
     index = 0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_cell_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_cell_chemical_vector.begin();
             chem_iter != p_cell_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_cell_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         // for each cell chemical, parse whether it is involved in this reaction.
-        for(unsigned j=0; j<mNumberOfCellSpecies; j++)
+        for (unsigned j=0; j<mNumCellSpecies; j++)
         {
             if (mpCellReactionSpecies[j]->GetChemicalName()==p_cell_chemical->GetChemicalName())
             {

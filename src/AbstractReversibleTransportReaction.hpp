@@ -83,9 +83,7 @@ public:
     void SetReversibleRateName(std::string);
 
     std::string GetReversibleRateName();
-
 };
-
 
 AbstractReversibleTransportReaction::AbstractReversibleTransportReaction(
                                     std::vector<AbstractChemical*> bulkReactionSpecies,
@@ -105,7 +103,6 @@ AbstractReversibleTransportReaction::AbstractReversibleTransportReaction(const A
 {
     mReverseReactionRate = existingReaction.mReverseReactionRate;
 }
-
 
 double AbstractReversibleTransportReaction::GetForwardReactionRate()
 {
@@ -133,25 +130,23 @@ void AbstractReversibleTransportReaction::SetReverseReactionRate(double reaction
 
 void AbstractReversibleTransportReaction::React(AbstractChemistry* bulkChemistry, AbstractChemistry* cellChemistry, const std::vector<double>& currentBulkConcentration, const std::vector<double>& currentCellConcentration, std::vector<double>& changeBulkConc, std::vector<double>& changeCellConc)
 {   
-
     std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry->rGetChemicalVector();
     std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry->rGetChemicalVector();
 
-    
     UpdateReactionRate(bulkChemistry, cellChemistry, currentBulkConcentration, currentCellConcentration);
     
     // perform the reaction
     
     // bulk species
     unsigned index = 0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_bulk_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_bulk_chemical_vector.begin();
             chem_iter != p_bulk_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_bulk_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         // for each system chemical, parse whether it is involved in this reaction.
-        for(unsigned j=0; j<mNumberOfBulkSpecies; j++)
+        for (unsigned j=0; j<mNumBulkSpecies; j++)
         {
             if (mpBulkReactionSpecies[j]->GetChemicalName()==p_bulk_chemical->GetChemicalName())
             {
@@ -164,13 +159,13 @@ void AbstractReversibleTransportReaction::React(AbstractChemistry* bulkChemistry
 
     // cell species 
     index = 0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_cell_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_cell_chemical_vector.begin();
             chem_iter != p_cell_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_cell_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-        for(unsigned j=0; j<mNumberOfCellSpecies; j++)
+        for (unsigned j=0; j<mNumCellSpecies; j++)
         {
             if (mpCellReactionSpecies[j]->GetChemicalName()==p_cell_chemical->GetChemicalName())
             {

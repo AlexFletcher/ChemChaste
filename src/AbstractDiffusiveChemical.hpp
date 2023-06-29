@@ -19,7 +19,7 @@ private:
     // the respective valeus for the diffusive subdomains
     std::vector<double> mDiffusivities = std::vector<double>();
 
-    unsigned mNumberOfDiffusiveDomains =0;
+    unsigned mNumDiffusiveDomains =0;
 
     bool mIsDiffusionSetup = false; 
 
@@ -50,7 +50,7 @@ public:
 
     void SetChemicalDiffusivityVector(std::vector<double>);
 
-    void SetNumberOfDiffusiveDomains(unsigned); 
+    void SetNumDiffusiveDomains(unsigned); 
 
     void SetIsDiffusionSetUp(bool);
 
@@ -60,7 +60,7 @@ public:
 
     std::vector<double> GetChemicalDiffusivityVector();
 
-    unsigned GetNumberOfDiffusiveDomains();
+    unsigned GetNumDiffusiveDomains();
 
     std::string GetDiffusiveDomainByIndex(unsigned);
 
@@ -96,7 +96,7 @@ AbstractDiffusiveChemical::AbstractDiffusiveChemical(
         // add the first input domain as an elements of the data vectors
         mDiffusiveDomain.push_back(diffusiveDomain);
         mDiffusivity.push_back(diffusivity);
-        mNumberOfDiffusiveDomains=mNumberOfDiffusiveDomains+1;
+        mNumDiffusiveDomains=mNumDiffusiveDomains+1;
     }
     
 }
@@ -117,30 +117,30 @@ void AbstractDiffusiveChemical::SetupDiffusiveProperties()
 void AbstractDiffusiveChemical::AddDiffusiveDomain(std::string newDomain, double newDiffusivity)
 {
     // add a new domain and diffusivity to the chemical's diffusion properties, check for duplicate domains
-    unsigned numberOfDiffusiveDomains = GetNumberOfDiffusiveDomains();
+    unsigned numDiffusiveDomains = GetNumDiffusiveDomains();
 
     std::vector<std::string> diffusiveDomains = GetDiffusiveDomainVector();
     std::vector<double> diffusivities = GetChemicalDiffusivityVector();
 
     // if the domains are empty, add the domain as a new property
-    if (numberOfDiffusiveDomains==0)
+    if (numDiffusiveDomains==0)
     {
 
         diffusiveDomains.push_back(newDomain);
         diffusivities.push_back(newDiffusivity);
-        numberOfDiffusiveDomains = numberOfDiffusiveDomains + 1;
+        numDiffusiveDomains = numDiffusiveDomains + 1;
         SetDiffusiveDomainVector(diffusiveDomains);
 
         SetChemicalDiffusivityVector(diffusivities);
 
-        SetNumberOfDiffusiveDomains(numberOfDiffusiveDomains); 
+        SetNumDiffusiveDomains(numDiffusiveDomains); 
     }
     else
     {
         // there are already domains in which the chemical diffuses, check that the new domain to add is not a duplicate
         bool isNewDomain = true;
         //check if domain is new
-        for(unsigned domain_index=0; domain_index < numberOfDiffusiveDomains; domain_index++)
+        for (unsigned domain_index=0; domain_index < numDiffusiveDomains; domain_index++)
         {
             if (diffusiveDomains[domain_index] == newDomain)
             {
@@ -152,12 +152,12 @@ void AbstractDiffusiveChemical::AddDiffusiveDomain(std::string newDomain, double
             // if the candidate domain is new the update diffusion properties
             diffusiveDomains.push_back(newDomain);
             diffusivities.push_back(newDiffusivity);
-            numberOfDiffusiveDomains = mNumberOfDiffusiveDomains + 1;
+            numDiffusiveDomains = mNumDiffusiveDomains + 1;
             SetDiffusiveDomainVector(diffusiveDomains);
 
             SetChemicalDiffusivityVector(diffusivities);
 
-            SetNumberOfDiffusiveDomains(numberOfDiffusiveDomains); 
+            SetNumDiffusiveDomains(numDiffusiveDomains); 
         }
     }
 }
@@ -166,7 +166,7 @@ void AbstractDiffusiveChemical::AddDiffusiveDomainVector(std::vector<std::string
 {
     if (domainLabelVector.size() == diffusivityVector.size())
     {
-        for(unsigned domain_index = 0; domain_index<domainLabelVector.size(); domain_index++)
+        for (unsigned domain_index = 0; domain_index<domainLabelVector.size(); domain_index++)
         {
             AddDiffusiveDomain(domainLabelVector[domain_index],diffusivityVector[domain_index]);
         }
@@ -198,9 +198,9 @@ void AbstractDiffusiveChemical::SetChemicalDiffusivityVector(std::vector<double>
     mDiffusivities = diffusivities;
 }
 
-void AbstractDiffusiveChemical::SetNumberOfDiffusiveDomains(unsigned numberOfDomains)
+void AbstractDiffusiveChemical::SetNumDiffusiveDomains(unsigned numDomains)
 {
-    mNumberOfDiffusiveDomains = numberOfDomains;
+    mNumDiffusiveDomains = numDomains;
 }
 
 void AbstractDiffusiveChemical::SetIsDiffusionSetUp(bool isSetup)
@@ -208,14 +208,14 @@ void AbstractDiffusiveChemical::SetIsDiffusionSetUp(bool isSetup)
     mIsDiffusionSetup = isSetup;
 }
 
-unsigned AbstractDiffusiveChemical::GetNumberOfDiffusiveDomains()
+unsigned AbstractDiffusiveChemical::GetNumDiffusiveDomains()
 {
-    return mNumberOfDiffusiveDomains;
+    return mNumDiffusiveDomains;
 }
 
 std::string AbstractDiffusiveChemical::GetDiffusiveDomainByIndex(unsigned index)
 {
-    if (index<mNumberOfDiffusiveDomains)
+    if (index<mNumDiffusiveDomains)
     {
         return mDiffusiveDomains[index];
     }
@@ -229,7 +229,7 @@ std::string AbstractDiffusiveChemical::GetDiffusiveDomainByIndex(unsigned index)
 
 double AbstractDiffusiveChemical::GetChemicalDiffusivityByIndex(unsigned index)
 {
-    if (index<mNumberOfDiffusiveDomains)
+    if (index<mNumDiffusiveDomains)
     {
         return mDiffusivities[index];
     }

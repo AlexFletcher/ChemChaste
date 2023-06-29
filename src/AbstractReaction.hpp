@@ -22,9 +22,9 @@ protected:
     // vector with the AbstractChemical products, in the forward reaction sense.  To be used to track system concentrations
     std::vector<AbstractChemical*> mpProducts;
 
-    unsigned mNumberOfProducts;
+    unsigned mNumProducts;
 
-    unsigned mNumberOfSubstrates;
+    unsigned mNumSubstrates;
 
     // vector containing the stoichmetry of the substrates.  Will be "-ve" in reaction
     std::vector<unsigned> mStoichSubstrates;
@@ -37,15 +37,13 @@ protected:
 
     bool mIsRateCheck;
 
-    double mDelta_rate_min;
+    double mDeltaRateMin;
 
-    double mDelta_rate_max;
+    double mDeltaRateMax;
 
     std::string mIrreversibleDelimiter = "->";
   
     std::string mIrreversibleRateName = "kf =";
-
-
 
 public:
 
@@ -81,8 +79,6 @@ public:
 
     virtual void ParseReactionInformation(std::string, bool);
 
-
-    // Chemical handeling functions
     std::vector<AbstractChemical*> GetSubstrates();
 
     AbstractChemical* GetSubstratesByIndex(unsigned);
@@ -107,16 +103,14 @@ public:
 
     void SetStoichProducts(std::vector<unsigned>);
 
-    void SetNumberOfSubstrates(unsigned);
+    void SetNumSubstrates(unsigned);
 
-    unsigned GetNumberOfSubstrates();
+    unsigned GetNumSubstrates();
 
-    void SetNumberOfProducts(unsigned);
+    void SetNumProducts(unsigned);
 
-    unsigned GetNumberOfProducts();
+    unsigned GetNumProducts();
 
-
-    // reaction concentration checking functions
     void SetIsRateCheck(bool);
 
     bool GetIsRateCheck();
@@ -131,9 +125,6 @@ public:
 
     double CheckRate(double);
 
-
-
-    // file read functions
     void SetIrreversibleDelimiter(std::string);
 
     std::string GetIrreversibleDelimiter();
@@ -142,17 +133,11 @@ public:
 
     std::string GetIrreversibleRateName();
 
-    // function for upstream class
-
     unsigned FindIndexOfLastDelimiterPosition(std::vector<std::string>, std::string);
 
     unsigned FindIndexOfFirstDelimiterPosition(std::vector<std::string>, std::string);
-
-    
-
 };
 
-// constructor
 AbstractReaction::AbstractReaction( std::vector<AbstractChemical*> substrates,
                                     std::vector<AbstractChemical*> products,
                                     std::vector<unsigned> stoichSubstrates,
@@ -164,16 +149,14 @@ AbstractReaction::AbstractReaction( std::vector<AbstractChemical*> substrates,
             mStoichProducts(stoichProducts),
             mReactionRate(reactionRate)
 {
-    mNumberOfProducts = products.size();
-    mNumberOfSubstrates  =substrates.size();
+    mNumProducts = products.size();
+    mNumSubstrates  =substrates.size();
 
     SetIsRateCheck(true);
     SetDeltaErrorRateMin(1e-8);
     SetDeltaErrorRateMax(1e8);
 }
 
-
-// copy constructor
 AbstractReaction::AbstractReaction(const AbstractReaction& existingReaction)
 {
     
@@ -182,8 +165,8 @@ AbstractReaction::AbstractReaction(const AbstractReaction& existingReaction)
     mStoichSubstrates = existingReaction.mStoichSubstrates;
     mStoichProducts = existingReaction.mStoichProducts;
     mReactionRate = existingReaction.mReactionRate;
-    mNumberOfProducts = existingReaction.mNumberOfProducts;
-    mNumberOfSubstrates = existingReaction.mNumberOfSubstrates;
+    mNumProducts = existingReaction.mNumProducts;
+    mNumSubstrates = existingReaction.mNumSubstrates;
 }
 
 void AbstractReaction::React(AbstractChemistry* systemChemistry, const std::vector<double>& currentChemistryConc, std::vector<double>& changeChemistryConc)
@@ -195,14 +178,14 @@ void AbstractReaction::React(AbstractChemistry* systemChemistry, const std::vect
     
     // perform the reaction
     unsigned index=0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         // for each system chemical, parse whether it is involved in this reaction.
-        for(unsigned j=0; j<mNumberOfSubstrates; j++)
+        for (unsigned j=0; j<mNumSubstrates; j++)
         {
             if (mpSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -211,7 +194,7 @@ void AbstractReaction::React(AbstractChemistry* systemChemistry, const std::vect
             }
         }
         // a reactant may be present on both sides of the reaction and may convert at different functional rates
-        for(unsigned j=0; j<mNumberOfProducts; j++)
+        for (unsigned j=0; j<mNumProducts; j++)
         {
             if (mpProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -222,7 +205,6 @@ void AbstractReaction::React(AbstractChemistry* systemChemistry, const std::vect
     }
 }
 
-// vitual function to update member variables and conditions of derived classes
 void AbstractReaction::UpdateReaction()
 {
     return;
@@ -255,7 +237,6 @@ std::string AbstractReaction::GetReactionType()
     return "ZerothOrderReaction";
 }
 
-
 void AbstractReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=false)
 {
     if (reaction_information.find(mIrreversibleRateName) != std::string::npos)
@@ -267,7 +248,6 @@ void AbstractReaction::ParseReactionInformation(std::string reaction_information
     }
 }
 
-// member functions
 std::vector<AbstractChemical*> AbstractReaction::GetSubstrates()
 {
     return mpSubstrates;
@@ -275,7 +255,7 @@ std::vector<AbstractChemical*> AbstractReaction::GetSubstrates()
 
 AbstractChemical* AbstractReaction::GetSubstratesByIndex(unsigned index)
 {
-    if (index < mNumberOfSubstrates)
+    if (index < mNumSubstrates)
     {
         return mpSubstrates[index];
     }
@@ -293,7 +273,7 @@ std::vector<AbstractChemical*> AbstractReaction::GetProducts()
 
 AbstractChemical* AbstractReaction::GetProductsByIndex(unsigned index)
 {
-    if (index < mNumberOfProducts)
+    if (index < mNumProducts)
     {
         return mpProducts[index];
     }
@@ -321,7 +301,7 @@ std::vector<unsigned> AbstractReaction::GetStoichSubstrates()
 
 unsigned AbstractReaction::GetStoichSubstratesByIndex(unsigned index)
 {
-    if (index < mNumberOfSubstrates)
+    if (index < mNumSubstrates)
     {
         return mStoichSubstrates[index];
     }
@@ -344,7 +324,7 @@ std::vector<unsigned> AbstractReaction::GetStoichProducts()
 
 unsigned AbstractReaction::GetStoichProductsByIndex(unsigned index)
 {
-    if (index < mNumberOfProducts)
+    if (index < mNumProducts)
     {
         return mStoichProducts[index];
     }
@@ -360,24 +340,24 @@ void AbstractReaction::SetStoichProducts(std::vector<unsigned> StoichProducts)
     mStoichProducts = StoichProducts;
 }
 
-void AbstractReaction::SetNumberOfSubstrates(unsigned numberOfSubstrates)
+void AbstractReaction::SetNumSubstrates(unsigned numSubstrates)
 {
-    mNumberOfSubstrates = numberOfSubstrates;
+    mNumSubstrates = numSubstrates;
 }
 
-unsigned AbstractReaction::GetNumberOfSubstrates()
+unsigned AbstractReaction::GetNumSubstrates()
 {
-    return mNumberOfSubstrates;
+    return mNumSubstrates;
 }
 
-void AbstractReaction::SetNumberOfProducts(unsigned numberOfProducts)
+void AbstractReaction::SetNumProducts(unsigned numProducts)
 {
-    mNumberOfProducts = numberOfProducts;
+    mNumProducts = numProducts;
 }
 
-unsigned AbstractReaction::GetNumberOfProducts()
+unsigned AbstractReaction::GetNumProducts()
 {
-    return mNumberOfProducts;
+    return mNumProducts;
 }
 
 void AbstractReaction::SetIsRateCheck(bool IsRateCheck)
@@ -392,34 +372,34 @@ bool AbstractReaction::GetIsRateCheck()
 
 void AbstractReaction::SetDeltaErrorRateMin(double delta_rate_min)
 {
-    mDelta_rate_min = delta_rate_min;
+    mDeltaRateMin = delta_rate_min;
 }
 
 double AbstractReaction::GetDeltaErrorRateMin()
 {
-    return mDelta_rate_min;
+    return mDeltaRateMin;
 }
 
 void AbstractReaction::SetDeltaErrorRateMax(double delta_rate_max)
 {
-    mDelta_rate_max = delta_rate_max;
+    mDeltaRateMax = delta_rate_max;
 }
 
 double AbstractReaction::GetDeltaErrorRateMax()
 {
-    return mDelta_rate_max;
+    return mDeltaRateMax;
 }
 
 double AbstractReaction::CheckRate(double rate)
 {
     // if reaction rate gets too low or high then undefined behaviour can occur
 
-    if (abs(rate) < mDelta_rate_min)
+    if (abs(rate) < mDeltaRateMin)
     {
         rate = 0.0;
-    }else if (abs(rate) > mDelta_rate_max)
+    }else if (abs(rate) > mDeltaRateMax)
     {
-        rate = mDelta_rate_max;
+        rate = mDeltaRateMax;
     }
     return rate;
 }
@@ -452,12 +432,12 @@ unsigned AbstractReaction::FindIndexOfLastDelimiterPosition(std::vector<std::str
     // and index delimiterVector.size() is returned. 
 
     unsigned index=0; 
-    unsigned numberOfDelimiters = delimiterVector.size();
-    std::vector<size_t> delimiterPositions(numberOfDelimiters,0);
+    unsigned numDelimiters = delimiterVector.size();
+    std::vector<size_t> delimiterPositions(numDelimiters,0);
     bool areAllNPOS = true; 
     size_t delimiterPosition=0;
 
-    for(unsigned i=0; i<numberOfDelimiters; i++)
+    for (unsigned i=0; i<numDelimiters; i++)
     {
         // find the positions of the last occurance of each delimiter
         delimiterPosition = textString.rfind(delimiterVector[i]);
@@ -473,7 +453,7 @@ unsigned AbstractReaction::FindIndexOfLastDelimiterPosition(std::vector<std::str
     bool IsNotFound=true;
     if (!areAllNPOS)
     {
-        for(unsigned i=0; i<numberOfDelimiters; i++)
+        for (unsigned i=0; i<numDelimiters; i++)
         {
             if (delimiterPositions[i] != std::string::npos)
             {
@@ -492,7 +472,7 @@ unsigned AbstractReaction::FindIndexOfLastDelimiterPosition(std::vector<std::str
     else
     {
         // no delimiter occurs within the textString so return the number of delimiters
-        index = numberOfDelimiters;
+        index = numDelimiters;
     }
 
     return index;
@@ -506,12 +486,12 @@ unsigned AbstractReaction::FindIndexOfFirstDelimiterPosition(std::vector<std::st
     // and index delimiterVector.size() is returned. 
 
     unsigned index=0; 
-    unsigned numberOfDelimiters = delimiterVector.size();
-    std::vector<size_t> delimiterPositions(numberOfDelimiters,0);
+    unsigned numDelimiters = delimiterVector.size();
+    std::vector<size_t> delimiterPositions(numDelimiters,0);
     bool areAllNPOS = true; 
     size_t delimiterPosition=0;
     
-    for(unsigned i=0; i<numberOfDelimiters; i++)
+    for (unsigned i=0; i<numDelimiters; i++)
     {
         // find the positions of the first occurance of each delimiter
         delimiterPosition = textString.find(delimiterVector[i]);
@@ -526,7 +506,7 @@ unsigned AbstractReaction::FindIndexOfFirstDelimiterPosition(std::vector<std::st
     // if at least one of the delimiters 
     if (!areAllNPOS)
     {
-        for(unsigned i=1; i<numberOfDelimiters; i++)
+        for (unsigned i=1; i<numDelimiters; i++)
         {
             if (delimiterPositions[index] == std::string::npos || delimiterPositions[i]<delimiterPositions[index])
             {
@@ -537,7 +517,7 @@ unsigned AbstractReaction::FindIndexOfFirstDelimiterPosition(std::vector<std::st
     else
     {
         // no delimiter occurs within the textString so return the number of delimiters
-        index = numberOfDelimiters;
+        index = numDelimiters;
     }
 
     return index;

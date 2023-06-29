@@ -41,6 +41,7 @@ private:
     std::string mGibbsDelimiter = "deltaG =";
 
 public:
+
     MassActionReaction( std::vector<AbstractChemical*> substrates = std::vector<AbstractChemical*>(),
                         std::vector<AbstractChemical*> products = std::vector<AbstractChemical*>(),
                         std::vector<unsigned> stoichSubstrates = std::vector<unsigned>(),
@@ -78,7 +79,6 @@ public:
 
     double GetReactionTemperature();
 
-
     double GetForwardReactionRateConstant();
 
     void SetForwardReactionRateConstant(double);
@@ -90,10 +90,8 @@ public:
     void SetGibbsDelmiter(std::string);
 
     std::string GetGibbsDelimiter();
-
 };
 
-// constructor
 MassActionReaction::MassActionReaction(std::vector<AbstractChemical*> substrates,
                         std::vector<AbstractChemical*> products,
                         std::vector<unsigned> stoichSubstrates,
@@ -113,7 +111,6 @@ MassActionReaction::MassActionReaction(std::vector<AbstractChemical*> substrates
         mForwardReactionRateConstant(ForwardReactionRateConstant),
         mReverseReactionRateConstant(ReverseReactionRateConstant)
 {
-    //std::cout<<"MasActionConstructor: "<<ForwardReactionRateConstant<<" "<<ReverseReactionRateConstant<<std::endl;
     if (mIsGibbs)
     {
         mGibbsFreeEnergy = ForwardReactionRateConstant;
@@ -147,13 +144,13 @@ void MassActionReaction::UpdateReactionRate(AbstractChemistry* systemChemistry, 
 
     std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
     unsigned index = 0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-        for(unsigned j=0; j<mNumberOfSubstrates; j++)
+        for (unsigned j=0; j<mNumSubstrates; j++)
         {
             if (mpSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -161,7 +158,7 @@ void MassActionReaction::UpdateReactionRate(AbstractChemistry* systemChemistry, 
                 break;
             }
         }
-        for(unsigned j=0; j<mNumberOfProducts; j++)
+        for (unsigned j=0; j<mNumProducts; j++)
         {
             if (mpProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -183,69 +180,61 @@ std::string MassActionReaction::GetReactionType()
 
 void MassActionReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=false)
 {
-    
     mIsReversible = IsReversible;
 
     if (!mIsReversible)
     {
-       
         if (reaction_information.find(mIrreversibleRateName) != std::string::npos)
         {
 
             size_t pos= reaction_information.find(mIrreversibleRateName);
             mForwardReactionRateConstant = atof(reaction_information.substr(pos+mIrreversibleRateName.size()+1,std::string::npos).c_str());
             mReverseReactionRateConstant = 0.0;
-
         }
     }
     else
     {  
         if (reaction_information.find(mGibbsDelimiter) != std::string::npos)
         {
-            size_t pos= reaction_information.find(mGibbsDelimiter);
-            std::cout<<"Gibbs raw: "<<reaction_information.substr(pos+mGibbsDelimiter.size()+1,std::string::npos).c_str()<<std::endl;
+            size_t pos = reaction_information.find(mGibbsDelimiter);
+            std::cout << "Gibbs raw: "<<reaction_information.substr(pos+mGibbsDelimiter.size()+1,std::string::npos).c_str() << std::endl;
             mGibbsFreeEnergy = atof(reaction_information.substr(pos+mGibbsDelimiter.size()+1,std::string::npos).c_str());
             mIsGibbs = true;
-            std::cout<<"Gibbs translated: "<<mGibbsFreeEnergy<<std::endl;
+            std::cout << "Gibbs translated: " << mGibbsFreeEnergy << std::endl;
         }
         else
         {
-            
-            //abstractReversibleReaction set the reaction rates not constants so update
+            // abstractReversibleReaction set the reaction rates not constants so update
             AbstractReversibleReaction::ParseReactionInformation(reaction_information,mIsReversible);
             SetForwardReactionRateConstant(GetForwardReactionRate());
             SetReverseReactionRateConstant(GetReverseReactionRate());
-        }
-        
+        }   
     }
-    //std::cout<<"MasActionCorrected: "<<mForwardReactionRateConstant<<" "<<mReverseReactionRateConstant<<std::endl;
 }
-
-
-
-// member function sspecific to this reaction class
 
 double MassActionReaction::CalculateReactionQuotient(AbstractChemistry* systemChemistry, const std::vector<double>& currentSystemConc)
 {
     double quotient = 1.0;
     
-    if (mNumberOfSubstrates ==0 || mNumberOfProducts==0)
+    if (mNumSubstrates ==0 || mNumProducts==0)
     {
         quotient = 0.0;
-    }else{
+    }
+    else
+    {
         double products_concentrations = 1.0;
         double substrates_concentrations = 1.0;
+    
         // need to check against the concentration of each chemical in the system
-        
         std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
         unsigned index = 0;
-        for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+        for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
                 chem_iter != p_chemical_vector.end();
                 ++chem_iter, ++index)
         {
             AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-            for(unsigned j=0; j<mNumberOfSubstrates; j++)
+            for (unsigned j=0; j<mNumSubstrates; j++)
             {
                 if (mpSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
@@ -253,7 +242,7 @@ double MassActionReaction::CalculateReactionQuotient(AbstractChemistry* systemCh
                     break;
                 }
             }
-            for(unsigned j=0; j<mNumberOfProducts; j++)
+            for (unsigned j=0; j<mNumProducts; j++)
             {
                 if (mpProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
@@ -263,7 +252,7 @@ double MassActionReaction::CalculateReactionQuotient(AbstractChemistry* systemCh
             }
         }    
 
-        quotient=products_concentrations/substrates_concentrations;
+        quotient = products_concentrations/substrates_concentrations;
     }
 
     return quotient;
@@ -334,6 +323,5 @@ std::string MassActionReaction::GetGibbsDelimiter()
 {
     return mGibbsDelimiter;
 }
-
 
 #endif

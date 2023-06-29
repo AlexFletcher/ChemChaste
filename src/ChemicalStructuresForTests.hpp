@@ -1,9 +1,101 @@
 #ifndef CHEMICALSTRUCTURESFORTESTS_HPP_
 #define CHEMICALSTRUCTURESFORTESTS_HPP_
 
-#include "ChasteHeaders.hpp"
-#include "GeneralHeaders.hpp"
-#include "ChemChasteHeaders.hpp"
+#include <cxxtest/TestSuite.h>
+
+#include "UblasIncludes.hpp"
+
+#include "AbstractCellBasedTestSuite.hpp"
+#include "CheckpointArchiveTypes.hpp"
+#include "PetscSetupAndFinalize.hpp"
+#include "RandomNumberGenerator.hpp"
+#include "SmartPointers.hpp"
+#include "HoneycombMeshGenerator.hpp"
+#include "GeneralisedLinearSpringForce.hpp"
+#include "WildTypeCellMutationState.hpp"
+#include "StemCellProliferativeType.hpp"
+#include "ConstBoundaryCondition.hpp"
+#include "OffLatticeSimulation.hpp"
+#include "ApoptoticCellProperty.hpp"
+#include "ArchiveOpener.hpp"
+#include "CaBasedCellPopulation.hpp"
+#include "CellsGenerator.hpp"
+#include "CheckpointArchiveTypes.hpp"
+#include "DifferentiatedCellProliferativeType.hpp"
+#include "HoneycombVertexMeshGenerator.hpp"
+#include "ReplicatableVector.hpp"
+#include "UniformCellCycleModel.hpp"
+#include "NoCellCycleModel.hpp"
+#include "UniformG1GenerationalCellCycleModel.hpp"
+#include "StemCellProliferativeType.hpp"
+#include "EulerIvpOdeSolver.hpp"
+#include "LinearParabolicPdeSystemWithCoupledOdeSystemSolver.hpp"
+#include "BoundaryConditionsContainer_extended.hpp"
+#include "OutputFileHandler.hpp"
+#include "TrianglesMeshReader.hpp"
+#include "NodeBasedCellPopulation.hpp"
+#include "VoronoiDataWriter.hpp"
+#include "CellDataItemWriter.hpp"
+#include "CellLocationIndexWriter.hpp"
+#include "CellIdWriter.hpp"
+#include "CellAgesWriter.hpp"
+#include "CellAncestorWriter.hpp"
+#include "CellAppliedForceWriter.hpp"
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <tuple>
+#include <cmath>
+
+#include "AbstractBoxDomainPdeSystemModifier.hpp"
+#include "AbstractChemical.hpp"
+#include "AbstractChemicalOdeForCoupledPdeSystem.hpp"
+#include "AbstractChemicalOdeSystem.hpp"
+#include "AbstractChemistry.hpp"
+#include "AbstractDiffusiveChemical.hpp"
+#include "AbstractDiffusiveChemistry.hpp" 
+#include "AbstractMembraneOdeSystem.hpp"
+#include "AbstractMembraneReaction.hpp"
+#include "AbstractMembraneReactionSystem.hpp"
+#include "AbstractPdeSystemModifier.hpp"
+#include "AbstractReaction.hpp"
+#include "AbstractReactionSystem.hpp"
+#include "AbstractReactionSystemFromFile.hpp"
+#include "AbstractReversibleMembraneReaction.hpp"
+#include "AbstractReversibleReaction.hpp"
+#include "AbstractReversibleTransportReaction.hpp"
+#include "AbstractTransportOdeSystem.hpp"
+#include "AbstractTransportOutReaction.hpp"
+#include "AbstractTransportReaction.hpp"
+#include "AbstractTransportReactionSystem.hpp"
+#include "ChemicalCell.hpp"
+#include "ChemicalCellProperty.hpp"
+#include "ChemicalDomainField_templated.hpp"
+#include "ChemicalDomainFieldForCellCoupling.hpp"
+#include "ChemicalSrnModel.hpp"
+#include "ChemicalTrackingModifier.hpp"
+#include "ExtendedCellProperty.hpp"
+#include "InhomogenousCoupledPdeOdeSolver_templated.hpp"
+#include "InhomogenousParabolicPdeForCoupledOdeSystem_templated.hpp"
+#include "InhomogenousParabolicPdeForCoupledOdeSystemInhibitedDiffusion_templated.hpp"
+#include "MassActionCoupledMembraneReaction.hpp"
+#include "MassActionReaction.hpp"
+#include "MassActionTransportReaction.hpp"
+#include "MembraneCellProperty.hpp"
+#include "NullSrnModel.hpp"
+#include "OdeConsumerProducer.hpp"
+#include "OdeSchnackenbergCoupledPdeOdeSystem.hpp"
+#include "ParabolicBoxDomainPdeSystemModifier.hpp"
+#include "PdeConsumerProducer.hpp"
+#include "PdeSchnackenbergCoupledPdeOdeSystem.hpp"
+#include "ReactionTypeDatabase.hpp"
+#include "SchnackenbergCoupledPdeSystem.hpp"
+#include "SchnackenbergSrnModel.hpp"
+#include "SimpleChemicalThresholdCellCycleModel.hpp"
+#include "TransportCellProperty.hpp"
+
 #include "SimpleChemicalThresholdCellCycleModel.hpp"
 
 /**
@@ -613,7 +705,6 @@ class ChemicalStructuresForTests
 
         void SetUpChemicalTrackingModifier()
         {
-
             boost::shared_ptr<ChemicalTrackingModifier<2,2>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<2,2>());
 
             SetPtrChemicalTrackingModifier(p_chemical_tracking_modifier);
@@ -621,7 +712,7 @@ class ChemicalStructuresForTests
 
         void SetUpCellInitialConditions(CellPtr p_cell, std::vector<std::string> speciesNames, std::vector<double> initValue)
         {
-            for(unsigned i=0; i<speciesNames.size();i++)
+            for (unsigned i=0; i<speciesNames.size();i++)
             {
                 p_cell->GetCellData()->SetItem(speciesNames[i],initValue[i]);
             }

@@ -2,9 +2,98 @@
 #define TESTCHEMCHASTEPAPER_HPP_
 
 #include "BoundaryConditionsContainer_extended.hpp"
-#include "ChasteHeaders.hpp"
-#include "GeneralHeaders.hpp"
-#include "ChemChasteHeaders.hpp"
+#include <cxxtest/TestSuite.h>
+#include "UblasIncludes.hpp"
+#include "AbstractCellBasedTestSuite.hpp"
+#include "CheckpointArchiveTypes.hpp"
+#include "PetscSetupAndFinalize.hpp"
+#include "RandomNumberGenerator.hpp"
+#include "SmartPointers.hpp"
+#include "HoneycombMeshGenerator.hpp"
+#include "GeneralisedLinearSpringForce.hpp"
+#include "WildTypeCellMutationState.hpp"
+#include "StemCellProliferativeType.hpp"
+#include "ConstBoundaryCondition.hpp"
+#include "OffLatticeSimulation.hpp"
+#include "ApoptoticCellProperty.hpp"
+#include "ArchiveOpener.hpp"
+#include "CaBasedCellPopulation.hpp"
+#include "CellsGenerator.hpp"
+#include "CheckpointArchiveTypes.hpp"
+#include "DifferentiatedCellProliferativeType.hpp"
+#include "HoneycombVertexMeshGenerator.hpp"
+#include "ReplicatableVector.hpp"
+#include "UniformCellCycleModel.hpp"
+#include "NoCellCycleModel.hpp"
+#include "UniformG1GenerationalCellCycleModel.hpp"
+#include "StemCellProliferativeType.hpp"
+#include "EulerIvpOdeSolver.hpp"
+#include "LinearParabolicPdeSystemWithCoupledOdeSystemSolver.hpp"
+#include "BoundaryConditionsContainer_extended.hpp"
+#include "OutputFileHandler.hpp"
+#include "TrianglesMeshReader.hpp"
+#include "NodeBasedCellPopulation.hpp"
+#include "VoronoiDataWriter.hpp"
+#include "CellDataItemWriter.hpp"
+#include "CellLocationIndexWriter.hpp"
+#include "CellIdWriter.hpp"
+#include "CellAgesWriter.hpp"
+#include "CellAncestorWriter.hpp"
+#include "CellAppliedForceWriter.hpp"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <tuple>
+#include <cmath>
+
+#include "AbstractBoxDomainPdeSystemModifier.hpp"
+#include "AbstractChemical.hpp"
+#include "AbstractChemicalOdeForCoupledPdeSystem.hpp"
+#include "AbstractChemicalOdeSystem.hpp"
+#include "AbstractChemistry.hpp"
+#include "AbstractDiffusiveChemical.hpp"
+#include "AbstractDiffusiveChemistry.hpp" 
+#include "AbstractMembraneOdeSystem.hpp"
+#include "AbstractMembraneReaction.hpp"
+#include "AbstractMembraneReactionSystem.hpp"
+#include "AbstractPdeSystemModifier.hpp"
+#include "AbstractReaction.hpp"
+#include "AbstractReactionSystem.hpp"
+#include "AbstractReactionSystemFromFile.hpp"
+#include "AbstractReversibleMembraneReaction.hpp"
+#include "AbstractReversibleReaction.hpp"
+#include "AbstractReversibleTransportReaction.hpp"
+#include "AbstractTransportOdeSystem.hpp"
+#include "AbstractTransportOutReaction.hpp"
+#include "AbstractTransportReaction.hpp"
+#include "AbstractTransportReactionSystem.hpp"
+#include "ChemicalCell.hpp"
+#include "ChemicalCellProperty.hpp"
+#include "ChemicalDomainField_templated.hpp"
+#include "ChemicalDomainFieldForCellCoupling.hpp"
+#include "ChemicalSrnModel.hpp"
+#include "ChemicalTrackingModifier.hpp"
+#include "ExtendedCellProperty.hpp"
+#include "InhomogenousCoupledPdeOdeSolver_templated.hpp"
+#include "InhomogenousParabolicPdeForCoupledOdeSystem_templated.hpp"
+#include "InhomogenousParabolicPdeForCoupledOdeSystemInhibitedDiffusion_templated.hpp"
+#include "MassActionCoupledMembraneReaction.hpp"
+#include "MassActionReaction.hpp"
+#include "MassActionTransportReaction.hpp"
+#include "MembraneCellProperty.hpp"
+#include "NullSrnModel.hpp"
+#include "OdeConsumerProducer.hpp"
+#include "OdeSchnackenbergCoupledPdeOdeSystem.hpp"
+#include "ParabolicBoxDomainPdeSystemModifier.hpp"
+#include "PdeConsumerProducer.hpp"
+#include "PdeSchnackenbergCoupledPdeOdeSystem.hpp"
+#include "ReactionTypeDatabase.hpp"
+#include "SchnackenbergCoupledPdeSystem.hpp"
+#include "SchnackenbergSrnModel.hpp"
+#include "SimpleChemicalThresholdCellCycleModel.hpp"
+#include "TransportCellProperty.hpp"
+
 #include "ChemicalCellFromFile.hpp"
 
 struct ControlStruct {
@@ -42,8 +131,8 @@ struct VariableDiffusionConstantCaseStruct {
     std::string cellCycleFilename = "SpeciesThreshold.csv";
 
     // mesh
-    unsigned numberOfCellsAcross = 1;
-    unsigned numberOfCellsUpwards = 1;
+    unsigned numCellsAcross = 1;
+    unsigned numCellsUpwards = 1;
     bool nodeBasedSimulation = true; // default to mesh based simulation, controls the interactions between the cells
     double nodesOnlyCutOff = 1.5; // for node based simulation case
     double originOfCellMeshRelativePdeFEMesh = -4.0;
@@ -82,8 +171,8 @@ struct VariableDiffusionStepChangeCaseStruct {
     std::string cellCycleFilename = "SpeciesThreshold.csv";
 
     // mesh
-    unsigned numberOfCellsAcross = 2;
-    unsigned numberOfCellsUpwards = 2;
+    unsigned numCellsAcross = 2;
+    unsigned numCellsUpwards = 2;
     bool nodeBasedSimulation = true; // default to mesh based simulation, controls the interactions between the cells
     double nodesOnlyCutOff = 1.5; // for node based simulation case
     double originOfCellMeshRelativePdeFEMesh = -4.0;
@@ -124,8 +213,8 @@ struct ExtracellularReactionCaseStruct {
     std::string cellCycleFilename = "SpeciesThreshold.csv";
 
     // mesh
-    unsigned numberOfCellsAcross = 2;
-    unsigned numberOfCellsUpwards = 2;
+    unsigned numCellsAcross = 2;
+    unsigned numCellsUpwards = 2;
     bool nodeBasedSimulation = true; // default to mesh based simulation, controls the interactions between the cells
     double nodesOnlyCutOff = 1.5; // for node based simulation case
     double originOfCellMeshRelativePdeFEMesh = -4.0;
@@ -166,8 +255,8 @@ struct MolenaarSystemCaseStruct {
     std::string cellCycleFilename = "SpeciesThreshold.csv";
 
     // mesh
-    unsigned numberOfCellsAcross = 1;
-    unsigned numberOfCellsUpwards = 1;
+    unsigned numCellsAcross = 1;
+    unsigned numCellsUpwards = 1;
     bool nodeBasedSimulation = true; // default to mesh based simulation, controls the interactions between the cells
     double nodesOnlyCutOff = 1.5; // for node based simulation case
     double originOfCellMeshRelativePdeFEMesh = -4.0;
@@ -219,7 +308,7 @@ public:
 
         
             // make mesh of cell with associated mesh based cell population
-            HoneycombMeshGenerator generator(VDCC.numberOfCellsAcross,VDCC.numberOfCellsUpwards);    // Parameters are: cells across, cells up
+            HoneycombMeshGenerator generator(VDCC.numCellsAcross,VDCC.numCellsUpwards);    // Parameters are: cells across, cells up
             MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
 
 
@@ -290,7 +379,7 @@ public:
 
                 
 
-                for(unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -328,7 +417,7 @@ public:
 
                 
 
-                for(unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -392,7 +481,7 @@ public:
 
         
             // make mesh of cell with associated mesh based cell population
-            HoneycombMeshGenerator generator(VDSC.numberOfCellsAcross,VDSC.numberOfCellsUpwards);    // Parameters are: cells across, cells up
+            HoneycombMeshGenerator generator(VDSC.numCellsAcross,VDSC.numCellsUpwards);    // Parameters are: cells across, cells up
             MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
 
 
@@ -463,7 +552,7 @@ public:
 
                 
 
-                for(unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -501,7 +590,7 @@ public:
 
                 
 
-                for(unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -567,7 +656,7 @@ public:
 
         
             // make mesh of cell with associated mesh based cell population
-            HoneycombMeshGenerator generator(ER.numberOfCellsAcross,ER.numberOfCellsUpwards);    // Parameters are: cells across, cells up
+            HoneycombMeshGenerator generator(ER.numCellsAcross,ER.numCellsUpwards);    // Parameters are: cells across, cells up
             MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
 
 
@@ -638,7 +727,7 @@ public:
 
                 
 
-                for(unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -679,7 +768,7 @@ public:
 
                 
 
-                for(unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -741,7 +830,7 @@ public:
 
         
             // make mesh of cell with associated mesh based cell population
-            HoneycombMeshGenerator generator(ML.numberOfCellsAcross,ML.numberOfCellsUpwards);    // Parameters are: cells across, cells up
+            HoneycombMeshGenerator generator(ML.numCellsAcross,ML.numCellsUpwards);    // Parameters are: cells across, cells up
             MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
 
 
@@ -812,7 +901,7 @@ public:
 
                 
 
-                for(unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -852,7 +941,7 @@ public:
 
                 
 
-                for(unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);

@@ -13,37 +13,38 @@
 /**
  * Reaction class which takes in chemical data for the whole system and uses
  * species not involved directly in the reaction to change the reaction rate.
+ * 
+ * \todo should this be abstract?
  */
 class SpectatorDependentReaction : public AbstractReaction
 {
+    
+private:
+    using AbstractReaction::UpdateReactionRate;
+    using AbstractReaction::GetReactionType;
+    using AbstractReaction::ParseReactionInformation;
+
 protected:
 
     std::vector<std::string> mSpectatorNames;
 
-    unsigned mNumberOfSpectators;
+    unsigned mNumSpectators;
 
     std::string mSpectatorDelimiter = "Spectator =";
 
     AbstractChemistry* mpSystemChemistry;
 
     double mReactionRateConstant;
-private:
-    using AbstractReaction::UpdateReactionRate;
-    using AbstractReaction::GetReactionType;
-    using AbstractReaction::ParseReactionInformation;
 
 public:
 
-    // constructor
-    SpectatorDependentReaction( std::vector<AbstractChemical*> substrates = std::vector<AbstractChemical*>(),
-                                std::vector<AbstractChemical*> products = std::vector<AbstractChemical*>(),
-                                std::vector<unsigned> stoichSubstrates = std::vector<unsigned>(),
-                                std::vector<unsigned> stoichProducts = std::vector<unsigned>(),
-                                AbstractChemistry* p_systemChemistry = new AbstractChemistry(),
-                                double reactionRate = 1.0
-                                );
+    SpectatorDependentReaction(std::vector<AbstractChemical*> substrates = std::vector<AbstractChemical*>(),
+                               std::vector<AbstractChemical*> products = std::vector<AbstractChemical*>(),
+                               std::vector<unsigned> stoichSubstrates = std::vector<unsigned>(),
+                               std::vector<unsigned> stoichProducts = std::vector<unsigned>(),
+                               AbstractChemistry* p_systemChemistry = new AbstractChemistry(),
+                               double reactionRate = 1.0);
 
-    // destructor
     virtual ~SpectatorDependentReaction()
     {
     };
@@ -53,8 +54,6 @@ public:
     virtual std::string GetReactionType();
 
     virtual void ParseReactionInformation(std::string, bool);
-
-    // class specific methods
 
     void UpdateSystemChemistry(std::vector<std::string>);
 
@@ -66,9 +65,9 @@ public:
 
     double GetReactionRateConstant();
 
-    void SetNumberOfSpectators(unsigned);
+    void SetNumSpectators(unsigned);
 
-    unsigned GetNumberOfSpectators();
+    unsigned GetNumSpectators();
 
     void SetSpectatorDelimiter(std::string);
     
@@ -82,33 +81,31 @@ SpectatorDependentReaction::SpectatorDependentReaction(
                                 std::vector<unsigned> stoichProducts,
                                 AbstractChemistry* p_systemChemistry,
                                 double reactionRate)
-                            : AbstractReaction(
-                                substrates,
-                                products,
-                                stoichSubstrates,
-                                stoichProducts,
-                                reactionRate
-                            ),
-                            mpSystemChemistry(p_systemChemistry)
-                            {
-                            }
-
+    : AbstractReaction(
+        substrates,
+        products,
+        stoichSubstrates,
+        stoichProducts,
+        reactionRate),
+    mpSystemChemistry(p_systemChemistry)
+{
+}
 
 void SpectatorDependentReaction::UpdateReactionRate(AbstractChemistry* systemChemistry, const std::vector<double>& currentSystemConc)
 {
     // multiply the reaction rate constant by the product of the spectator set concentrations
 
-    double spectatorConcentration =1.0;
+    double spectatorConcentration = 1.0;
 
-    unsigned spectatorCount=0;
+    unsigned spectatorCount = 0;
 
     std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
     unsigned index = 0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
-        if (spectatorCount == mNumberOfSpectators)
+        if (spectatorCount == mNumSpectators)
         {
             // don't need to continue processing the species
             break;
@@ -117,7 +114,7 @@ void SpectatorDependentReaction::UpdateReactionRate(AbstractChemistry* systemChe
         {
             AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-            for(unsigned i=0; i<mNumberOfSpectators; i++)
+            for (unsigned i=0; i<mNumSpectators; i++)
             {
                 if (mSpectatorNames[i]==p_system_chemical->GetChemicalName())
                 {
@@ -172,9 +169,8 @@ void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_i
     std::vector<std::string> spectatorNames;
     std::vector<unsigned> spectatorIndices;
     std::string tempString;
-    
 
-    while(positionSpectator != std::string::npos)
+    while (positionSpectator != std::string::npos)
     {
         if (positionRate<positionSpectator)
         {
@@ -212,7 +208,6 @@ void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_i
             spectatorNames.push_back(spectator);
             
             reaction_information = reaction_information.substr(positionSpectator+mSpectatorDelimiter.size()+1,std::string::npos);
-
         }
 
         // update the delimiter positions from the new substrings
@@ -223,17 +218,14 @@ void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_i
         {
             // there are no more species but the rate is still unknown and in the string
             reactionRate = atof(reaction_information.substr(positionRate+mIrreversibleRateName.size()+1,std::string::npos).c_str());
-
         }
     }
 
     SetReactionRateConstant(reactionRate);
     SetSpectatorNames(spectatorNames);
-    SetNumberOfSpectators(spectatorNames.size());
+    SetNumSpectators(spectatorNames.size());
     UpdateSystemChemistry(spectatorNames);
 }
-
-// class specific methods
 
 void SpectatorDependentReaction::UpdateSystemChemistry(std::vector<std::string> spectatorNames)
 {
@@ -241,8 +233,7 @@ void SpectatorDependentReaction::UpdateSystemChemistry(std::vector<std::string> 
     // be present in the system chemistry.  As the chemical ODE system derives the state variable vector,
     // which controls the concentrations data flow, from the reaction system chemistry the spectators need 
     // to be in the chemistry for the concentrations to be avaliable
-
-    for(unsigned i=0; i<mNumberOfSpectators; i++)
+    for (unsigned i=0; i<mNumSpectators; i++)
     {
         mpSystemChemistry->AddChemical(new AbstractChemical(spectatorNames[i]));
     }
@@ -253,12 +244,10 @@ void SpectatorDependentReaction::SetSpectatorNames(std::vector<std::string> name
     mSpectatorNames = names;
 }
 
-
 std::vector<std::string> SpectatorDependentReaction::GetSpectatorNames()
 {
     return mSpectatorNames;
 }
-
 
 void SpectatorDependentReaction::SetReactionRateConstant(double reactionRate)
 {
@@ -270,14 +259,14 @@ double SpectatorDependentReaction::GetReactionRateConstant()
     return mReactionRateConstant;
 }
 
-void SpectatorDependentReaction::SetNumberOfSpectators(unsigned numberOfSpectators)
+void SpectatorDependentReaction::SetNumSpectators(unsigned numSpectators)
 {
-    mNumberOfSpectators = numberOfSpectators;
+    mNumSpectators = numSpectators;
 }
 
-unsigned SpectatorDependentReaction::GetNumberOfSpectators()
+unsigned SpectatorDependentReaction::GetNumSpectators()
 {
-    return mNumberOfSpectators;
+    return mNumSpectators;
 }
 
 void SpectatorDependentReaction::SetSpectatorDelimiter(std::string delim)
@@ -289,7 +278,5 @@ std::string SpectatorDependentReaction::GetSpectatorDelimiter()
 {
     return mSpectatorDelimiter;
 }
-
-
 
 #endif

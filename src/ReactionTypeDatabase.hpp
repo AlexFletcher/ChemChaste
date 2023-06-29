@@ -79,13 +79,7 @@ void ReactionTablet(AbstractReaction*& p_reaction,  std::string reactionType = "
         p_reaction = new MichaelisMentenReaction(substrates, products, stoichSubstrates, stoichProducts, p_systemChemistry);
         p_reaction->ParseReactionInformation(reactionInformation, IsReversible);
     }
-
-
     // add more else if (reactionType == "...")
-
-
-
-
     else
     {
         std::cout<<"ReactionTablet Error: "<<reactionType<<" is unknown to the ReactionTypeDataBase."<<std::endl;
@@ -95,7 +89,6 @@ void ReactionTablet(AbstractReaction*& p_reaction,  std::string reactionType = "
 //======================================================//
 //                  TRANSPORT REACTIONS                 //   
 //======================================================//
-
 
 void TransportTablet(AbstractTransportReaction*& p_reaction,  std::string reactionType = "", std::vector<AbstractChemical*> bulkReactionSpecies = std::vector<AbstractChemical*>(), std::vector<AbstractChemical*> cellReactionSpecies = std::vector<AbstractChemical*>(), std::vector<unsigned> stoichBulk = std::vector<unsigned>(), std::vector<unsigned> stoichCell = std::vector<unsigned>(), std::string reactionInformation = "", bool IsReversible = false, AbstractChemistry* p_systemChemistry = new AbstractChemistry())
 {
@@ -124,14 +117,6 @@ void TransportTablet(AbstractTransportReaction*& p_reaction,  std::string reacti
 
         p_reaction->ParseReactionInformation(reactionInformation, IsReversible);
     }
-
-
-
-
-
-
-
-
     else
     {
         std::cout<<"TransportTablet Error: "<<reactionType<<" is unknown to the ReactionTypeDataBase."<<std::endl;
@@ -164,17 +149,10 @@ void MembraneTablet(AbstractMembraneReaction*& p_reaction,  std::string reaction
         p_reaction->ParseReactionInformation(reactionInformation, IsReversible);
 
     }
-
-
-
-
-
     else
     {
         std::cout<<"MembraneTablet Error: "<<reactionType<<" is unknown to the ReactionTypeDataBase."<<std::endl;
     }
 }
 
-
 #endif
-

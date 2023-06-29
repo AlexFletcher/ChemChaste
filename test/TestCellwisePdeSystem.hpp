@@ -324,17 +324,17 @@ public:
         //StateVariableRegister* cell_register  = new StateVariableRegister(cell_states); 
 
         p_transport_reaction_system->ReactSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
-        for(unsigned i=0; i<p_transport_reaction_system->GetNumberOfReactions(); i++)
+        for (unsigned i=0; i<p_transport_reaction_system->GetNumReactions(); i++)
         {
             std::cout<<"Reaction type: "<<i<<" "<< p_transport_reaction_system->GetReactionByIndex(i)->GetReactionType()<<std::endl;
         }
 
-        for(unsigned i=0; i<environment_concentration_at_point.size();i++)
+        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
         {
             std::cout<<"Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i]<<std::endl;
         }
 
-        for(unsigned i=0; i<cell_concentration.size();i++)
+        for (unsigned i=0; i<cell_concentration.size();i++)
         {
             std::cout<<"Cell State "<<cell_states[i]<<": initial: "<<cell_concentration[i]<<" change: "<<change_cell_concentration_vector[i]<<std::endl;
         }
@@ -385,12 +385,12 @@ public:
         change_cell_concentration_vector= {0.0,0.0,0.0};
         p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
 
-        for(unsigned i=0; i<environment_concentration_at_point.size();i++)
+        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
         {
             std::cout<<"Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i]<<std::endl;
         }
 
-        for(unsigned i=0; i<cell_concentration.size();i++)
+        for (unsigned i=0; i<cell_concentration.size();i++)
         {
             std::cout<<"Cell State "<<cell_states[i]<<": initial: "<<cell_concentration[i]<<" change: "<<change_cell_concentration_vector[i]<<std::endl;
         }
@@ -466,10 +466,10 @@ public:
 
                 boost::shared_ptr<MembraneCellProperty> property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
-                std::cout<<"Cell "<<cell_count<<": Membrane thickness: "<<property-> GetMembraneThickness()<<std::endl;
-                for(unsigned i=0; i<property-> GetStateVariableRegister()->GetNumberOfStateVariables();i++)
+                std::cout<<"Cell "<<cell_count<<": Membrane thickness: "<<property->GetMembraneThickness()<<std::endl;
+                for (unsigned i=0; i<property->GetStateVariableRegister()->GetNumStateVariables();i++)
                 {
-                    std::cout<<"State: "<<property-> GetStateVariableRegister()-> RetrieveStateVariableName(i)<<" Concentration: "<< property-> GetCellConcentrationByIndex(i)<<std::endl;
+                    std::cout<<"State: "<<property->GetStateVariableRegister()->RetrieveStateVariableName(i)<<" Concentration: "<< property->GetCellConcentrationByIndex(i)<<std::endl;
                 }
             }
 
@@ -483,12 +483,12 @@ public:
 
                 std::cout<<"Cell "<<cell_count<<std::endl;
 
-                for(unsigned i=0; i<environment_concentration_at_point.size();i++)
+                for (unsigned i=0; i<environment_concentration_at_point.size();i++)
                 {
                     std::cout<<"Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i]<<std::endl;
                 }
 
-                for(unsigned i=0; i<cell_concentration_vector[cell_count].size();i++)
+                for (unsigned i=0; i<cell_concentration_vector[cell_count].size();i++)
                 {
                     std::cout<<"Cell State "<<cell_states[i]<<": initial: "<<cell_concentration_vector[cell_count][i]<<" change: "<<change_cell_concentration_cell_vector[cell_count][i]<<std::endl;
                 }
@@ -576,17 +576,17 @@ public:
         //StateVariableRegister* cell_register  = new StateVariableRegister(cell_states); 
 
         p_transport_reaction_system->ReactSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
-        for(unsigned i=0; i<p_transport_reaction_system->GetNumberOfReactions(); i++)
+        for (unsigned i=0; i<p_transport_reaction_system->GetNumReactions(); i++)
         {
             std::cout<<"Reaction type: "<<i<<" "<< p_transport_reaction_system->GetReactionByIndex(i)->GetReactionType()<<std::endl;
         }
 
-        for(unsigned i=0; i<environment_concentration_at_point.size();i++)
+        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
         {
             std::cout<<"Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i]<<std::endl;
         }
 
-        for(unsigned i=0; i<cell_concentration.size();i++)
+        for (unsigned i=0; i<cell_concentration.size();i++)
         {
             std::cout<<"Cell State "<<cell_states[i]<<": initial: "<<cell_concentration[i]<<" change: "<<change_cell_concentration_vector[i]<<std::endl;
         }
@@ -599,12 +599,12 @@ public:
         change_cell_concentration_vector= {0.0,0.0};
         p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
 
-        for(unsigned i=0; i<environment_concentration_at_point.size();i++)
+        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
         {
             std::cout<<"Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i]<<std::endl;
         }
 
-        for(unsigned i=0; i<cell_concentration.size();i++)
+        for (unsigned i=0; i<cell_concentration.size();i++)
         {
             std::cout<<"Cell State "<<cell_states[i]<<": initial: "<<cell_concentration[i]<<" change: "<<change_cell_concentration_vector[i]<<std::endl;
         }
@@ -837,7 +837,7 @@ public:
             }
 
             // Set initial condition for PDE
-            for(unsigned i=0; i<probDim; i++)
+            for (unsigned i=0; i<probDim; i++)
             {
                 cells[i]->GetCellData()->SetItem(stateVariableNames[0],initialCellValuesOfStateVariables[0]);
                 cells[i]->GetCellData()->SetItem(stateVariableNames[1],initialCellValuesOfStateVariables[1]);

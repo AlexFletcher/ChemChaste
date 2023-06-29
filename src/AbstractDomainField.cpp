@@ -34,7 +34,7 @@ AbstractDomainField::AbstractDomainField(   std::string domainLabelFilename,
     // determine the mesh dimensions up to the maximum allowed through the scaling
     // cover the whole domain with the mesh
     unsigned count=0;
-    while( meshElementX < mCartesianCellDimensions[0]*mCartesianCellScaleXY[0])
+    while (meshElementX < mCartesianCellDimensions[0]*mCartesianCellScaleXY[0])
     {
         meshElementX  = count*meshScaleXY[0];
         count=count+1;
@@ -42,7 +42,7 @@ AbstractDomainField::AbstractDomainField(   std::string domainLabelFilename,
     meshDimensions.push_back(count-1);
 
     count=0;
-    while( meshElementY < mCartesianCellDimensions[1]*mCartesianCellScaleXY[1])
+    while (meshElementY < mCartesianCellDimensions[1]*mCartesianCellScaleXY[1])
     {
         meshElementY  = count*meshScaleXY[1];
         count=count+1;
@@ -127,10 +127,10 @@ std::vector<std::string> AbstractDomainField::LabelNodesWithDomains()
     // nodes are defined bottom-left of domain to top-right in a serialised manner
     MutableMesh<2,2>* p_mesh = GetDomainMesh();
 
-    unsigned numberOfNodes = p_mesh->GetNumNodes();
+    unsigned numNodes = p_mesh->GetNumNodes();
 
     // form the serialised node label array
-    std::vector<std::string> serialisedNodeDomains(numberOfNodes,"");
+    std::vector<std::string> serialisedNodeDomains(numNodes,"");
     
     for (AbstractTetrahedralMesh<2,2>::NodeIterator iter = p_mesh ->GetNodeIteratorBegin();
              iter != p_mesh ->GetNodeIteratorEnd();
@@ -153,10 +153,10 @@ std::vector<std::string> AbstractDomainField::LabelNodesWithOdes()
     // nodes are defined bottom-left of domain to top-right in a serialised manner
     MutableMesh<2,2>* p_mesh = GetDomainMesh();
 
-    unsigned numberOfNodes = p_mesh->GetNumNodes();
+    unsigned numNodes = p_mesh->GetNumNodes();
 
     // form the serialised node label array
-    std::vector<std::string> serialisedNodeLabels(numberOfNodes,"");
+    std::vector<std::string> serialisedNodeLabels(numNodes,"");
     
     for (AbstractTetrahedralMesh<2,2>::NodeIterator iter = p_mesh ->GetNodeIteratorBegin();
              iter != p_mesh ->GetNodeIteratorEnd();
@@ -186,26 +186,26 @@ void AbstractDomainField::ParseInitialConditionsFromFile(std::string initialCond
     // replace any state in register but not in intitial conditions with value of 0.0
     
     // for the vector in order of StateVariableRegister
-    unsigned numberOfStateVariables = mStateVariableVector->GetNumberOfStateVariables();
-    unsigned numberOfNodes = GetDomainMesh()->GetNumNodes();
+    unsigned numStateVariables = mStateVariableVector->GetNumStateVariables();
+    unsigned numNodes = GetDomainMesh()->GetNumNodes();
     
  
     // determine the nodal initial condition, test for perturbation
-    std::vector<double> init_conds(numberOfStateVariables*numberOfNodes,0.0);
+    std::vector<double> init_conds(numStateVariables*numNodes,0.0);
     std::vector<std::string> node_domain_labels = GetNodeDomains();
-    for (unsigned node_index=0; node_index<numberOfNodes; node_index++)
+    for (unsigned node_index=0; node_index<numNodes; node_index++)
     {   
         // each node set as being a vector of the read in state condition values
 
         // test for the domain of the node, retireve the condition for the specific domain
-        for(unsigned pdeDim=0; pdeDim<numberOfStateVariables; pdeDim++)
+        for (unsigned pdeDim=0; pdeDim<numStateVariables; pdeDim++)
         {   
             // determine which state the pde dimension refers to and then retrieve the condition if present
             std::string stateName = mStateVariableVector->RetrieveStateVariableName(pdeDim);
        
             bool IsFoundState =false;
             // run through input data, line by line
-            for(unsigned inputState=0; inputState<initialConditionsAsStrings.size();inputState++)
+            for (unsigned inputState=0; inputState<initialConditionsAsStrings.size();inputState++)
             {
                 // test whether the state variable is specified within the input data
                 if (stateName==initialConditionsAsStrings[inputState][0])
@@ -225,11 +225,11 @@ void AbstractDomainField::ParseInitialConditionsFromFile(std::string initialCond
                             if (PerturbInitialConditionTest(initialConditionsAsStrings[inputState])||IsPerturbInitialConditions)
                             {
                             
-                                init_conds[numberOfStateVariables*node_index + pdeDim] =fabs(std::stod(initialConditionsAsStrings[inputState][2]) + RandomNumberGenerator::Instance()->ranf());
+                                init_conds[numStateVariables*node_index + pdeDim] =fabs(std::stod(initialConditionsAsStrings[inputState][2]) + RandomNumberGenerator::Instance()->ranf());
                             }
                             else
                             {
-                                init_conds[numberOfStateVariables*node_index + pdeDim] =std::stod(initialConditionsAsStrings[inputState][2]);
+                                init_conds[numStateVariables*node_index + pdeDim] =std::stod(initialConditionsAsStrings[inputState][2]);
                             }
                             break;
                         }
@@ -242,11 +242,11 @@ void AbstractDomainField::ParseInitialConditionsFromFile(std::string initialCond
                         // store the condition, serialised for nodes
                         if (IsPerturbInitialConditions)
                         {
-                            init_conds[numberOfStateVariables*node_index + pdeDim] =fabs(std::stod(initialConditionsAsStrings[inputState][2]) + RandomNumberGenerator::Instance()->ranf());
+                            init_conds[numStateVariables*node_index + pdeDim] =fabs(std::stod(initialConditionsAsStrings[inputState][2]) + RandomNumberGenerator::Instance()->ranf());
                         }
                         else
                         {
-                            init_conds[numberOfStateVariables*node_index + pdeDim] =std::stod(initialConditionsAsStrings[inputState][2]);
+                            init_conds[numStateVariables*node_index + pdeDim] =std::stod(initialConditionsAsStrings[inputState][2]);
                         }
                         break;
                     }   
@@ -260,7 +260,7 @@ void AbstractDomainField::ParseInitialConditionsFromFile(std::string initialCond
                 if (IsPerturbInitialConditions)
                 {
                     // initialise to a small perturbation, otherwise leave as intitialised 0.0
-                    init_conds[numberOfStateVariables*node_index + pdeDim] =fabs(RandomNumberGenerator::Instance()->ranf());
+                    init_conds[numStateVariables*node_index + pdeDim] =fabs(RandomNumberGenerator::Instance()->ranf());
                 }
             }
         }
@@ -302,7 +302,7 @@ std::vector<std::vector<std::string>> AbstractDomainField::ReturnStateDataWithin
     std::string inputName;
     std::vector<std::vector<std::string>> newMatrix;
 
-    for(unsigned i=0; i<inputMatrix.size();i++)
+    for (unsigned i=0; i<inputMatrix.size();i++)
     {
         inputName = inputMatrix[i][0];
 
@@ -324,17 +324,17 @@ void AbstractDomainField::ParseBoundaryConditionsFromFile(std::string boundaryCo
     // use state name against stateVariableRegister to remove any state value not in the system
     // replace any state in register but not in boundary conditions with value of 0.0, type Derichlet
 
-    unsigned numberOfStateVariables = GetStateVariableVector() ->GetNumberOfStateVariables();
+    unsigned numStateVariables = GetStateVariableVector() ->GetNumStateVariables();
 
-    std::vector<std::string> boundaryConditionTypes(numberOfStateVariables,"Dirichlet");
-    std::vector<double> boundaryConditionValues(numberOfStateVariables,0.0);
+    std::vector<std::string> boundaryConditionTypes(numStateVariables,"Dirichlet");
+    std::vector<double> boundaryConditionValues(numStateVariables,0.0);
 
-    for(unsigned pdeDim=0; pdeDim<numberOfStateVariables; pdeDim++)
+    for (unsigned pdeDim=0; pdeDim<numStateVariables; pdeDim++)
     {   
         // determine which state the pde dimension refers to and then retrieve the condition if present
         std::string stateName = mStateVariableVector->RetrieveStateVariableName(pdeDim);
 
-        for(unsigned inputState=0; inputState<boundaryConditionsAsStrings.size();inputState++)
+        for (unsigned inputState=0; inputState<boundaryConditionsAsStrings.size();inputState++)
         {
             // test whether the state variable is specified within the input data
             if (stateName==boundaryConditionsAsStrings[inputState][0])
@@ -414,7 +414,7 @@ std::string AbstractDomainField::ReturnNodeOdeLabelAtPosition(const c_vector<dou
 
     // for the y position
 
-    for(unsigned i=1; i<(mCartesianOdeDimensions[1]+1); i++) // top to bottom
+    for (unsigned i=1; i<(mCartesianOdeDimensions[1]+1); i++) // top to bottom
     {
         if (position[1] <= i*mCartesianOdeScaleXY[1])
         {
@@ -425,7 +425,7 @@ std::string AbstractDomainField::ReturnNodeOdeLabelAtPosition(const c_vector<dou
 
     // for the x position
 
-    for(unsigned i=1; i<(mCartesianOdeDimensions[0]+1); i++)
+    for (unsigned i=1; i<(mCartesianOdeDimensions[0]+1); i++)
     {
         if (position[0] <= i*mCartesianOdeScaleXY[0])
         {
@@ -447,7 +447,7 @@ std::string AbstractDomainField::ReturnDomainLabelAtPosition(const c_vector<doub
     unsigned labelYIndex =0;
     // for the y position
 
-    for(unsigned i=1; i<(mCartesianChasteDimensions[1]+1); i++) // top to bottomw
+    for (unsigned i=1; i<(mCartesianChasteDimensions[1]+1); i++) // top to bottomw
     {
         if (position[1] <= i*mCartesianChasteScaleXY[1])
         {
@@ -458,7 +458,7 @@ std::string AbstractDomainField::ReturnDomainLabelAtPosition(const c_vector<doub
 
     // for the x position
 
-    for(unsigned i=1; i<(mCartesianChasteDimensions[0]+1); i++)
+    for (unsigned i=1; i<(mCartesianChasteDimensions[0]+1); i++)
     {
         if (position[0] <= i*mCartesianChasteScaleXY[0])
         {
@@ -479,16 +479,16 @@ void AbstractDomainField::MapOdeLabelsToCartesianOdeDomain()
 
     // determine the number of steps in a mapped chaste grid based on the the number of input domain dimensions and the
     // ration of scaling parameters, round to the nearest integer value.
-    unsigned numberOfXSteps = std::round((mCartesianOdeDimensions[0]*mCartesianOdeScaleXY[0])/cartesianChasteScaleXY[0]); 
-    unsigned numberOfYSteps = std::round((mCartesianOdeDimensions[1]*mCartesianOdeScaleXY[1])/cartesianChasteScaleXY[1]); 
+    unsigned numXSteps = std::round((mCartesianOdeDimensions[0]*mCartesianOdeScaleXY[0])/cartesianChasteScaleXY[0]); 
+    unsigned numYSteps = std::round((mCartesianOdeDimensions[1]*mCartesianOdeScaleXY[1])/cartesianChasteScaleXY[1]); 
 
     std::vector<std::vector<std::string>> cartesianOdeDomain;
 
     // define the boundary with the edge steps included for easier comparisons of (double) spatial values
-    for(unsigned yindex=0; yindex<numberOfYSteps; yindex++)
+    for (unsigned yindex=0; yindex<numYSteps; yindex++)
     {
         std::vector<std::string> rowVector;
-        for(unsigned xindex=0; xindex<numberOfXSteps; xindex++)
+        for (unsigned xindex=0; xindex<numXSteps; xindex++)
         {
             // push back the ode label of the file domain onto the mapped domain, here everything is in terms of std::string label
             rowVector.push_back(ReturnMappedOdeLabel(xindex,yindex,mCartesianChasteScaleXY));
@@ -512,19 +512,19 @@ void AbstractDomainField::MapToChasteCartesianDomain()
 
     SetCartesianChasteScale(cartesianChasteScaleXY);
 
-    unsigned numberOfXSteps = std::round((mCartesianCellDimensions[0]*mCartesianCellScaleXY[0])/cartesianChasteScaleXY[0]); 
-    unsigned numberOfYSteps = std::round((mCartesianCellDimensions[1]*mCartesianCellScaleXY[1])/cartesianChasteScaleXY[1]); 
+    unsigned numXSteps = std::round((mCartesianCellDimensions[0]*mCartesianCellScaleXY[0])/cartesianChasteScaleXY[0]); 
+    unsigned numYSteps = std::round((mCartesianCellDimensions[1]*mCartesianCellScaleXY[1])/cartesianChasteScaleXY[1]); 
  
     std::vector<std::vector<std::string>> cartesianChasteDomain;
     std::vector<unsigned> cartesianChasteDimensions;
-    cartesianChasteDimensions.push_back(numberOfXSteps);
-    cartesianChasteDimensions.push_back(numberOfYSteps);
+    cartesianChasteDimensions.push_back(numXSteps);
+    cartesianChasteDimensions.push_back(numYSteps);
 
     // define the boundary with the edge steps included for easier comparisons of (double) spatial values
-    for(unsigned yindex=0; yindex<numberOfYSteps; yindex++)
+    for (unsigned yindex=0; yindex<numYSteps; yindex++)
     {
         std::vector<std::string> rowVector;
-        for(unsigned xindex=0; xindex<numberOfXSteps; xindex++)
+        for (unsigned xindex=0; xindex<numXSteps; xindex++)
         {
             // push back the domain label of the file domain onto the mapped domain, here everything is in terms of std::string label
             rowVector.push_back(ReturnMappedDomainLabel(xindex,yindex,mCartesianChasteScaleXY));
@@ -541,7 +541,7 @@ double AbstractDomainField::GetDiffusionValueBasedOnPoint(const ChastePoint<2>& 
 {
     
     // take in the point and state index then determine the state name and domain label, then determine the diffusion value
-    if (stateIndex<mStateVariableVector ->GetNumberOfStateVariables())
+    if (stateIndex<mStateVariableVector ->GetNumStateVariables())
     {
         if (mDiffusionDatabase[0].size() ==1 )
         {
@@ -571,13 +571,13 @@ double AbstractDomainField::ReturnDiffusionValueFromStateNameAndDomainLabel(std:
 {
     // look for diffusion value (from diffusiondatabase) based on state name and domain label
 
-    unsigned numberOfDiffusiveEntries = mDiffusionDatabase.size();
+    unsigned numDiffusiveEntries = mDiffusionDatabase.size();
     bool IsStateFound=false;
     if (mDiffusionDatabase[0].size() ==2)
     {
         // take to be only state name, diffusion value structure
         // find stateName
-        for(unsigned diffusive_index=0; diffusive_index<numberOfDiffusiveEntries; diffusive_index++)
+        for (unsigned diffusive_index=0; diffusive_index<numDiffusiveEntries; diffusive_index++)
         {
             if (stateName == mDiffusionDatabase[diffusive_index][0])
             {
@@ -596,7 +596,7 @@ double AbstractDomainField::ReturnDiffusionValueFromStateNameAndDomainLabel(std:
     else
     {
         // find stateName, test for domain name
-        for(unsigned diffusive_index=0; diffusive_index<numberOfDiffusiveEntries; diffusive_index++)
+        for (unsigned diffusive_index=0; diffusive_index<numDiffusiveEntries; diffusive_index++)
         {
             if (stateName == mDiffusionDatabase[diffusive_index][0])
             {
@@ -632,7 +632,7 @@ std::string AbstractDomainField::ReturnMappedDomainLabel(unsigned xindex, unsign
     
     // for the y position
 
-    for(unsigned i=1; i<(mCartesianCellDimensions[1]+1); i++) // top to bottom
+    for (unsigned i=1; i<(mCartesianCellDimensions[1]+1); i++) // top to bottom
     {
         if (positionY <= i*mCartesianCellScaleXY[1])
         {
@@ -643,7 +643,7 @@ std::string AbstractDomainField::ReturnMappedDomainLabel(unsigned xindex, unsign
 
     // for the x position
 
-    for(unsigned i=1; i<(mCartesianCellDimensions[0]+1); i++)
+    for (unsigned i=1; i<(mCartesianCellDimensions[0]+1); i++)
     {
         if (positionX <= i*mCartesianCellScaleXY[0])
         {
@@ -669,7 +669,7 @@ std::string AbstractDomainField::ReturnMappedOdeLabel(unsigned xindex, unsigned 
     
     // for the y position
 
-    for(unsigned i=1; i<(mCartesianOdeDimensions[1]+1); i++) // top to bottomw
+    for (unsigned i=1; i<(mCartesianOdeDimensions[1]+1); i++) // top to bottomw
     {
         if (positionY <= i*mCartesianOdeScaleXY[1])
         {
@@ -680,7 +680,7 @@ std::string AbstractDomainField::ReturnMappedOdeLabel(unsigned xindex, unsigned 
 
     // for the x position
 
-    for(unsigned i=1; i<(mCartesianOdeDimensions[0]+1); i++)
+    for (unsigned i=1; i<(mCartesianOdeDimensions[0]+1); i++)
     {
         if (positionX <= i*mCartesianOdeScaleXY[0])
         {
@@ -744,7 +744,7 @@ std::vector<std::string> AbstractDomainField::parseMatrixLineString(std::string 
 
     bool IsEndOfLine = false;
     
-    while(!IsEndOfLine)
+    while (!IsEndOfLine)
     {
         // while not at the end of the file, sample sub strings from the posiiton of the delimiter
         if (posSnew == std::string::npos)
@@ -825,7 +825,7 @@ void AbstractDomainField::ReadDiffusionDatabase()
     // vector to store the state variables
     std::vector<std::string> stateVector;
     std::vector<std::string> domainVector;
-    for(unsigned i=0; i<diffusionDatabase.size(); i++)
+    for (unsigned i=0; i<diffusionDatabase.size(); i++)
     {
         // the first element of the read in database is the identifying names
         // of the state variables that diffuse
@@ -836,16 +836,15 @@ void AbstractDomainField::ReadDiffusionDatabase()
         }
     }
 
-    SetNumberOfDomains(ReturnUnique(domainVector).size());
+    SetNumDomains(ReturnUnique(domainVector).size());
     // for a new state variable registers with the unique identifying names from the diffusion file
     StateVariableRegister*   p_stateVariableVector = new StateVariableRegister(ReturnUnique(stateVector));
-    unsigned numberOfStates = p_stateVariableVector->GetNumberOfStateVariables();
-    
+    unsigned num_states = p_stateVariableVector->GetNumStateVariables();
 
     // store the diffusion information
     SetStateVariableVector(p_stateVariableVector);
 
-    SetNumberOfStates(numberOfStates);
+    SetNumStates(num_states);
 
     SetDiffusionDatabase(diffusionDatabase);
 }
@@ -857,10 +856,10 @@ std::vector<std::string> AbstractDomainField::ReturnUnique(std::vector<std::stri
     resultUnique.push_back(candidateVector.at(0));
     unsigned uniqueCount =1;
     bool IsFound = false;
-    for(unsigned i=1; i<candidateVector.size(); i++)
+    for (unsigned i=1; i<candidateVector.size(); i++)
     {
         IsFound = false;
-        for(unsigned j=0; j<uniqueCount; j++)
+        for (unsigned j=0; j<uniqueCount; j++)
         {
 
             if (candidateVector[i] == resultUnique[j])
@@ -886,12 +885,12 @@ std::vector<std::string> AbstractDomainField::ReturnUnique(std::vector<std::vect
     unsigned uniqueCount =1;
     bool IsFound = false;
 
-    for(unsigned j=0; j<candidateMatrix.size(); j++)
+    for (unsigned j=0; j<candidateMatrix.size(); j++)
     {
-        for(unsigned i=0; i<candidateMatrix[j].size(); i++)
+        for (unsigned i=0; i<candidateMatrix[j].size(); i++)
         {
             IsFound = false;
-            for(unsigned k=0; k<uniqueCount; k++)
+            for (unsigned k=0; k<uniqueCount; k++)
             {
                 if (candidateMatrix[j][i] == resultUnique[k])
                 {
@@ -937,14 +936,14 @@ void AbstractDomainField::printVector(std::vector<std::string> vec)
 
 
 
-void AbstractDomainField::SetNumberOfDomains(unsigned numberOfDomains)
+void AbstractDomainField::SetNumDomains(unsigned numDomains)
 {
-    mNumberOfDomains = numberOfDomains;
+    mNumDomains = numDomains;
 }
 
-unsigned AbstractDomainField::GetNumberOfDomains()
+unsigned AbstractDomainField::GetNumDomains()
 {
-    return mNumberOfDomains;
+    return mNumDomains;
 }
 
 void AbstractDomainField::SetDomainLabels(std::vector<std::vector<std::string>> domainLabels)
@@ -964,7 +963,7 @@ void AbstractDomainField::SetDomainLabelVector(std::vector<std::string> domainLa
 
 std::string AbstractDomainField::GetDomainLabelByIndex(unsigned index)
 {
-    if (index<mNumberOfDomains)
+    if (index<mNumDomains)
     {
         return mDomainLabelVector[index];
     }
@@ -991,14 +990,14 @@ std::vector<std::vector<std::string>> AbstractDomainField::GetDomainKeys()
     return mDomainKeys;
 }
 
-void AbstractDomainField::SetNumberOfOdeSystems(unsigned numberSystems)
+void AbstractDomainField::SetNumOdeSystems(unsigned numberSystems)
 {
-    mNumberOfOdeSystems = numberSystems;
+    mNumOdeSystems = numberSystems;
 }
 
-unsigned AbstractDomainField::GetNumberOfOdeSystems()
+unsigned AbstractDomainField::GetNumOdeSystems()
 {
-    return mNumberOfOdeSystems;
+    return mNumOdeSystems;
 }
 
 void AbstractDomainField::SetOdeLabels(std::vector<std::vector<std::string>> odeLabels)
@@ -1041,14 +1040,14 @@ StateVariableRegister* AbstractDomainField::GetStateVariableVector()
     return mStateVariableVector;
 }
 
-void AbstractDomainField::SetNumberOfStates(unsigned numberStates)
+void AbstractDomainField::SetNumStates(unsigned numberStates)
 {
-    mNumberOfStates = numberStates;
+    mNumStates = numberStates;
 } 
 
-unsigned AbstractDomainField::GetNumberOfStates()
+unsigned AbstractDomainField::GetNumStates()
 {
-    return mNumberOfStates;
+    return mNumStates;
 }
 
 void AbstractDomainField::SetCartesianCellDimensions(std::vector<unsigned> cellDims)
@@ -1235,7 +1234,7 @@ std::string AbstractDomainField::ReturnKeyValueFromNodeLabel(std::string nodeLab
 {
     bool IsFound=false;
 
-    for(unsigned key_index=0; key_index<mOdeKeys.size(); key_index++)
+    for (unsigned key_index=0; key_index<mOdeKeys.size(); key_index++)
     {
         if (mOdeKeys[key_index][0] == nodeLabel)
         {
@@ -1256,7 +1255,7 @@ std::string AbstractDomainField::ReturnDomainKeyFromDomainLabel(std::string doma
 {
     bool IsFound=false;
 
-    for(unsigned key_index=0; key_index<mDomainKeys.size(); key_index++)
+    for (unsigned key_index=0; key_index<mDomainKeys.size(); key_index++)
     {
         
         if (mDomainKeys[key_index][0] == domainLabel)

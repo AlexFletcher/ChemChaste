@@ -56,11 +56,11 @@ public:
     
         std::vector<ConstBoundaryCondition<2>*> vectorConstBCs;
         
-        for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
             vectorConstBCs.push_back(new ConstBoundaryCondition<2>(params.bcValuesNeu[pdeDim]));
         }
         
-        for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
             for (TetrahedralMesh<2,2>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
             boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
@@ -81,7 +81,7 @@ public:
             columnNum = 0;
             rowNum = 0;
 
-            while(i >= rowNum*(params.MeshDimensions[0]+1))
+            while (i >= rowNum*(params.MeshDimensions[0]+1))
             {
                 rowNum = rowNum + 1;
             
@@ -90,14 +90,14 @@ public:
             columnNum = i - (rowNum-1)*(params.MeshDimensions[0]+1);
             if ((columnNum==3 || columnNum==4 || columnNum==5 || columnNum==6) && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
             {
-                for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+                for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
                 {   // serialised for nodes
                     init_conds[1*i + pdeDim] = fabs(params.initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
                 }
             }
             else
             {
-                for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+                for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
                 {   // serialised for nodes
                     init_conds[1*i + pdeDim] = fabs(params.initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
                 }
@@ -173,7 +173,7 @@ std::cout<<"Here2"<<std::endl;
             columnNum = 0;
             rowNum = 0;
 
-            while(i >= rowNum*(params.MeshDimensions[0]+1))
+            while (i >= rowNum*(params.MeshDimensions[0]+1))
             {
                 rowNum = rowNum + 1;
             
@@ -182,14 +182,14 @@ std::cout<<"Here2"<<std::endl;
             columnNum = i - (rowNum-1)*(params.MeshDimensions[0]+1);
             if ((columnNum==3 || columnNum==4 || columnNum==5 || columnNum==6) && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
             {
-                for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+                for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
                 {   // serialised for nodes
                     init_conds[1*i + pdeDim] = fabs(params.initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
                 }
             }
             else
             {
-                for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+                for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
                 {   // serialised for nodes
                     init_conds[1*i + pdeDim] = fabs(params.initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
                 }

@@ -70,9 +70,7 @@ public:
     void SetReversibleRateName(std::string);
 
     std::string GetReversibleRateName();
-
 };
-
 
 AbstractReversibleReaction::AbstractReversibleReaction(std::vector<AbstractChemical*> substrates,
                                     std::vector<AbstractChemical*> products,
@@ -95,10 +93,9 @@ AbstractReversibleReaction::AbstractReversibleReaction(const AbstractReversibleR
     mStoichProducts = existingReaction.mStoichProducts;
     mReactionRate = existingReaction.mReactionRate;
     mReverseReactionRate = existingReaction.mReverseReactionRate;
-    mNumberOfProducts = existingReaction.mNumberOfProducts;
-    mNumberOfSubstrates = existingReaction.mNumberOfSubstrates;
+    mNumProducts = existingReaction.mNumProducts;
+    mNumSubstrates = existingReaction.mNumSubstrates;
 }
-
 
 double AbstractReversibleReaction::GetForwardReactionRate()
 {
@@ -132,14 +129,14 @@ void AbstractReversibleReaction::React(AbstractChemistry* systemChemistry, const
     
     // perform the reaction
     unsigned index = 0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
         AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         // for each system chemical, parse whether it is involved in this reaction.
-        for(unsigned j=0; j<mNumberOfSubstrates; j++)
+        for (unsigned j=0; j<mNumSubstrates; j++)
         {
             if (mpSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -149,7 +146,7 @@ void AbstractReversibleReaction::React(AbstractChemistry* systemChemistry, const
             }
         }
         // a reactant may be present on both sides of the reaction and may convert at different functional rates
-        for(unsigned j=0; j<mNumberOfProducts; j++)
+        for (unsigned j=0; j<mNumProducts; j++)
         {
             if (mpProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
@@ -159,8 +156,7 @@ void AbstractReversibleReaction::React(AbstractChemistry* systemChemistry, const
             }
         }
     }
-};
-
+}
 
 void AbstractReversibleReaction::UpdateReaction()
 {
@@ -183,8 +179,6 @@ std::string AbstractReversibleReaction::GetReactionType()
 
 void AbstractReversibleReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible = true)
 {
-     
-
     if (!IsReversible)
     {
         AbstractReaction::ParseReactionInformation(reaction_information, false);
@@ -192,7 +186,6 @@ void AbstractReversibleReaction::ParseReactionInformation(std::string reaction_i
     }
     else
     {
-
         bool IsForward = reaction_information.find(mIrreversibleRateName);
         bool IsReverse = reaction_information.find(mReversibleName);
         size_t posForward;
@@ -226,11 +219,9 @@ void AbstractReversibleReaction::ParseReactionInformation(std::string reaction_i
             reaction_information.erase(posReverse,std::string::npos);
             SetForwardReactionRate(atof(reaction_information.substr(posForward+mIrreversibleRateName.size()+1,std::string::npos).c_str()));
         }
-
     }
 }
 
-// file read functions
 void AbstractReversibleReaction::SetReversibleDelimiter(std::string delim)
 {
     mReversibleDelimiter = delim;

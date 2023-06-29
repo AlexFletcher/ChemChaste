@@ -104,11 +104,11 @@ public:
 
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(boundaryConditionValues[pdeDim]));
         }
 
-        for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
             if (boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
             {
@@ -140,7 +140,7 @@ public:
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver>> odeSolverSystem;
         std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
-        for(unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {
             odeSystem.push_back(p_field->GetOdeSystem()[i]);
             boost::shared_ptr<EulerIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
@@ -234,11 +234,11 @@ public:
 
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(boundaryConditionValues[pdeDim]));
         }
 
-        for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
             if (boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
             {
@@ -270,10 +270,10 @@ public:
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver>> odeSolverSystem;
         std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
-        for(unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {
             std::cout<<"node number: "<<i<<std::endl;
-            for(unsigned j=0; j<p_field->GetOdeSystem()[i]->GetReactionSystem()->GetReactionVector().size();j++)
+            for (unsigned j=0; j<p_field->GetOdeSystem()[i]->GetReactionSystem()->GetReactionVector().size();j++)
             {
                 std::cout<< p_field->GetOdeSystem()[i]->GetReactionSystem()->GetReactionVector()[j]->GetReactionType()<<std::endl;
             }

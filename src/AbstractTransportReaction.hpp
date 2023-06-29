@@ -27,9 +27,9 @@ protected:
     // vector with the AbstractChemical cell species, in the forward reaction sense.  To be used to track system concentrations
     std::vector<AbstractChemical*> mpCellReactionSpecies;
 
-    unsigned mNumberOfBulkSpecies;
+    unsigned mNumBulkSpecies;
 
-    unsigned mNumberOfCellSpecies;
+    unsigned mNumCellSpecies;
 
 
     // vector containing the stoichmetry of the substrates, bulk species.  Will be "-ve" in reaction
@@ -43,9 +43,9 @@ protected:
 
     bool mIsRateCheck;
 
-    double mDelta_rate_min;
+    double mDeltaRateMin;
 
-    double mDelta_rate_max;
+    double mDeltaRateMax;
 
     std::string mIrreversibleDelimiter = "->";
   
@@ -61,7 +61,6 @@ public:
                                 double reactionRate = 1.0
     );
     
-
     // copy constructor
     AbstractTransportReaction(const AbstractTransportReaction&);
 
@@ -70,8 +69,6 @@ public:
     {
     };
 
-
-    // virtual methods
 
     // function to take in pointer to current concentration state vector of the state vector for change in cocnentration.  Basic update via multiplying by constant reaction rate
     virtual void React(AbstractChemistry*, AbstractChemistry*, const std::vector<double>&, const std::vector<double>&, std::vector<double>&, std::vector<double>&);
@@ -88,8 +85,6 @@ public:
 
     virtual void ParseReactionInformation(std::string, bool);
 
-
-    // Chemical handeling functions
     std::vector<AbstractChemical*> GetBulkSpecies();
 
     AbstractChemical* GetBulkSpeciesByIndex(unsigned);
@@ -114,16 +109,14 @@ public:
 
     void SetStoichCell(std::vector<unsigned>);
 
-    void SetNumberOfBulkSpecies(unsigned);
+    void SetNumBulkSpecies(unsigned);
 
-    unsigned GetNumberOfBulkSpecies();
+    unsigned GetNumBulkSpecies();
 
-    void SetNumberOfCellSpecies(unsigned);
+    void SetNumCellSpecies(unsigned);
 
-    unsigned GetNumberOfCellSpecies();
+    unsigned GetNumCellSpecies();
 
-
-    // reaction concentration checking functions
     void SetIsRateCheck(bool);
 
     bool GetIsRateCheck();
@@ -138,9 +131,6 @@ public:
 
     double CheckRate(double);
 
-
-
-    // file read functions
     void SetIrreversibleDelimiter(std::string);
 
     std::string GetIrreversibleDelimiter();
@@ -148,10 +138,8 @@ public:
     void SetIrreversibleRateName(std::string);
 
     std::string GetIrreversibleRateName();
-
 };
 
-// constructor
 AbstractTransportReaction::AbstractTransportReaction(   std::vector<AbstractChemical*> bulkReactionSpecies,
                                                         std::vector<AbstractChemical*> cellReactionSpecies,
                                                         std::vector<unsigned> stoichBulk,
@@ -163,8 +151,8 @@ AbstractTransportReaction::AbstractTransportReaction(   std::vector<AbstractChem
             mStoichCell(stoichCell),
             mReactionRate(reactionRate)
 {
-    mNumberOfCellSpecies = cellReactionSpecies.size();
-    mNumberOfBulkSpecies = bulkReactionSpecies.size();
+    mNumCellSpecies = cellReactionSpecies.size();
+    mNumBulkSpecies = bulkReactionSpecies.size();
 
     SetIsRateCheck(true);
     SetDeltaErrorRateMin(1e-8);
@@ -179,17 +167,15 @@ AbstractTransportReaction::AbstractTransportReaction(const AbstractTransportReac
     mStoichBulk = existingReaction.mStoichBulk;
     mStoichCell = existingReaction.mStoichCell;
     mReactionRate = existingReaction.mReactionRate;
-    mNumberOfCellSpecies = existingReaction.mNumberOfCellSpecies;
-    mNumberOfBulkSpecies = existingReaction.mNumberOfBulkSpecies;
+    mNumCellSpecies = existingReaction.mNumCellSpecies;
+    mNumBulkSpecies = existingReaction.mNumBulkSpecies;
     mIsRateCheck = existingReaction.mIsRateCheck;
-    mDelta_rate_min = existingReaction.mDelta_rate_min;
-    mDelta_rate_max = existingReaction.mDelta_rate_max;
+    mDeltaRateMin = existingReaction.mDeltaRateMin;
+    mDeltaRateMax = existingReaction.mDeltaRateMax;
 }
 
 void AbstractTransportReaction::React(AbstractChemistry* bulkChemistry, AbstractChemistry* cellChemistry, const std::vector<double>& currentBulkConcentration, const std::vector<double>& currentCellConcentration, std::vector<double>& changeBulkConc, std::vector<double>& changeCellConc)
 {   
-
-    
     std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry->rGetChemicalVector();
     
     std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry->rGetChemicalVector();
@@ -200,14 +186,14 @@ void AbstractTransportReaction::React(AbstractChemistry* bulkChemistry, Abstract
 
     // run through the bulk species
     unsigned index=0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_bulk_chemical_vector.begin();
-            chem_iter != p_bulk_chemical_vector.end();
-            ++chem_iter, ++index)
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_bulk_chemical_vector.begin();
+         chem_iter != p_bulk_chemical_vector.end();
+         ++chem_iter, ++index)
     {
         AbstractChemical *p_bulk_chemical = static_cast<AbstractChemical*>(*chem_iter);
 
         // for each bulk chemical, parse whether it is involved in this reaction.
-        for(unsigned j=0; j<mNumberOfBulkSpecies; j++)
+        for (unsigned j=0; j<mNumBulkSpecies; j++)
         {
             if (mpBulkReactionSpecies.at(j)->GetChemicalName()==p_bulk_chemical->GetChemicalName())
             {
@@ -218,14 +204,14 @@ void AbstractTransportReaction::React(AbstractChemistry* bulkChemistry, Abstract
     }
 
     // run through the cell species
-    index=0;
-    for(std::vector<AbstractChemical*>::iterator chem_iter = p_cell_chemical_vector.begin();
-            chem_iter != p_cell_chemical_vector.end();
-            ++chem_iter, ++index)
+    index = 0;
+    for (std::vector<AbstractChemical*>::iterator chem_iter = p_cell_chemical_vector.begin();
+         chem_iter != p_cell_chemical_vector.end();
+         ++chem_iter, ++index)
     {
         AbstractChemical *p_cell_chemical = static_cast<AbstractChemical*>(*chem_iter);
    
-        for(unsigned j=0; j<mNumberOfCellSpecies; j++)
+        for (unsigned j=0; j<mNumCellSpecies; j++)
         {
             if (mpCellReactionSpecies.at(j)->GetChemicalName()==p_cell_chemical->GetChemicalName())
             {
@@ -233,12 +219,9 @@ void AbstractTransportReaction::React(AbstractChemistry* bulkChemistry, Abstract
                 break;
             }
         }
-
     }
-
 }
 
-// vitual function to update member variables and conditions of derived classes
 void AbstractTransportReaction::UpdateReaction()
 {
     return;
@@ -246,7 +229,7 @@ void AbstractTransportReaction::UpdateReaction()
 
 void AbstractTransportReaction::UpdateReactionRate(AbstractChemistry* bulkChemistry, AbstractChemistry* cellChemistry, const std::vector<double>& currentBulkConc, const std::vector<double>& currentCellConc)
 {
-    // default to zeroth order reaction
+    // Default to zeroth order reaction
     SetReactionRate(mReactionRate);
 }
 
@@ -287,7 +270,7 @@ std::vector<AbstractChemical*> AbstractTransportReaction::GetBulkSpecies()
 
 AbstractChemical* AbstractTransportReaction::GetBulkSpeciesByIndex(unsigned index)
 {
-    if (index < mNumberOfBulkSpecies)
+    if (index < mNumBulkSpecies)
     {
         return mpBulkReactionSpecies[index];
     }
@@ -305,7 +288,7 @@ std::vector<AbstractChemical*> AbstractTransportReaction::GetCellSpecies()
 
 AbstractChemical* AbstractTransportReaction::GetCellSpeciesByIndex(unsigned index)
 {
-    if (index < mNumberOfCellSpecies)
+    if (index < mNumCellSpecies)
     {
         return mpCellReactionSpecies[index];
     }
@@ -333,7 +316,7 @@ std::vector<unsigned> AbstractTransportReaction::GetStoichBulk()
 
 unsigned AbstractTransportReaction::GetStoichBulkByIndex(unsigned index)
 {
-    if (index < mNumberOfBulkSpecies)
+    if (index < mNumBulkSpecies)
     {
         return mStoichBulk[index];
     }
@@ -356,7 +339,7 @@ std::vector<unsigned> AbstractTransportReaction::GetStoichCell()
 
 unsigned AbstractTransportReaction::GetStoichCellByIndex(unsigned index)
 {
-    if (index < mNumberOfCellSpecies)
+    if (index < mNumCellSpecies)
     {
         return mStoichCell[index];
     }
@@ -372,24 +355,24 @@ void AbstractTransportReaction::SetStoichCell(std::vector<unsigned> StoichCell)
     mStoichCell = StoichCell;
 }
 
-void AbstractTransportReaction::SetNumberOfBulkSpecies(unsigned numberOfBulkSpecies)
+void AbstractTransportReaction::SetNumBulkSpecies(unsigned numBulkSpecies)
 {
-    mNumberOfBulkSpecies = numberOfBulkSpecies;
+    mNumBulkSpecies = numBulkSpecies;
 }
 
-unsigned AbstractTransportReaction::GetNumberOfBulkSpecies()
+unsigned AbstractTransportReaction::GetNumBulkSpecies()
 {
-    return mNumberOfBulkSpecies;
+    return mNumBulkSpecies;
 }
 
-void AbstractTransportReaction::SetNumberOfCellSpecies(unsigned numberOfCellSpecies)
+void AbstractTransportReaction::SetNumCellSpecies(unsigned numCellSpecies)
 {
-    mNumberOfCellSpecies = numberOfCellSpecies;
+    mNumCellSpecies = numCellSpecies;
 }
 
-unsigned AbstractTransportReaction::GetNumberOfCellSpecies()
+unsigned AbstractTransportReaction::GetNumCellSpecies()
 {
-    return mNumberOfCellSpecies;
+    return mNumCellSpecies;
 }
 
 void AbstractTransportReaction::SetIsRateCheck(bool IsRateCheck)
@@ -404,34 +387,34 @@ bool AbstractTransportReaction::GetIsRateCheck()
 
 void AbstractTransportReaction::SetDeltaErrorRateMin(double delta_rate_min)
 {
-    mDelta_rate_min = delta_rate_min;
+    mDeltaRateMin = delta_rate_min;
 }
 
 double AbstractTransportReaction::GetDeltaErrorRateMin()
 {
-    return mDelta_rate_min;
+    return mDeltaRateMin;
 }
 
 void AbstractTransportReaction::SetDeltaErrorRateMax(double delta_rate_max)
 {
-    mDelta_rate_max = delta_rate_max;
+    mDeltaRateMax = delta_rate_max;
 }
 
 double AbstractTransportReaction::GetDeltaErrorRateMax()
 {
-    return mDelta_rate_max;
+    return mDeltaRateMax;
 }
 
 double AbstractTransportReaction::CheckRate(double rate)
 {
     // if reaction rate gets too low or high then undefined behaviour can occur
 
-    if (abs(rate) < mDelta_rate_min)
+    if (abs(rate) < mDeltaRateMin)
     {
         rate = 0.0;
-    }else if (abs(rate) > mDelta_rate_max)
+    }else if (abs(rate) > mDeltaRateMax)
     {
-        rate = mDelta_rate_max;
+        rate = mDeltaRateMax;
     }
     return rate;
 }

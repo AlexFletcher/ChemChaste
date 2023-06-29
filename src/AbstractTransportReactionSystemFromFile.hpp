@@ -25,11 +25,11 @@ protected:
 
         // std::vector<AbstractTransportReaction*> mpReactionVector;
 
-        // unsigned mNumberOfReactions;
+        // unsigned mNumReactions;
 
-        // unsigned mNumberOfBulkStates=0;
+        // unsigned mNumBulkStates=0;
 
-        // unsigned mNumberOfCellStates=0;
+        // unsigned mNumCellStates=0;
 
     std::string mInputFileName;
 
@@ -43,7 +43,6 @@ protected:
 
     bool mIsReversedReaction = false;
     
-
 public:
 
     AbstractTransportReactionSystemFromFile(std::string);
@@ -69,9 +68,6 @@ public:
     std::string ParseReactionInformation(std::string);
 
     std::string GetFileName();
-
-
-
 };
 
 AbstractTransportReactionSystemFromFile::AbstractTransportReactionSystemFromFile(std::string InputFileName)
@@ -86,14 +82,14 @@ AbstractTransportReactionSystemFromFile::AbstractTransportReactionSystemFromFile
     std::vector<std::string> bulkChemicalsNames;
     std::vector<std::string> cellChemicalsNames;
     
-    for(unsigned reaction=0; reaction<system.size(); reaction++)
+    for (unsigned reaction=0; reaction<system.size(); reaction++)
     {
 
-        for(unsigned species=0; species<std::get<2>(system[reaction]).size(); species++)
+        for (unsigned species=0; species<std::get<2>(system[reaction]).size(); species++)
         {
             bulkChemicalsNames.push_back(std::get<2>(system[reaction])[species]);
         }
-        for(unsigned species=0; species<std::get<3>(system[reaction]).size(); species++)
+        for (unsigned species=0; species<std::get<3>(system[reaction]).size(); species++)
         {
             cellChemicalsNames.push_back(std::get<3>(system[reaction])[species]);
         }
@@ -101,8 +97,6 @@ AbstractTransportReactionSystemFromFile::AbstractTransportReactionSystemFromFile
 
     ParseSystemChemistry(bulkChemicalsNames,cellChemicalsNames);
     FormReactionSystemObjectFromTuple(system);
-
-    //std::cout<<"AbstractTransportReactionSystemFromFile::AbstractTransportReactionSystemFromFile - end"<<std::endl;
 }
 
 void AbstractTransportReactionSystemFromFile::SetFileDeliminator()
@@ -120,11 +114,9 @@ void AbstractTransportReactionSystemFromFile::FormReactionSystemObjectFromTuple(
 {
     // for each reaction whose data is in the tuple, form the corresponding reaction class
     // denote in the reaction class the function necessary to parse reaction information
-    //std::cout<<"AbstractTransportReactionSystemFromFile::FormReactionSystemObjectFromTuple( - start"<<std::endl;
+    SetNumReactions(system_tuple.size());
 
-    SetNumberOfReactions(system_tuple.size());
-
-    for( unsigned reaction =0; reaction<mNumberOfReactions; reaction++)
+    for (unsigned reaction =0; reaction<mNumReactions; reaction++)
     {
         AbstractTransportReaction* p_reaction = new AbstractTransportReaction();
         std::vector<AbstractChemical*> substrates_chemical_vector = FromChemicalNameVectorToAbstractChemicalVector(std::get<2>(system_tuple[reaction]));
@@ -134,13 +126,12 @@ void AbstractTransportReactionSystemFromFile::FormReactionSystemObjectFromTuple(
 
         mpReactionVector.push_back(p_reaction);
     }
-    //std::cout<<"AbstractTransportReactionSystemFromFile::FormReactionSystemObjectFromTuple( - end"<<std::endl;
 }
 
 std::vector<AbstractChemical*> AbstractTransportReactionSystemFromFile::FromChemicalNameVectorToAbstractChemicalVector(std::vector<std::string> nameVector)
 {
     std::vector<AbstractChemical*> chemicalVector = std::vector<AbstractChemical*>();
-    for(unsigned i=0; i<nameVector.size(); i++)
+    for (unsigned i=0; i<nameVector.size(); i++)
     {
         chemicalVector.push_back(new AbstractChemical(nameVector[i]));
     }
@@ -153,7 +144,7 @@ void AbstractTransportReactionSystemFromFile::ParseSystemChemistry(std::vector<s
     AbstractChemistry* mpBulkChemistry = new AbstractChemistry();
     AbstractChemistry* mpCellChemistry = new AbstractChemistry();
     
-    for(unsigned i =0; i<bulk_species_names.size(); i++)
+    for (unsigned i =0; i<bulk_species_names.size(); i++)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(bulk_species_names[i]);
         mpBulkChemistry->AddChemical(candidate_chemical);
@@ -161,7 +152,7 @@ void AbstractTransportReactionSystemFromFile::ParseSystemChemistry(std::vector<s
 
     SetBulkChemistry(mpBulkChemistry);
 
-    for(unsigned i =0; i<cell_species_names.size(); i++)
+    for (unsigned i =0; i<cell_species_names.size(); i++)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(cell_species_names[i]);
         mpCellChemistry->AddChemical(candidate_chemical);
@@ -172,7 +163,6 @@ void AbstractTransportReactionSystemFromFile::ParseSystemChemistry(std::vector<s
 
 std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string>> AbstractTransportReactionSystemFromFile::ReactionSystemFromFile()
 {
-    //std::cout<<"AbstractTransportReactionSystemFromFile::ReactionSystemFromFile() - start"<<std::endl;
     // read a reaction from the file
     std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string>>  system;  
 
@@ -182,14 +172,13 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
 
     std::vector<std::string> reactionString;
 
-    unsigned numberOfReactions=0;
+    unsigned numReactions=0;
 
     if (inputFile.is_open())
     {
         // open the reaction file
         while (getline(inputFile,line))
         {
-
             // for each non-empty reation file line, parse the reactions into
             // data structures on line by line basis
             if (!line.empty())
@@ -229,7 +218,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                     // reaction type, IsReversible, Substrates, Products, stoichSubstrates, stoichProducts, reaction information
                     // std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string 
                     system.push_back(std::make_tuple(reactionType, IsReversible, std::get<0>(ReactionStringTuple)[0], std::get<0>(ReactionStringTuple)[1], std::get<1>(ReactionStringTuple)[0], std::get<1>(ReactionStringTuple)[1], reactionInfo));
-                    numberOfReactions +=1;
+                    numReactions +=1;
                 }
             }
         }
@@ -239,16 +228,16 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
     {
         std::cout<<"Error: Filename not found: "<<mInputFileName<<std::endl;
     }
-    
-    //std::cout<<"AbstractTransportReactionSystemFromFile::ReactionSystemFromFile() - end"<<std::endl;
+
     return system;
 }
 
 bool AbstractTransportReactionSystemFromFile::TestReversibility(std::string line)
 {
     // test for reversibility in reaction string
-    bool IsReversible =  false;
-    if (line.find(mReverDelimiter) != std::string::npos){
+    bool IsReversible = false;
+    if (line.find(mReverDelimiter) != std::string::npos)
+    {
         // set reversible switch
         IsReversible =  true;
     }
@@ -257,8 +246,7 @@ bool AbstractTransportReactionSystemFromFile::TestReversibility(std::string line
 }
 
 std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsigned>>> AbstractTransportReactionSystemFromFile::ParseReactionString(std::string line)
-{
-    
+{    
     std::string tempString;
     std::vector<std::vector<std::string>> species;
     std::vector<std::vector<unsigned>> stoich;
@@ -284,19 +272,16 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
         {
             delim = mReverseDelimiter;
         }
-
     }
     
-
     // split the reaction string on the deliminator, whether reversible or irreversible
     size_t posC = line.find(delim);
-
 
     complexes.push_back(line.substr(0,posC-1));
     complexes.push_back(line.substr(posC+3,std::string::npos));
 
     // parse complexes based on additon of new molecuels
-    for(unsigned complexNumber=0; complexNumber<2; complexNumber++)
+    for (unsigned complexNumber=0; complexNumber<2; complexNumber++)
     {
         std::string str=complexes[complexNumber];
         // posiitons of characters in the reaction string to parse
@@ -307,11 +292,13 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
         std::vector<unsigned> stoichVector;
 
         // remove potential whitespace from zeroth character, seen in case <->
-        if (isspace(str.c_str()[0])){
+        if (isspace(str.c_str()[0]))
+        {
             str.erase(str.begin());
         }
 
-        while(posSnew != std::string::npos){
+        while (posSnew != std::string::npos)
+        {
 
             // update position of character pointer based on species separator " + " default
             posSnew = str.find(mSpeciesSeparator,posSold);
@@ -327,14 +314,15 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
                 stoichValue=std::stoul(strT.c_str());
                 
                 unsigned i=0;
-                while(isdigit(strT.c_str()[i])){i++;}
+                while (isdigit(strT.c_str()[i])){i++;}
                     tempString=strT.substr(i,std::string::npos);
             }else{tempString=strT;}
 
             // remove whitespace and memory container size to ensure like for like comparisons are consistent
             tempString.erase(remove_if (tempString.begin(), tempString.end(), isspace), tempString.end());
 
-            if (stoichValue==0){
+            if (stoichValue==0)
+            {
                 // skip the push_back of the zero entry
             }
             else
@@ -346,7 +334,6 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
         }
         species.push_back(reactants);
         stoich.push_back(stoichVector);
-
     }
 
     return std::make_tuple(species, stoich);

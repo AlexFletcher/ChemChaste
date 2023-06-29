@@ -21,7 +21,7 @@ protected:
 
     std::vector<AbstractReaction*> mpReactionVector;
 
-    unsigned mNumberOfReactions;
+    unsigned mNumReactions;
 
 public:
     AbstractReactionSystem( AbstractChemistry* systemChemistry = new AbstractChemistry(), 
@@ -49,25 +49,23 @@ public:
 
     void SetSystemChemistry(AbstractChemistry*);
 
-    unsigned GetNumberOfReactions();
+    unsigned GetNumReactions();
 
-    void SetNumberOfReactions(unsigned);
-
-
+    void SetNumReactions(unsigned);
 };
 
 AbstractReactionSystem::AbstractReactionSystem(AbstractChemistry* systemChemistry, 
                             std::vector<AbstractReaction*> reactionVector)
     :   mpSystemChemistry(systemChemistry),
         mpReactionVector(reactionVector),
-        mNumberOfReactions(reactionVector.size())
+        mNumReactions(reactionVector.size())
 {
 }
 
 AbstractReactionSystem::AbstractReactionSystem(const AbstractReactionSystem& existingReactionSystem)
 {
     mpReactionVector = existingReactionSystem.mpReactionVector;
-    mNumberOfReactions = existingReactionSystem.mNumberOfReactions;
+    mNumReactions = existingReactionSystem.mNumReactions;
     mpSystemChemistry = existingReactionSystem.mpSystemChemistry;
 }
 
@@ -79,7 +77,7 @@ void AbstractReactionSystem::ReactSystem(const std::vector<double>& currentChemi
     UpdateReactionSystem(currentChemistryConc);
     
     std::vector<double> deltaConcentration(number_of_species, 0.0);
-    for(std::vector<AbstractReaction*>::iterator reaction_iter = mpReactionVector.begin();
+    for (std::vector<AbstractReaction*>::iterator reaction_iter = mpReactionVector.begin();
             reaction_iter != mpReactionVector.end();
             ++reaction_iter)
     {
@@ -92,11 +90,11 @@ void AbstractReactionSystem::ReactSystem(const std::vector<double>& currentChemi
        
         // update the change in concentration
         
-        for(unsigned i=0; i<number_of_species; i++)
+        for (unsigned i=0; i<number_of_species; i++)
         {
             changeChemistryConc[i] += deltaConcentration[i];
 
-            deltaConcentration[i] =0;
+            deltaConcentration[i] = 0;
         }
     }
 }
@@ -114,10 +112,12 @@ std::vector<AbstractReaction*> AbstractReactionSystem::GetReactionVector()
 
 AbstractReaction* AbstractReactionSystem::GetReactionByIndex(unsigned index)
 {
-    if (index < mNumberOfReactions)
+    if (index < mNumReactions)
     {
         return mpReactionVector[index];
-    }else{
+    }
+    else
+    {
         return new AbstractReaction();
     }
 }
@@ -129,7 +129,7 @@ void AbstractReactionSystem::SetReactionVector(std::vector<AbstractReaction*> re
 
 void AbstractReactionSystem::SetReactionByIndex(AbstractReaction* reaction, unsigned index)
 {
-    if (index < mNumberOfReactions)
+    if (index < mNumReactions)
     {
         mpReactionVector[index] = reaction;
     }
@@ -145,14 +145,14 @@ void AbstractReactionSystem::SetSystemChemistry(AbstractChemistry* systemChemist
     mpSystemChemistry = systemChemistry;
 }
 
-unsigned AbstractReactionSystem::GetNumberOfReactions()
+unsigned AbstractReactionSystem::GetNumReactions()
 {
-    return mNumberOfReactions;
+    return mNumReactions;
 }
 
-void AbstractReactionSystem::SetNumberOfReactions(unsigned numberOfReactions)
+void AbstractReactionSystem::SetNumReactions(unsigned numReactions)
 {
-    mNumberOfReactions = numberOfReactions;
+    mNumReactions = numReactions;
 }
 
 #endif

@@ -243,7 +243,7 @@ void ExecutableSupport::WriteMachineInfoFile(std::string fileBaseName)
     }
 
     *out_file << "\nInformation on number and type of processors:" << std::endl;
-    *out_file << sys_info.dwNumberOfProcessors;
+    *out_file << sys_info.dwNumProcessors;
     *out_file << "\nInformation on processor caches, in the same order as above:" << std::endl;
     *out_file << "Unknown" << std::endl; ///\todo #2016 Get CPU info on Windows?
 

@@ -247,7 +247,7 @@ void AbstractDiffusiveChemistry::UpdateDomainVector(AbstractDiffusiveChemical* p
         // Assume the new chemical is known in the system
         if (pChemical->GetChemicalName() == dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->GetChemicalName())
         {   
-            unsigned num_candidate_domains = chemical->GetNumberOfDiffusiveDomains();
+            unsigned num_candidate_domains = chemical->GetNumDiffusiveDomains();
 
             // Chemical whose domain is to be tested has been found in the chemical data structure
             for (unsigned candidate_domain_index = 0; candidate_domain_index < num_candidate_domains; ++candidate_domain_index)
@@ -256,7 +256,7 @@ void AbstractDiffusiveChemistry::UpdateDomainVector(AbstractDiffusiveChemical* p
                 bool is_new_domain = true;
                 unsigned index_record = 0;
                 
-                for (unsigned domain_index = 0; domain_index < dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->GetChemicalName()->GetNumberOfDiffusiveDomains(); domain_index++)
+                for (unsigned domain_index = 0; domain_index < dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->GetChemicalName()->GetNumDiffusiveDomains(); domain_index++)
                 {
                     // For each of the current existing domains
                     std::string existing_query_domain = dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->GetChemicalName()->GetDiffusiveDomainByIndex(domain_index);

@@ -30,7 +30,7 @@ protected:
 
 
     // domain information input
-    unsigned mNumberOfDomains;
+    unsigned mNumDomains;
 
     std::vector<std::vector<std::string>> mDomainLabels;
 
@@ -45,7 +45,7 @@ protected:
 
 
     // ode system information input
-    unsigned mNumberOfOdeSystems;
+    unsigned mNumOdeSystems;
 
     std::vector<std::vector<std::string>> mOdeLabels;
 
@@ -60,7 +60,7 @@ protected:
 
 
     // collective system information
-    unsigned mNumberOfStates; // numebr of unique species in the diffusion database
+    unsigned mNumStates; // numebr of unique species in the diffusion database
 
     StateVariableRegister* mStateVariableVector; // container of each unique species in the diffusion database
 
@@ -210,7 +210,7 @@ public:
     bool PerturbInitialConditionTest(std::vector<std::string>);
 
     // set methods
-    void SetNumberOfDomains(unsigned);
+    void SetNumDomains(unsigned);
 
     void SetDomainLabels(std::vector<std::vector<std::string>>);
 
@@ -218,7 +218,7 @@ public:
 
     void SetDomainKeys(std::vector<std::vector<std::string>>);    
 
-    void SetNumberOfOdeSystems(unsigned);
+    void SetNumOdeSystems(unsigned);
 
     void SetOdeLabels(std::vector<std::vector<std::string>>);
 
@@ -228,7 +228,7 @@ public:
 
     void SetStateVariableVector(StateVariableRegister*);
 
-    void SetNumberOfStates(unsigned);    
+    void SetNumStates(unsigned);    
         
     void SetCartesianCellDimensions(std::vector<unsigned>);
 
@@ -268,7 +268,7 @@ public:
 
 
     // get methods
-    unsigned GetNumberOfDomains();
+    unsigned GetNumDomains();
 
     std::vector<std::vector<std::string>> GetDomainLabels();
 
@@ -278,7 +278,7 @@ public:
 
     std::vector<std::vector<std::string>> GetDomainKeys();
 
-    unsigned GetNumberOfOdeSystems();
+    unsigned GetNumOdeSystems();
 
     std::vector<std::vector<std::string>> GetOdeLabels();
 
@@ -288,7 +288,7 @@ public:
 
     StateVariableRegister* GetStateVariableVector();
 
-    unsigned GetNumberOfStates();
+    unsigned GetNumStates();
 
     std::vector<unsigned> GetCartesianCellDimensions();
 
