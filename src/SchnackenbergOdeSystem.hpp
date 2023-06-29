@@ -10,6 +10,9 @@
 
 #include "AbstractOdeSystem.hpp"
 
+/**
+ * \todo Document this class.
+ */
 class SchnackenbergOdeSystem : public AbstractOdeSystem
 {
 

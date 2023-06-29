@@ -11,10 +11,13 @@
 #include "CellCycleModelOdeSolver.hpp"
 #include "AbstractOdeSrnModel.hpp"
 
-// class to define the subcellular reaction network (SRN) belonging to a cell. Solves an Ode system to model the 
-// chemical reactions occuring within the cell. The reaction sutilise the cell chemical concentrations which
-// are updated from the cellData class, updated in the ChemicalTrackingModifier class.
-
+/**
+ * Class to define the subcellular reaction network (SRN) belonging to a cell. 
+ * Solves an ODE system to model the chemical reactions occuring within the 
+ * cell. The reaction sutilise the cell chemical concentrations which are 
+ * updated from the cellData class, updated in the ChemicalTrackingModifier 
+ * class.
+ */
 class ChemicalSrnModel : public AbstractOdeSrnModel
 {
 protected:

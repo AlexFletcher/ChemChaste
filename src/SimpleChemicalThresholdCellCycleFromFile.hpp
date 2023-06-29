@@ -1,16 +1,17 @@
 #ifndef SIMPLECHEMICALTHRESHOLDCELLCYCLEFROMFILE_HPP_
 #define SIMPLECHEMICALTHRESHOLDCELLCYCLEFROMFILE_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <iostream>
 
-// reaction includes
 #include "AbstractChemistry.hpp"
 #include "SimpleChemicalThresholdCellCycleModel.hpp"
  
+/**
+ * \todo Document this class.
+ */
 class SimpleChemicalThresholdCellCycleFromFile : public SimpleChemicalThresholdCellCycleModel
 {
 protected:
@@ -61,11 +62,11 @@ void SimpleChemicalThresholdCellCycleFromFile::SetUp()
         // the first element of the read in database is the identifying names
         thresholdChemicalVector.push_back(thresholdDatabase[i][0]);
 
-        if(thresholdDatabase[i].size()==3)
+        if (thresholdDatabase[i].size()==3)
         {
             // data for both the maximum and minimum thresholds
 
-            if(std::stoul(thresholdDatabase[i][1].c_str())<std::stoul(thresholdDatabase[i][2].c_str()))
+            if (std::stoul(thresholdDatabase[i][1].c_str())<std::stoul(thresholdDatabase[i][2].c_str()))
             {
                 // then can't possibly divide as will be apoptotic,so don't check
                 maximumThresholdVector.push_back(std::stoul(thresholdDatabase[i][1].c_str()));
@@ -81,7 +82,7 @@ void SimpleChemicalThresholdCellCycleFromFile::SetUp()
                 minimumThresholdCheck.push_back(true);
             }
         }
-        else if(thresholdDatabase[i].size()==2)
+        else if (thresholdDatabase[i].size()==2)
         {
             // data for only the maximum the thresholds
             maximumThresholdVector.push_back(std::stoul(thresholdDatabase[i][1].c_str()));
@@ -98,7 +99,7 @@ void SimpleChemicalThresholdCellCycleFromFile::SetUp()
             minimumThresholdCheck.push_back(false);
         }
         // error checking
-        if(maximumThresholdVector[i] < mSmallestMaximumThreshold)
+        if (maximumThresholdVector[i] < mSmallestMaximumThreshold)
         {
             maximumThresholdVector[i] = 0.0;
             maximumThresholdCheck[i] = false;
@@ -112,7 +113,7 @@ void SimpleChemicalThresholdCellCycleFromFile::SetUp()
 
     for(unsigned i=0; i<thresholdChemicalVector.size(); i++)
     {
-        pThresholdChemistry -> AddChemical(new AbstractChemical(thresholdChemicalVector[i]));
+        pThresholdChemistry->AddChemical(new AbstractChemical(thresholdChemicalVector[i]));
     }
     
 
@@ -141,13 +142,13 @@ std::vector<std::vector<std::string>> SimpleChemicalThresholdCellCycleFromFile::
     std::vector<std::vector<std::string>> outputMatrix = std::vector<std::vector<std::string>>();
 
     // check file exists and is openable
-    if(inputFile.is_open()){
+    if (inputFile.is_open()){
         // open the matrix file
         while (getline(inputFile,line)){
             // while the file still has lines not read.
             // read line left to right, top to bottom.
-            if(!line.empty()){
-                if(line.at(0)=='#')
+            if (!line.empty()){
+                if (line.at(0)=='#')
                 {
                     //std::cout<<"Escape line: "<<line<<std::endl;
                 }
@@ -183,7 +184,7 @@ std::vector<std::string> SimpleChemicalThresholdCellCycleFromFile::parseMatrixLi
     while(!IsEndOfLine)
     {
         // while not at the end of the file, sample sub strings from the posiiton of the delimiter
-        if(posSnew == std::string::npos)
+        if (posSnew == std::string::npos)
         {
             IsEndOfLine = true;
         }

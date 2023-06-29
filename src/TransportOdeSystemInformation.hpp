@@ -5,7 +5,9 @@
 #include "AbstractOdeSystemInformation.hpp"
 #include "AbstractTransportReactionSystem.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 template<class ODE_SYSTEM>
 class TransportOdeSystemInformation : public AbstractOdeSystemInformation
 {
@@ -55,7 +57,6 @@ void TransportOdeSystemInformation<ODE_SYSTEM>::Initialise()
 {
 }
 
-
 template<class ODE_SYSTEM>
 boost::shared_ptr<TransportOdeSystemInformation<ODE_SYSTEM> > TransportOdeSystemInformation<ODE_SYSTEM>::Instance()
 {
@@ -79,7 +80,6 @@ void TransportOdeSystemInformation<ODE_SYSTEM>::SetReactionSystem(AbstractTransp
 {
     mp_reaction_system  = p_reaction_system;
 }
-
 
 /**
  * Definition of the instance static member.

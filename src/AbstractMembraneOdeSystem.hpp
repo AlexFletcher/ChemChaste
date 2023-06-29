@@ -6,12 +6,15 @@
 #include "MembraneOdeSystemInformation.hpp"
 #include "StateVariableRegister.hpp"
 
-// abstract ode system for controllign the change in chemical concentrations (state variables) at the membrane 
-// of a cell. The class handles the different chemical concentrations at points eitherside of the
-// infinitesmimal membrane, in this base class, parsing the differnet concentrations for the membrane
-// reaction system. The class recombines the different concentrations to pass to handler methods and also 
-// performs concentration errror checking through set thresholds. 
-
+/**
+ * Abstract ODE system for controllign the change in chemical concentrations 
+ * (state variables) at the membrane of a cell. The class handles the different 
+ * chemical concentrations at points eitherside of the infinitesmimal membrane, 
+ * in this base class, parsing the differnet concentrations for the membrane 
+ * reaction system. The class recombines the different concentrations to pass to 
+ * handler methods and also performs concentration errror checking through set 
+ * thresholds.
+ */
 class AbstractMembraneOdeSystem: public AbstractOdeSystem
 {
 private:
@@ -110,7 +113,7 @@ AbstractMembraneOdeSystem::AbstractMembraneOdeSystem(AbstractMembraneReactionSys
 
     SetReactionSystem(mpMembraneReactionSystem);
     SetNumberOfSpecies(mpMembraneReactionSystem ->GetNumberOfBulkStates()+mpMembraneReactionSystem ->GetNumberOfCellStates());
-    SetNumberOfReactions(mpMembraneReactionSystem -> GetNumberOfReactions());
+    SetNumberOfReactions(mpMembraneReactionSystem->GetNumberOfReactions());
 
     // initialsie cell concentration vectors
     std::vector<double> cellConcentration(mpMembraneReactionSystem ->GetNumberOfCellStates(),1.0);
@@ -130,17 +133,11 @@ AbstractMembraneOdeSystem::AbstractMembraneOdeSystem(const AbstractMembraneOdeSy
     : AbstractOdeSystem(existingSystem.mNumberOfSpecies)
 {
     mpMembraneReactionSystem = existingSystem.mpMembraneReactionSystem;
-
     mNumberOfSpecies = existingSystem.mNumberOfSpecies;
-
     mNumberOfReactions = existingSystem.mNumberOfReactions;
-
     mDelta_error = existingSystem.mDelta_error;
-
     mIsCheckConcentration = existingSystem.mIsCheckConcentration;
-
 }
-
 
 void AbstractMembraneOdeSystem::EvaluateYDerivatives(double time, const std::vector<double>& rY, std::vector<double>& rDY)
 {
@@ -161,7 +158,7 @@ void AbstractMembraneOdeSystem::EvaluateYDerivatives(double time, const std::vec
     {
         this_state = mpMembraneReactionSystem->GetBulkChemistry()->GetChemicalNamesByIndex(i);
 
-        if(mPdeStateVariableRegister->IsStateVariablePresent(this_state))
+        if (mPdeStateVariableRegister->IsStateVariablePresent(this_state))
         {
             bulkConcentrations[i] = rY.at(mPdeStateVariableRegister->RetrieveStateVariableIndex(this_state));
         }
@@ -187,13 +184,13 @@ void AbstractMembraneOdeSystem::EvaluateYDerivatives(double time, const std::vec
         rDY[i] = 0.0;
     }
 
-    if(mIsCheckConcentration)
+    if (mIsCheckConcentration)
     {   
         CheckConcentration(bulkConcentrations);
         CheckConcentration(cellConcentrations);
     }
  
-    mpMembraneReactionSystem -> ReactSystem(bulkConcentrations, cellConcentrations, changeBulkConcentrations, changeCellConcentrations);
+    mpMembraneReactionSystem->ReactSystem(bulkConcentrations, cellConcentrations, changeBulkConcentrations, changeCellConcentrations);
 
     // reform rDY for passing to the solver
     for(unsigned i=0; i<number_of_bulk_states; i++)
@@ -263,7 +260,7 @@ void AbstractMembraneOdeSystem::UpdateReservedCellConcentrationByIndex(unsigned 
 
 void AbstractMembraneOdeSystem::UpdateReservedCellConcentrationByName(std::string name, double concentration)
 {
-    unsigned index = mpMembraneReactionSystem -> GetCellChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpMembraneReactionSystem->GetCellChemistry()->GetChemicalIndexByName(name);
 
     mReservedCellConcentration[index] = concentration;
 }
@@ -275,11 +272,9 @@ void AbstractMembraneOdeSystem::UpdateChangeCellConcentrationByIndex(unsigned in
 
 void AbstractMembraneOdeSystem::UpdateChangeCellConcentrationByName(std::string name, double concentration)
 {
-    unsigned index = mpMembraneReactionSystem -> GetCellChemistry() -> GetChemicalIndexByName(name);
-
+    unsigned index = mpMembraneReactionSystem->GetCellChemistry()->GetChemicalIndexByName(name);
     mChangeCellConc[index] = concentration;
 }
-
 
 void AbstractMembraneOdeSystem::SetDeltaError(double delta_error)
 {
@@ -304,7 +299,7 @@ void AbstractMembraneOdeSystem::CheckConcentration(const std::vector<double>& rY
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
-        if(rY[i]<mDelta_error)
+        if (rY[i]<mDelta_error)
         {
             const_cast<double&>(rY[i]) = 0;
         }
@@ -344,7 +339,7 @@ double AbstractMembraneOdeSystem::RetrieveReservedCellConcentrationByIndex(unsig
 
 double AbstractMembraneOdeSystem::RetrieveReservedCellConcentrationByName(std::string name)
 {
-    unsigned index = mpMembraneReactionSystem -> GetCellChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpMembraneReactionSystem->GetCellChemistry()->GetChemicalIndexByName(name);
 
     return mReservedCellConcentration[index];
 }
@@ -356,30 +351,27 @@ double AbstractMembraneOdeSystem::RetrieveChangeCellConcentrationByIndex(unsigne
 
 double AbstractMembraneOdeSystem::RetrieveChangeCellConcentrationByName(std::string name)
 {
-    unsigned index = mpMembraneReactionSystem -> GetCellChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpMembraneReactionSystem->GetCellChemistry()->GetChemicalIndexByName(name);
 
     return mChangeCellConc[index];
 }
-
-
-// templated ode system information required by Chaste
 
 template<>
 void MembraneOdeSystemInformation<AbstractMembraneOdeSystem>::Initialise()
 {
     // initialise the bulk state varibles
-    for( unsigned i=0; i<mp_reaction_system -> GetBulkChemistry() -> GetNumberChemicals(); i++)
+    for( unsigned i=0; i<mp_reaction_system->GetBulkChemistry()->GetNumberChemicals(); i++)
     {
-        this->mVariableNames.push_back(mp_reaction_system -> GetBulkChemistry() -> GetChemicalNamesByIndex(i));
-        this->mVariableUnits.push_back(mp_reaction_system -> GetBulkChemistry() -> GetChemicalDimensionsByIndex(i));
+        this->mVariableNames.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalNamesByIndex(i));
+        this->mVariableUnits.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalDimensionsByIndex(i));
         this->mInitialConditions.push_back(1.0); // will be overridden
     }
     
     // initialise the cell state varibles; appended onto the end of the bulk state vectors
-    for( unsigned i=0; i<mp_reaction_system -> GetCellChemistry() -> GetNumberChemicals(); i++)
+    for( unsigned i=0; i<mp_reaction_system->GetCellChemistry()->GetNumberChemicals(); i++)
     {
-        this->mVariableNames.push_back(mp_reaction_system -> GetCellChemistry() -> GetChemicalNamesByIndex(i));
-        this->mVariableUnits.push_back(mp_reaction_system -> GetCellChemistry() -> GetChemicalDimensionsByIndex(i));
+        this->mVariableNames.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalNamesByIndex(i));
+        this->mVariableUnits.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalDimensionsByIndex(i));
         this->mInitialConditions.push_back(1.0); // will be overridden
     }
     this->mInitialised = true;

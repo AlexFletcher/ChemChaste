@@ -30,8 +30,9 @@ class AbstractCellCycleModel; // Circular definition (cells need to know about c
 class AbstractSrnModel; // Circular definition (cells need to know about subcellular reaction network models and vice-versa).
 class Cell;
 
-// version of cell.hpp in which the cell division properties may be overridden
-
+/**
+ * Version of Cell.hpp in which the cell division properties may be overridden
+ */
 class ComplexCell : public Cell
 {
 protected:
@@ -142,34 +143,34 @@ CellPtr ComplexCell::Divide()
     // record the cell chemistry for splitting cell data
     AbstractChemistry* cellChemistry = new AbstractChemistry();
 
-    if(static_cast<ChemicalSrnModel*>(mpSrnModel)->SRNType()=="Chemical")
+    if (static_cast<ChemicalSrnModel*>(mpSrnModel)->SRNType()=="Chemical")
     {
         ChemicalSrnModel* p_srn_model = static_cast<ChemicalSrnModel*>(mpSrnModel);
-        cellChemistry -> AddChemistry(p_srn_model->GetCellChemistry()); // from SRN
+        cellChemistry->AddChemistry(p_srn_model->GetCellChemistry()); // from SRN
     }
 
-    if(static_cast<SimpleChemicalThresholdCellCycleModel*>(mpCellCycleModel)->CellCycleType()=="Chemical")
+    if (static_cast<SimpleChemicalThresholdCellCycleModel*>(mpCellCycleModel)->CellCycleType()=="Chemical")
     {
         SimpleChemicalThresholdCellCycleModel* p_cc_model = static_cast<SimpleChemicalThresholdCellCycleModel*>(mpCellCycleModel);
-        cellChemistry -> AddChemistry(p_cc_model->GetThresholdChemistry()); // from cell cycle model
+        cellChemistry->AddChemistry(p_cc_model->GetThresholdChemistry()); // from cell cycle model
     }
 
     // transport property
-    if(mCellPropertyCollection.HasProperty<TransportCellProperty>())
+    if (mCellPropertyCollection.HasProperty<TransportCellProperty>())
     {
         boost::shared_ptr<TransportCellProperty> transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(mCellPropertyCollection.GetPropertiesType<TransportCellProperty>().GetProperty());
         AbstractChemistry* transportChemistry = transport_cell_property ->GetTransportReactionSystem()->GetCellChemistry();
         // add the cell chemistry due to transport
-        cellChemistry -> AddChemistry(transportChemistry);
+        cellChemistry->AddChemistry(transportChemistry);
     }
 
     // membrane property
-    if(mCellPropertyCollection.HasProperty<MembraneCellProperty>())
+    if (mCellPropertyCollection.HasProperty<MembraneCellProperty>())
     {
         boost::shared_ptr<MembraneCellProperty> membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(mCellPropertyCollection.GetPropertiesType<MembraneCellProperty>().GetProperty());
         AbstractChemistry* membraneChemistry = membrane_cell_property ->GetMembraneReactionSystem()->GetCellChemistry();
         // add the cell chemistry due to membrane
-        cellChemistry -> AddChemistry(membraneChemistry);
+        cellChemistry->AddChemistry(membraneChemistry);
     }
 
 
@@ -181,15 +182,15 @@ CellPtr ComplexCell::Divide()
     double parent_species_concentration=0.0;
     double new_parent_species_concentration=0.0;
     double daughter_species_concentration=0.0;
-    unsigned numberOfChemicals = cellChemistry -> GetNumberChemicals();
+    unsigned numberOfChemicals = cellChemistry->GetNumberChemicals();
 
     for(unsigned i=0; i<numberOfChemicals; i++)
     {
         
-        parent_species_concentration = this->GetCellData()->GetItem(cellChemistry -> GetChemicalNamesByIndex(i));
+        parent_species_concentration = this->GetCellData()->GetItem(cellChemistry->GetChemicalNamesByIndex(i));
         
 
-        if(IsChemicalShared(cellChemistry -> GetChemicalNamesByIndex(i)))
+        if (IsChemicalShared(cellChemistry->GetChemicalNamesByIndex(i)))
         {
             // chemical concentration is shared upon division
             new_parent_species_concentration = SplitParentCellData(parent_species_concentration);
@@ -204,14 +205,14 @@ CellPtr ComplexCell::Divide()
         }
         
         // check for positive concentrations
-        if(daughter_species_concentration<0.0)
+        if (daughter_species_concentration<0.0)
         {
             // must be positive concentration
             daughter_species_concentration =0.0;
         }
         
-        this->GetCellData()->SetItem(cellChemistry -> GetChemicalNamesByIndex(i), new_parent_species_concentration);
-        p_daughter_cell_data->SetItem(cellChemistry -> GetChemicalNamesByIndex(i), daughter_species_concentration);
+        this->GetCellData()->SetItem(cellChemistry->GetChemicalNamesByIndex(i), new_parent_species_concentration);
+        p_daughter_cell_data->SetItem(cellChemistry->GetChemicalNamesByIndex(i), daughter_species_concentration);
     }
 
 
@@ -221,7 +222,7 @@ CellPtr ComplexCell::Divide()
 
 
     // transport property
-    if(mCellPropertyCollection.HasProperty<TransportCellProperty>())
+    if (mCellPropertyCollection.HasProperty<TransportCellProperty>())
     {
         // parent property
         boost::shared_ptr<TransportCellProperty> transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(mCellPropertyCollection.GetPropertiesType<TransportCellProperty>().GetProperty());
@@ -240,7 +241,7 @@ CellPtr ComplexCell::Divide()
     }
 
     // membrane property
-    if(mCellPropertyCollection.HasProperty<MembraneCellProperty>())
+    if (mCellPropertyCollection.HasProperty<MembraneCellProperty>())
     {
         boost::shared_ptr<MembraneCellProperty> membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(mCellPropertyCollection.GetPropertiesType<MembraneCellProperty>().GetProperty());
 
@@ -256,7 +257,7 @@ CellPtr ComplexCell::Divide()
     }
 
     // cellAnalytics property
-    if(mCellPropertyCollection.HasProperty<CellAnalyticsProperty>())
+    if (mCellPropertyCollection.HasProperty<CellAnalyticsProperty>())
     {
         // parent property
         boost::shared_ptr<CellAnalyticsProperty> cellAnalytics_cell_property = boost::static_pointer_cast<CellAnalyticsProperty>(mCellPropertyCollection.GetPropertiesType<CellAnalyticsProperty>().GetProperty());
@@ -298,9 +299,9 @@ CellPtr ComplexCell::Divide()
 
     for(unsigned i=0; i<numberOfChemicals; i++)
     {
-        chemicalName = cellChemistry -> GetChemicalNamesByIndex(i);
+        chemicalName = cellChemistry->GetChemicalNamesByIndex(i);
 
-        if(!thresholdChemistry->CheckChemical(new AbstractChemical(chemicalName)))
+        if (!thresholdChemistry->CheckChemical(new AbstractChemical(chemicalName)))
         {
             prime_cell_threshold_species_concentrations[thresholdChemistry->GetChemicalIndexByName(chemicalName)] = p_cell_data->GetItem(chemicalName);
             //std::cout<<"parent concentration: "<<chemicalName<<" : "<<p_cell_data->GetItem(chemicalName)<<std::endl;
@@ -310,9 +311,9 @@ CellPtr ComplexCell::Divide()
 
     for(unsigned i=0; i<numberOfChemicals; i++)
     {
-        chemicalName = cellChemistry -> GetChemicalNamesByIndex(i);
+        chemicalName = cellChemistry->GetChemicalNamesByIndex(i);
         //std::cout<<chemicalName<<": "<<p_daughter_cell_data->GetItem(chemicalName)<<std::endl;
-        if(!thresholdChemistry->CheckChemical(new AbstractChemical(chemicalName)))
+        if (!thresholdChemistry->CheckChemical(new AbstractChemical(chemicalName)))
         {
             daughter_cell_threshold_species_concentrations[thresholdChemistry->GetChemicalIndexByName(chemicalName)] = p_daughter_cell_data->GetItem(chemicalName);
             //std::cout<<"daughter concentration: "<<chemicalName<<" : "<<p_daughter_cell_data->GetItem(chemicalName)<<std::endl;
@@ -363,12 +364,12 @@ bool ComplexCell::IsChemicalShared(std::string chemical_name)
     for(unsigned i=0; i<mChemicalNames.size(); i++)
     {
         // for each cellular chemical
-        if(mChemicalNames[i]==chemical_name)
+        if (mChemicalNames[i]==chemical_name)
         {
             for(unsigned j=0; j<mShareKey.size(); j++)
             {
                 // test if the chemical is to be shared
-                if(mChemicalDivsionRules[i]==mShareKey[j])
+                if (mChemicalDivsionRules[i]==mShareKey[j])
                 {
                     isChemicalShared=true;
                 }

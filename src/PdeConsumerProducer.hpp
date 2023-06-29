@@ -5,8 +5,9 @@
 #include "ChastePoint.hpp"
 #include "Element.hpp"
 
-
-
+/**
+ * \todo Document this class.
+ */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 class PdeConsumerProducer : public AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>
 {

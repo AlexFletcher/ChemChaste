@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 
-/*
-    Class to hold the names of the variables in an inhomogenous system, name index pair
-*/
+/**
+ * Class to hold the names of the variables in an inhomogenous system, name 
+ * index pair.
+ */
 class StateVariableRegister
 {
 protected:

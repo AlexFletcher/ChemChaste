@@ -1,20 +1,20 @@
 #ifndef MEMBRANEREACTIONSYSTEMFROMFILE_HPP_
 #define MEMBRANEREACTIONSYSTEMFROMFILE_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <iostream>
 #include <fstream>
 
-// reaction includes
 #include "AbstractMembraneReactionSystem.hpp"
 #include "AbstractMembraneReaction.hpp"
 #include "AbstractChemistry.hpp"
 #include "ReactionTypeDatabase.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 class AbstractMembraneReactionSystemFromFile : public AbstractMembraneReactionSystem
 {
 protected:
@@ -124,7 +124,7 @@ AbstractMembraneReactionSystemFromFile::AbstractMembraneReactionSystemFromFile(s
             // for the products
             bulkChemicalNames.push_back(std::get<3>(system[reaction])[species]);
         }
-        if(mIsCoupledReaction[reaction]==true)
+        if (mIsCoupledReaction[reaction]==true)
         {
             // also has separate cell chemistry
             numberOfCellSubstrates = ReturnSubstratesForReactionIndex(reaction)[1];
@@ -207,7 +207,7 @@ void AbstractMembraneReactionSystemFromFile::FormReactionSystemObjectFromTuple(s
         std::vector<AbstractChemical*> cell_substrates_chemical_vector = std::vector<AbstractChemical*>();
         std::vector<AbstractChemical*> cell_products_chemical_vector = std::vector<AbstractChemical*>();
 
-        if(mIsCoupledReaction[reaction]==true)
+        if (mIsCoupledReaction[reaction]==true)
         {
 
             numberOfCellSubstrates = ReturnSubstratesForReactionIndex(reaction)[1];
@@ -257,13 +257,13 @@ void AbstractMembraneReactionSystemFromFile::ParseSystemChemistry(std::vector<st
     for(unsigned i =0; i<bulk_names.size(); i++)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(bulk_names[i]);
-        bulkChemistry -> AddChemical(candidate_chemical);
+        bulkChemistry->AddChemical(candidate_chemical);
     }
 
     for(unsigned i =0; i<cell_names.size(); i++)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(cell_names[i]);
-        cellChemistry -> AddChemical(candidate_chemical);
+        cellChemistry->AddChemical(candidate_chemical);
     }
 
     SetBulkChemistry(bulkChemistry);
@@ -283,16 +283,16 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
 
     unsigned numberOfReactions=0;
 
-    if(inputFile.is_open())
+    if (inputFile.is_open())
     {
         // open the reaction file
         while (getline(inputFile,line))
         {
             // for each non-empty reation file line, parse the reactions into
             // data structures on line by line basis
-            if(!line.empty())
+            if (!line.empty())
             {
-                if(line.at(0)=='#')
+                if (line.at(0)=='#')
                 {
                     // line starts with escape character
 
@@ -302,7 +302,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                 {
                     // check if two sub-reactions are defined (either side of the membrane)
                     size_t coupled_reactions_delimiter_loc = line.find(mReactionDelimiter);
-                    if(coupled_reactions_delimiter_loc != std::string::npos)
+                    if (coupled_reactions_delimiter_loc != std::string::npos)
                     {
      
                         mIsCoupledReaction.push_back(true);
@@ -407,7 +407,7 @@ bool AbstractMembraneReactionSystemFromFile::TestReversibility(std::string line)
 {
     // test for reversibility in reaction string
     bool IsReversible =  false;
-    if(line.find(mReverDelimiter) != std::string::npos){
+    if (line.find(mReverDelimiter) != std::string::npos){
         // set reversible switch
         IsReversible =  true;
     }
@@ -427,7 +427,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
 
     bool IsReversible = TestReversibility(line);
     std::string delim;
-    if(IsReversible)
+    if (IsReversible)
     {
         delim = mReverDelimiter;
     }
@@ -465,7 +465,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
         std::vector<unsigned> stoichVector;
 
         // remove potential whitespace from zeroth character, seen in case <->
-        if(isspace(str.c_str()[0])){
+        if (isspace(str.c_str()[0])){
             str.erase(str.begin());
         }
 
@@ -481,7 +481,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
 
             unsigned stoichValue=1;
 
-            if(isdigit(strT.c_str()[0])){
+            if (isdigit(strT.c_str()[0])){
                 stoichValue=std::stoul(strT.c_str());
                 
                 unsigned i=0;
@@ -490,9 +490,9 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             }else{tempString=strT;}
 
             // remove whitespace and memory container size to ensure like for like comparisons are consistent
-            tempString.erase(remove_if(tempString.begin(), tempString.end(), isspace), tempString.end());
+            tempString.erase(remove_if (tempString.begin(), tempString.end(), isspace), tempString.end());
 
-            if(stoichValue==0){
+            if (stoichValue==0){
                 // skip the push_back of the zero entry
             }
             else
@@ -530,7 +530,6 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
     return std::make_tuple(species, stoich);
 }
 
-
 std::string AbstractMembraneReactionSystemFromFile::ParseReactionInformation(std::string line)
 {
     // at the moment leave empty, populated in the individual reaction classes
@@ -564,7 +563,7 @@ void AbstractMembraneReactionSystemFromFile::SetNumberOfProducts(std::vector<std
 
 std::vector<unsigned> AbstractMembraneReactionSystemFromFile::ReturnSubstratesForReactionIndex(unsigned index)
 {
-    if(index<mNumberSubstrates.size())
+    if (index<mNumberSubstrates.size())
     {
         return mNumberSubstrates[index];
     }
@@ -573,7 +572,7 @@ std::vector<unsigned> AbstractMembraneReactionSystemFromFile::ReturnSubstratesFo
 
 std::vector<unsigned> AbstractMembraneReactionSystemFromFile::ReturnProductsForReactionIndex(unsigned index)
 {
-    if(index<mNumberProducts.size())
+    if (index<mNumberProducts.size())
     {
         return mNumberProducts[index];
     }

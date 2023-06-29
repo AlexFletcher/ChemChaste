@@ -9,6 +9,9 @@
 #include "ChemicalCell.hpp"
 #include "AbstractTransportReactionSystemFromFile.hpp"
 
+/**
+ * \todo Document class.
+ */
 class TransportCellPropertyFromFile
 {
 protected:
@@ -45,7 +48,7 @@ public:
         : mTransportFilename(filename)
     {
 
-        if(filename != "")
+        if (filename != "")
         {
             SetTransportFilename(filename);
         }
@@ -58,7 +61,7 @@ public:
         AbstractTransportReactionSystemFromFile* p_transport_system_from_file = new AbstractTransportReactionSystemFromFile(mTransportFilename);
         
         //boost::shared_ptr<TransportCellProperty> pTransportProperty(new TransportCellProperty());
-        p_transport -> SetUp(p_transport_system_from_file, p_cell);
+        p_transport->SetUp(p_transport_system_from_file, p_cell);
 
         SetTransportProperty(p_transport);
     }

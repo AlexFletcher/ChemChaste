@@ -27,10 +27,6 @@
 #include "PetscVecTools.hpp"
 #include "ReplicatableVector.hpp"
 
-
-//#include "ExtendedBoundaryConditionsContainerImplementation.hpp"
-
-
 /**
  * Boundary Conditions Container.
  *

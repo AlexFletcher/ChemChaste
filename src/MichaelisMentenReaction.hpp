@@ -1,25 +1,27 @@
 #ifndef MICHAELISMENTENREACTION_HPP_
 #define MICHAELISMENTENREACTION_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <cmath>
 
-// custom includes
 #include "AbstractChemical.hpp"
 #include "AbstractChemistry.hpp"
 #include "AbstractReaction.hpp"
 #include "SpectatorDependentReaction.hpp"
 
-// reaction class for performing a Michaelis-Menten kinetic reation
-// E + S <==> ES -> E + x
-// rate(x) = dx/dt = Vmax*(x/(Km + x)) = kcat*[Enzyme]*(x/(Km + x))
-// There may be more than one enzyme, should there be a mechanical need,
-// and herein enzymes are referred to as "Spectators" due to class hierarchy 
-// referring to the enzymes not being consumed/produced over the full mechanism.
-
+/**
+ * Reaction class for performing a Michaelis-Menten kinetic reation
+ * 
+ * E + S <==> ES->E + x
+ * 
+ * rate(x) = dx/dt = Vmax*(x/(Km + x)) = kcat*[Enzyme]*(x/(Km + x))
+ * 
+ * There may be more than one enzyme, should there be a mechanical need, and 
+ * herein enzymes are referred to as "Spectators" due to class hierarchy 
+ * referring to the enzymes not being consumed/produced over the full mechanism.
+ */
 class MichaelisMentenReaction : public SpectatorDependentReaction
 {
 protected:
@@ -98,7 +100,7 @@ void MichaelisMentenReaction::UpdateReactionRate(AbstractChemistry* systemChemis
     double substrateConcentration=0.0;
 
     // apply non-linear term (x/(Km + x))
-    std::vector<AbstractChemical*> p_chemical_vector = systemChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
     unsigned index = 0;
     for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
@@ -108,7 +110,7 @@ void MichaelisMentenReaction::UpdateReactionRate(AbstractChemistry* systemChemis
 
         for(unsigned j=0; j<mNumberOfSubstrates; j++)
         {
-            if(mpSubstrates[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 substrateConcentration *=  std::pow(currentSystemConc[index],mStoichSubstrates[j]);
                 break;
@@ -148,19 +150,19 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
     size_t positionMichaelisMenten = reaction_information.find(mMichaelisConstantDelimiter);
 
     // check that each of the delimiters exists
-    if(positionSpectator==std::string::npos)
+    if (positionSpectator==std::string::npos)
     {
         // spectator not found
         std::cout<<"Error MichaelisMentenReaction::ParseReactionInformation: Enzyme not found"<<std::endl;
     }
 
-    if(positionRate==std::string::npos)
+    if (positionRate==std::string::npos)
     {
         // spectator not found
         std::cout<<"Error MichaelisMentenReaction::ParseReactionInformation: reaction rate not found: "<< mIrreversibleRateName<<std::endl;
     }
 
-    if(positionMichaelisMenten==std::string::npos)
+    if (positionMichaelisMenten==std::string::npos)
     {
         // spectator not found
         std::cout<<"Error MichaelisMentenReaction::ParseReactionInformation: Michaelis-Menten constant not found"<<std::endl;
@@ -182,7 +184,7 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
     {
         // find the position of the first delimiter
         delimiterIndex = FindIndexOfLastDelimiterPosition(delimiterVector, tempString);
-        if(delimiterIndex == numberOfDelimiters)
+        if (delimiterIndex == numberOfDelimiters)
         {
             break;
         }

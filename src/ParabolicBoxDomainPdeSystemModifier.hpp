@@ -12,7 +12,9 @@
 #include "InhomogenousCoupledPdeOdeSolver_templated.hpp"
 #include "ChemicalDomainFieldForCellCoupling.hpp"
 
-
+/**
+ * \todo Document this class.
+ */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 class ParabolicBoxDomainPdeSystemModifier : public AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>
 {
@@ -178,7 +180,7 @@ void ParabolicBoxDomainPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Set
     //std::cout<<"ParabolicBoxDomainPdeSystemModifier<ELEMENT_DIM,SPACE_DIM>::SetupSolve - end"<<std::endl;
 }
 
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM> // why does this take in a cell population? if() is true, shrinks the box onto the tissue (cellpopulation) here makes no difference
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM> // why does this take in a cell population? if () is true, shrinks the box onto the tissue (cellpopulation) here makes no difference
 boost::shared_ptr<BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM> > ParabolicBoxDomainPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ConstructBoundaryConditionsContainer(AbstractCellPopulation<ELEMENT_DIM,SPACE_DIM>& rCellPopulation)
 {
     boost::shared_ptr<BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM> > p_bcc(new BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>(false)); // false implies not to delete previous conditions but there shouldn't be any
@@ -189,7 +191,7 @@ boost::shared_ptr<BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>
     }
     else // Apply BC at boundary nodes of box domain FE mesh
     {
-        p_bcc = this->mpCoupledDomainField -> ReturnSharedPtrBoundaryConditionsContainer();//ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnSharedPtrBoundaryConditionsContainer();
+        p_bcc = this->mpCoupledDomainField->ReturnSharedPtrBoundaryConditionsContainer();//ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnSharedPtrBoundaryConditionsContainer();
     }
  
     return p_bcc;
@@ -215,18 +217,18 @@ void ParabolicBoxDomainPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Set
             // the cell has it's own concentration vector that may be related to the domain
             boost::shared_ptr<ChemicalCellProperty> property = boost::static_pointer_cast<ChemicalCellProperty>(prop_collection.GetPropertiesType<ChemicalCellProperty>().GetProperty());
 
-            std::vector<std::string> cell_species_names = property -> GetStateVariableRegister() -> GetStateVariableRegisterVector();
+            std::vector<std::string> cell_species_names = property->GetStateVariableRegister()->GetStateVariableRegisterVector();
   
             for(unsigned name_index=0; name_index<cell_species_names.size();name_index++)
             {   
-                cell_iter->GetCellData()->SetItem(cell_species_names[name_index], property -> GetCellConcentrationByIndex(name_index));
+                cell_iter->GetCellData()->SetItem(cell_species_names[name_index], property->GetCellConcentrationByIndex(name_index));
             }
         }
         else
         {   
             // assume zero concentration in cell, set up for all species in the PROBLEM_DIM, that is species diffusing through the domain
             std::vector<double> initial_conditions(PROBLEM_DIM,0.0);
-            std::vector<std::string> domain_species_names = this->mpCoupledDomainField -> GetDomainStateVariableRegister() -> GetStateVariableRegisterVector();
+            std::vector<std::string> domain_species_names = this->mpCoupledDomainField->GetDomainStateVariableRegister()->GetStateVariableRegisterVector();
 
             for(unsigned name_index=0; name_index<domain_species_names.size();name_index++)
             {
@@ -240,7 +242,7 @@ void ParabolicBoxDomainPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Set
     // set pde serialised nodal initial conditions from domain layer
 
     // Initialise mSolution
-    this->mSolution = PetscTools::CreateVec(this->mpCoupledDomainField -> GetInitialNodeConditions());
+    this->mSolution = PetscTools::CreateVec(this->mpCoupledDomainField->GetInitialNodeConditions());
 
 }
 

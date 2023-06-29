@@ -186,7 +186,6 @@ protected:
         return true;
     }
 
-
 public:
 
     /**
@@ -289,7 +288,6 @@ void AbstractFeVolumeIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM, CAN_
 
     HeartEventHandler::EndEvent(assemble_event);
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Implementation - AssembleOnElement and smaller
@@ -430,6 +428,5 @@ void AbstractFeVolumeIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM, CAN_
         }
     }
 }
-
 
 #endif 

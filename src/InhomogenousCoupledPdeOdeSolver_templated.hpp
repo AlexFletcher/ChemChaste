@@ -18,7 +18,6 @@
 #include "VtkMeshWriter.hpp"
 #include "StateVariableRegister.hpp"
 
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -26,9 +25,10 @@
 
 #include <boost/shared_ptr.hpp>
 
-// Same as other class but the numberOfStateVariables to the ode terms are not all equal.
-// The ode's change on a nodal basis
-
+/**
+ * Same as other class but the numberOfStateVariables to the ODE terms are not 
+ * all equal. The ODEs change on a nodal basis.
+ */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM=ELEMENT_DIM, unsigned PROBLEM_DIM=1>
 class InhomogenousCoupledPdeOdeSolverTemplated
     : public AbstractAssemblerSolverHybrid<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM, NORMAL>,
@@ -362,16 +362,16 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
     {   
         unsigned matchedIndex;
         unsigned num_state_variables = mpPdeSystem->GetStateVariableRegister()->GetNumberOfStateVariables();
-        std::vector<std::string> pde_variable_register = mpPdeSystem->GetStateVariableRegister() -> GetStateVariableRegisterVector();
+        std::vector<std::string> pde_variable_register = mpPdeSystem->GetStateVariableRegister()->GetStateVariableRegisterVector();
 
         for (unsigned i=0; i<num_state_variables; i++)
         {
             // each node may not have the total number of states in the ode system
             // select using the statevariable registers at the nodes, if state variable isn't present the value is 0
 
-            if(mOdeSystemsAtNodes[pNode->GetIndex()] -> GetStateVariableRegister() -> IsStateVariablePresent(pde_variable_register[i]))
+            if (mOdeSystemsAtNodes[pNode->GetIndex()]->GetStateVariableRegister()->IsStateVariablePresent(pde_variable_register[i]))
             {
-                matchedIndex = mOdeSystemsAtNodes[pNode->GetIndex()] -> GetStateVariableRegister() -> RetrieveStateVariableIndex(pde_variable_register[i]);
+                matchedIndex = mOdeSystemsAtNodes[pNode->GetIndex()]->GetStateVariableRegister()->RetrieveStateVariableIndex(pde_variable_register[i]);
 
                 //rGetStateVariables() returns the current values of the state variables, index
                 mInterpolatedOdeStateVariables[i] += phiI * mOdeSystemsAtNodes[pNode->GetIndex()]->rGetStateVariables()[matchedIndex];
@@ -382,7 +382,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
 
     }
 
-    if(mCalculateTotalMass)
+    if (mCalculateTotalMass)
     {
         // interpolate the previous timestep solution at nodes
         // sum the interpolated value 
@@ -397,12 +397,12 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
         }
     }
 
-    if(mInterpolatePosition)
+    if (mInterpolatePosition)
     {
      //   mX.rGetLocation() += phiI*pNode->rGetLocation();
     }
 
-    if(mInterpolateStateVariable)
+    if (mInterpolateStateVariable)
     {
     //    ReplicatableVector current_nodal_values(this->mInitialCondition);
 
@@ -415,7 +415,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
 
     mInterpolationNodeCount++;
 
-    if(mInterpolationNodeCount == mNodesInElement)
+    if (mInterpolationNodeCount == mNodesInElement)
     {
         // position and state variable vector are fully known
         ChastePoint<SPACE_DIM> X = AbstractFeVolumeIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM, true, true, NORMAL>::GetPosition();
@@ -423,7 +423,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
         c_vector<double,PROBLEM_DIM> U = AbstractFeVolumeIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM, true, true, NORMAL>::GetStateVariable();
 
 
-        if(mCalculateTotalMass)
+        if (mCalculateTotalMass)
         {
             for (unsigned i=0; i<PROBLEM_DIM; i++)
             {
@@ -432,10 +432,10 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
         }
 
         
-        if(mCalculateSliceMass)
+        if (mCalculateSliceMass)
         {
             //std::cout<<"y: "<<X[1]<<std::endl;
-            if(2.85>X[1] && X[1]>2.8)
+            if (2.85>X[1] && X[1]>2.8)
             {
                 // store the x position and the state variable U
                 std::vector<double> thisSlicePosition;
@@ -662,7 +662,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
     TimeStepper stepper(this->mTstart, this->mTend, mSamplingTimeStep);
 
 
-    std::vector<std::string> p_pde_stateVariableNames = mpPdeSystem -> GetStateVariableRegister() ->GetStateVariableRegisterVector();
+    std::vector<std::string> p_pde_stateVariableNames = mpPdeSystem->GetStateVariableRegister() ->GetStateVariableRegisterVector();
     
     
     // make a vector of file streams to store slice values per pde dim
@@ -677,7 +677,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
         std::shared_ptr<std::ofstream> sliceMassFile(new std::ofstream);
         std::string sliceMassFilename = "/home/chaste/testoutput/"+this->mOutputDirectory+"sliceMass_"+p_pde_stateVariableNames[i]+".csv";
         std::cout<<"sliceMassFilename: "<<sliceMassFilename<<std::endl;
-        sliceMassFile -> open(sliceMassFilename);
+        sliceMassFile->open(sliceMassFilename);
         sliceMassFiles.push_back(sliceMassFile);
     }
 
@@ -720,7 +720,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
     timeFile.open (timeFilename);
 
 
-    if(mCalculateTotalMass)
+    if (mCalculateTotalMass)
     {
         for(unsigned pdeNum=1; pdeNum<PROBLEM_DIM;pdeNum++)
         {
@@ -855,7 +855,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
     VtkMeshWriter<ELEMENT_DIM, SPACE_DIM> mesh_writer(this->mOutputDirectory, "results_"+time.str(), false);
     // need to ensure StateVariableRegister is defined
   
-    std::vector<std::string> p_pde_stateVariableNames = mpPdeSystem -> GetStateVariableRegister() ->GetStateVariableRegisterVector();
+    std::vector<std::string> p_pde_stateVariableNames = mpPdeSystem->GetStateVariableRegister() ->GetStateVariableRegisterVector();
     
     /*
      * We first loop over PDEs. For each PDE we store the solution
@@ -892,7 +892,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
 
 
         std::vector<std::vector<double> > ode_data;
-        unsigned num_state_vars = mpPdeSystem -> GetStateVariableRegister() ->GetNumberOfStateVariables();
+        unsigned num_state_vars = mpPdeSystem->GetStateVariableRegister() ->GetNumberOfStateVariables();
         ode_data.resize(num_state_vars);
         for (unsigned state_var_index=0; state_var_index<num_state_vars; state_var_index++)
         {
@@ -905,11 +905,11 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
             // this could be of variable size, is of only the states that the ode modifies
 
 
-            std::vector<std::string> ode_var_names = mOdeSystemsAtNodes[node_index]->GetStateVariableRegister() -> GetStateVariableRegisterVector();
+            std::vector<std::string> ode_var_names = mOdeSystemsAtNodes[node_index]->GetStateVariableRegister()->GetStateVariableRegisterVector();
             for (unsigned ode_index=0; ode_index<ode_var_names.size(); ode_index++)
             {
                 // for each state variable in the ode system, find and update the corresponding variable in the pde system 
-                ode_data[mpPdeSystem -> GetStateVariableRegister() -> RetrieveStateVariableIndex(ode_var_names[ode_index])][node_index] = all_odes_this_node[ode_index];
+                ode_data[mpPdeSystem->GetStateVariableRegister()->RetrieveStateVariableIndex(ode_var_names[ode_index])][node_index] = all_odes_this_node[ode_index];
                 
             }
 
@@ -947,7 +947,7 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::ResetInterpolatedQuantitiesOnNewTimeStep()
 {
 
-    if(mCalculateTotalMass)
+    if (mCalculateTotalMass)
     {
         // reset previous timstep value of total mass
         std::fill(mTotalMass.begin(), mTotalMass.end(), 0.0);
@@ -955,7 +955,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
         std::fill(mOldTotalMass.begin(), mOldTotalMass.end(), 0.0);
     }
 
-    if(mCalculateSliceMass)
+    if (mCalculateSliceMass)
     {
         mSliceMass = std::vector<std::vector<double>> ();
 

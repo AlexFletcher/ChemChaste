@@ -131,7 +131,7 @@ void SimpleChemicalThresholdCellCycleModel::UpdateStarvationDuration()
     for(unsigned species=0; species<mNumberThresholdSpecies; species++)
     {
 
-        if(GetMinimumThresholdCheckByIndex(species) && GetSpeciesConcentrationsByIndex(species)<GetMinimumThresholdByIndex(species))
+        if (GetMinimumThresholdCheckByIndex(species) && GetSpeciesConcentrationsByIndex(species)<GetMinimumThresholdByIndex(species))
         {
             mCurrentStarvationDuration = (SimulationTime::Instance()->GetTime() - mCurrentStarvationOnsetTime);
  
@@ -147,7 +147,7 @@ void SimpleChemicalThresholdCellCycleModel::UpdateStarvationDuration()
             }
         }
     }
-    if(!isStarving)
+    if (!isStarving)
     {
         // Reset the cell's Starvation duration and update the time at which the onset of Starvation occurs
         mCurrentStarvationDuration = 0.0;
@@ -172,7 +172,7 @@ bool SimpleChemicalThresholdCellCycleModel::ConcentrationAboveMaxThreshold()
 
     for(unsigned species=0; species<mNumberThresholdSpecies; species++)
     {
-        if(GetMaximumThresholdCheckByIndex(species) && GetSpeciesConcentrationsByIndex(species)>GetMaximumThresholdByIndex(species))
+        if (GetMaximumThresholdCheckByIndex(species) && GetSpeciesConcentrationsByIndex(species)>GetMaximumThresholdByIndex(species))
         {
             return true;
         }
@@ -185,7 +185,7 @@ bool SimpleChemicalThresholdCellCycleModel::ConcentrationBelowMinThreshold()
     // search through all the threhsold species for whether nay are above the maximum threshold
     for(unsigned species=0; species<mNumberThresholdSpecies; species++)
     {
-        if(GetMinimumThresholdCheckByIndex(species) && GetSpeciesConcentrationsByIndex(species)<GetMinimumThresholdByIndex(species))
+        if (GetMinimumThresholdCheckByIndex(species) && GetSpeciesConcentrationsByIndex(species)<GetMinimumThresholdByIndex(species))
         {
             return true;
         }
@@ -210,7 +210,7 @@ void SimpleChemicalThresholdCellCycleModel::SetMinimumSpeciesThreshold(std::vect
 
 void SimpleChemicalThresholdCellCycleModel::SetMaximumThresholdByIndex(double threshold, unsigned index)
 {
-    if(index<mNumberThresholdSpecies)
+    if (index<mNumberThresholdSpecies)
     {
         mMaxThresholdConcentrationValues[index] = threshold;
     }
@@ -222,7 +222,7 @@ void SimpleChemicalThresholdCellCycleModel::SetMaximumThresholdByIndex(double th
 
 void SimpleChemicalThresholdCellCycleModel::SetMinimumThresholdByIndex(double threshold, unsigned index)
 {
-    if(index<mNumberThresholdSpecies)
+    if (index<mNumberThresholdSpecies)
     {
         mMinThresholdConcentrationValues[index] = threshold;
     }
@@ -239,7 +239,7 @@ void SimpleChemicalThresholdCellCycleModel::SetSpeciesConcentrations(std::vector
 
 void SimpleChemicalThresholdCellCycleModel::SetSpeciesConcentrationsByIndex(double threshold, unsigned index)
 {
-    if(index<mNumberThresholdSpecies)
+    if (index<mNumberThresholdSpecies)
     {
         mSpeciesConcentrations[index] = threshold;
     }
@@ -266,7 +266,7 @@ void SimpleChemicalThresholdCellCycleModel::SetMinimumThresholdCheck(std::vector
 
 void SimpleChemicalThresholdCellCycleModel::SetMaximumThresholdCheckByIndex(bool thresholdCheck, unsigned index)
 {
-    if(index<mNumberThresholdSpecies)
+    if (index<mNumberThresholdSpecies)
     {
         mIsMaximumThresholdSet[index] = thresholdCheck;
     }
@@ -278,7 +278,7 @@ void SimpleChemicalThresholdCellCycleModel::SetMaximumThresholdCheckByIndex(bool
 
 void SimpleChemicalThresholdCellCycleModel::SetMinimumThresholdCheckByIndex(bool thresholdCheck, unsigned index)
 {
-    if(index<mNumberThresholdSpecies)
+    if (index<mNumberThresholdSpecies)
     {
         mIsMinimumThresholdSet[index] = thresholdCheck;
     }
@@ -310,7 +310,7 @@ std::vector<double> SimpleChemicalThresholdCellCycleModel::GetMinimumSpeciesThre
 
 double SimpleChemicalThresholdCellCycleModel::GetMaximumThresholdByIndex(unsigned index)
 {
-    if(index<mNumberThresholdSpecies)
+    if (index<mNumberThresholdSpecies)
     {
         return mMaxThresholdConcentrationValues[index];
     }
@@ -320,7 +320,7 @@ double SimpleChemicalThresholdCellCycleModel::GetMaximumThresholdByIndex(unsigne
 
 double SimpleChemicalThresholdCellCycleModel::GetMinimumThresholdByIndex(unsigned index)
 {
-    if(index<mNumberThresholdSpecies)
+    if (index<mNumberThresholdSpecies)
     {
         return mMinThresholdConcentrationValues[index];
     }
@@ -335,7 +335,7 @@ std::vector<double> SimpleChemicalThresholdCellCycleModel::GetSpeciesConcentrati
 
 double SimpleChemicalThresholdCellCycleModel::GetSpeciesConcentrationsByIndex(unsigned index)
 {
-    if(index<mNumberThresholdSpecies)
+    if (index<mNumberThresholdSpecies)
     {
         return mSpeciesConcentrations[index];
     }
@@ -360,7 +360,7 @@ std::vector<bool> SimpleChemicalThresholdCellCycleModel::GetMinimumThresholdChec
 
 bool SimpleChemicalThresholdCellCycleModel::GetMaximumThresholdCheckByIndex(unsigned index)
 {
-    if(index<mNumberThresholdSpecies)
+    if (index<mNumberThresholdSpecies)
     {
         return mIsMaximumThresholdSet[index];
     }
@@ -370,7 +370,7 @@ bool SimpleChemicalThresholdCellCycleModel::GetMaximumThresholdCheckByIndex(unsi
 
 bool SimpleChemicalThresholdCellCycleModel::GetMinimumThresholdCheckByIndex(unsigned index)
 {
-    if(index<mNumberThresholdSpecies)
+    if (index<mNumberThresholdSpecies)
     {
         return mIsMinimumThresholdSet[index];
     }

@@ -15,6 +15,9 @@
 #include "AbstractIvpOdeSolver.hpp"
 #include "EulerIvpOdeSolver.hpp"
 
+/**
+ * \todo Document this class.
+ */
 class MembraneCellProperty : public AbstractCellProperty
 {
 protected:

@@ -1,16 +1,15 @@
 #ifndef ABSTRACTDIFFUSIVECHEMICAL_HPP_
 #define ABSTRACTDIFFUSIVECHEMICAL_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 
-// custom includes
 #include "AbstractChemical.hpp"
 
-// abstract property to contain information about diffusive chemical species
-
+/**
+ * Abstract property to contain information about diffusive chemical species.
+ */
 class AbstractDiffusiveChemical : public AbstractChemical
 {
 private:
@@ -92,7 +91,7 @@ AbstractDiffusiveChemical::AbstractDiffusiveChemical(
     std::vector<std::string> mDiffusiveDomain =std::vector<std::string>();
     std::vector<double> mDiffusivity = std::vector<double>();
     mIsDiffusionSetup =true;
-    if(diffusiveDomain != "")
+    if (diffusiveDomain != "")
     {
         // add the first input domain as an elements of the data vectors
         mDiffusiveDomain.push_back(diffusiveDomain);
@@ -124,7 +123,7 @@ void AbstractDiffusiveChemical::AddDiffusiveDomain(std::string newDomain, double
     std::vector<double> diffusivities = GetChemicalDiffusivityVector();
 
     // if the domains are empty, add the domain as a new property
-    if(numberOfDiffusiveDomains==0)
+    if (numberOfDiffusiveDomains==0)
     {
 
         diffusiveDomains.push_back(newDomain);
@@ -143,12 +142,12 @@ void AbstractDiffusiveChemical::AddDiffusiveDomain(std::string newDomain, double
         //check if domain is new
         for(unsigned domain_index=0; domain_index < numberOfDiffusiveDomains; domain_index++)
         {
-            if(diffusiveDomains[domain_index] == newDomain)
+            if (diffusiveDomains[domain_index] == newDomain)
             {
                 isNewDomain = false;
             }
         }
-        if(isNewDomain)
+        if (isNewDomain)
         {
             // if the candidate domain is new the update diffusion properties
             diffusiveDomains.push_back(newDomain);
@@ -165,7 +164,7 @@ void AbstractDiffusiveChemical::AddDiffusiveDomain(std::string newDomain, double
 
 void AbstractDiffusiveChemical::AddDiffusiveDomainVector(std::vector<std::string> domainLabelVector, std::vector<double> diffusivityVector)
 {
-    if(domainLabelVector.size() == diffusivityVector.size())
+    if (domainLabelVector.size() == diffusivityVector.size())
     {
         for(unsigned domain_index = 0; domain_index<domainLabelVector.size(); domain_index++)
         {
@@ -177,9 +176,7 @@ void AbstractDiffusiveChemical::AddDiffusiveDomainVector(std::vector<std::string
     {
         std::cout<<"Error: AbstractDiffusiveChemical::AddDiffusiveDomainVector:   Domain vector and diffusivity vector not of equla size"<<std::endl;
     }
-    
 }
-
 
 std::vector<std::string> AbstractDiffusiveChemical::GetDiffusiveDomainVector()
 {
@@ -190,7 +187,6 @@ std::vector<double> AbstractDiffusiveChemical::GetChemicalDiffusivityVector()
 {
     return mDiffusivities;
 }
-
 
 void AbstractDiffusiveChemical::SetDiffusiveDomainVector(std::vector<std::string> diffusiveDomains)
 {
@@ -219,7 +215,7 @@ unsigned AbstractDiffusiveChemical::GetNumberOfDiffusiveDomains()
 
 std::string AbstractDiffusiveChemical::GetDiffusiveDomainByIndex(unsigned index)
 {
-    if(index<mNumberOfDiffusiveDomains)
+    if (index<mNumberOfDiffusiveDomains)
     {
         return mDiffusiveDomains[index];
     }
@@ -233,7 +229,7 @@ std::string AbstractDiffusiveChemical::GetDiffusiveDomainByIndex(unsigned index)
 
 double AbstractDiffusiveChemical::GetChemicalDiffusivityByIndex(unsigned index)
 {
-    if(index<mNumberOfDiffusiveDomains)
+    if (index<mNumberOfDiffusiveDomains)
     {
         return mDiffusivities[index];
     }

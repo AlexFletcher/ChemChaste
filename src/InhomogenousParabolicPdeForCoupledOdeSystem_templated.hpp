@@ -1,22 +1,21 @@
 #ifndef InhomogenousParabolicPdeForCoupledOdeSystem_templated_HPP_
 #define InhomogenousParabolicPdeForCoupledOdeSystem_templated_HPP_
 
-
 #include "AbstractLinearParabolicPdeSystemForCoupledOdeSystem.hpp"
 #include "ChastePoint.hpp"
 #include "Element.hpp"
 #include <string>
 #include "StateVariableRegister.hpp"
-//#include "ChemicalDomainFieldForCellCoupling.hpp"
 #include "ChemicalDomainField_templated.hpp"
 #include "AbstractDomainField_templated.hpp"
 
-// class defining the pde system neded when running chemical reaction-diffusion systems 
-
+/**
+ * Class defining the PDE system neded when running chemical reaction-diffusion 
+ * systems.
+ */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 class InhomogenousParabolicPdeForCoupledOdeSystemTemplated : public AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>
 {
-
 protected:
 
     // register for controlling the index values for variables to different ode systems
@@ -34,63 +33,55 @@ protected:
     // switch for non-constant diffusion rate
     bool mIsDomainDiffusionVector = false;
 
-
 public:
 
     InhomogenousParabolicPdeForCoupledOdeSystemTemplated()
-        :   AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>()
-            
+        : AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>()
     {
     }
 
     InhomogenousParabolicPdeForCoupledOdeSystemTemplated(std::vector<double> diffusionVector, std::vector<std::string> nameVector = std::vector<std::string>())
-        :   AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(),
-            mDiffusionRateConstantVector(diffusionVector)
+        : AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(),
+          mDiffusionRateConstantVector(diffusionVector)
     {        
         mIsDomainDiffusionVector = true;
 
-        if(nameVector.empty())
+        if (nameVector.empty())
         {
-            for(unsigned i=0; i<PROBLEM_DIM; i++)
+            for (unsigned i = 0; i < PROBLEM_DIM; i++)
             {
                 nameVector.push_back(std::to_string(i));
             } 
         }
 
         StateVariableRegister* p_stateVariableRegister = new StateVariableRegister(nameVector);
-          
         SetStateVariableRegister(p_stateVariableRegister);
     }
 
     InhomogenousParabolicPdeForCoupledOdeSystemTemplated(std::vector<double> diffusionVector, StateVariableRegister* p_stateVariableRegister)
-        :   AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(),
-            mDiffusionRateConstantVector(diffusionVector),
-            mpStateVariableRegister(p_stateVariableRegister)
+        : AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(),
+          mDiffusionRateConstantVector(diffusionVector),
+          mpStateVariableRegister(p_stateVariableRegister)
     {        
         mIsDomainDiffusionVector = true;
     }
 
     InhomogenousParabolicPdeForCoupledOdeSystemTemplated(AbstractDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>* p_domainField)
-        :   AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(),
-            mpDomainField(p_domainField)
+        : AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(),
+          mpDomainField(p_domainField)
     {
 
         mIsDomainDiffusionField = true;
-        if(mpDomainField->GetFieldType()=="ChemicalDomainFieldTemplated")
-        //if(dynamic_cast<ChemicalDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>*>(mpDomainField)!= nullptr)
+        if (mpDomainField->GetFieldType() == "ChemicalDomainFieldTemplated")
         {
 
             SetStateVariableRegister(dynamic_cast<ChemicalDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>*>(mpDomainField) ->GetStateVariableVector());
         }
 
-        //if(dynamic_cast<ChemicalDomainFieldForCellCoupling<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>*>(mpDomainField)!= nullptr)
-        if(mpDomainField->GetFieldType()=="ChemicalDomainFieldForCellCoupling")
+        if (mpDomainField->GetFieldType() == "ChemicalDomainFieldForCellCoupling")
         {
-
             SetStateVariableRegister(mpDomainField ->GetStateVariableVector());
-            //SetStateVariableRegister(dynamic_cast<ChemicalDomainFieldForCellCoupling<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>*>(mpDomainField) ->GetStateVariableVector());
         }
-        
     }
 
     virtual ~InhomogenousParabolicPdeForCoupledOdeSystemTemplated()
@@ -101,13 +92,7 @@ public:
     {
         return 1.0;
     }
-    /*
-    virtual double ComputeSourceTerm(const ChastePoint<SPACE_DIM>& rX, c_vector<double,PROBLEM_DIM>& rU, std::vector<double>& rOdeSolution, unsigned pdeIndex)
-    {
-        // the interpolated ode solution at a point rX, will be 0 if the surrounding nodes do not process the variable
-        return rOdeSolution[pdeIndex];
-    }
-    */
+
     virtual double ComputeSourceTerm(const ChastePoint<SPACE_DIM>& rX, c_vector<double,PROBLEM_DIM>& rU, std::vector<double>& rOdeSolution, unsigned pdeIndex)
     {
 
@@ -115,25 +100,22 @@ public:
 
         std::vector<std::string> node_labels = mpDomainField ->GetNodeLabels();
 
-        std::vector<double> rUvec(PROBLEM_DIM,0.0);
-        for(unsigned i=0;i<PROBLEM_DIM;i++)
+        std::vector<double> rUvec(PROBLEM_DIM, 0.0);
+        for (unsigned i = 0; i < PROBLEM_DIM; i++)
         {
             rUvec[i] = rU(i);
         }
 
-        
         AbstractInhomogenousOdeSystemForCoupledPdeSystem* p_system = dynamic_cast<ChemicalDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>*>(mpDomainField)->GetOdeSystem()[0];
         AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem* p_system_cast = dynamic_cast<AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem*>(p_system);
-        std::vector<AbstractReaction*>  p_reactionVector = p_system_cast ->GetReactionSystem() -> GetReactionVector();
+        std::vector<AbstractReaction*>  p_reactionVector = p_system_cast ->GetReactionSystem()->GetReactionVector();
         
-        
-        
-        for(unsigned i=0; i<node_labels.size();i++)
+        for (unsigned i = 0; i < node_labels.size(); i++)
         {
-            if(node_labels[i] == odeLabel)
+            if (node_labels[i] == odeLabel)
             {
-                // found the correct chemical ode
-                dynamic_cast<ChemicalDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>*>(mpDomainField)->GetOdeSystem()[i] -> EvaluateYDerivatives(1.0, rUvec, rOdeSolution);
+                // Found the correct chemical ode
+                dynamic_cast<ChemicalDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>*>(mpDomainField)->GetOdeSystem()[i]->EvaluateYDerivatives(1.0, rUvec, rOdeSolution);
 
                 return rUvec[pdeIndex];
             }
@@ -142,13 +124,9 @@ public:
         return rUvec[pdeIndex];
     }
 
-
-
-
     void SetDiffusionRateConstantVector(std::vector<double> diffusionRateConstantVector)
     {
         mIsDomainDiffusionVector = true;
-        
         mDiffusionRateConstantVector = diffusionRateConstantVector;
     }
 
@@ -173,14 +151,14 @@ public:
     virtual double DiffusionFunction(const ChastePoint<SPACE_DIM>& rX, unsigned pdeIndex, Element<ELEMENT_DIM,SPACE_DIM>* pElement=NULL)
     {
         // virtual function, use constant value as base case
-        if(mIsDomainDiffusionVector == true)
+        if (mIsDomainDiffusionVector == true)
         {
             // use the pdeIndex and stateVaribale register to search for a species-domain pair to retrive value?
             return GetDiffusionRateConstantByIndex(pdeIndex);
         }
-        else if(mIsDomainDiffusionField == true)
+        else if (mIsDomainDiffusionField == true)
         {
-            return mpDomainField -> GetDiffusionValueBasedOnPoint(rX,pdeIndex);
+            return mpDomainField->GetDiffusionValueBasedOnPoint(rX,pdeIndex);
         }
         else
         {
@@ -250,6 +228,5 @@ public:
         mpDomainField = p_domainField;
     }
 };
-
 
 #endif 

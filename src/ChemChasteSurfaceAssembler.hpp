@@ -7,7 +7,6 @@
 #include "PetscVecTools.hpp"
 #include "PetscMatTools.hpp"
 
-
 /**
  *  Similar to AbstractFeVolumeIntegralAssembler but is used for constructing finite element objects
  *  that are based on SURFACE INTEGRALS, as opposed to volume integrals.
@@ -134,7 +133,6 @@ AbstractFeSurfaceIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::~Abstra
     delete mpSurfaceQuadRule;
 }
 
-
 template <unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void AbstractFeSurfaceIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::DoAssemble()
 {
@@ -166,7 +164,6 @@ void AbstractFeSurfaceIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Do
 
     HeartEventHandler::EndEvent(HeartEventHandler::NEUMANN_BCS);
 }
-
 
 template <unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void AbstractFeSurfaceIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::AssembleOnSurfaceElement(

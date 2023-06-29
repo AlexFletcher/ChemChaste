@@ -12,7 +12,6 @@
 template <int SPACE_DIM>
 class SimpleHeatEquation : public AbstractLinearParabolicPde<SPACE_DIM>
 {
-
 public:
     double ComputeSourceTerm(const ChastePoint<SPACE_DIM>& , double, Element<SPACE_DIM,SPACE_DIM>* pElement=NULL)
     {

@@ -6,7 +6,9 @@
 #include "ChemicalOdeSystemInformation.hpp"
 #include "StateVariableRegister.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 class AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem: public AbstractInhomogenousOdeSystemForCoupledPdeSystem
 {
 private:
@@ -60,18 +62,18 @@ public:
 };
 
 AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem(AbstractReactionSystem* pReactionSystem)
-    : AbstractInhomogenousOdeSystemForCoupledPdeSystem(pReactionSystem -> GetSystemChemistry() -> GetNumberChemicals(),pReactionSystem -> GetSystemChemistry() -> GetNumberChemicals())
+    : AbstractInhomogenousOdeSystemForCoupledPdeSystem(pReactionSystem->GetSystemChemistry()->GetNumberChemicals(),pReactionSystem->GetSystemChemistry()->GetNumberChemicals())
 {
 
-    //mpSystemInfo -> ChemicalOdeSystemInformation<AbstractChemicalOdeSystem>::InstanceWrapper(pReactionSystem);
+    //mpSystemInfo->ChemicalOdeSystemInformation<AbstractChemicalOdeSystem>::InstanceWrapper(pReactionSystem);
     SetReactionSystem(pReactionSystem);
-    SetNumberOfSpecies(pReactionSystem -> GetSystemChemistry() -> GetNumberChemicals());
-    SetNumberOfReactions(pReactionSystem -> GetNumberOfReactions());
+    SetNumberOfSpecies(pReactionSystem->GetSystemChemistry()->GetNumberChemicals());
+    SetNumberOfReactions(pReactionSystem->GetNumberOfReactions());
 
 
 
     mpSystemInfo.reset(new ChemicalOdeSystemInformation<AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem>(pReactionSystem));
-    //mpSystemInfo -> SetReactionSystem(pReactionSystem);
+    //mpSystemInfo->SetReactionSystem(pReactionSystem);
     SetStateVariables(GetInitialConditions());
 
     SetIsCheckConcentration(true);
@@ -88,11 +90,10 @@ AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::AbstractInhomogenousCh
     mNumberOfReactions = existingSystem.mNumberOfReactions;
 }
 
-
 void AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::EvaluateYDerivatives(double time, const std::vector<double>& rY, std::vector<double>& rDY)
 {
 
-    if(mIsCheckConcentration)
+    if (mIsCheckConcentration)
     {
         CheckConcentration(rY);
     }
@@ -103,14 +104,14 @@ void AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::EvaluateYDerivati
     }
     
 
-    mpReactionSystem -> ReactSystem(rY, rDY);
+    mpReactionSystem->ReactSystem(rY, rDY);
 
 
     for(unsigned i=0; i<mNumberOfSpecies; i++)
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
-        if(rDY[i]<mDelta_error && rDY[i]>mDelta_error)
+        if (rDY[i]<mDelta_error && rDY[i]>mDelta_error)
         {
             rDY[i] = 0;
         }
@@ -175,7 +176,7 @@ void AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::CheckConcentratio
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
-        if(rY[i]<mDelta_error)
+        if (rY[i]<mDelta_error)
         {
             const_cast<double&>(rY[i]) = 0;
         }
@@ -193,15 +194,14 @@ bool AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::GetIsCheckConcent
     return mIsCheckConcentration;
 }
 
-
 template<>
 void ChemicalOdeSystemInformation<AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem>::Initialise()
 {
 
-    for( unsigned i=0; i<mp_reaction_system -> GetSystemChemistry() -> GetNumberChemicals(); i++)
+    for( unsigned i=0; i<mp_reaction_system->GetSystemChemistry()->GetNumberChemicals(); i++)
     {
-        this->mVariableNames.push_back(mp_reaction_system -> GetSystemChemistry() -> GetChemicalNamesByIndex(i));
-        this->mVariableUnits.push_back(mp_reaction_system -> GetSystemChemistry() -> GetChemicalDimensionsByIndex(i));
+        this->mVariableNames.push_back(mp_reaction_system->GetSystemChemistry()->GetChemicalNamesByIndex(i));
+        this->mVariableUnits.push_back(mp_reaction_system->GetSystemChemistry()->GetChemicalDimensionsByIndex(i));
         this->mInitialConditions.push_back(1.0); // will be overridden
     }
     this->mInitialised = true;

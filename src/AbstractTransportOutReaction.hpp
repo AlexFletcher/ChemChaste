@@ -1,22 +1,23 @@
 #ifndef ABSTRACTTRANSPORTOUTREACTION_HPP_
 #define ABSTRACTTRANSPORTOUTREACTION_HPP_
 
-// general includes
 #include <string>
 #include <stdlib.h> 
 #include <vector>
 #include <iostream>
-// custom includes
+
 #include "AbstractChemistry.hpp"
 #include "AbstractChemical.hpp"
 #include "AbstractTransportReaction.hpp"
 
-// abstract property to contain information about the interactions of chemical species at a cell boundary
-// bulk <- cell
-// reaction substrates denote the species in the bulk while products denote species in the cell
-
-// ZerothOrderTransportOutOfCell
-
+/**
+ * Abstract property to contain information about the interactions of chemical 
+ * species at a cell boundary:
+ * bulk <- cell
+ * 
+ * Reaction substrates denote the species in the bulk while products denote 
+ * species in the cell.
+ */
 class AbstractTransportOutReaction : public AbstractTransportReaction
 {
 private:
@@ -79,13 +80,12 @@ AbstractTransportOutReaction::AbstractTransportOutReaction(     std::vector<Abst
     mIrreversibleRateName = "kr =";
 }
 
-
 void AbstractTransportOutReaction::React(AbstractChemistry* bulkChemistry, AbstractChemistry* cellChemistry, const std::vector<double>& currentBulkConcentration, const std::vector<double>& currentCellConcentration, std::vector<double>& changeBulkConc, std::vector<double>& changeCellConc)
 {   
 
-    std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry->rGetChemicalVector();
 
-    std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry->rGetChemicalVector();
 
     UpdateReactionRate(bulkChemistry, cellChemistry, currentBulkConcentration, currentCellConcentration);
     
@@ -102,18 +102,16 @@ void AbstractTransportOutReaction::React(AbstractChemistry* bulkChemistry, Abstr
         // for each system chemical, parse whether it is involved in this reaction.
         for(unsigned j=0; j<mNumberOfBulkSpecies; j++)
         {
-            if(mpBulkReactionSpecies[j] -> GetChemicalName()==p_bulk_chemical -> GetChemicalName())
+            if (mpBulkReactionSpecies[j]->GetChemicalName()==p_bulk_chemical->GetChemicalName())
             {
                 changeBulkConc[index] += mStoichBulk[j]*GetReactionRate();
                 break;
             }
         }
-        
     }
 
-
-    // run through the cell species
-    index=0;
+    // Run through the cell species
+    index = 0;
     for(std::vector<AbstractChemical*>::iterator chem_iter = p_cell_chemical_vector.begin();
             chem_iter != p_cell_chemical_vector.end();
             ++chem_iter, ++index)
@@ -123,16 +121,14 @@ void AbstractTransportOutReaction::React(AbstractChemistry* bulkChemistry, Abstr
         // for each cell chemical, parse whether it is involved in this reaction.
         for(unsigned j=0; j<mNumberOfCellSpecies; j++)
         {
-            if(mpCellReactionSpecies[j] -> GetChemicalName()==p_cell_chemical -> GetChemicalName())
+            if (mpCellReactionSpecies[j]->GetChemicalName()==p_cell_chemical->GetChemicalName())
             {
                 changeCellConc[index] -= mStoichCell[j]*GetReactionRate();
                 break;
             }
         }
     }
-    
 }
-
 
 std::string AbstractTransportOutReaction::GetReactionType()
 {
@@ -140,10 +136,9 @@ std::string AbstractTransportOutReaction::GetReactionType()
     return "ZerothOrderTransportOutOfCell";
 }
 
-
 void AbstractTransportOutReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=false)
 {
-    if(reaction_information.find(mIrreversibleRateName) != std::string::npos)
+    if (reaction_information.find(mIrreversibleRateName) != std::string::npos)
     {
 
         size_t pos= reaction_information.find(mIrreversibleRateName);
@@ -152,8 +147,6 @@ void AbstractTransportOutReaction::ParseReactionInformation(std::string reaction
     }
 }
 
-
-// file read functions
 void AbstractTransportOutReaction::SetIrreversibleDelimiter(std::string delim)
 {
     mIrreversibleDelimiter = delim;

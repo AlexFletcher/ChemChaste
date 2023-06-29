@@ -48,7 +48,7 @@ std::vector<double> ChemicalCellProperty::GetCellConcentrationVector()
 
 double ChemicalCellProperty::GetCellConcentrationByIndex(unsigned index)
 {
-    if(index < mConcentrationVector.size())
+    if (index < mConcentrationVector.size())
     {
         return mConcentrationVector[index];
     }
@@ -58,7 +58,7 @@ double ChemicalCellProperty::GetCellConcentrationByIndex(unsigned index)
 
 double ChemicalCellProperty::GetCellConcentrationByName(std::string name)
 {
-    if(mpStateVariableRegister->IsStateVariablePresent(name))
+    if (mpStateVariableRegister->IsStateVariablePresent(name))
     {
         return mConcentrationVector[mpStateVariableRegister->RetrieveStateVariableIndex(name)];
     }

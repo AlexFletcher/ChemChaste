@@ -180,5 +180,4 @@ void AbstractFeAssemblerCommon<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::SetStateVar
     mU = U;
 }
 
-
 #endif 

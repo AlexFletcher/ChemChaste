@@ -1,7 +1,6 @@
 #ifndef INITIALCELLCONDITIONSFROMFILE_HPP_
 #define INITIALCELLCONDITIONSFROMFILE_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
@@ -9,11 +8,11 @@
 #include <stdlib.h> 
 
 #include "RandomNumberGenerator.hpp"
-
-// reaction includes
 #include "AbstractChemistry.hpp"
 
- 
+/**
+ * \todo Document this class.
+ */
 class InitialCellConditionsFromFile
 {
 protected:
@@ -70,17 +69,17 @@ InitialCellConditionsFromFile::InitialCellConditionsFromFile(std::string conditi
         // the first element of the read in database is the identifying names
         chemicalNamesVector.push_back(conditionsDatabase[i][0]);
 
-        if(conditionsDatabase[0].size()==2)
+        if (conditionsDatabase[0].size()==2)
         {
             // data for species concentration
             concentrationVector.push_back(atof(conditionsDatabase[i][1].c_str()));
         }
-        else if(conditionsDatabase[0].size()==3)
+        else if (conditionsDatabase[0].size()==3)
         {
             // data for species concentration and whether to perturb the initial value
             
             perturbConcentrationVector.push_back(StringToBool(conditionsDatabase[i][2]));
-            if(perturbConcentrationVector[i]==true)
+            if (perturbConcentrationVector[i]==true)
             {
                 concentrationVector.push_back(fabs(atof(conditionsDatabase[i][1].c_str()) + RandomNumberGenerator::Instance()->ranf()));
             }
@@ -111,13 +110,13 @@ std::vector<std::vector<std::string>> InitialCellConditionsFromFile::ReadMatrix(
     std::vector<std::vector<std::string>> outputMatrix = std::vector<std::vector<std::string>>();
 
     // check file exists and is openable
-    if(inputFile.is_open()){
+    if (inputFile.is_open()){
         // open the matrix file
         while (getline(inputFile,line)){
             // while the file still has lines not read.
             // read line left to right, top to bottom.
-            if(!line.empty()){
-                if(line.at(0)=='#')
+            if (!line.empty()){
+                if (line.at(0)=='#')
                 {
                     //std::cout<<"Escape line: "<<line<<std::endl;
                 }
@@ -153,7 +152,7 @@ std::vector<std::string> InitialCellConditionsFromFile::parseMatrixLineString(st
     while(!IsEndOfLine)
     {
         // while not at the end of the file, sample sub strings from the posiiton of the delimiter
-        if(posSnew == std::string::npos)
+        if (posSnew == std::string::npos)
         {
             IsEndOfLine = true;
         }
@@ -178,7 +177,7 @@ bool InitialCellConditionsFromFile::StringToBool(std::string test_string)
 
     for(unsigned i=0; i<mBoolTestDictionary.size(); i++)
     {
-        if(test_string == mBoolTestDictionary[i])
+        if (test_string == mBoolTestDictionary[i])
         {
             return true;
         }
@@ -186,8 +185,6 @@ bool InitialCellConditionsFromFile::StringToBool(std::string test_string)
 
     return false;
 }
-
-
 
 void InitialCellConditionsFromFile::SetChemicalNamesVector(std::vector<std::string> namesVector)
 {
@@ -204,7 +201,6 @@ void InitialCellConditionsFromFile::SetPerturbConcentrationVector(std::vector<bo
     mPerturbConcentrationVector = perturbConcentrationVector;
 }
 
-
 std::vector<std::string> InitialCellConditionsFromFile::GetChemicalNamesVector()
 {
     return mChemicalNamesVector;
@@ -219,6 +215,5 @@ std::vector<bool> InitialCellConditionsFromFile::GetPerturbConcentrationVector()
 {
     return mPerturbConcentrationVector;
 }
-
 
 #endif

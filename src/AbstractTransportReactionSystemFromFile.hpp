@@ -1,21 +1,20 @@
 #ifndef ABSTRACTTRANSPORTREACTIONSYSTEMFROMFILE_HPP_
 #define ABSTRACTTRANSPORTREACTIONSYSTEMFROMFILE_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <iostream>
 #include <fstream>
 
-// reaction includes
 #include "AbstractTransportReactionSystem.hpp"
 #include "AbstractTransportReaction.hpp"
 #include "AbstractChemistry.hpp"
 #include "ReactionTypeDatabase.hpp"
 
-// class to construct a transport reaction system from a file 
-
+/**
+ * Class to construct a transport reaction system from a file.
+ */
 class AbstractTransportReactionSystemFromFile : public AbstractTransportReactionSystem
 {
 protected:
@@ -157,7 +156,7 @@ void AbstractTransportReactionSystemFromFile::ParseSystemChemistry(std::vector<s
     for(unsigned i =0; i<bulk_species_names.size(); i++)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(bulk_species_names[i]);
-        mpBulkChemistry -> AddChemical(candidate_chemical);
+        mpBulkChemistry->AddChemical(candidate_chemical);
     }
 
     SetBulkChemistry(mpBulkChemistry);
@@ -165,7 +164,7 @@ void AbstractTransportReactionSystemFromFile::ParseSystemChemistry(std::vector<s
     for(unsigned i =0; i<cell_species_names.size(); i++)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(cell_species_names[i]);
-        mpCellChemistry -> AddChemical(candidate_chemical);
+        mpCellChemistry->AddChemical(candidate_chemical);
     }
 
     SetCellChemistry(mpCellChemistry);
@@ -185,7 +184,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
 
     unsigned numberOfReactions=0;
 
-    if(inputFile.is_open())
+    if (inputFile.is_open())
     {
         // open the reaction file
         while (getline(inputFile,line))
@@ -193,9 +192,9 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
 
             // for each non-empty reation file line, parse the reactions into
             // data structures on line by line basis
-            if(!line.empty())
+            if (!line.empty())
             {
-                if(line.at(0)=='#')
+                if (line.at(0)=='#')
                 {
                     //std::cout<<"Escape line: "<<line<<std::endl;
                 }
@@ -249,7 +248,7 @@ bool AbstractTransportReactionSystemFromFile::TestReversibility(std::string line
 {
     // test for reversibility in reaction string
     bool IsReversible =  false;
-    if(line.find(mReverDelimiter) != std::string::npos){
+    if (line.find(mReverDelimiter) != std::string::npos){
         // set reversible switch
         IsReversible =  true;
     }
@@ -269,7 +268,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
 
     bool IsReversible = TestReversibility(line);
     std::string delim;
-    if(IsReversible)
+    if (IsReversible)
     {
         delim = mReverDelimiter;
     }
@@ -308,7 +307,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
         std::vector<unsigned> stoichVector;
 
         // remove potential whitespace from zeroth character, seen in case <->
-        if(isspace(str.c_str()[0])){
+        if (isspace(str.c_str()[0])){
             str.erase(str.begin());
         }
 
@@ -324,7 +323,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
 
             unsigned stoichValue=1;
 
-            if(isdigit(strT.c_str()[0])){
+            if (isdigit(strT.c_str()[0])){
                 stoichValue=std::stoul(strT.c_str());
                 
                 unsigned i=0;
@@ -333,9 +332,9 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             }else{tempString=strT;}
 
             // remove whitespace and memory container size to ensure like for like comparisons are consistent
-            tempString.erase(remove_if(tempString.begin(), tempString.end(), isspace), tempString.end());
+            tempString.erase(remove_if (tempString.begin(), tempString.end(), isspace), tempString.end());
 
-            if(stoichValue==0){
+            if (stoichValue==0){
                 // skip the push_back of the zero entry
             }
             else

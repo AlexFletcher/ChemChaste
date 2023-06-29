@@ -9,11 +9,11 @@
 #include "Cell.hpp"
 #include "AbstractCellProperty.hpp"
 
-
-
+/**
+ * \todo Document class.
+ */
 class CellAnalyticsProperty : public AbstractCellProperty
 {
-
 protected:
 
     // CellPtr to a given cell for access to cell data and for properties
@@ -21,11 +21,9 @@ protected:
 
     unsigned mCellID;
 
-
 public:
 
     CellAnalyticsProperty();
-
 
     virtual ~CellAnalyticsProperty();
 

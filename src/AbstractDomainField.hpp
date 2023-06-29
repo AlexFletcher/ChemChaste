@@ -9,9 +9,10 @@
 #include "AbstractTetrahedralMesh.hpp"
 #include "StateVariableRegister.hpp"
 
-/*
-    Class to hold the information about the spatial domain, mesh, domain labels, ode types etc
-*/
+/**
+ * Class to hold the information about the spatial domain, mesh, domain labels, 
+ * ODE types etc.
+ */
 class AbstractDomainField
 {
 protected:

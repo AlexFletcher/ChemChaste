@@ -1,8 +1,6 @@
 #ifndef ABSTRACTPDESYSTEMMODIFIER_HPP_
 #define ABSTRACTPDESYSTEMMODIFIER_HPP_
 
-//#include <cxxtest/GlobalFixture.h>
-//#include "PetscSetupAndFinalize.hpp"
 #include "ChasteSerialization.hpp"
 #include "ClassIsAbstract.hpp"
 #include <boost/shared_ptr.hpp>
@@ -364,7 +362,7 @@ void AbstractPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::UpdateAtEndOf
             VtkMeshWriter<ELEMENT_DIM,SPACE_DIM>* p_vtk_mesh_writer = new VtkMeshWriter<ELEMENT_DIM,SPACE_DIM>(mOutputDirectory, results_file, false);
             std::vector<double> pde_solution;
 
-            for (unsigned i=0; i<mpFeMesh->GetNumNodes(); i++)
+            for (unsigned i = 0; i < mpFeMesh->GetNumNodes(); i++)
             {
                 pde_solution.push_back(solution_repl[i*PROBLEM_DIM+pdeDim]); 
             }
@@ -374,10 +372,8 @@ void AbstractPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::UpdateAtEndOf
 
             delete p_vtk_mesh_writer;
         }
-        
     }
 #endif //CHASTE_VTK
-    //std::cout<<"AbstractPdeSystemModifier - UpdateAtEndOfOutputTimeStep - end"<<std::endl;
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>

@@ -1,94 +1,160 @@
 #ifndef ABSTRACTCHEMICAL_HPP_
 #define ABSTRACTCHEMICAL_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 
-// abstract property to contain information about a chemical species used in ChemChaste
-// conatains the name of the chemical and basic chemcial properties
-
+/**
+ * Abstract class used to contain information about a chemical species in 
+ * ChemChaste. Contains the name of the chemical and basic chemcial properties.
+ */
 class AbstractChemical
 {
 private:
 
+    /** The name of the chemical. Defaults to empty string. */
     std::string mChemicalName;
 
-    // chemical properties list for accessing by inherited properties
-
-    // default value 1.0
+    /** The molecular size of the chemical. Defaults to 1.0. */
     double mSize;
 
-    // default value 1.0
+    /** The molecular mass of the chemical. Defaults to 1.0. */
     double mMass;
 
-    // molecular charge for case of electrical reactions
-    // default value 0
+    /** Molecular charge for case of electrical reactions. Defaults to 0. */
     int mValence;
 
-    // numerical dimensions for the chemical traits, used in the ode information to define the states
-    // default "non-dim"
+    /**
+     * Numerical dimensions for the chemical traits, used in the ODE information 
+     * to define the states. Defaults to "non-dim".
+     */
     std::string mChemicalDimensions;
 
-    // energetic information for gibbs formation energies and reaction rate calculation
-    // no default set
+    /**
+     * Whether the Gibbs formation energy is known. Defaults to false.
+     */
     bool mFormationKnown;
 
-    // no default set
+    /**
+     * The Gibbs formation energy. Defaults to 0.
+     */
     double mFormationGibbs;
-
 
 public:
 
-    AbstractChemical(   std::string chemicalName = "", 
-                        double size = 1.0,
-                        double mass = 1.0,
-                        int valence = 0,
-                        std::string chemicalDimensions = "non-dim"
-                        );
+    /**
+     * Default constructor.
+     * 
+     * @param chemicalName the name of the chemical. Defaults to empty string.
+     * @param size The molecular size of the chemical. Defaults to 1.0.
+     * @param mass The molecular mass of the chemical. Defaults to 1.0.
+     * @param valence Molecular charge for case of electrical reactions. 
+     *                Defaults to 0.
+     * @param chemicalDimensions Numerical dimensions for the chemical traits. 
+     *                           Defaults to 1.0.
+     */
+    AbstractChemical(std::string chemicalName="", 
+                     double size=1.0,
+                     double mass=1.0,
+                     int valence=0,
+                     std::string chemicalDimensions="non-dim");
 
+    /**
+     * Destructor.
+     */
     virtual ~AbstractChemical()
     {
     };
 
-    // set methods
+    /**
+     * Set mChemicalName.
+     * 
+     * @param chemicalName The name of the chemical.
+     */
+    void SetChemicalName(std::string chemicalName);
 
-    void SetChemicalName(std::string);
+    /**
+     * Set mSize.
+     * 
+     * @param size The molecular size of the chemical.
+     */
+    void SetChemicalSize(double size);
 
-    void SetChemicalSize(double);
+    /**
+     * Set mMass.
+     * 
+     * @param mass The molecular mass of the chemical.
+     */
+    void SetChemicalMass(double mass);
 
-    void SetChemicalMass(double);
+    /**
+     * Set mValence.
+     * 
+     * @param valence Molecular charge for case of electrical reactions.
+     */
+    void SetChemicalValence(int valence);
+    
+    /**
+     * Set mChemicalDimensions.
+     * 
+     * @param chemicalDimensions Numerical dimensions for the chemical traits.
+     */
+    void SetChemicalDimensions(std::string chemicalDimensions);
 
-    void SetChemicalValence(int);
+    /**
+     * Set mFormationKnown.
+     * 
+     * @param formationKnown Whether the Gibbs formation energy is known.
+     */
+    void SetChemicalFormationKnown(bool formationKnown);
 
-    void SetChemicalFormationGibbs(double);
+    /**
+     * Set mFormationGibbs.
+     * 
+     * @param formationGibbs The Gibbs formation energy.
+     */
+    void SetChemicalFormationGibbs(double formationGibbs);
 
-    void SetChemicalFormationKnown(bool);
-
-    void SetChemicalDimensions(std::string);
-
-    // get methods
-
+    /**
+     * @return mChemicalName.
+     */
     std::string GetChemicalName();
 
+    /**
+     * @return mSize.
+     */
     double GetChemicalSize();
 
+    /**
+     * @return mMass.
+     */
     double GetChemicalMass();
 
+    /**
+     * @return mCValence.
+     */
     int GetChemicalValence();
 
-    double GetChemicalFormationGibbs();
-
+    /**
+     * @return mChemicalDimensions.
+     */
     std::string GetChemicalDimensions();
 
+    /**
+     * @return mFormationKnown.
+     */
     bool IsChemicalFormationKnown();
 
-    virtual std::string GetChemicalType()
-    {
-        return "AbstractChemical";
-    };
+    /**
+     * @return mFormationGibbs.
+     */
+    double GetChemicalFormationGibbs();
 
+    /**
+     * @return "AbstractChemical".
+     */
+    virtual std::string GetChemicalType();
 };
 
-#endif
+#endif /* ABSTRACTCHEMICAL_HPP_ */

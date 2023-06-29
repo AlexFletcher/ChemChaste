@@ -6,10 +6,11 @@
 #include "TransportOdeSystemInformation.hpp"
 #include "StateVariableRegister.hpp"
 
-
-// ode system to model transport phenomena across a membrane seaprating two compartments
-// the compartments external (bulk) and internal (cell) are recorded separately
-
+/**
+ * ODE system to model transport phenomena across a membrane seaprating two 
+ * compartments. The compartments external (bulk) and internal (cell) are 
+ * recorded separately.
+ */
 class AbstractTransportOdeSystem: public AbstractOdeSystem
 {
 private:
@@ -107,7 +108,7 @@ AbstractTransportOdeSystem::AbstractTransportOdeSystem(AbstractTransportReaction
 
     SetReactionSystem(mpTransportReactionSystem);
     SetNumberOfSpecies(mpTransportReactionSystem ->GetNumberOfBulkStates()+mpTransportReactionSystem ->GetNumberOfCellStates());
-    SetNumberOfReactions(mpTransportReactionSystem -> GetNumberOfReactions());
+    SetNumberOfReactions(mpTransportReactionSystem->GetNumberOfReactions());
 
     // initialsie cell concentration vectors
     std::vector<double> cellConcentration(mpTransportReactionSystem ->GetNumberOfCellStates(),1.0);
@@ -127,17 +128,11 @@ AbstractTransportOdeSystem::AbstractTransportOdeSystem(const AbstractTransportOd
     : AbstractOdeSystem(existingSystem.mNumberOfSpecies)
 {
     mpTransportReactionSystem = existingSystem.mpTransportReactionSystem;
-
     mNumberOfSpecies = existingSystem.mNumberOfSpecies;
-
     mNumberOfReactions = existingSystem.mNumberOfReactions;
-
     mDelta_error = existingSystem.mDelta_error;
-
     mIsCheckConcentration = existingSystem.mIsCheckConcentration;
-
 }
-
 
 void AbstractTransportOdeSystem::EvaluateYDerivatives(double time, const std::vector<double>& rY, std::vector<double>& rDY)
 {
@@ -160,7 +155,7 @@ void AbstractTransportOdeSystem::EvaluateYDerivatives(double time, const std::ve
         //changeBulkConcentrations.push_back(rDY.at(i));
         /*
         this_state = mpTransportReactionSystem->GetBulkChemistry()->GetChemicalNamesByIndex(i);
-        if(mPdeStateVariableRegister->IsStateVariablePresent(this_state))
+        if (mPdeStateVariableRegister->IsStateVariablePresent(this_state))
         {
             bulkConcentrations[i] = rY.at(mPdeStateVariableRegister->RetrieveStateVariableIndex(this_state));
         }
@@ -186,7 +181,7 @@ void AbstractTransportOdeSystem::EvaluateYDerivatives(double time, const std::ve
         rDY[i] = 0.0;
     }
     
-    if(mIsCheckConcentration)
+    if (mIsCheckConcentration)
     {   
         CheckConcentration(bulkConcentrations);
         CheckConcentration(cellConcentrations);
@@ -199,7 +194,7 @@ void AbstractTransportOdeSystem::EvaluateYDerivatives(double time, const std::ve
     //    mChangeCellConc[i] =0.0;
     //}
 
-    mpTransportReactionSystem -> ReactSystem(bulkConcentrations, cellConcentrations, changeBulkConcentrations, changeCellConcentrations);
+    mpTransportReactionSystem->ReactSystem(bulkConcentrations, cellConcentrations, changeBulkConcentrations, changeCellConcentrations);
 
     // reform rDY for passing to the solver
     for(unsigned i=0; i<number_of_bulk_states; i++)
@@ -271,7 +266,7 @@ void AbstractTransportOdeSystem::UpdateReservedCellConcentrationByIndex(unsigned
 
 void AbstractTransportOdeSystem::UpdateReservedCellConcentrationByName(std::string name, double concentration)
 {
-    unsigned index = mpTransportReactionSystem -> GetCellChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpTransportReactionSystem->GetCellChemistry()->GetChemicalIndexByName(name);
 
     mReservedCellConcentration[index] = concentration;
 }
@@ -283,11 +278,10 @@ void AbstractTransportOdeSystem::UpdateChangeCellConcentrationByIndex(unsigned i
 
 void AbstractTransportOdeSystem::UpdateChangeCellConcentrationByName(std::string name, double concentration)
 {
-    unsigned index = mpTransportReactionSystem -> GetCellChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpTransportReactionSystem->GetCellChemistry()->GetChemicalIndexByName(name);
 
     mChangeCellConc[index] = concentration;
 }
-
 
 void AbstractTransportOdeSystem::SetDeltaError(double delta_error)
 {
@@ -312,7 +306,7 @@ void AbstractTransportOdeSystem::CheckConcentration(const std::vector<double>& r
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
-        if(rY[i]<mDelta_error)
+        if (rY[i]<mDelta_error)
         {
             const_cast<double&>(rY[i]) = 0;
         }
@@ -352,7 +346,7 @@ double AbstractTransportOdeSystem::RetrieveReservedCellConcentrationByIndex(unsi
 
 double AbstractTransportOdeSystem::RetrieveReservedCellConcentrationByName(std::string name)
 {
-    unsigned index = mpTransportReactionSystem -> GetCellChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpTransportReactionSystem->GetCellChemistry()->GetChemicalIndexByName(name);
 
     return mReservedCellConcentration[index];
 }
@@ -364,30 +358,27 @@ double AbstractTransportOdeSystem::RetrieveChangeCellConcentrationByIndex(unsign
 
 double AbstractTransportOdeSystem::RetrieveChangeCellConcentrationByName(std::string name)
 {
-    unsigned index = mpTransportReactionSystem -> GetCellChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpTransportReactionSystem->GetCellChemistry()->GetChemicalIndexByName(name);
 
     return mChangeCellConc[index];
 }
-
-
-
 
 template<>
 void TransportOdeSystemInformation<AbstractTransportOdeSystem>::Initialise()
 {
     // initialise the bulk state varibles
-    for( unsigned i=0; i<mp_reaction_system -> GetBulkChemistry() -> GetNumberChemicals(); i++)
+    for( unsigned i=0; i<mp_reaction_system->GetBulkChemistry()->GetNumberChemicals(); i++)
     {
-        this->mVariableNames.push_back(mp_reaction_system -> GetBulkChemistry() -> GetChemicalNamesByIndex(i));
-        this->mVariableUnits.push_back(mp_reaction_system -> GetBulkChemistry() -> GetChemicalDimensionsByIndex(i));
+        this->mVariableNames.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalNamesByIndex(i));
+        this->mVariableUnits.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalDimensionsByIndex(i));
         this->mInitialConditions.push_back(1.0); // will be overridden
     }
     
     // initialise the cell state varibles; appended onto the end of the bulk state vectors
-    for( unsigned i=0; i<mp_reaction_system -> GetCellChemistry() -> GetNumberChemicals(); i++)
+    for( unsigned i=0; i<mp_reaction_system->GetCellChemistry()->GetNumberChemicals(); i++)
     {
-        this->mVariableNames.push_back(mp_reaction_system -> GetCellChemistry() -> GetChemicalNamesByIndex(i));
-        this->mVariableUnits.push_back(mp_reaction_system -> GetCellChemistry() -> GetChemicalDimensionsByIndex(i));
+        this->mVariableNames.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalNamesByIndex(i));
+        this->mVariableUnits.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalDimensionsByIndex(i));
         this->mInitialConditions.push_back(1.0); // will be overridden
     }
     this->mInitialised = true;

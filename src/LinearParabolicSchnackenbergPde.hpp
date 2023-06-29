@@ -8,7 +8,7 @@
 #include "AbstractChemicalOdeForCoupledPdeSystem.hpp"
 
 /**
-* The non-dimensionalised Schnackenberg reaction diffusion equation
+ * The non-dimensionalised Schnackenberg reaction diffusion equation.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 class LinearParabolicSchnackenbergPde : public AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>
@@ -23,7 +23,6 @@ private:
     double mB;
     
     double mGamma;
-
 
 public:
 
@@ -51,7 +50,7 @@ public:
         assert(pdeIndex<PROBLEM_DIM);
 
         double source_term_this_pde_index;
-        if(pdeIndex==0)
+        if (pdeIndex==0)
         {
             // U
             source_term_this_pde_index = mGamma*(mA - rU(0) + rU(0)*rU(0)*rU(1));

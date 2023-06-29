@@ -1,25 +1,26 @@
 #ifndef ABSTRACTREACTIONSYSTEMFROMFILE_HPP_
 #define ABSTRACTREACTIONSYSTEMFROMFILE_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <iostream>
 
-// reaction includes
 #include "AbstractReactionSystem.hpp"
 #include "AbstractReaction.hpp"
 #include "AbstractChemistry.hpp"
 #include "ReactionTypeDatabase.hpp"
 
-// class containg the methods to read a system of reactions from a text file. A set of file 
-// deliminators for p[asring the differnet information string are provided defaults. For each reaction
-// the chemical species participating and their stoichiometry as substrates and/or products is 
-// determined for the file row string. The reaction type is read form the file and the 
-// ReactionTypeDatabase with the ReactionTablet function is used to typecast the desired reaction 
-// type which inherit from AbstractReaction. The full system chemistry is determined.
-
+/**
+ * Class containg the methods to read a system of reactions from a text file. A 
+ * set of file deliminators for parsing the differnet information string are 
+ * provided defaults. For each reaction the chemical species participating and 
+ * their stoichiometry as substrates and/or products is determined for the file 
+ * row string. The reaction type is read form the file and the 
+ * ReactionTypeDatabase with the ReactionTablet function is used to typecast the 
+ * desired reaction type which inherit from AbstractReaction. The full system 
+ * chemistry is determined.
+ */
 class AbstractReactionSystemFromFile : public AbstractReactionSystem
 {
 protected:
@@ -154,7 +155,7 @@ void AbstractReactionSystemFromFile::ParseSystemChemistry(std::vector<std::strin
     for(unsigned i =0; i<species_names.size(); i++)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(species_names[i]);
-        mpSystemChemistry -> AddChemical(candidate_chemical);
+        mpSystemChemistry->AddChemical(candidate_chemical);
     }
 
     SetSystemChemistry(mpSystemChemistry);
@@ -176,7 +177,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
 
     unsigned numberOfReactions=0;
 
-    if(inputFile.is_open())
+    if (inputFile.is_open())
     {   
         // open the reaction file
         while (getline(inputFile,line))
@@ -184,11 +185,11 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
 
             // for each non-empty reation file line, parse the reactions into
             // data structures on line by line basis
-            if(!line.empty())
+            if (!line.empty())
             {
-                if(!DomainFound)
+                if (!DomainFound)
                 {
-                    if(line.find("Domain : ") != std::string::npos)
+                    if (line.find("Domain : ") != std::string::npos)
                     {
                         SetDomain(line.substr(line.find("Domain : ")+1,std::string::npos));
                         DomainFound = true;
@@ -236,7 +237,7 @@ bool AbstractReactionSystemFromFile::TestReversibility(std::string line)
 {
     // test for reversibility in reaction string
     bool IsReversible =  false;
-    if(line.find(mReverDelimiter) != std::string::npos){
+    if (line.find(mReverDelimiter) != std::string::npos){
         // set reversible switch
         IsReversible =  true;
     }
@@ -256,7 +257,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
 
     bool IsReversible = TestReversibility(line);
     std::string delim;
-    if(IsReversible)
+    if (IsReversible)
     {
         delim = mReverDelimiter;
     }
@@ -285,7 +286,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
         std::vector<unsigned> stoichVector;
 
         // remove potential whitespace from zeroth character, seen in case <->
-        if(isspace(str.c_str()[0])){
+        if (isspace(str.c_str()[0])){
             str.erase(str.begin());
         }
 
@@ -301,7 +302,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
 
             unsigned stoichValue=1;
 
-            if(isdigit(strT.c_str()[0])){
+            if (isdigit(strT.c_str()[0])){
                 stoichValue=std::stoul(strT.c_str());
                 
                 unsigned i=0;
@@ -310,9 +311,9 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             }else{tempString=strT;}
 
             // remove whitespace and memory container size to ensure like for like comparisons are consistent
-            tempString.erase(remove_if(tempString.begin(), tempString.end(), isspace), tempString.end());
+            tempString.erase(remove_if (tempString.begin(), tempString.end(), isspace), tempString.end());
 
-            if(stoichValue==0){
+            if (stoichValue==0){
                 // skip the push_back of the zero entry
             }
             else

@@ -5,7 +5,9 @@
 #include "AbstractOdeSystemInformation.hpp"
 #include "AbstractReactionSystem.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 template<class ODE_SYSTEM>
 class ChemicalOdeSystemInformation : public AbstractOdeSystemInformation
 {

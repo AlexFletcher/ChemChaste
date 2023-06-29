@@ -31,7 +31,7 @@ void AbstractChemistry::AddChemical(AbstractChemical *chemical)
     // function to check whether a chemical is present, if not add to mChemicalVector
 
     bool newChem = false;
-    if(mpChemicalVector.empty())
+    if (mpChemicalVector.empty())
     {
         newChem = true;
     }
@@ -41,7 +41,7 @@ void AbstractChemistry::AddChemical(AbstractChemical *chemical)
         newChem = CheckChemical(chemical);
     }
 
-    if(newChem)
+    if (newChem)
     {
     
         UpdateChemicalVectors(chemical);
@@ -58,11 +58,9 @@ bool AbstractChemistry::CheckChemical(AbstractChemical* chemical)
     for(std::vector<AbstractChemical*> :: iterator chemical_iter = mpChemicalVector.begin(); 
         chemical_iter != mpChemicalVector.end();
          ++chemical_iter)
-    {
-    
-        if(chemical -> GetChemicalName() ==  dynamic_cast<AbstractChemical*>(*chemical_iter) -> GetChemicalName())
+    {    
+        if (chemical->GetChemicalName() ==  dynamic_cast<AbstractChemical*>(*chemical_iter)->GetChemicalName())
         {
-
             newChem = false;
             break;
         }
@@ -70,13 +68,12 @@ bool AbstractChemistry::CheckChemical(AbstractChemical* chemical)
     return newChem;
 }
 
-
 void AbstractChemistry::UpdateChemicalVectors(AbstractChemical* chemical)
 {
     mpChemicalVector.push_back(chemical);
     // properties needed for general function
-    mChemicalNames.push_back(chemical -> GetChemicalName()); // may remove this, will lead to duplicates
-    mChemicalDimensions.push_back(chemical -> GetChemicalDimensions()); // may remove this, will lead to duplicates
+    mChemicalNames.push_back(chemical->GetChemicalName()); // may remove this, will lead to duplicates
+    mChemicalDimensions.push_back(chemical->GetChemicalDimensions()); // may remove this, will lead to duplicates
     // further properties, to be overridded in derived classes
     mNumberChemicals +=1;
     return;
@@ -109,7 +106,7 @@ std::vector<std::string> AbstractChemistry::GetChemicalNames()
 
 std::string AbstractChemistry::GetChemicalNamesByIndex(unsigned index)
 {
-    if(index < mNumberChemicals)
+    if (index < mNumberChemicals)
     {
         return mChemicalNames[index];
     }
@@ -128,7 +125,7 @@ unsigned AbstractChemistry::GetChemicalIndexByName(std::string name)
          ++chemical_iter)
     {
     
-        if(name ==  dynamic_cast<AbstractChemical*>(*chemical_iter) -> GetChemicalName())
+        if (name ==  dynamic_cast<AbstractChemical*>(*chemical_iter)->GetChemicalName())
         {
             break;
         }
@@ -146,7 +143,7 @@ std::vector<std::string> AbstractChemistry::GetChemicalDimensions()
 
 std::string AbstractChemistry::GetChemicalDimensionsByIndex(unsigned index)
 {
-    if(index < mNumberChemicals)
+    if (index < mNumberChemicals)
     {
         return mChemicalDimensions[index];
     }

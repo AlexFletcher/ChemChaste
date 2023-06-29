@@ -1,18 +1,19 @@
 #ifndef MASSACTIONREACTION_HPP_
 #define MASSACTIONREACTION_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <cmath>
 
-// custom includes
 #include "AbstractChemical.hpp"
 #include "AbstractReversibleReaction.hpp"
 
 // mass action reactions are generally reversible
 
+/**
+ * \todo Document this class.
+ */
 class MassActionReaction : public AbstractReversibleReaction
 {
 private:
@@ -113,11 +114,11 @@ MassActionReaction::MassActionReaction(std::vector<AbstractChemical*> substrates
         mReverseReactionRateConstant(ReverseReactionRateConstant)
 {
     //std::cout<<"MasActionConstructor: "<<ForwardReactionRateConstant<<" "<<ReverseReactionRateConstant<<std::endl;
-    if(mIsGibbs)
+    if (mIsGibbs)
     {
         mGibbsFreeEnergy = ForwardReactionRateConstant;
     }
-    if(!mIsReversible)
+    if (!mIsReversible)
     {
         mReverseReactionRateConstant = 0.0;
     }
@@ -134,7 +135,7 @@ void MassActionReaction::UpdateReactionRate(AbstractChemistry* systemChemistry, 
     double kf = mForwardReactionRateConstant;
     double kr = mReverseReactionRateConstant;
 
-    if(mIsGibbs)
+    if (mIsGibbs)
     {
         kf = DeltaGtoKf(mGibbsFreeEnergy, kr);
     }
@@ -144,7 +145,7 @@ void MassActionReaction::UpdateReactionRate(AbstractChemistry* systemChemistry, 
     double forwardFlux=1.0;
     double reverseFlux=1.0;
 
-    std::vector<AbstractChemical*> p_chemical_vector = systemChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
     unsigned index = 0;
     for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
@@ -154,7 +155,7 @@ void MassActionReaction::UpdateReactionRate(AbstractChemistry* systemChemistry, 
 
         for(unsigned j=0; j<mNumberOfSubstrates; j++)
         {
-            if(mpSubstrates[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 forwardFlux *=  std::pow(currentSystemConc[index],mStoichSubstrates[j]);
                 break;
@@ -162,7 +163,7 @@ void MassActionReaction::UpdateReactionRate(AbstractChemistry* systemChemistry, 
         }
         for(unsigned j=0; j<mNumberOfProducts; j++)
         {
-            if(mpProducts[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 reverseFlux *=  std::pow(currentSystemConc[index],mStoichProducts[j]);
                 break;
@@ -185,10 +186,10 @@ void MassActionReaction::ParseReactionInformation(std::string reaction_informati
     
     mIsReversible = IsReversible;
 
-    if(!mIsReversible)
+    if (!mIsReversible)
     {
        
-        if(reaction_information.find(mIrreversibleRateName) != std::string::npos)
+        if (reaction_information.find(mIrreversibleRateName) != std::string::npos)
         {
 
             size_t pos= reaction_information.find(mIrreversibleRateName);
@@ -199,7 +200,7 @@ void MassActionReaction::ParseReactionInformation(std::string reaction_informati
     }
     else
     {  
-        if(reaction_information.find(mGibbsDelimiter) != std::string::npos)
+        if (reaction_information.find(mGibbsDelimiter) != std::string::npos)
         {
             size_t pos= reaction_information.find(mGibbsDelimiter);
             std::cout<<"Gibbs raw: "<<reaction_information.substr(pos+mGibbsDelimiter.size()+1,std::string::npos).c_str()<<std::endl;
@@ -228,7 +229,7 @@ double MassActionReaction::CalculateReactionQuotient(AbstractChemistry* systemCh
 {
     double quotient = 1.0;
     
-    if(mNumberOfSubstrates ==0 || mNumberOfProducts==0)
+    if (mNumberOfSubstrates ==0 || mNumberOfProducts==0)
     {
         quotient = 0.0;
     }else{
@@ -236,7 +237,7 @@ double MassActionReaction::CalculateReactionQuotient(AbstractChemistry* systemCh
         double substrates_concentrations = 1.0;
         // need to check against the concentration of each chemical in the system
         
-        std::vector<AbstractChemical*> p_chemical_vector = systemChemistry -> rGetChemicalVector();
+        std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
         unsigned index = 0;
         for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
                 chem_iter != p_chemical_vector.end();
@@ -246,7 +247,7 @@ double MassActionReaction::CalculateReactionQuotient(AbstractChemistry* systemCh
 
             for(unsigned j=0; j<mNumberOfSubstrates; j++)
             {
-                if(mpSubstrates[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+                if (mpSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
                     substrates_concentrations *=  std::pow(currentSystemConc[index],mStoichSubstrates[j]);
                     break;
@@ -254,7 +255,7 @@ double MassActionReaction::CalculateReactionQuotient(AbstractChemistry* systemCh
             }
             for(unsigned j=0; j<mNumberOfProducts; j++)
             {
-                if(mpProducts[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+                if (mpProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
                     products_concentrations *=  std::pow(currentSystemConc[index],mStoichProducts[j]);
                     break;

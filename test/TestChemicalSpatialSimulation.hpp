@@ -1,15 +1,12 @@
 #ifndef TESTCHEMICALSPATIALSIMULATION_HPP_
 #define TESTCHEMICALSPATIALSIMULATION_HPP_
 
-// chaste includes
 #include <cxxtest/TestSuite.h>
 #include "UblasIncludes.hpp"
 #include "AbstractCellBasedTestSuite.hpp"
 #include "CheckpointArchiveTypes.hpp"
 #include "PetscSetupAndFinalize.hpp"
 
-
-// general includes
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -17,11 +14,7 @@
 #include <tuple>
 #include <cmath>
 
-// Extended boundary conditions container
 #include "BoundaryConditionsContainer_extended.hpp"
-
-
-// chaste PdeOde includes
 #include "HoneycombMeshGenerator.hpp"
 #include "EulerIvpOdeSolver.hpp"
 #include "LinearParabolicPdeSystemWithCoupledOdeSystemSolver.hpp"
@@ -30,25 +23,17 @@
 #include "OutputFileHandler.hpp"
 #include "RandomNumberGenerator.hpp"
 #include "TrianglesMeshReader.hpp"
-
-// inhomogenous solver
 #include "StateVariableRegister.hpp"
 #include "InhomogenousParabolicPdeOdeSystem.hpp"
 #include "InhomogenousCoupledPdeOdeSolver.hpp"
-
 #include "InhomogenousOdeSchnackenbergCoupledPdeOdeSystem.hpp"
 #include "InhomogenousOdeConsumerProducer.hpp"
 #include "AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem.hpp"
-
-// custom pdeOde includes
 #include "PdeSchnackenbergCoupledPdeOdeSystem.hpp"
 #include "PdeConsumerProducer.hpp"
 #include "InhomogenousParabolicPdeOdeSystem.hpp"
-
-// domain field includes
 #include "AbstractDomainField.hpp"
 #include "ChemicalDomainField.hpp"
-
 
 class TestChemicalSpatialSimulation : public AbstractCellBasedTestSuite
 {
@@ -89,29 +74,29 @@ public:
         std::cout<<"File probDim: "<<p_field ->GetProblemDimensions()<<std::endl;
         std::cout<<"User probDim: "<<probDim<<std::endl;
 
-        MutableMesh<2,2>* p_mesh = p_field ->GetMeshGenerator() -> GetMesh();
+        MutableMesh<2,2>* p_mesh = p_field ->GetMeshGenerator()->GetMesh();
         const unsigned spaceDim=2;
         const unsigned elementDim=2;
         
     
-        std::cout<<"Domain numNodes: "<<p_field -> GetDomainMesh() -> GetNumNodes()<<std::endl;
-        std::cout<<"Class numNodes: "<<p_mesh -> GetNumNodes()<<std::endl;
+        std::cout<<"Domain numNodes: "<<p_field->GetDomainMesh()->GetNumNodes()<<std::endl;
+        std::cout<<"Class numNodes: "<<p_mesh->GetNumNodes()<<std::endl;
         // process initial conditions
         std::cout<<"Process initial conditions"<<std::endl;
 
-        p_field -> ParseInitialConditionsFromFile(dataFileRoot+initialConditionsFilename);
+        p_field->ParseInitialConditionsFromFile(dataFileRoot+initialConditionsFilename);
         
         // PETSc Vec
-        Vec initial_condition = PetscTools::CreateVec(p_field -> GetInitialNodeConditions());
+        Vec initial_condition = PetscTools::CreateVec(p_field->GetInitialNodeConditions());
 
         
 
         // process boundary conditions
-        p_field -> ParseBoundaryConditionsFromFile(dataFileRoot+boundaryConditionsFilename);
+        p_field->ParseBoundaryConditionsFromFile(dataFileRoot+boundaryConditionsFilename);
 
-        std::vector<std::string> boundaryConditionTypes = p_field -> GetBoundaryConditionTypes();
+        std::vector<std::string> boundaryConditionTypes = p_field->GetBoundaryConditionTypes();
 
-        std::vector<double> boundaryConditionValues = p_field -> GetBoundaryConditionValues();
+        std::vector<double> boundaryConditionValues = p_field->GetBoundaryConditionValues();
 
         // Process Boundary Conditions
         std::cout<<"Process Boundary Conditions"<<std::endl;
@@ -125,7 +110,7 @@ public:
 
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
+            if (boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -133,7 +118,7 @@ public:
                 {
                     bcc.AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[pdeDim], pdeDim);
                 }
-            }else if(boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
+            }else if (boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
             
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
@@ -219,29 +204,29 @@ public:
         std::cout<<"File probDim: "<<p_field ->GetProblemDimensions()<<std::endl;
         std::cout<<"User probDim: "<<probDim<<std::endl;
 
-        MutableMesh<2,2>* p_mesh = p_field ->GetMeshGenerator() -> GetMesh();
+        MutableMesh<2,2>* p_mesh = p_field ->GetMeshGenerator()->GetMesh();
         const unsigned spaceDim=2;
         const unsigned elementDim=2;
         
     
-        std::cout<<"Domain numNodes: "<<p_field -> GetDomainMesh() -> GetNumNodes()<<std::endl;
-        std::cout<<"Class numNodes: "<<p_mesh -> GetNumNodes()<<std::endl;
+        std::cout<<"Domain numNodes: "<<p_field->GetDomainMesh()->GetNumNodes()<<std::endl;
+        std::cout<<"Class numNodes: "<<p_mesh->GetNumNodes()<<std::endl;
         // process initial conditions
         std::cout<<"Process initial conditions"<<std::endl;
 
-        p_field -> ParseInitialConditionsFromFile(dataFileRoot+initialConditionsFilename);
+        p_field->ParseInitialConditionsFromFile(dataFileRoot+initialConditionsFilename);
         
         // PETSc Vec
-        Vec initial_condition = PetscTools::CreateVec(p_field -> GetInitialNodeConditions());
+        Vec initial_condition = PetscTools::CreateVec(p_field->GetInitialNodeConditions());
 
         
 
         // process boundary conditions
-        p_field -> ParseBoundaryConditionsFromFile(dataFileRoot+boundaryConditionsFilename);
+        p_field->ParseBoundaryConditionsFromFile(dataFileRoot+boundaryConditionsFilename);
 
-        std::vector<std::string> boundaryConditionTypes = p_field -> GetBoundaryConditionTypes();
+        std::vector<std::string> boundaryConditionTypes = p_field->GetBoundaryConditionTypes();
 
-        std::vector<double> boundaryConditionValues = p_field -> GetBoundaryConditionValues();
+        std::vector<double> boundaryConditionValues = p_field->GetBoundaryConditionValues();
 
         // Process Boundary Conditions
         std::cout<<"Process Boundary Conditions"<<std::endl;
@@ -255,7 +240,7 @@ public:
 
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
+            if (boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -263,7 +248,7 @@ public:
                 {
                     bcc.AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[pdeDim], pdeDim);
                 }
-            }else if(boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
+            }else if (boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
             
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
@@ -288,9 +273,9 @@ public:
         for(unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {
             std::cout<<"node number: "<<i<<std::endl;
-            for(unsigned j=0; j<p_field->GetOdeSystem()[i] -> GetReactionSystem() -> GetReactionVector().size();j++)
+            for(unsigned j=0; j<p_field->GetOdeSystem()[i]->GetReactionSystem()->GetReactionVector().size();j++)
             {
-                std::cout<< p_field->GetOdeSystem()[i] -> GetReactionSystem() -> GetReactionVector()[j] -> GetReactionType()<<std::endl;
+                std::cout<< p_field->GetOdeSystem()[i]->GetReactionSystem()->GetReactionVector()[j]->GetReactionType()<<std::endl;
             }
             
             odeSystem.push_back(p_field->GetOdeSystem()[i]);

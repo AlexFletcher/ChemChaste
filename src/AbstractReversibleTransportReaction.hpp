@@ -1,23 +1,23 @@
 #ifndef ABSTRACTREVERSIBLETRANSPORTREACTION_HPP_
 #define ABSTRACTREVERSIBLETRANSPORTREACTION_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 
-// reaction includes
 #include "AbstractTransportReaction.hpp"
 
-// reaction class formed from two individual AbstractTransportReaction, handles running both reactions
-// in their coupled sense.
-
-// abstract property to contain information about the interactions of chemical species at a cell boundary
-// bulk <-> cell
-// reaction substrates denote the species in the bulk while products denote species in the cell
-
-// ReversibleTransportReaction
-
+/**
+ * Reaction class formed from two individual AbstractTransportReaction, handles 
+ * running both reactions in their coupled sense.
+ * 
+ * Abstract property to contain information about the interactions of chemical 
+ * species at a cell boundary:
+ * bulk <-> cell
+ * 
+ * Reaction substrates denote the species in the bulk while products denote 
+ * species in the cell.
+ */
 class AbstractReversibleTransportReaction : public AbstractTransportReaction
 {
 protected:
@@ -124,7 +124,7 @@ void AbstractReversibleTransportReaction::SetForwardReactionRate(double reaction
 
 void AbstractReversibleTransportReaction::SetReverseReactionRate(double reactionRate)
 {
-    if(mIsRateCheck)
+    if (mIsRateCheck)
     {
         reactionRate = CheckRate(reactionRate);
     }
@@ -134,8 +134,8 @@ void AbstractReversibleTransportReaction::SetReverseReactionRate(double reaction
 void AbstractReversibleTransportReaction::React(AbstractChemistry* bulkChemistry, AbstractChemistry* cellChemistry, const std::vector<double>& currentBulkConcentration, const std::vector<double>& currentCellConcentration, std::vector<double>& changeBulkConc, std::vector<double>& changeCellConc)
 {   
 
-    std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry -> rGetChemicalVector();
-    std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry->rGetChemicalVector();
+    std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry->rGetChemicalVector();
 
     
     UpdateReactionRate(bulkChemistry, cellChemistry, currentBulkConcentration, currentCellConcentration);
@@ -153,7 +153,7 @@ void AbstractReversibleTransportReaction::React(AbstractChemistry* bulkChemistry
         // for each system chemical, parse whether it is involved in this reaction.
         for(unsigned j=0; j<mNumberOfBulkSpecies; j++)
         {
-            if(mpBulkReactionSpecies[j] -> GetChemicalName()==p_bulk_chemical -> GetChemicalName())
+            if (mpBulkReactionSpecies[j]->GetChemicalName()==p_bulk_chemical->GetChemicalName())
             {
                 changeBulkConc[index] -= mStoichBulk[j]*GetForwardReactionRate();
                 changeBulkConc[index] += mStoichBulk[j]*GetReverseReactionRate();
@@ -172,17 +172,15 @@ void AbstractReversibleTransportReaction::React(AbstractChemistry* bulkChemistry
 
         for(unsigned j=0; j<mNumberOfCellSpecies; j++)
         {
-            if(mpCellReactionSpecies[j] -> GetChemicalName()==p_cell_chemical -> GetChemicalName())
+            if (mpCellReactionSpecies[j]->GetChemicalName()==p_cell_chemical->GetChemicalName())
             {
                 changeCellConc[index] += mStoichCell[j]*GetForwardReactionRate();
                 changeCellConc[index] -= mStoichCell[j]*GetReverseReactionRate();
                 break;
             }
         }
-    }
-    
+    }  
 };
-
 
 void AbstractReversibleTransportReaction::UpdateReaction()
 {
@@ -200,7 +198,7 @@ void AbstractReversibleTransportReaction::ParseReactionInformation(std::string r
 {
     //std::cout<<"AbstractReversibleTransportReaction::ParseReactionInformation - start"<<std::endl;
 
-    if(!IsReversible)
+    if (!IsReversible)
     {
         AbstractTransportReaction::ParseReactionInformation(reaction_information, false);
         SetReverseReactionRate(0.0);
@@ -216,21 +214,21 @@ void AbstractReversibleTransportReaction::ParseReactionInformation(std::string r
         unsigned length_string_forward =0;
         unsigned length_string_reverse =0;
       
-        if(IsForward)
+        if (IsForward)
         {
             posForward = reaction_information.find(mIrreversibleRateName);
             
             length_string_forward = reaction_information.substr(posForward,std::string::npos).length();
         }
      
-        if(IsReverse)
+        if (IsReverse)
         {
             posReverse = reaction_information.find(mReversibleName);
 
             length_string_reverse = reaction_information.substr(posReverse,std::string::npos).length();
         }
 
-        if( length_string_forward<length_string_reverse )
+        if ( length_string_forward<length_string_reverse )
         {
             // kf defined first
 

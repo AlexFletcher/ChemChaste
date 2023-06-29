@@ -1,19 +1,19 @@
 #ifndef ABSTRACTTRANSPORTREACTIONSYSTEM_HPP_
 #define ABSTRACTTRANSPORTREACTIONSYSTEM_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <iostream>
 
-// reaction includes
 #include "AbstractTransportReaction.hpp"
 #include "AbstractChemistry.hpp"
 
-// class to contain and handle a system of transport reactions. Transport reactions are defined across 
-// a membrane where either side have their own concentration vectors
-
+/**
+ * Class to contain and handle a system of transport reactions. Transport 
+ * reactions are defined across a membrane where either side have their own 
+ * concentration vectors.
+ */
 class AbstractTransportReactionSystem
 {
 protected:
@@ -85,8 +85,9 @@ AbstractTransportReactionSystem::AbstractTransportReactionSystem(   AbstractChem
         mpCellChemistry(cellChemistry),
         mpReactionVector(reactionVector),
         mNumberOfReactions(reactionVector.size()),
-        mNumberOfBulkStates(bulkChemistry -> GetNumberChemicals()),
-        mNumberOfCellStates(cellChemistry -> GetNumberChemicals())
+        mNumberOfBulkStates(bulkChemistry->GetNumberChemicals()),
+        mNumberOfCellStates(cellChemistry
+        GetNumberChemicals())
 {
 }
 
@@ -99,9 +100,6 @@ AbstractTransportReactionSystem::AbstractTransportReactionSystem(const AbstractT
     mNumberOfCellStates = existingReactionSystem.mNumberOfCellStates;
     mNumberOfBulkStates = existingReactionSystem.mNumberOfBulkStates;
 }
-
-
-// virtual methods
 
 void AbstractTransportReactionSystem::ReactSystem(const std::vector<double>& currentBulkConcentration, const std::vector<double>& currentCellConcentration, std::vector<double>& changeBulkConc,std::vector<double>& changeCellConc)
 {
@@ -122,7 +120,7 @@ void AbstractTransportReactionSystem::ReactSystem(const std::vector<double>& cur
 
         AbstractTransportReaction *p_system_reaction = static_cast<AbstractTransportReaction*>(*reaction_iter);
 
-        p_system_reaction -> React(mpBulkChemistry, mpCellChemistry, currentBulkConcentration, currentCellConcentration, deltaBulkConcentration, deltaCellConcentration);
+        p_system_reaction->React(mpBulkChemistry, mpCellChemistry, currentBulkConcentration, currentCellConcentration, deltaBulkConcentration, deltaCellConcentration);
 
         // update the change in concentrations
         for(unsigned i=0; i<mNumberOfBulkStates; i++)
@@ -134,19 +132,13 @@ void AbstractTransportReactionSystem::ReactSystem(const std::vector<double>& cur
         {
             changeCellConc.at(i) += deltaCellConcentration.at(i);
         }
-
     }
-
 }
 
 void AbstractTransportReactionSystem::UpdateReactionSystem(const std::vector<double>& currentBulkConc, const std::vector<double>& currentCellConc)
 {
-    // virtual
     return;
 }
-
-
-// set methods
 
 void AbstractTransportReactionSystem::SetReactionVector(std::vector<AbstractTransportReaction*> reactionVector)
 {
@@ -155,7 +147,7 @@ void AbstractTransportReactionSystem::SetReactionVector(std::vector<AbstractTran
 
 void AbstractTransportReactionSystem::SetReactionByIndex(AbstractTransportReaction* reaction, unsigned index)
 {
-    if(index < mNumberOfReactions)
+    if (index < mNumberOfReactions)
     {
         mpReactionVector[index] = reaction;
     }
@@ -164,22 +156,19 @@ void AbstractTransportReactionSystem::SetReactionByIndex(AbstractTransportReacti
 void AbstractTransportReactionSystem::SetBulkChemistry(AbstractChemistry* bulkChemistry)
 {
     mpBulkChemistry = bulkChemistry;
-    mNumberOfBulkStates = bulkChemistry -> GetNumberChemicals();
+    mNumberOfBulkStates = bulkChemistry->GetNumberChemicals();
 }
 
 void AbstractTransportReactionSystem::SetCellChemistry(AbstractChemistry* cellChemistry)
 {
     mpCellChemistry = cellChemistry;
-    mNumberOfCellStates = cellChemistry -> GetNumberChemicals();
+    mNumberOfCellStates = cellChemistry->GetNumberChemicals();
 }
 
 void AbstractTransportReactionSystem::SetNumberOfReactions(unsigned numberOfReactions)
 {
     mNumberOfReactions = numberOfReactions;
 }
-
-
-// get methods
 
 std::vector<AbstractTransportReaction*> AbstractTransportReactionSystem::GetReactionVector()
 {
@@ -188,7 +177,7 @@ std::vector<AbstractTransportReaction*> AbstractTransportReactionSystem::GetReac
 
 AbstractTransportReaction* AbstractTransportReactionSystem::GetReactionByIndex(unsigned index)
 {
-    if(index < mNumberOfReactions)
+    if (index < mNumberOfReactions)
     {
         return mpReactionVector[index];
     }else{

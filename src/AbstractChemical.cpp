@@ -1,31 +1,29 @@
 #include "AbstractChemical.hpp"
 
 AbstractChemical::AbstractChemical(std::string chemicalName, 
-                    double size,
-                    double mass,
-                    int valence,
-                    std::string chemicalDimensions)
-    :   mChemicalName(chemicalName),
-        mSize(size),
-        mMass(mass),
-        mValence(valence),
-        mChemicalDimensions(chemicalDimensions)
+    double size,
+    double mass,
+    int valence,
+    std::string chemicalDimensions)
+    : mChemicalName(chemicalName),
+      mSize(size),
+      mMass(mass),
+      mValence(valence),
+      mChemicalDimensions(chemicalDimensions)
 {
-    // default to not knowning the formation energy
+    // default to not knowing the formation energy
     SetChemicalFormationGibbs(0.0);
     SetChemicalFormationKnown(false);
 }
 
-// set methods
-
-void AbstractChemical::SetChemicalName(std::string ChemicalName)
+void AbstractChemical::SetChemicalName(std::string chemicalName)
 {
-    mChemicalName = ChemicalName;
+    mChemicalName = chemicalName;
 }
 
-void AbstractChemical::SetChemicalSize(double Size)
+void AbstractChemical::SetChemicalSize(double size)
 {
-    mSize = Size;
+    mSize = size;
 }
 
 void AbstractChemical::SetChemicalMass(double Mass)
@@ -33,14 +31,14 @@ void AbstractChemical::SetChemicalMass(double Mass)
     mMass  =Mass;
 }
 
-void AbstractChemical::SetChemicalValence(int Valence)
+void AbstractChemical::SetChemicalValence(int valence)
 {
-    mValence = Valence;
+    mValence = valence;
 }
 
-void AbstractChemical::SetChemicalFormationGibbs(double formationGibbs)
+void AbstractChemical::SetChemicalDimensions(std::string chemicalDimensions)
 {
-    mFormationGibbs = formationGibbs;
+    mChemicalDimensions = chemicalDimensions;
 }
 
 void AbstractChemical::SetChemicalFormationKnown(bool formationKnown)
@@ -48,12 +46,10 @@ void AbstractChemical::SetChemicalFormationKnown(bool formationKnown)
     mFormationKnown = formationKnown;
 }
 
-void AbstractChemical::SetChemicalDimensions(std::string dimensions)
+void AbstractChemical::SetChemicalFormationGibbs(double formationGibbs)
 {
-    mChemicalDimensions = dimensions;
+    mFormationGibbs = formationGibbs;
 }
-
-// get methods
 
 std::string AbstractChemical::GetChemicalName()
 {
@@ -75,11 +71,6 @@ int AbstractChemical::GetChemicalValence()
     return mValence;
 }
 
-double AbstractChemical::GetChemicalFormationGibbs()
-{
-    return mFormationKnown;
-}
-
 std::string AbstractChemical::GetChemicalDimensions()
 {
     return mChemicalDimensions;
@@ -88,4 +79,14 @@ std::string AbstractChemical::GetChemicalDimensions()
 bool AbstractChemical::IsChemicalFormationKnown()
 {
     return mFormationKnown;
+}
+
+double AbstractChemical::GetChemicalFormationGibbs()
+{
+    return mFormationKnown;
+}
+
+std::string GetChemicalType()
+{
+    return "AbstractChemical";
 }

@@ -14,14 +14,12 @@
 #include "AbstractTetrahedralMesh.hpp"
 #include "EulerIvpOdeSolver.hpp"
 
-
-
-
-// class to handle the formation of a chemcially active domain ready for coupling to a cell 
-// simulation
-
-// need to template over <ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM> for PDE and BCC
-
+/**
+ * Class to handle the formation of a chemcially active domain ready for 
+ * coupling to a cell simulation.
+ * 
+ * Need to template over <ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM> for PDE and BCC.
+ */
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 class ChemicalDomainFieldForCellCoupling: public ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>
 {
@@ -304,36 +302,36 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
         mCartesianCellLayerScaleXY(cartesianCellLayerScaleXY)
     
     {
-        if(mMeshDomainLower.empty())
+        if (mMeshDomainLower.empty())
         {
             std::vector<double> lower(SPACE_DIM,0.0);
             mMeshDomainLower = lower;
         }
-        if(mMeshDomainUpper.empty())
+        if (mMeshDomainUpper.empty())
         {
             std::vector<double> upper(SPACE_DIM,0.0);
             mMeshDomainUpper = upper;
         }
-        if(mMeshCentre.empty())
+        if (mMeshCentre.empty())
         {
             std::vector<double> centre(SPACE_DIM,0.0);
             mMeshCentre = centre;
         }
 
-        if(mCartesianCellLayerScaleXY.empty())
+        if (mCartesianCellLayerScaleXY.empty())
         {
             // default to scale 1.0 in all directions
             std::vector<double> cellLayerScaleXY(SPACE_DIM,1.0);
             mCartesianCellLayerScaleXY = cellLayerScaleXY;
         }
 
-        if(mCellLabelOrigin.empty())
+        if (mCellLabelOrigin.empty())
         {
             std::vector<double> origin(SPACE_DIM,0);
             mCellLabelOrigin = origin;
         }
 
-        if(cellLabelFilename != cellKeyFilename)
+        if (cellLabelFilename != cellKeyFilename)
         {
             mIsCellLayerFileBased = true;
             SetUpCellLayer();
@@ -374,9 +372,9 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
 
         // process initial conditions
 
-        this -> ParseInitialConditionsFromFile(mInitialConditionsFilename);
+        this->ParseInitialConditionsFromFile(mInitialConditionsFilename);
         // process boundary conditions
-        this -> ParseBoundaryConditionsFromFile(mBoundaryConditionsFilename);
+        this->ParseBoundaryConditionsFromFile(mBoundaryConditionsFilename);
 
         mpBoundaryConditionsContainer = ProcessBoundaryConditions();
 
@@ -393,8 +391,8 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
     {
 
         // retireive the boundary conditions information derived from the files inputs
-        std::vector<std::string> boundaryConditionTypes = this -> GetBoundaryConditionTypes();
-        std::vector<double> boundaryConditionValues = this -> GetBoundaryConditionValues();
+        std::vector<std::string> boundaryConditionTypes = this->GetBoundaryConditionTypes();
+        std::vector<double> boundaryConditionValues = this->GetBoundaryConditionValues();
 
         // create containeers to store the boundary conditions, assume each boundary condition is constant over the simulation
         boost::shared_ptr<BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>> p_bcc(new BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>());
@@ -406,7 +404,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
 
         for(unsigned pdeDim=0; pdeDim<PROBLEM_DIM; pdeDim++)
         {
-            if(boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
+            if (boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
             {
                 // standardise
                 boundaryConditionTypes[pdeDim] = "Dirichlet";
@@ -418,7 +416,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
                 {
                     p_bcc->AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[pdeDim], pdeDim);
                 }
-            }else if(boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
+            }else if (boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
             {
                 // standardise
                 boundaryConditionTypes[pdeDim] = "Neumann";
@@ -433,7 +431,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
             }
         }
         // update boundary condition types
-        this -> SetBoundaryConditionTypes(boundaryConditionTypes);
+        this->SetBoundaryConditionTypes(boundaryConditionTypes);
 
         return p_bcc;
     }
@@ -502,7 +500,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
     {
         // hard code the honey comb mesh scale factor and dimensions with a default of tetrahedral mesh
         std::vector<double> meshScale;
-        if(mIsCellHoneyCombMesh)
+        if (mIsCellHoneyCombMesh)
         {   
             switch (SPACE_DIM)
             {
@@ -557,11 +555,11 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
         // use the aforementioned mesh dimension to produce a new honeycomb mesh, as mutable mesh type
 
         //HoneycombMeshGenerator generator(meshDimensions[0], meshDimensions[1], 0);
-        if(mIsCellHoneyCombMesh)
+        if (mIsCellHoneyCombMesh)
         {
             HoneycombMeshGenerator* p_generator = new HoneycombMeshGenerator(mCellMeshDimensions[0], mCellMeshDimensions[1], 0);
 
-            mpCellMesh = dynamic_cast<TetrahedralMesh<ELEMENT_DIM,SPACE_DIM>*>(p_generator -> GetMesh());
+            mpCellMesh = dynamic_cast<TetrahedralMesh<ELEMENT_DIM,SPACE_DIM>*>(p_generator->GetMesh());
 
             SetCellMeshGenerator(p_generator);
   
@@ -596,7 +594,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
         // retireve the node positions and compare to domain labels in order to label the nodes
         // nodes are defined bottom-left of domain to top-right in a serialised manner
 
-        unsigned numberOfNodes = mpCellMesh -> GetNumNodes();
+        unsigned numberOfNodes = mpCellMesh->GetNumNodes();
 
         // form the serialised node label array
         std::vector<std::string> serialisedNodeCells(numberOfNodes,"");
@@ -633,7 +631,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
 
             for(unsigned i=0; i<(mCartesianChasteCellDimensions[dim]); i++)
             {
-                if(position_in_domain <= i*mCartesianChasteCellScaleXY[dim])
+                if (position_in_domain <= i*mCartesianChasteCellScaleXY[dim])
                 {
                     labelIndex[dim] = i;
                     break;
@@ -653,7 +651,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
 
         for(unsigned i=0; i<keyVector.size();i++)
         {
-            if(keyVector[i]==keyString)
+            if (keyVector[i]==keyString)
             {
                 return i;
             }
@@ -692,7 +690,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
     {
         
         std::vector<double> cartesianChasteCellScaleXY;
-        if(mIsCellHoneyCombMesh)
+        if (mIsCellHoneyCombMesh)
         {
             // is a a honeycomb mesh
             //cartesianChasteCellScaleXY.push_back(0.25);
@@ -747,14 +745,14 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
 
         for(unsigned key_index=0; key_index<mCellKeys.size(); key_index++)
         {
-            if(mCellKeys[key_index][0] == cellLabel)
+            if (mCellKeys[key_index][0] == cellLabel)
             {
                 return mCellKeys[key_index][1];
                 IsFound=true;
                 break;
             }
         }
-        if(!IsFound)
+        if (!IsFound)
         {
             std::cout<<"Error: ChemicalDomainFieldForCellCoupling::ReturnCellKeyFromCellLabel, cell label not found"<<std::endl;
             return "Null";
@@ -779,7 +777,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
 
         for(unsigned i=0; i<(mCartesianCellLayerDimensions[1]+1); i++) // top to bottom
         {
-            if(positionY <= i*mCartesianCellLayerScaleXY[1])
+            if (positionY <= i*mCartesianCellLayerScaleXY[1])
             {
                 labelYIndex = i;
                 break;
@@ -790,7 +788,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
 
         for(unsigned i=0; i<(mCartesianCellLayerDimensions[0]+1); i++)
         {
-            if(positionX <= i*mCartesianCellLayerScaleXY[0])
+            if (positionX <= i*mCartesianCellLayerScaleXY[0])
             {
                 labelXIndex = i;
                 break;
@@ -890,7 +888,7 @@ ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ChemicalD
     template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
     std::string ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::GetCellLabelByIndex(unsigned index)
     {
-        if(index<mCellNodes.size())
+        if (index<mCellNodes.size())
         {
             return mCellNodes[index];
         }

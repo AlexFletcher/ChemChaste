@@ -5,7 +5,9 @@
 #include "OdeSystemInformation.hpp"
 #include "Exception.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 class AbstractInhomogenousOdeSystem : public AbstractOdeSystemForCoupledPdeSystem
 {
 protected:
@@ -73,9 +75,9 @@ public:
 
     double rRetrieveStateVariable(std::string variable_name)
     {
-        if(IsStateVariablePresent(variable_name))
+        if (IsStateVariablePresent(variable_name))
         {
-            return rGetStateVariable()[mpStateVariableRegister -> RetrieveStateVariableIndex(variable_name)];
+            return rGetStateVariable()[mpStateVariableRegister->RetrieveStateVariableIndex(variable_name)];
         }
         else
         {
@@ -85,7 +87,7 @@ public:
 
     unsigned GetNumberOfStateVariables()
     {
-        return mpStateVariableRegister -> GetNumberOfStateVariables();
+        return mpStateVariableRegister->GetNumberOfStateVariables();
     }
 
 };

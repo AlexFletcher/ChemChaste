@@ -4,7 +4,9 @@
 #include "AbstractInhomogenousOdeSystemForCoupledPdeSystem.hpp"
 #include "OdeSystemInformation.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 class InhomogenousOdeConsumerProducer: public AbstractInhomogenousOdeSystemForCoupledPdeSystem
 {
 private:

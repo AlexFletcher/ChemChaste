@@ -12,6 +12,9 @@
 
 // base case assume spherical geometry
 
+/**
+ * \todo Document class.
+ */
 template<unsigned SPACE_DIM>
 class ExtendedCellProperty : public ChemicalCellProperty
 {
@@ -307,7 +310,7 @@ void ExtendedCellProperty<SPACE_DIM>::SetUpExtendedCell(StateVariableRegister* p
 template<unsigned SPACE_DIM>
 void ExtendedCellProperty<SPACE_DIM>::UpdateExtendedCell()
 {
-    if(mIsCellDynamic)
+    if (mIsCellDynamic)
     {
         CellGrowth();
     }
@@ -344,7 +347,7 @@ bool ExtendedCellProperty<SPACE_DIM>::IsPointInCell(const ChastePoint<SPACE_DIM>
         square_difference_distance += pow((cellCentrePoint.rGetLocation()[dim] - test_point.rGetLocation()[dim]),2.0);
     }
 
-    if(sqrt(square_difference_distance)<=mCellDimensions[0])
+    if (sqrt(square_difference_distance)<=mCellDimensions[0])
     {
         return true;
     }
@@ -361,7 +364,7 @@ bool ExtendedCellProperty<SPACE_DIM>::IsPointOnCellBoundary(const ChastePoint<SP
     // to determine the locations of the points either side. Stepsize in x mMeshDomainScale[0] 
     // stepsize in y mMeshDomainScale[1], stepsize in z mMeshDomainScale[2] .
 
-    if(IsPointInCell(cellCentrePoint,test_point))
+    if (IsPointInCell(cellCentrePoint,test_point))
     {
         return CheckCellBoundary(cellCentrePoint,test_point);
     }
@@ -381,13 +384,13 @@ bool ExtendedCellProperty<SPACE_DIM>::CheckCellBoundary(const ChastePoint<SPACE_
     for(unsigned dim=0; dim<SPACE_DIM; dim++)
     {
         secondary_test_point.SetCoordinate(dim, test_point[dim]+ mCellDimensions[dim]);
-        if(!IsPointInCell(cellCentrePoint, secondary_test_point))
+        if (!IsPointInCell(cellCentrePoint, secondary_test_point))
         {
             return true;
             break;
         }
         secondary_test_point.SetCoordinate(dim, test_point[dim] - mCellDimensions[dim]);
-        if(!IsPointInCell(cellCentrePoint, secondary_test_point))
+        if (!IsPointInCell(cellCentrePoint, secondary_test_point))
         {
             return true;
             break;
@@ -402,7 +405,7 @@ bool ExtendedCellProperty<SPACE_DIM>::CheckCellBoundary(const ChastePoint<SPACE_
 template<unsigned SPACE_DIM>
 void ExtendedCellProperty<SPACE_DIM>::CalculateVolumeOfCell()
 {
-    if(mCellDimensions[0]<mMinimalDimensions[0])
+    if (mCellDimensions[0]<mMinimalDimensions[0])
     {
         // i.e the cell radius is below the minimal dimension threshold suggesting
         // radius is true zero or at least negligible. Set the volume ot be zero.
@@ -443,7 +446,7 @@ void ExtendedCellProperty<SPACE_DIM>::CalculateNumberOfCellMeshElements(ChastePo
 
     mNumberMeshVoxelsOnBoundary=0;
 
-    if(mCellDimensions[0]<mMinimalDimensions[0])
+    if (mCellDimensions[0]<mMinimalDimensions[0])
     {
         // i.e the cell radius is below the minimal dimension threshold suggesting
         // radius is true zero or at least negligible.
@@ -456,7 +459,7 @@ void ExtendedCellProperty<SPACE_DIM>::CalculateNumberOfCellMeshElements(ChastePo
     else
     {
         // have a finite radius so calculate the volume in terms of mesh voxels in the spatial dimensions
-        if(CheckCellBoundary(cellCentrePoint,cellCentrePoint))
+        if (CheckCellBoundary(cellCentrePoint,cellCentrePoint))
         {
             // if the cell centre is a boundary point then the central voxel is the only voxel within the cell 
             mTotalNumberMeshVoxels =1;
@@ -549,7 +552,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXBoundaryVoxels(Chas
     test_point.SetCoordinate(0, start_point[0]);
     unsigned x_step_counter=1;
     double deltaX = mMeshDomainScale[0]; // step size of the FeMesh
-    if(polarity>0.0)
+    if (polarity>0.0)
     {
         while(test_point_is_on_boundary)
         {
@@ -584,7 +587,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXInternalVoxels(Chas
     test_point.SetCoordinate(0, start_point[0]);
     unsigned x_step_counter=1;
     double deltaX = mMeshDomainScale[0]; // step size in x of FeMesh
-    if(polarity>0.0)
+    if (polarity>0.0)
     {
         // positive direction
         while(!test_point_is_on_boundary)
@@ -623,7 +626,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughXVoxels(ChastePoint<SPACE_DIM>&
     unsigned x_step_counter=1; // x_step_counter = 0 refers to the original start point
 
     // check if the start point is on the boundary
-    if(CheckCellBoundary(cellCentrePoint,start_point))
+    if (CheckCellBoundary(cellCentrePoint,start_point))
     {
         mNumberMeshVoxelsOnBoundary +=1;
         test_point.SetCoordinate(0, start_point[0]);
@@ -672,7 +675,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYBoundaryVoxels(Cha
     test_point.SetCoordinate(1, start_point[1]);
     unsigned y_step_counter=1;
     double deltaY = mMeshDomainScale[1]; // step size in y of FeMesh
-    if(polarity>0.0)
+    if (polarity>0.0)
     {
         while(test_point_is_on_boundary)
         {
@@ -682,7 +685,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYBoundaryVoxels(Cha
             test_point_is_on_boundary = IsPointInCell(cellCentrePoint,test_point);
             
             
-            if(test_point_is_on_boundary)
+            if (test_point_is_on_boundary)
             {
                 // next voxel step in Y is in boundary, run through the X slice from this test_point
                 StepThroughXVoxels(cellCentrePoint,start_point);
@@ -703,7 +706,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYBoundaryVoxels(Cha
             test_point_is_on_boundary = IsPointInCell(cellCentrePoint,test_point);
             
             
-            if(test_point_is_on_boundary)
+            if (test_point_is_on_boundary)
             {
                 // next voxel step in Y is in boundary, run through the X slice from this test_point
                 StepThroughXVoxels(cellCentrePoint,start_point);
@@ -725,7 +728,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYInternalVoxels(Cha
     test_point.SetCoordinate(1, start_point[1]);
     unsigned y_step_counter=1;
     double deltaY = mMeshDomainScale[1]; // step size in y of FeMesh
-    if(polarity>0.0)
+    if (polarity>0.0)
     {
         // positive direction
         while(!test_point_is_on_boundary)
@@ -734,7 +737,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYInternalVoxels(Cha
             test_point_is_on_boundary = CheckCellBoundary(cellCentrePoint,test_point);
             
             // if the next y step voxel is not on the boundary run through the x slice
-            if(!test_point_is_on_boundary)
+            if (!test_point_is_on_boundary)
             {
                 // next voxel step in Y is in boundary, run through the X slice from this test_point
                 StepThroughXVoxels(cellCentrePoint,test_point);
@@ -753,7 +756,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYInternalVoxels(Cha
             test_point_is_on_boundary = CheckCellBoundary(cellCentrePoint,test_point);
             
             // if the next y step voxel is not on the boundary run through the x slice
-            if(!test_point_is_on_boundary)
+            if (!test_point_is_on_boundary)
             {
                 // next voxel step in Y is in boundary, run through the X slice from this test_point
                 StepThroughXVoxels(cellCentrePoint,test_point);
@@ -776,7 +779,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughXYVoxels(ChastePoint<SPACE_DIM>
     ChastePoint<SPACE_DIM> test_point = start_point;
 
     // check if the start point is on the boundary
-    if(CheckCellBoundary(cellCentrePoint,start_point))
+    if (CheckCellBoundary(cellCentrePoint,start_point))
     {
         mNumberMeshVoxelsOnBoundary +=1;
         // positive y direction
@@ -827,7 +830,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYZBoundaryVoxels(Ch
     test_point.SetCoordinate(2, start_point[2]);
     unsigned z_step_counter=1;
     double deltaZ = mMeshDomainScale[2]; // step size in z of FeMesh
-    if(polarity>0.0)
+    if (polarity>0.0)
     {
         while(test_point_is_on_boundary)
         {
@@ -837,7 +840,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYZBoundaryVoxels(Ch
             test_point_is_on_boundary = IsPointInCell(cellCentrePoint,test_point);
             
             
-            if(test_point_is_on_boundary)
+            if (test_point_is_on_boundary)
             {
                 // next voxel step in Z is in boundary, run through the XY slice from this test_point
                 StepThroughXYVoxels(cellCentrePoint,start_point);
@@ -858,7 +861,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYZBoundaryVoxels(Ch
             test_point_is_on_boundary = IsPointInCell(cellCentrePoint,test_point);
             
             
-            if(test_point_is_on_boundary)
+            if (test_point_is_on_boundary)
             {
                 // next voxel step in Z is in boundary, run through the Y slice from this test_point
                 StepThroughXYVoxels(cellCentrePoint,start_point);
@@ -880,7 +883,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYZInternalVoxels(Ch
     test_point.SetCoordinate(2, start_point[2]);
     unsigned z_step_counter=1;
     double deltaZ = mMeshDomainScale[1]; // step size in z of FeMesh
-    if(polarity>0.0)
+    if (polarity>0.0)
     {
         // positive direction
         while(!test_point_is_on_boundary)
@@ -889,7 +892,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYZInternalVoxels(Ch
             test_point_is_on_boundary = CheckCellBoundary(cellCentrePoint,test_point);
             
             // if the next y step voxel is not on the boundary run through the x slice
-            if(!test_point_is_on_boundary)
+            if (!test_point_is_on_boundary)
             {
                 // next voxel step in Z is in boundary, run through the Y slice from this test_point
                 StepThroughXYVoxels(cellCentrePoint,test_point);
@@ -908,7 +911,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughDirectionalXYZInternalVoxels(Ch
             test_point_is_on_boundary = CheckCellBoundary(cellCentrePoint,test_point);
             
             // if the next z step voxel is not on the boundary run through the y slice
-            if(!test_point_is_on_boundary)
+            if (!test_point_is_on_boundary)
             {
                 // next voxel step in Z is in boundary, run through the Y slice from this test_point
                 StepThroughXYVoxels(cellCentrePoint,test_point);
@@ -931,7 +934,7 @@ void ExtendedCellProperty<SPACE_DIM>::StepThroughXYZVoxels(ChastePoint<SPACE_DIM
     ChastePoint<SPACE_DIM> test_point = start_point;
 
     // check if the start point is on the boundary
-    if(CheckCellBoundary(cellCentrePoint,start_point))
+    if (CheckCellBoundary(cellCentrePoint,start_point))
     {
         mNumberMeshVoxelsOnBoundary +=1;
         // positive y direction
@@ -971,7 +974,7 @@ template<unsigned SPACE_DIM>
 double ExtendedCellProperty<SPACE_DIM>::RetrieveBoundarySourceByStateName(std::string stateName, ChastePoint<SPACE_DIM> rX)
 {
     // if cell is on boundary add the result of the transport Ode system
-    unsigned index = mpStateVariableRegister -> RetrieveStateVariableIndex(stateName);
+    unsigned index = mpStateVariableRegister->RetrieveStateVariableIndex(stateName);
 
     // retrieve the extended cell property
     //boost::shared_ptr<ExtendedCellProperty<SPACE_DIM>> extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(mThis_cellPtr->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
@@ -984,7 +987,7 @@ double ExtendedCellProperty<SPACE_DIM>::RetrieveInternalCellSourceByStateName(st
 {
     // the value to give the variable stateName when the point is in the cell
 
-    unsigned index = mpStateVariableRegister -> RetrieveStateVariableIndex(stateName);
+    unsigned index = mpStateVariableRegister->RetrieveStateVariableIndex(stateName);
 
     return mConcentrationVector[index];
 }
@@ -997,10 +1000,10 @@ double ExtendedCellProperty<SPACE_DIM>::RetrieveBoundaryCellSourceByStateNameAnd
 
     for(unsigned index=0; index<mVectorOfBoundaryLocations.size();index++)
     {
-        if(CheckChastePointsForEquality(rX_test,mVectorOfBoundaryLocations[index]))
+        if (CheckChastePointsForEquality(rX_test,mVectorOfBoundaryLocations[index]))
         {
             // return the corresponding state variable
-            return mVectorOfExternalBoundaryStateVariables[index][mpStateVariableRegister -> RetrieveStateVariableIndex(stateName)];
+            return mVectorOfExternalBoundaryStateVariables[index][mpStateVariableRegister->RetrieveStateVariableIndex(stateName)];
         }
     }
     return 0.0;
@@ -1014,10 +1017,10 @@ double ExtendedCellProperty<SPACE_DIM>::RetrieveBoundaryInternalCellSourceByStat
 
     for(unsigned index=0; index<mVectorOfBoundaryLocations.size;index++)
     {
-        if(CheckChastePointsForEquality(rX_test,mVectorOfBoundaryLocations[index]))
+        if (CheckChastePointsForEquality(rX_test,mVectorOfBoundaryLocations[index]))
         {
             // return the corresponding state variable
-            return mVectorOfInternalBoundaryStateVariables[index][mpStateVariableRegister -> RetrieveStateVariableIndex(stateName)];
+            return mVectorOfInternalBoundaryStateVariables[index][mpStateVariableRegister->RetrieveStateVariableIndex(stateName)];
         }
     }
     return 0.0;
@@ -1031,7 +1034,7 @@ std::vector<double>& ExtendedCellProperty<SPACE_DIM>::RetrieveBoundaryCellSource
 
     for(unsigned index=0; index<mVectorOfBoundaryLocations.size;index++)
     {
-        if(CheckChastePointsForEquality(rX_test,mVectorOfBoundaryLocations[index]))
+        if (CheckChastePointsForEquality(rX_test,mVectorOfBoundaryLocations[index]))
         {
             // return the corresponding state variable vector
             return mVectorOfExternalBoundaryStateVariables[index];
@@ -1049,7 +1052,7 @@ std::vector<double>& ExtendedCellProperty<SPACE_DIM>::RetrieveInternalBoundaryCe
 
     for(unsigned index=0; index<mVectorOfBoundaryLocations.size;index++)
     {
-        if(CheckChastePointsForEquality(rX_test,mVectorOfBoundaryLocations[index]))
+        if (CheckChastePointsForEquality(rX_test,mVectorOfBoundaryLocations[index]))
         {
             // return the corresponding state variable vector
             return mVectorOfInternalBoundaryStateVariables[index];
@@ -1071,7 +1074,7 @@ bool ExtendedCellProperty<SPACE_DIM>::CheckChastePointsForEquality(ChastePoint<S
 
     for(unsigned i=0; i<SPACE_DIM; i++)
     {
-        if(rX1[i] < rX2[i] + 0.5*mMeshDomainScale[i] && rX1[i] >= rX2[i] - 0.5*mMeshDomainScale[i])
+        if (rX1[i] < rX2[i] + 0.5*mMeshDomainScale[i] && rX1[i] >= rX2[i] - 0.5*mMeshDomainScale[i])
         {
             // both points are congruent within 0.5 of mesh scale in the ith dimension
             equality=true;
@@ -1143,9 +1146,9 @@ void ExtendedCellProperty<SPACE_DIM>::AppendInternalCellBoundaryConcentrations(s
 {
     
 
-    if(mVectorOfBoundaryLocations.empty())
+    if (mVectorOfBoundaryLocations.empty())
     {
-        if(mNumberMeshVoxelsOnBoundary>0)
+        if (mNumberMeshVoxelsOnBoundary>0)
         {
             // scale the cell concentration by the number of boundary voxels shared
             for(unsigned i=0; i<mConcentrationVector.size(); i++)
@@ -1304,7 +1307,7 @@ void ExtendedCellProperty<SPACE_DIM>::SetVectorOfBoundaryStateVariables(std::vec
 template<unsigned SPACE_DIM>
 void ExtendedCellProperty<SPACE_DIM>::SetVectorOfBoundaryStateVariablesByIndex(unsigned index, std::vector<double> boundaryStateVariables)
 {
-    if(index<mVectorOfExternalBoundaryStateVariables.size())
+    if (index<mVectorOfExternalBoundaryStateVariables.size())
     {
         mVectorOfExternalBoundaryStateVariables[index] = boundaryStateVariables;
     }
@@ -1324,7 +1327,7 @@ void ExtendedCellProperty<SPACE_DIM>::SetVectorOfInternalBoundaryStateVariables(
 template<unsigned SPACE_DIM>
 void ExtendedCellProperty<SPACE_DIM>::SetVectorOfInternalBoundaryStateVariablesByIndex(unsigned index, std::vector<double> boundaryStateVariables)
 {
-    if(index<mVectorOfInternalBoundaryStateVariables.size())
+    if (index<mVectorOfInternalBoundaryStateVariables.size())
     {
         mVectorOfInternalBoundaryStateVariables[index] = boundaryStateVariables;
     }
@@ -1344,7 +1347,7 @@ void ExtendedCellProperty<SPACE_DIM>::SetVectorOfBoundaryLocations(std::vector<C
 template<unsigned SPACE_DIM>
 void ExtendedCellProperty<SPACE_DIM>::SetVectorOfBoundaryLocationsByIndex(unsigned index, ChastePoint<SPACE_DIM> point)
 {
-    if(index<mVectorOfBoundaryLocations.size())
+    if (index<mVectorOfBoundaryLocations.size())
     {
         mVectorOfBoundaryLocations[index] = point;
     }
@@ -1455,7 +1458,7 @@ std::vector<std::vector<double>> ExtendedCellProperty<SPACE_DIM>::GetVectorOfBou
 template<unsigned SPACE_DIM>
 std::vector<double> ExtendedCellProperty<SPACE_DIM>::GetVectorOfBoundaryStateVariablesByLocationIndex(unsigned index)
 {
-    if(index < mVectorOfExternalBoundaryStateVariables.size())
+    if (index < mVectorOfExternalBoundaryStateVariables.size())
     {
         return mVectorOfExternalBoundaryStateVariables[index];
     }
@@ -1472,7 +1475,7 @@ std::vector<std::vector<double>> ExtendedCellProperty<SPACE_DIM>::GetVectorOfInt
 template<unsigned SPACE_DIM>
 std::vector<double> ExtendedCellProperty<SPACE_DIM>::GetVectorOfInternalBoundaryStateVariablesByLocationIndex(unsigned index)
 {
-    if(index < mVectorOfInternalBoundaryStateVariables.size())
+    if (index < mVectorOfInternalBoundaryStateVariables.size())
     {
         return mVectorOfInternalBoundaryStateVariables[index];
     }
@@ -1489,7 +1492,7 @@ std::vector<ChastePoint<SPACE_DIM>> ExtendedCellProperty<SPACE_DIM>::GetVectorOf
 template<unsigned SPACE_DIM>
 ChastePoint<SPACE_DIM> ExtendedCellProperty<SPACE_DIM>::GetVectorOfBoundaryLocationsByIndex(unsigned index)
 {
-    if(index < mVectorOfBoundaryLocations.size())
+    if (index < mVectorOfBoundaryLocations.size())
     {
         return mVectorOfBoundaryLocations[index];
     }

@@ -10,7 +10,9 @@
 #include "AbstractCellProperty.hpp"
 #include "TransportCellProperty.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 class CellTrackingModifier : public AbstractCellBasedSimulationModifier<ELEMENT_DIM,SPACE_DIM>
 {
@@ -23,7 +25,6 @@ public:
     virtual void UpdateAtEndOfTimeStep(AbstractCellPopulation<ELEMENT_DIM,SPACE_DIM>& rCellPopulation);
 
     virtual void SetupSolve(AbstractCellPopulation<ELEMENT_DIM,SPACE_DIM>& rCellPopulation, std::string outputDirectory);
-
 
     void UpdateCellData(AbstractCellPopulation<ELEMENT_DIM,SPACE_DIM>& rCellPopulation);
 
@@ -69,13 +70,11 @@ void CellTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCellPop
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
-
         CellPropertyCollection collection = cell_iter->rGetCellPropertyCollection();
 
         bool transport_active = collection.HasProperty<TransportCellProperty>();
         if (transport_active)
         {
-
             CellPropertyCollection transport_collection = collection.GetPropertiesType<TransportCellProperty>();
             boost::shared_ptr<TransportCellProperty> transportProp = boost::static_pointer_cast<TransportCellProperty>(transport_collection.GetProperty());
     

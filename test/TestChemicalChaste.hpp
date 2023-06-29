@@ -1,7 +1,6 @@
 #ifndef TESTCHEMICALCHASTE_HPP_
 #define TESTCHEMICALCHASTE_HPP_
 
-// chaste includes
 #include <cxxtest/TestSuite.h>
 #include "UblasIncludes.hpp"
 #include "AbstractCellBasedTestSuite.hpp"
@@ -9,8 +8,6 @@
 #include "PetscSetupAndFinalize.hpp"
 #include "SmartPointers.hpp"
 
-
-// general includes
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -18,21 +15,16 @@
 #include <tuple>
 #include <cmath>
 
-// chemical includes
 #include "AbstractChemical.hpp"
 #include "AbstractDiffusiveChemical.hpp"
 #include "AbstractChemistry.hpp"
 #include "AbstractDiffusiveChemistry.hpp" 
-
-// reaction-diffusion includes
 #include "AbstractReaction.hpp"
 #include "AbstractReversibleReaction.hpp"
 #include "AbstractReactionSystem.hpp"
 #include "MassActionReaction.hpp"
 #include "AbstractReactionSystemFromFile.hpp"
 #include "ReactionTypeDatabase.hpp"
-
-// chaste PdeOde includes
 #include "HoneycombMeshGenerator.hpp"
 #include "EulerIvpOdeSolver.hpp"
 #include "LinearParabolicPdeSystemWithCoupledOdeSystemSolver.hpp"
@@ -41,17 +33,12 @@
 #include "OutputFileHandler.hpp"
 #include "RandomNumberGenerator.hpp"
 #include "TrianglesMeshReader.hpp"
-
-// custom pdeOde includes
 #include "PdeSchnackenbergCoupledPdeOdeSystem.hpp"
 #include "OdeSchnackenbergCoupledPdeOdeSystem.hpp"
 #include "PdeConsumerProducer.hpp"
 #include "OdeConsumerProducer.hpp"
-
 #include "AbstractChemicalOdeSystem.hpp"
 #include "AbstractChemicalOdeForCoupledPdeSystem.hpp"
-
-// CHASTE Spheroid includes
 #include "SimpleOxygenBasedCellCycleModel.hpp"
 #include "WildTypeCellMutationState.hpp"
 #include "StemCellProliferativeType.hpp"
@@ -60,11 +47,7 @@
 #include "EllipticGrowingDomainPdeModifier.hpp"
 #include "OffLatticeSimulation.hpp"
 #include "GeneralisedLinearSpringForce.hpp"
-
-
 #include "SchnackenbergCoupledPdeSystem.hpp"
-
-
 
 class TestChemicalChaste : public AbstractCellBasedTestSuite
 {
@@ -76,7 +59,7 @@ public:
 
         AbstractChemical *p_chemical = new AbstractChemical("A");
         AbstractDiffusiveChemical *p_chemical_diffusive = new AbstractDiffusiveChemical("B");
-        p_chemical_diffusive -> AddDiffusiveDomain("test",1.0);
+        p_chemical_diffusive->AddDiffusiveDomain("test",1.0);
 
         std::cout<<"Name: "<<p_chemical ->GetChemicalName() <<std::endl;
         std::cout<<"Type: "<<p_chemical ->GetChemicalType() <<std::endl;
@@ -91,13 +74,13 @@ public:
         p_chemicalVector.push_back(p_chemical);
         p_chemicalVector.push_back(p_chemical_diffusive);
 
-        std::cout<<p_chemicalVector[0] -> GetChemicalType() <<std::endl;
-        std::cout<<p_chemicalVector[1] -> GetChemicalType() <<std::endl;
+        std::cout<<p_chemicalVector[0]->GetChemicalType() <<std::endl;
+        std::cout<<p_chemicalVector[1]->GetChemicalType() <<std::endl;
 
         // get the diffusive value for [1]
         std::cout<<"dynamic casting"<<std::endl;
         AbstractDiffusiveChemical *p_chemical_diffusive_2 = dynamic_cast<AbstractDiffusiveChemical*>(p_chemicalVector[1]);
-        std::cout<<p_chemical_diffusive_2 -> GetChemicalDiffusivityVector()[0] <<std::endl;
+        std::cout<<p_chemical_diffusive_2->GetChemicalDiffusivityVector()[0] <<std::endl;
     }
 
     void TestChemistryClass()
@@ -115,10 +98,10 @@ public:
         for(unsigned species=0; species<Number_of_species; species++)
         {
             AbstractChemical *p_chemical = new AbstractChemical(ChemicalNames[species]);
-            p_chemistry -> AddChemical(p_chemical);
+            p_chemistry->AddChemical(p_chemical);
             
         }
-        std::vector<std::string> ChemNames = p_chemistry -> GetChemicalNames();
+        std::vector<std::string> ChemNames = p_chemistry->GetChemicalNames();
         
         std::cout<<"Chemical names: "<<std::endl;
 
@@ -134,15 +117,15 @@ public:
         for(unsigned species=0; species<Number_of_species; species++)
         {
             AbstractDiffusiveChemical *p_chemical = new AbstractDiffusiveChemical(ChemicalNamesDiffusive[species]);
-            p_chemical -> AddDiffusiveDomain(DiffusionDomains[species],DiffusionRates[species]);
-            p_diffusive_chemistry -> AddChemical(p_chemical);
+            p_chemical->AddDiffusiveDomain(DiffusionDomains[species],DiffusionRates[species]);
+            p_diffusive_chemistry->AddChemical(p_chemical);
         }
         std::cout<<"Chemical diffusivities: "<<std::endl;
 
         for(unsigned i=0; i<Number_of_species; i++)
         {
-            std::cout<<p_diffusive_chemistry -> GetChemicalNamesByIndex(i)<<std::endl;
-            std::cout<<p_diffusive_chemistry -> GetDiffusivityVectorByIndex(i)[0]<<std::endl;
+            std::cout<<p_diffusive_chemistry->GetChemicalNamesByIndex(i)<<std::endl;
+            std::cout<<p_diffusive_chemistry->GetDiffusivityVectorByIndex(i)[0]<<std::endl;
         }
 
 
@@ -152,8 +135,8 @@ public:
         // maybe need to template this function? currently add to the highest class to avoid object splicing
         AbstractChemistry *p_newChemistry = dynamic_cast<AbstractChemistry*>(p_diffusive_chemistry);
 
-        p_chemistry -> AddChemistry(p_newChemistry);
-        std::vector<std::string> ChemistryNames = p_chemistry -> GetChemicalNames();
+        p_chemistry->AddChemistry(p_newChemistry);
+        std::vector<std::string> ChemistryNames = p_chemistry->GetChemicalNames();
         for(unsigned i=0; i<Number_of_species; i++)
         {
             std::cout<<ChemistryNames[i]<<std::endl;
@@ -170,18 +153,18 @@ public:
         for(unsigned species=0; species<Number_of_species; species++)
         {
             AbstractDiffusiveChemical *p_chemical = new AbstractDiffusiveChemical(NewChemicalNamesDiffusive[species]);
-            p_chemical -> AddDiffusiveDomain(DiffusionDomains[species],NewDiffusionRates[species]);
-            p_newDiffusiveChemistry -> AddChemical(p_chemical); //shouldn't add the first species Ud as is a duplicate of name and domain
+            p_chemical->AddDiffusiveDomain(DiffusionDomains[species],NewDiffusionRates[species]);
+            p_newDiffusiveChemistry->AddChemical(p_chemical); //shouldn't add the first species Ud as is a duplicate of name and domain
         }
 
-        p_diffusive_chemistry -> AddChemistry(p_newDiffusiveChemistry);
+        p_diffusive_chemistry->AddChemistry(p_newDiffusiveChemistry);
         
         std::cout<<"Number of chemicals: "<<p_diffusive_chemistry ->GetNumberChemicals()<<std::endl;
         std::cout<<"Number of diffusive chemicals: "<<p_diffusive_chemistry ->GetNumberDiffusiveChemicals()<<std::endl;
         for(unsigned i=0; i<4; i++)
         {
-            std::cout<<p_diffusive_chemistry -> GetChemicalNamesByIndex(i)<<std::endl;
-            std::cout<<p_diffusive_chemistry -> GetDiffusivityValueByChemicalName(p_diffusive_chemistry -> GetChemicalNamesByIndex(i))<<std::endl;
+            std::cout<<p_diffusive_chemistry->GetChemicalNamesByIndex(i)<<std::endl;
+            std::cout<<p_diffusive_chemistry->GetDiffusivityValueByChemicalName(p_diffusive_chemistry->GetChemicalNamesByIndex(i))<<std::endl;
         }
 
     }
@@ -203,11 +186,11 @@ public:
 
         for(unsigned species=0; species<Number_of_species; species++)
         {
-            if(IsDiffusing[species])
+            if (IsDiffusing[species])
             {
                 // use the diffusive chemical root
                 AbstractDiffusiveChemical *p_chemical = new AbstractDiffusiveChemical(ChemicalNames[species]);
-                p_chemical -> AddDiffusiveDomain(DiffusionDomains[species],DiffusionRates[species]);
+                p_chemical->AddDiffusiveDomain(DiffusionDomains[species],DiffusionRates[species]);
                 p_chemicalVector.push_back(p_chemical);
             }else{
                 // use the non-diffusive chemical root
@@ -230,12 +213,12 @@ public:
             
             AbstractChemical *p_2 = dynamic_cast<AbstractChemical*>(*chem_iter);
             
-            if( p_2 -> GetChemicalType() == "AbstractDiffusiveChemical")
+            if ( p_2->GetChemicalType() == "AbstractDiffusiveChemical")
             {
                 AbstractDiffusiveChemical *p_chemical = dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter);
-                ChemicalName = p_chemical -> GetChemicalName();
-                Diffusivity = p_chemical -> GetChemicalDiffusivityVector()[0];
-                Domain = p_chemical -> GetDiffusiveDomainVector()[0];
+                ChemicalName = p_chemical->GetChemicalName();
+                Diffusivity = p_chemical->GetChemicalDiffusivityVector()[0];
+                Domain = p_chemical->GetDiffusiveDomainVector()[0];
             }
             
             std::cout<<"Name: "<<ChemicalName<<std::endl;
@@ -246,9 +229,9 @@ public:
 
         std::cout<<"Schnackenberg Chemistry"<<std::endl;
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemistry* p_system_chemistry = new AbstractChemistry();
 
@@ -267,12 +250,12 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -282,7 +265,7 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
@@ -306,9 +289,9 @@ public:
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
         std::cout<<"Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1]<<std::endl;
         std::cout<<"============================"<<std::endl;
-        std::cout<<"r1: 2U + V -> 3U     forwardRate = "<<reaction_1_rate<<std::endl;
+        std::cout<<"r1: 2U + V->3U     forwardRate = "<<reaction_1_rate<<std::endl;
         change_concentration_vector= {0.0,0.0};
-        p_reaction_1 -> React(p_system_chemistry,concentration_vector,change_concentration_vector);
+        p_reaction_1->React(p_system_chemistry,concentration_vector,change_concentration_vector);
         //concentration_vector[0] = concentration_vector[0] + change_concentration_vector[0];
         //concentration_vector[1] = concentration_vector[1] + change_concentration_vector[1];
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
@@ -316,15 +299,15 @@ public:
         std::cout<<"============================"<<std::endl;
         std::cout<<"r2: 0 <-> U          forwardRate = "<<reaction_2_forward_rate<<" reverseRate = "<<reaction_2_reverse_rate<<std::endl;
         change_concentration_vector= {0.0,0.0};
-        p_reaction_2 -> React(p_system_chemistry,concentration_vector,change_concentration_vector);
+        p_reaction_2->React(p_system_chemistry,concentration_vector,change_concentration_vector);
         //concentration_vector[0] = concentration_vector[0] + change_concentration_vector[0];
         //concentration_vector[1] = concentration_vector[1] + change_concentration_vector[1];
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
         std::cout<<"Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1]<<std::endl;
         std::cout<<"============================"<<std::endl;
-        std::cout<<"r3: 0 -> V           forwardRate = "<<reaction_3_rate<<std::endl;
+        std::cout<<"r3: 0->V           forwardRate = "<<reaction_3_rate<<std::endl;
         change_concentration_vector= {0.0,0.0};
-        p_reaction_3 -> React(p_system_chemistry,concentration_vector,change_concentration_vector);
+        p_reaction_3->React(p_system_chemistry,concentration_vector,change_concentration_vector);
         //concentration_vector[0] = concentration_vector[0] + change_concentration_vector[0];
         //concentration_vector[1] = concentration_vector[1] + change_concentration_vector[1];
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
@@ -340,9 +323,9 @@ public:
         p_reaction_vector_1.push_back(p_reaction_1);
 
         AbstractReactionSystem* p_reaction_system_1 = new AbstractReactionSystem(p_system_chemistry, p_reaction_vector_1);
-        p_reaction_system_1 -> ReactSystem(concentration_vector,change_concentration_vector);
+        p_reaction_system_1->ReactSystem(concentration_vector,change_concentration_vector);
         std::cout<<"============================"<<std::endl;
-        std::cout<<"r1: 2U + V -> 3U     forwardRate = "<<reaction_1_rate<<std::endl;
+        std::cout<<"r1: 2U + V->3U     forwardRate = "<<reaction_1_rate<<std::endl;
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
         std::cout<<"Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1]<<std::endl;
 
@@ -356,12 +339,12 @@ public:
         p_reaction_vector_2.push_back(p_reaction_3);
 
         AbstractReactionSystem* p_reaction_system_2 = new AbstractReactionSystem(p_system_chemistry, p_reaction_vector_2);
-        p_reaction_system_2 -> ReactSystem(concentration_vector,change_concentration_vector);
+        p_reaction_system_2->ReactSystem(concentration_vector,change_concentration_vector);
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
         std::cout<<"Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1]<<std::endl;
-        for(unsigned i=0; i<p_reaction_system_2 -> GetNumberOfReactions(); i++)
+        for(unsigned i=0; i<p_reaction_system_2->GetNumberOfReactions(); i++)
         {
-            std::cout<<"Reaction type: "<<i<<" "<< p_reaction_system_2 -> GetReactionByIndex(i) -> GetReactionType()<<std::endl;
+            std::cout<<"Reaction type: "<<i<<" "<< p_reaction_system_2->GetReactionByIndex(i)->GetReactionType()<<std::endl;
         }
     }
 
@@ -386,12 +369,12 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -401,7 +384,7 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
@@ -426,22 +409,22 @@ public:
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
         std::cout<<"Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1]<<std::endl;
         std::cout<<"============================"<<std::endl;
-        std::cout<<"r1: 2U + V -> 3U     forwardRate = "<<reaction_1_rate<<std::endl;
+        std::cout<<"r1: 2U + V->3U     forwardRate = "<<reaction_1_rate<<std::endl;
         change_concentration_vector= {0.0,0.0};
-        p_reaction_1 -> React(p_system_chemistry,concentration_vector,change_concentration_vector);
+        p_reaction_1->React(p_system_chemistry,concentration_vector,change_concentration_vector);
     
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
         std::cout<<"Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1]<<std::endl;
         std::cout<<"============================"<<std::endl;
         std::cout<<"r2: 0 <-> U          forwardRate = "<<reaction_2_forward_rate<<" reverseRate = "<<reaction_2_reverse_rate<<std::endl;
         change_concentration_vector= {0.0,0.0};
-        p_reaction_2 -> React(p_system_chemistry,concentration_vector,change_concentration_vector);
+        p_reaction_2->React(p_system_chemistry,concentration_vector,change_concentration_vector);
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
         std::cout<<"Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1]<<std::endl;
         std::cout<<"============================"<<std::endl;
-        std::cout<<"r3: 0 -> V           forwardRate = "<<reaction_3_rate<<std::endl;
+        std::cout<<"r3: 0->V           forwardRate = "<<reaction_3_rate<<std::endl;
         change_concentration_vector= {0.0,0.0};
-        p_reaction_3 -> React(p_system_chemistry,concentration_vector,change_concentration_vector);
+        p_reaction_3->React(p_system_chemistry,concentration_vector,change_concentration_vector);
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
         std::cout<<"Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1]<<std::endl;
 
@@ -457,12 +440,12 @@ public:
         p_mass_action_reaction_vector.push_back(p_reaction_3);
 
         AbstractReactionSystem* p_mass_action_reaction_system = new AbstractReactionSystem(p_system_chemistry, p_mass_action_reaction_vector);
-        p_mass_action_reaction_system -> ReactSystem(concentration_vector,change_concentration_vector);
+        p_mass_action_reaction_system->ReactSystem(concentration_vector,change_concentration_vector);
         std::cout<<"Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1]<<std::endl;
         std::cout<<"Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1]<<std::endl;
-        for(unsigned i=0; i<p_mass_action_reaction_system -> GetNumberOfReactions(); i++)
+        for(unsigned i=0; i<p_mass_action_reaction_system->GetNumberOfReactions(); i++)
         {
-            std::cout<<"Reaction type: "<<i<<" "<< p_mass_action_reaction_system -> GetReactionByIndex(i) -> GetReactionType()<<std::endl;
+            std::cout<<"Reaction type: "<<i<<" "<< p_mass_action_reaction_system->GetReactionByIndex(i)->GetReactionType()<<std::endl;
         }
     }
 
@@ -494,7 +477,7 @@ public:
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -535,11 +518,11 @@ public:
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
-            if(i==22 || i==77)
+            if (i==22 || i==77)
             {
                 odeSystem.push_back(new OdeSchnackenbergCoupledPdeOdeSystem(0.1, 0.2, 0.3, 0.1));
 
-            }else if(i==27 || i==72)
+            }else if (i==27 || i==72)
             {
                 odeSystem.push_back(new OdeSchnackenbergCoupledPdeOdeSystem(0.1, 0.2, 0.3, 0.1));  
             }else{
@@ -581,8 +564,8 @@ public:
         std::cout<<"ConsumerProducer"<<std::endl;
 
         //  reaction system involving two species, A and B
-        // 0 -> A   rateConstant = k1
-        // B -> 0   rateConstant = k2
+        // 0->A   rateConstant = k1
+        // B->0   rateConstant = k2
         // A <-> B  rateConstantForward = k3    rateConstantReverse = k_3
         // A diffuses at rate Da
         // B diffuses at rate Db
@@ -616,7 +599,7 @@ public:
 
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -657,11 +640,11 @@ public:
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
-            if(i==22)
+            if (i==22)
             {
                 odeSystem.push_back(new OdeConsumerProducer(1, 0, 0, 0));
 
-            }else if(i==77)
+            }else if (i==77)
             {
                 odeSystem.push_back(new OdeConsumerProducer(0, 1, 0, 0));  
             }else{
@@ -704,9 +687,9 @@ public:
         /*
         std::cout<<"Mass action kinetics of Schnackenberg using the AbstractChemicalOdeSystem Class"<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemistry* p_system_chemistry = new AbstractChemistry();
 
@@ -725,7 +708,7 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -735,7 +718,7 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
@@ -788,9 +771,9 @@ public:
         
         std::cout<<"Mass action kinetics of Schnackenberg using the AbstractChemicalOdeSystem Class"<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemistry* p_system_chemistry = new AbstractChemistry();
 
@@ -809,7 +792,7 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -819,16 +802,16 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
         p_products_3.push_back(p_chemical_V);
         stoich_products_3.push_back(1);
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         double reaction_1_rate = 1.0;
         double reaction_2_forward_rate = 0.5;
@@ -885,7 +868,7 @@ public:
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -966,9 +949,9 @@ public:
         std::cout<<"-----------------------------"<<std::endl;
 
         AbstractReaction* p_reaction = new AbstractReaction();
-        std::cout<<"Before cast reaction type: "<<p_reaction -> GetReactionType()<<std::endl;
+        std::cout<<"Before cast reaction type: "<<p_reaction->GetReactionType()<<std::endl;
         ReactionTablet(p_reaction,"MassActionReaction");
-        std::cout<<"After cast reaction type: "<<p_reaction -> GetReactionType()<<std::endl;
+        std::cout<<"After cast reaction type: "<<p_reaction->GetReactionType()<<std::endl;
 
 
         std::cout<<"-----------------------------"<<std::endl;
@@ -982,9 +965,9 @@ public:
 
         std::cout<<"Mass action kinetics of Schnackenberg using the AbstractChemicalOdeSystem Class"<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemistry* p_system_chemistry = new AbstractChemistry();
 
@@ -1003,7 +986,7 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -1013,7 +996,7 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
@@ -1057,15 +1040,15 @@ public:
         std::cout<<"-----------------------------"<<std::endl;
         std::cout<<"Read out reaction details: "<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        std::cout<<"Number of reactions: "<<p_file_reaction_system -> GetNumberOfReactions()<<std::endl;
-        for(unsigned i=0; i<p_file_reaction_system -> GetNumberOfReactions(); i++)
+        std::cout<<"Number of reactions: "<<p_file_reaction_system->GetNumberOfReactions()<<std::endl;
+        for(unsigned i=0; i<p_file_reaction_system->GetNumberOfReactions(); i++)
         {
-            std::cout<<"Reaction: "<<i<<" "<< p_file_reaction_system -> GetReactionByIndex(i) -> GetReactionType()<<std::endl;
-            std::cout<<"Reaction: "<<i<<" "<< dynamic_cast<MassActionReaction*>(p_file_reaction_system -> GetReactionByIndex(i)) -> GetForwardReactionRateConstant()<<std::endl;
-            std::cout<<"Reaction: "<<i<<" "<< dynamic_cast<MassActionReaction*>(p_file_reaction_system -> GetReactionByIndex(i)) -> GetReverseReactionRateConstant()<<std::endl;
+            std::cout<<"Reaction: "<<i<<" "<< p_file_reaction_system->GetReactionByIndex(i)->GetReactionType()<<std::endl;
+            std::cout<<"Reaction: "<<i<<" "<< dynamic_cast<MassActionReaction*>(p_file_reaction_system->GetReactionByIndex(i))->GetForwardReactionRateConstant()<<std::endl;
+            std::cout<<"Reaction: "<<i<<" "<< dynamic_cast<MassActionReaction*>(p_file_reaction_system->GetReactionByIndex(i))->GetReverseReactionRateConstant()<<std::endl;
         }
 
-        std::vector<std::string> chemNames = p_file_reaction_system-> GetSystemChemistry() -> GetChemicalNames();
+        std::vector<std::string> chemNames = p_file_reaction_system-> GetSystemChemistry()->GetChemicalNames();
         std::cout<<"System chemical names:"<<std::endl;
         for(unsigned i=0; i<chemNames.size();i++)
         {
@@ -1077,14 +1060,14 @@ public:
             AbstractReaction* p_reaction = p_file_reaction_system-> GetReactionByIndex(i);
 
             std::cout<<"Reaction type: "<<p_reaction ->GetReactionType()<<std::endl;
-            for(unsigned j=0; j<p_reaction -> GetNumberOfSubstrates(); j++)
+            for(unsigned j=0; j<p_reaction->GetNumberOfSubstrates(); j++)
             {
-                std::cout<<"Substrate: "<<p_reaction -> GetSubstratesByIndex(j) -> GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichSubstratesByIndex(j)<<std::endl;
+                std::cout<<"Substrate: "<<p_reaction->GetSubstratesByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichSubstratesByIndex(j)<<std::endl;
             }
 
-            for(unsigned j=0; j<p_reaction -> GetNumberOfProducts(); j++)
+            for(unsigned j=0; j<p_reaction->GetNumberOfProducts(); j++)
             {
-                std::cout<<"Product: "<<p_reaction -> GetProductsByIndex(j) -> GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichProductsByIndex(j)<<std::endl;
+                std::cout<<"Product: "<<p_reaction->GetProductsByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichProductsByIndex(j)<<std::endl;
             }
 
         }
@@ -1094,15 +1077,15 @@ public:
         std::cout<<"-----------------------------"<<std::endl;
         std::cout<<"Read out reaction details: "<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        std::cout<<"Number of reactions: "<<p_mass_action_reaction_system -> GetNumberOfReactions()<<std::endl;
-        for(unsigned i=0; i<p_mass_action_reaction_system -> GetNumberOfReactions(); i++)
+        std::cout<<"Number of reactions: "<<p_mass_action_reaction_system->GetNumberOfReactions()<<std::endl;
+        for(unsigned i=0; i<p_mass_action_reaction_system->GetNumberOfReactions(); i++)
         {
-            std::cout<<"Reaction: "<<i<<" "<< p_mass_action_reaction_system -> GetReactionByIndex(i) -> GetReactionType()<<std::endl;
-            std::cout<<"Reaction: "<<i<<" "<< dynamic_cast<MassActionReaction*>(p_mass_action_reaction_system -> GetReactionByIndex(i)) -> GetForwardReactionRateConstant()<<std::endl;
-            std::cout<<"Reaction: "<<i<<" "<< dynamic_cast<MassActionReaction*>(p_mass_action_reaction_system -> GetReactionByIndex(i)) -> GetReverseReactionRateConstant()<<std::endl;
+            std::cout<<"Reaction: "<<i<<" "<< p_mass_action_reaction_system->GetReactionByIndex(i)->GetReactionType()<<std::endl;
+            std::cout<<"Reaction: "<<i<<" "<< dynamic_cast<MassActionReaction*>(p_mass_action_reaction_system->GetReactionByIndex(i))->GetForwardReactionRateConstant()<<std::endl;
+            std::cout<<"Reaction: "<<i<<" "<< dynamic_cast<MassActionReaction*>(p_mass_action_reaction_system->GetReactionByIndex(i))->GetReverseReactionRateConstant()<<std::endl;
         }
 
-        std::vector<std::string> chemNames_hard_coded = p_mass_action_reaction_system-> GetSystemChemistry() -> GetChemicalNames();
+        std::vector<std::string> chemNames_hard_coded = p_mass_action_reaction_system-> GetSystemChemistry()->GetChemicalNames();
         std::cout<<"System chemical names:"<<std::endl;
         for(unsigned i=0; i<chemNames_hard_coded.size();i++)
         {
@@ -1114,14 +1097,14 @@ public:
             AbstractReaction* p_reaction = p_mass_action_reaction_system-> GetReactionByIndex(i);
 
             std::cout<<"Reaction type: "<<p_reaction ->GetReactionType()<<std::endl;
-            for(unsigned j=0; j<p_reaction -> GetNumberOfSubstrates(); j++)
+            for(unsigned j=0; j<p_reaction->GetNumberOfSubstrates(); j++)
             {
-                std::cout<<"Substrate: "<<p_reaction -> GetSubstratesByIndex(j) -> GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichSubstratesByIndex(j)<<std::endl;
+                std::cout<<"Substrate: "<<p_reaction->GetSubstratesByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichSubstratesByIndex(j)<<std::endl;
             }
 
-            for(unsigned j=0; j<p_reaction -> GetNumberOfProducts(); j++)
+            for(unsigned j=0; j<p_reaction->GetNumberOfProducts(); j++)
             {
-                std::cout<<"Product: "<<p_reaction -> GetProductsByIndex(j) -> GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichProductsByIndex(j)<<std::endl;
+                std::cout<<"Product: "<<p_reaction->GetProductsByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichProductsByIndex(j)<<std::endl;
             }
 
         }
@@ -1166,8 +1149,8 @@ public:
         std::cout<<"ConsumerProducerFromFile"<<std::endl;
 
         //  reaction system involving two species, A and B
-        // 0 -> A   rateConstant = k1
-        // B -> 0   rateConstant = k2
+        // 0->A   rateConstant = k1
+        // B->0   rateConstant = k2
         // A <-> B  rateConstantForward = k3    rateConstantReverse = k_3
         // A diffuses at rate Da
         // B diffuses at rate Db
@@ -1201,7 +1184,7 @@ public:
 
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1242,19 +1225,19 @@ public:
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
-            if(i==22)
+            if (i==22)
             {
                 odeSystem.push_back(new OdeConsumerProducer(1, 0, 0, 0));
 
-            }else if(i==77)
+            }else if (i==77)
             {
                 odeSystem.push_back(new OdeConsumerProducer(0, 1, 0, 0));  
             }else{
                 odeSystem.push_back(new OdeConsumerProducer(0, 0, 0.1, 0));
             }
         }
-        // 0 -> A   rateConstant = k1
-        // B -> 0   rateConstant = k2
+        // 0->A   rateConstant = k1
+        // B->0   rateConstant = k2
         // A <-> B  rateConstantForward = k3    rateConstantReverse = k_3
         // A diffuses at rate Da
         // B diffuses at rate Db
@@ -1462,14 +1445,14 @@ public:
         std::cout<<"-----------------------------"<<std::endl;
         std::cout<<"Read out reaction details: "<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        std::cout<<"Number of reactions: "<<p_file_reaction_system -> GetNumberOfReactions()<<std::endl;
-        for(unsigned i=0; i<p_file_reaction_system -> GetNumberOfReactions(); i++)
+        std::cout<<"Number of reactions: "<<p_file_reaction_system->GetNumberOfReactions()<<std::endl;
+        for(unsigned i=0; i<p_file_reaction_system->GetNumberOfReactions(); i++)
         {
-            std::cout<<"Reaction: "<<i<<" "<< p_file_reaction_system -> GetReactionByIndex(i) -> GetReactionType()<<std::endl;
-            std::cout<<"Number of spectators: "<<i<<" "<< dynamic_cast<SpectatorDependentReaction*>(p_file_reaction_system -> GetReactionByIndex(i)) -> GetNumberOfSpectators()<<std::endl;
+            std::cout<<"Reaction: "<<i<<" "<< p_file_reaction_system->GetReactionByIndex(i)->GetReactionType()<<std::endl;
+            std::cout<<"Number of spectators: "<<i<<" "<< dynamic_cast<SpectatorDependentReaction*>(p_file_reaction_system->GetReactionByIndex(i))->GetNumberOfSpectators()<<std::endl;
         }
 
-        std::vector<std::string> chemNames = p_file_reaction_system-> GetSystemChemistry() -> GetChemicalNames();
+        std::vector<std::string> chemNames = p_file_reaction_system-> GetSystemChemistry()->GetChemicalNames();
         std::cout<<"System chemical names:"<<std::endl;
         for(unsigned i=0; i<chemNames.size();i++)
         {
@@ -1481,14 +1464,14 @@ public:
             AbstractReaction* p_reaction = p_file_reaction_system-> GetReactionByIndex(i);
 
             std::cout<<"Reaction type: "<<p_reaction ->GetReactionType()<<std::endl;
-            for(unsigned j=0; j<p_reaction -> GetNumberOfSubstrates(); j++)
+            for(unsigned j=0; j<p_reaction->GetNumberOfSubstrates(); j++)
             {
-                std::cout<<"Substrate: "<<p_reaction -> GetSubstratesByIndex(j) -> GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichSubstratesByIndex(j)<<std::endl;
+                std::cout<<"Substrate: "<<p_reaction->GetSubstratesByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichSubstratesByIndex(j)<<std::endl;
             }
 
-            for(unsigned j=0; j<p_reaction -> GetNumberOfProducts(); j++)
+            for(unsigned j=0; j<p_reaction->GetNumberOfProducts(); j++)
             {
-                std::cout<<"Product: "<<p_reaction -> GetProductsByIndex(j) -> GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichProductsByIndex(j)<<std::endl;
+                std::cout<<"Product: "<<p_reaction->GetProductsByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichProductsByIndex(j)<<std::endl;
             }
 
         }
@@ -1521,9 +1504,9 @@ public:
         /*
         std::cout<<"Mass action kinetics of Schnackenberg using the AbstractChemicalOdeSystem Class"<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemistry* p_system_chemistry = new AbstractChemistry();
 
@@ -1542,7 +1525,7 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -1552,16 +1535,16 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
         p_products_3.push_back(p_chemical_V);
         stoich_products_3.push_back(1);
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         double reaction_1_rate = 1.0;
         double reaction_2_forward_rate = 0.5;
@@ -1618,7 +1601,7 @@ public:
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1782,9 +1765,9 @@ public:
         
         std::cout<<"Mass action kinetics of Schnackenberg using the AbstractChemicalOdeSystem Class"<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemistry* p_system_chemistry = new AbstractChemistry();
 
@@ -1803,7 +1786,7 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -1813,16 +1796,16 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
         p_products_3.push_back(p_chemical_V);
         stoich_products_3.push_back(1);
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         double reaction_1_rate = 0.1;
         double reaction_2_forward_rate = 0.1;
@@ -1879,7 +1862,7 @@ public:
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1958,9 +1941,9 @@ public:
         
         std::cout<<"Mass action kinetics of Schnackenberg using the AbstractChemicalOdeSystem Class"<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemistry* p_system_chemistry = new AbstractChemistry();
 
@@ -1979,7 +1962,7 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -1989,16 +1972,16 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
         p_products_3.push_back(p_chemical_V);
         stoich_products_3.push_back(1);
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         double reaction_1_rate = 0.2;
         double reaction_2_forward_rate = 0.2;
@@ -2055,7 +2038,7 @@ public:
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -2135,9 +2118,9 @@ public:
         
         std::cout<<"Mass action kinetics of Schnackenberg using the AbstractChemicalOdeSystem Class"<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemistry* p_system_chemistry = new AbstractChemistry();
 
@@ -2156,7 +2139,7 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -2166,16 +2149,16 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
         p_products_3.push_back(p_chemical_V);
         stoich_products_3.push_back(1);
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         double reaction_1_rate = 0.3;
         double reaction_2_forward_rate = 0.3;
@@ -2232,7 +2215,7 @@ public:
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -2312,9 +2295,9 @@ public:
         
         std::cout<<"Mass action kinetics of Schnackenberg using the AbstractChemicalOdeSystem Class"<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemistry* p_system_chemistry = new AbstractChemistry();
 
@@ -2333,7 +2316,7 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -2343,16 +2326,16 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
         p_products_3.push_back(p_chemical_V);
         stoich_products_3.push_back(1);
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         double reaction_1_rate = 0.3;
         double reaction_2_forward_rate = 0.3;
@@ -2409,7 +2392,7 @@ public:
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -2488,9 +2471,9 @@ public:
         
         std::cout<<"Mass action kinetics of Schnackenberg using the AbstractChemicalOdeSystem Class"<<std::endl;
         std::cout<<"-----------------------------"<<std::endl;
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         AbstractChemistry* p_system_chemistry = new AbstractChemistry();
 
@@ -2509,7 +2492,7 @@ public:
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
         stoich_substrates_1.push_back(2);
@@ -2519,16 +2502,16 @@ public:
         stoich_products_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
         stoich_substrates_1.push_back(1);
         p_products_3.push_back(p_chemical_V);
         stoich_products_3.push_back(1);
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
-        // r3: 0 -> V           forwardRate = 0.3
+        // r3: 0->V           forwardRate = 0.3
 
         double reaction_1_rate = 0.3;
         double reaction_2_forward_rate = 0.3;
@@ -2585,7 +2568,7 @@ public:
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();

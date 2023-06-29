@@ -1,23 +1,20 @@
 #ifndef ABSTRACTREVERSIBLEMEMBRANEREACTION_HPP_
 #define ABSTRACTREVERSIBLEMEMBRANEREACTION_HPP_
 
-// general includes
 #include <string>
 #include <stdlib.h> 
 #include <vector>
 #include <iostream>
-// custom includes
+
 #include "AbstractChemistry.hpp"
 #include "AbstractChemical.hpp"
-
-// reaction includes
 #include "AbstractMembraneReaction.hpp"
 
-// abstract property to contain information about the interactions of chemical species at a cell boundary
-// define two coupled reactions; first the reaction in the bulk, second the reaction on the cell side
-// bulk -> bulk | cell -> cell
-
-
+/**
+ * Abstract property to contain information about the interactions of chemical 
+ * species at a cell boundary define two coupled reactions; first the reaction 
+ * in the bulk, second the reaction on the cell side: bulk->bulk | cell->cell
+ */
 class AbstractReversibleMembraneReaction : public AbstractMembraneReaction
 {
 protected:
@@ -129,7 +126,7 @@ void AbstractReversibleMembraneReaction::SetForwardReactionRate(double reactionR
 
 void AbstractReversibleMembraneReaction::SetReverseReactionRate(double reactionRate)
 {
-    if(mIsRateCheck)
+    if (mIsRateCheck)
     {
         reactionRate = CheckRate(reactionRate);
     }
@@ -138,9 +135,9 @@ void AbstractReversibleMembraneReaction::SetReverseReactionRate(double reactionR
 
 void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry, AbstractChemistry* cellChemistry, const std::vector<double>& currentBulkConcentration, const std::vector<double>& currentCellConcentration, std::vector<double>& changeBulkConc, std::vector<double>& changeCellConc)
 {
-    std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry->rGetChemicalVector();
     
-    std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry->rGetChemicalVector();
     
     UpdateReactionRate(bulkChemistry, cellChemistry, currentBulkConcentration, currentCellConcentration);
     // perform the reaction
@@ -156,7 +153,7 @@ void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry,
         // for each bulk chemical, parse whether it is involved in this reaction.
         for(unsigned j=0; j<mNumberOfBulkSubstrates; j++)
         {
-            if(mpBulkSubstrates[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpBulkSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 changeBulkConc[index] -= mStoichBulkSubstrates[j]*GetForwardReactionRate();
                 changeBulkConc[index] += mStoichBulkSubstrates[j]*GetReverseReactionRate();
@@ -166,7 +163,7 @@ void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry,
         // a reactant may be present on both sides of the reaction and may convert at different functional rates
         for(unsigned j=0; j<mNumberOfBulkProducts; j++)
         {
-            if(mpBulkProducts[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpBulkProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 changeBulkConc[index] += mStoichBulkProducts[j]*GetForwardReactionRate();
                 changeBulkConc[index] -= mStoichBulkProducts[j]*GetReverseReactionRate();
@@ -185,7 +182,7 @@ void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry,
         // for each bulk chemical, parse whether it is involved in this reaction.
         for(unsigned j=0; j<mNumberOfCellSubstrates; j++)
         {
-            if(mpCellSubstrates[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpCellSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 changeCellConc[index] -= mStoichCellSubstrates[j]*GetForwardReactionRate();
                 changeCellConc[index] += mStoichCellSubstrates[j]*GetReverseReactionRate();
@@ -195,7 +192,7 @@ void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry,
         // a reactant may be present on both sides of the reaction and may convert at different functional rates
         for(unsigned j=0; j<mNumberOfCellProducts; j++)
         {
-            if(mpCellProducts[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpCellProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 changeCellConc[index] += mStoichCellProducts[j]*GetForwardReactionRate();
                 changeCellConc[index] -= mStoichCellProducts[j]*GetReverseReactionRate();
@@ -204,7 +201,6 @@ void AbstractReversibleMembraneReaction::React(AbstractChemistry* bulkChemistry,
         }
     }
 };
-
 
 void AbstractReversibleMembraneReaction::UpdateReaction()
 {
@@ -228,7 +224,7 @@ void AbstractReversibleMembraneReaction::ParseReactionInformation(std::string re
 {
      
 
-    if(!IsReversible)
+    if (!IsReversible)
     {
         AbstractMembraneReaction::ParseReactionInformation(reaction_information, false);
         SetReverseReactionRate(0.0);
@@ -243,20 +239,20 @@ void AbstractReversibleMembraneReaction::ParseReactionInformation(std::string re
         unsigned length_string_forward =0;
         unsigned length_string_reverse =0;
 
-        if(IsForward)
+        if (IsForward)
         {
             posForward = reaction_information.find(mIrreversibleRateName);
 
             length_string_forward = reaction_information.substr(posForward,std::string::npos).length();
         }
-        if(IsReverse)
+        if (IsReverse)
         {
             posReverse = reaction_information.find(mReversibleName);
 
             length_string_reverse = reaction_information.substr(posReverse,std::string::npos).length();
         }
 
-        if( length_string_forward<length_string_reverse )
+        if ( length_string_forward<length_string_reverse )
         {
             SetForwardReactionRate(atof(reaction_information.substr(posForward+mIrreversibleRateName.size()+1,std::string::npos).c_str()));
             reaction_information.erase(posForward,std::string::npos);

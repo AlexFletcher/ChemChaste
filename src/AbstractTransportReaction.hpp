@@ -1,21 +1,22 @@
 #ifndef ABSTRACTTRANSPORTREACTION_HPP_
 #define ABSTRACTTRANSPORTREACTION_HPP_
 
-// general includes
 #include <string>
 #include <stdlib.h> 
 #include <vector>
 #include <iostream>
-// custom includes
+
 #include "AbstractChemistry.hpp"
 #include "AbstractChemical.hpp"
 
-// abstract property to contain information about the interactions of chemical species at a cell boundary
-// bulk -> cell
-// reaction substrates denote the species in the bulk while products denote species in the cell
-
-// ZerothOrderTransportIntoCell
-
+/**
+ * Abstract property to contain information about the interactions of chemical 
+ * species at a cell boundary:
+ * bulk->cell
+ * 
+ * Reaction substrates denote the species in the bulk while products denote 
+ * species in the cell.
+ */
 class AbstractTransportReaction 
 {
 protected:
@@ -170,8 +171,6 @@ AbstractTransportReaction::AbstractTransportReaction(   std::vector<AbstractChem
     SetDeltaErrorRateMax(1e8);
 }
 
-
-// copy constructor
 AbstractTransportReaction::AbstractTransportReaction(const AbstractTransportReaction& existingReaction)
 {
     
@@ -191,9 +190,9 @@ void AbstractTransportReaction::React(AbstractChemistry* bulkChemistry, Abstract
 {   
 
     
-    std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry->rGetChemicalVector();
     
-    std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry->rGetChemicalVector();
     
     UpdateReactionRate(bulkChemistry, cellChemistry, currentBulkConcentration, currentCellConcentration);
     
@@ -210,7 +209,7 @@ void AbstractTransportReaction::React(AbstractChemistry* bulkChemistry, Abstract
         // for each bulk chemical, parse whether it is involved in this reaction.
         for(unsigned j=0; j<mNumberOfBulkSpecies; j++)
         {
-            if(mpBulkReactionSpecies.at(j) -> GetChemicalName()==p_bulk_chemical -> GetChemicalName())
+            if (mpBulkReactionSpecies.at(j)->GetChemicalName()==p_bulk_chemical->GetChemicalName())
             {
                 changeBulkConc.at(index)  -= mStoichBulk.at(j)*GetReactionRate();
                 break;
@@ -228,7 +227,7 @@ void AbstractTransportReaction::React(AbstractChemistry* bulkChemistry, Abstract
    
         for(unsigned j=0; j<mNumberOfCellSpecies; j++)
         {
-            if(mpCellReactionSpecies.at(j) -> GetChemicalName()==p_cell_chemical -> GetChemicalName())
+            if (mpCellReactionSpecies.at(j)->GetChemicalName()==p_cell_chemical->GetChemicalName())
             {
                 changeCellConc.at(index) += mStoichCell.at(j) *GetReactionRate();
                 break;
@@ -253,7 +252,7 @@ void AbstractTransportReaction::UpdateReactionRate(AbstractChemistry* bulkChemis
 
 void AbstractTransportReaction::SetReactionRate(double reactionRate)
 {
-    if(mIsRateCheck)
+    if (mIsRateCheck)
     {
         reactionRate = CheckRate(reactionRate);
     }
@@ -272,21 +271,15 @@ std::string AbstractTransportReaction::GetReactionType()
     return "ZerothOrderTransportIntoCell";
 }
 
-
 void AbstractTransportReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=false)
 {
-    //std::cout<<"AbstractTransportReaction::ParseReactionInformation - start"<<std::endl;
-    if(reaction_information.find(mIrreversibleRateName) != std::string::npos)
+    if (reaction_information.find(mIrreversibleRateName) != std::string::npos)
     {
-        size_t pos= reaction_information.find(mIrreversibleRateName);
-
-        SetReactionRate(atof(reaction_information.substr(pos+mIrreversibleRateName.size()+1,std::string::npos).c_str()));
+        size_t pos = reaction_information.find(mIrreversibleRateName);
+        SetReactionRate(atof(reaction_information.substr(pos+mIrreversibleRateName.size()+1, std::string::npos).c_str()));
     }
-    //std::cout<<"AbstractTransportReaction::ParseReactionInformation - end"<<std::endl;
 }
 
-
-// member functions
 std::vector<AbstractChemical*> AbstractTransportReaction::GetBulkSpecies()
 {
     return mpBulkReactionSpecies;
@@ -294,7 +287,7 @@ std::vector<AbstractChemical*> AbstractTransportReaction::GetBulkSpecies()
 
 AbstractChemical* AbstractTransportReaction::GetBulkSpeciesByIndex(unsigned index)
 {
-    if(index < mNumberOfBulkSpecies)
+    if (index < mNumberOfBulkSpecies)
     {
         return mpBulkReactionSpecies[index];
     }
@@ -310,10 +303,9 @@ std::vector<AbstractChemical*> AbstractTransportReaction::GetCellSpecies()
     return mpCellReactionSpecies;
 }
 
-
 AbstractChemical* AbstractTransportReaction::GetCellSpeciesByIndex(unsigned index)
 {
-    if(index < mNumberOfCellSpecies)
+    if (index < mNumberOfCellSpecies)
     {
         return mpCellReactionSpecies[index];
     }
@@ -329,22 +321,19 @@ void AbstractTransportReaction::SetBulkSpecies(std::vector<AbstractChemical*> bu
     mpBulkReactionSpecies = bulkReactionSpecies;
 }
 
-
 void AbstractTransportReaction::SetCellSpecies(std::vector<AbstractChemical*> cellReactionSpecies)
 {
     mpCellReactionSpecies = cellReactionSpecies;
 }
-
 
 std::vector<unsigned> AbstractTransportReaction::GetStoichBulk()
 {
     return mStoichBulk;
 }
 
-
 unsigned AbstractTransportReaction::GetStoichBulkByIndex(unsigned index)
 {
-    if(index < mNumberOfBulkSpecies)
+    if (index < mNumberOfBulkSpecies)
     {
         return mStoichBulk[index];
     }
@@ -355,22 +344,19 @@ unsigned AbstractTransportReaction::GetStoichBulkByIndex(unsigned index)
     } 
 }
 
-
 void AbstractTransportReaction::SetStoichBulk(std::vector<unsigned> stoichBulk)
 {
     mStoichBulk = stoichBulk;
 }
-
 
 std::vector<unsigned> AbstractTransportReaction::GetStoichCell()
 {
     return mStoichCell;
 }
 
-
 unsigned AbstractTransportReaction::GetStoichCellByIndex(unsigned index)
 {
-    if(index < mNumberOfCellSpecies)
+    if (index < mNumberOfCellSpecies)
     {
         return mStoichCell[index];
     }
@@ -391,18 +377,15 @@ void AbstractTransportReaction::SetNumberOfBulkSpecies(unsigned numberOfBulkSpec
     mNumberOfBulkSpecies = numberOfBulkSpecies;
 }
 
-
 unsigned AbstractTransportReaction::GetNumberOfBulkSpecies()
 {
     return mNumberOfBulkSpecies;
 }
 
-
 void AbstractTransportReaction::SetNumberOfCellSpecies(unsigned numberOfCellSpecies)
 {
     mNumberOfCellSpecies = numberOfCellSpecies;
 }
-
 
 unsigned AbstractTransportReaction::GetNumberOfCellSpecies()
 {
@@ -443,18 +426,16 @@ double AbstractTransportReaction::CheckRate(double rate)
 {
     // if reaction rate gets too low or high then undefined behaviour can occur
 
-    if(abs(rate) < mDelta_rate_min)
+    if (abs(rate) < mDelta_rate_min)
     {
         rate = 0.0;
-    }else if(abs(rate) > mDelta_rate_max)
+    }else if (abs(rate) > mDelta_rate_max)
     {
         rate = mDelta_rate_max;
     }
     return rate;
 }
 
-
-// file read functions
 void AbstractTransportReaction::SetIrreversibleDelimiter(std::string delim)
 {
     mIrreversibleDelimiter = delim;

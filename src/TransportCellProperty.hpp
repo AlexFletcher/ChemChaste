@@ -15,7 +15,9 @@
 #include "EulerIvpOdeSolver.hpp"
 #include "ChastePoint.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 class TransportCellProperty : public AbstractCellProperty
 {
 protected:

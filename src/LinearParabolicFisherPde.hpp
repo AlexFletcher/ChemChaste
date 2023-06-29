@@ -8,7 +8,7 @@
 #include "AbstractChemicalOdeForCoupledPdeSystem.hpp"
 
 /**
-* The Fisher - KPP reaction diffusion equation
+* The Fisher - KPP reaction diffusion equation.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 class LinearParabolicFisherPde : public AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>

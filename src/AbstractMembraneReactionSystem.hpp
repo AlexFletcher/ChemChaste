@@ -1,19 +1,20 @@
 #ifndef ABSTRACTMEMBRANEREACTIONSYSTEM_HPP_
 #define ABSTRACTMEMBRANEREACTIONSYSTEM_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <iostream>
 
-// reaction includes
 #include "AbstractMembraneReaction.hpp"
 #include "AbstractChemistry.hpp"
 
-// class to hold a set of membrane reactions and handle the parsing and reforming of the different chemical concentration (state variable)
-// vectors. These vectors being the concentrations external and internal to the infinitesimal thickness membrane. 
-
+/**
+ * Class to hold a set of membrane reactions and handle the parsing and 
+ * reforming of the different chemical concentration (state variable) vectors. 
+ * These vectors being the concentrations external and internal to the 
+ * infinitesimal thickness membrane.
+ */
 class AbstractMembraneReactionSystem
 {
 protected:
@@ -85,8 +86,8 @@ AbstractMembraneReactionSystem::AbstractMembraneReactionSystem( AbstractChemistr
         mpCellChemistry(cellChemistry),
         mpReactionVector(reactionVector),
         mNumberOfReactions(reactionVector.size()),
-        mNumberOfBulkStates(bulkChemistry -> GetNumberChemicals()),
-        mNumberOfCellStates(cellChemistry -> GetNumberChemicals())
+        mNumberOfBulkStates(bulkChemistry->GetNumberChemicals()),
+        mNumberOfCellStates(cellChemistry->GetNumberChemicals())
 {
 }
 
@@ -99,9 +100,6 @@ AbstractMembraneReactionSystem::AbstractMembraneReactionSystem(const AbstractMem
     mNumberOfCellStates = existingReactionSystem.mNumberOfCellStates;
     mNumberOfBulkStates = existingReactionSystem.mNumberOfBulkStates;
 }
-
-
-// virtual methods
 
 void AbstractMembraneReactionSystem::ReactSystem(const std::vector<double>& currentBulkConcentration, const std::vector<double>& currentCellConcentration, std::vector<double>& changeBulkConc,std::vector<double>& changeCellConc)
 {
@@ -123,7 +121,7 @@ void AbstractMembraneReactionSystem::ReactSystem(const std::vector<double>& curr
 
         AbstractMembraneReaction *p_system_reaction = static_cast<AbstractMembraneReaction*>(*reaction_iter);
 
-        p_system_reaction -> React(mpBulkChemistry, mpCellChemistry, currentBulkConcentration, currentCellConcentration, deltaBulkConcentration, deltaCellConcentration);
+        p_system_reaction->React(mpBulkChemistry, mpCellChemistry, currentBulkConcentration, currentCellConcentration, deltaBulkConcentration, deltaCellConcentration);
 
         // update the change in concentrations
         
@@ -145,9 +143,6 @@ void AbstractMembraneReactionSystem::UpdateReactionSystem(const std::vector<doub
     return;
 }
 
-
-// set methods
-
 void AbstractMembraneReactionSystem::SetReactionVector(std::vector<AbstractMembraneReaction*> reactionVector)
 {
     mpReactionVector = reactionVector;
@@ -155,7 +150,7 @@ void AbstractMembraneReactionSystem::SetReactionVector(std::vector<AbstractMembr
 
 void AbstractMembraneReactionSystem::SetReactionByIndex(AbstractMembraneReaction* reaction, unsigned index)
 {
-    if(index < mNumberOfReactions)
+    if (index < mNumberOfReactions)
     {
         mpReactionVector[index] = reaction;
     }
@@ -164,22 +159,19 @@ void AbstractMembraneReactionSystem::SetReactionByIndex(AbstractMembraneReaction
 void AbstractMembraneReactionSystem::SetBulkChemistry(AbstractChemistry* bulkChemistry)
 {
     mpBulkChemistry = bulkChemistry;
-    mNumberOfBulkStates = bulkChemistry -> GetNumberChemicals();
+    mNumberOfBulkStates = bulkChemistry->GetNumberChemicals();
 }
 
 void AbstractMembraneReactionSystem::SetCellChemistry(AbstractChemistry* cellChemistry)
 {
     mpCellChemistry = cellChemistry;
-    mNumberOfCellStates = cellChemistry -> GetNumberChemicals();
+    mNumberOfCellStates = cellChemistry->GetNumberChemicals();
 }
 
 void AbstractMembraneReactionSystem::SetNumberOfReactions(unsigned numberOfReactions)
 {
     mNumberOfReactions = numberOfReactions;
 }
-
-
-// get methods
 
 std::vector<AbstractMembraneReaction*> AbstractMembraneReactionSystem::GetReactionVector()
 {
@@ -188,7 +180,7 @@ std::vector<AbstractMembraneReaction*> AbstractMembraneReactionSystem::GetReacti
 
 AbstractMembraneReaction* AbstractMembraneReactionSystem::GetReactionByIndex(unsigned index)
 {
-    if(index < mNumberOfReactions)
+    if (index < mNumberOfReactions)
     {
         return mpReactionVector[index];
     }else{

@@ -1,20 +1,19 @@
 #ifndef ABSTRACTMEMBRANEREACTION_HPP_
 #define ABSTRACTMEMBRANEREACTION_HPP_
 
-// general includes
 #include <string>
 #include <stdlib.h> 
 #include <vector>
 #include <iostream>
-// custom includes
+
 #include "AbstractChemistry.hpp"
 #include "AbstractChemical.hpp"
 
-// abstract property to contain information about the interactions of chemical species at a cell boundary
-// define two coupled reactions; first the reaction in the bulk, second the reaction on the cell side
-// bulk -> bulk | cell -> cell
-
-
+/**
+ * Abstract property to contain information about the interactions of chemical 
+ * species at a cell boundary. Define two coupled reactions; first the reaction 
+ * in the bulk, second the reaction on the cell side: bulk->bulk | cell->cell
+ */
 class AbstractMembraneReaction 
 {
 protected:
@@ -242,14 +241,13 @@ AbstractMembraneReaction::AbstractMembraneReaction(const AbstractMembraneReactio
     mDelta_rate_max = existingReaction.mDelta_rate_max;
 }
 
-
 // function to take in pointer to current concentration state vector of the state vector for change in concentration.  Basic update via multiplying by constant reaction rate
 void AbstractMembraneReaction::React(AbstractChemistry* bulkChemistry, AbstractChemistry* cellChemistry, const std::vector<double>& currentBulkConcentration, const std::vector<double>& currentCellConcentration, std::vector<double>& changeBulkConc, std::vector<double>& changeCellConc)
 {
 
-    std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_bulk_chemical_vector = bulkChemistry->rGetChemicalVector();
     
-    std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_cell_chemical_vector = cellChemistry->rGetChemicalVector();
     
     UpdateReactionRate(bulkChemistry, cellChemistry, currentBulkConcentration, currentCellConcentration);
     
@@ -267,7 +265,7 @@ void AbstractMembraneReaction::React(AbstractChemistry* bulkChemistry, AbstractC
         // for each bulk chemical, parse whether it is involved in this reaction.
         for(unsigned j=0; j<mNumberOfBulkSubstrates; j++)
         {
-            if(mpBulkSubstrates[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpBulkSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 changeBulkConc[index] -= mStoichBulkSubstrates[j]*GetReactionRate();
                 break;
@@ -276,7 +274,7 @@ void AbstractMembraneReaction::React(AbstractChemistry* bulkChemistry, AbstractC
         // a reactant may be present on both sides of the reaction and may convert at different functional rates
         for(unsigned j=0; j<mNumberOfBulkProducts; j++)
         {
-            if(mpBulkProducts[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpBulkProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 changeBulkConc[index] += mStoichBulkProducts[j]*GetReactionRate();
                 break;
@@ -284,9 +282,8 @@ void AbstractMembraneReaction::React(AbstractChemistry* bulkChemistry, AbstractC
         }
     }
 
-
-    // run through the cell species
-    index=0;
+    // Run through the cell species
+    index = 0;
     for(std::vector<AbstractChemical*>::iterator chem_iter = p_cell_chemical_vector.begin();
             chem_iter != p_cell_chemical_vector.end();
             ++chem_iter, ++index)
@@ -296,7 +293,7 @@ void AbstractMembraneReaction::React(AbstractChemistry* bulkChemistry, AbstractC
         // for each bulk chemical, parse whether it is involved in this reaction.
         for(unsigned j=0; j<mNumberOfCellSubstrates; j++)
         {
-            if(mpCellSubstrates[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpCellSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 changeCellConc[index] -= mStoichCellSubstrates[j]*GetReactionRate();
                 break;
@@ -305,7 +302,7 @@ void AbstractMembraneReaction::React(AbstractChemistry* bulkChemistry, AbstractC
         // a reactant may be present on both sides of the reaction and may convert at different functional rates
         for(unsigned j=0; j<mNumberOfCellProducts; j++)
         {
-            if(mpCellProducts[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpCellProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 changeCellConc[index] += mStoichCellProducts[j]*GetReactionRate();
                 break;
@@ -329,7 +326,7 @@ void AbstractMembraneReaction::UpdateReactionRate(AbstractChemistry* bulkChemist
 
 void AbstractMembraneReaction::SetReactionRate(double reactionRate)
 {
-    if(mIsRateCheck)
+    if (mIsRateCheck)
     {
         reactionRate = CheckRate(reactionRate);
     }
@@ -350,9 +347,9 @@ std::string AbstractMembraneReaction::GetReactionType()
 
 void AbstractMembraneReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=false)
 {
-    if(reaction_information.find(mIrreversibleRateName) != std::string::npos)
+    if (reaction_information.find(mIrreversibleRateName) != std::string::npos)
     {
-        if(reaction_information.find(";") != std::string::npos)
+        if (reaction_information.find(";") != std::string::npos)
         {
             size_t pos= reaction_information.find(";");
             reaction_information = reaction_information.substr(0,pos);
@@ -371,7 +368,7 @@ std::vector<AbstractChemical*> AbstractMembraneReaction::GetBulkSubstrates()
 
 AbstractChemical* AbstractMembraneReaction::GetBulkSubstratesByIndex(unsigned index)
 {
-    if(index < mNumberOfBulkSubstrates)
+    if (index < mNumberOfBulkSubstrates)
     {
         return mpBulkSubstrates[index];
     }
@@ -389,7 +386,7 @@ std::vector<AbstractChemical*> AbstractMembraneReaction::GetCellSubstrates()
 
 AbstractChemical* AbstractMembraneReaction::GetCellSubstratesByIndex(unsigned index)
 {
-    if(index < mNumberOfCellSubstrates)
+    if (index < mNumberOfCellSubstrates)
     {
         return mpCellSubstrates[index];
     }
@@ -407,7 +404,7 @@ std::vector<AbstractChemical*> AbstractMembraneReaction::GetBulkProducts()
 
 AbstractChemical* AbstractMembraneReaction::GetBulkProductsByIndex(unsigned index)
 {
-    if(index < mNumberOfBulkProducts)
+    if (index < mNumberOfBulkProducts)
     {
         return mpBulkProducts[index];
     }
@@ -418,7 +415,6 @@ AbstractChemical* AbstractMembraneReaction::GetBulkProductsByIndex(unsigned inde
     } 
 }
 
-
 std::vector<AbstractChemical*> AbstractMembraneReaction::GetCellProducts()
 {
     return mpCellProducts;
@@ -426,7 +422,7 @@ std::vector<AbstractChemical*> AbstractMembraneReaction::GetCellProducts()
 
 AbstractChemical* AbstractMembraneReaction::GetCellProductsByIndex(unsigned index)
 {
-    if(index < mNumberOfCellProducts)
+    if (index < mNumberOfCellProducts)
     {
         return mpCellProducts[index];
     }
@@ -464,7 +460,7 @@ std::vector<unsigned> AbstractMembraneReaction::GetBulkStoichSubstrates()
 
 unsigned AbstractMembraneReaction::GetBulkStoichSubstratesByIndex(unsigned index)
 {
-    if(index < mNumberOfBulkSubstrates)
+    if (index < mNumberOfBulkSubstrates)
     {
         return mStoichBulkSubstrates[index];
     }
@@ -487,7 +483,7 @@ std::vector<unsigned> AbstractMembraneReaction::GetCellStoichSubstrates()
 
 unsigned AbstractMembraneReaction::GetCellStoichSubstratesByIndex(unsigned index)
 {
-    if(index < mNumberOfCellSubstrates)
+    if (index < mNumberOfCellSubstrates)
     {
         return mStoichCellSubstrates[index];
     }
@@ -510,7 +506,7 @@ std::vector<unsigned> AbstractMembraneReaction::GetBulkStoichProducts()
 
 unsigned AbstractMembraneReaction::GetBulkStoichProductsByIndex(unsigned index)
 {
-    if(index < mNumberOfBulkProducts)
+    if (index < mNumberOfBulkProducts)
     {
         return mStoichBulkProducts[index];
     }
@@ -533,7 +529,7 @@ std::vector<unsigned> AbstractMembraneReaction::GetCellStoichProducts()
 
 unsigned AbstractMembraneReaction::GetCellStoichProductsByIndex(unsigned index)
 {
-    if(index < mNumberOfCellProducts)
+    if (index < mNumberOfCellProducts)
     {
         return mStoichCellProducts[index];
     }
@@ -589,8 +585,6 @@ unsigned AbstractMembraneReaction::GetNumberOfCellProducts()
     return mNumberOfCellProducts;
 }
 
-
-// reaction concentration checking functions
 void AbstractMembraneReaction::SetIsRateCheck(bool IsRateCheck)
 {
     mIsRateCheck = IsRateCheck;
@@ -625,18 +619,16 @@ double AbstractMembraneReaction::CheckRate(double rate)
 {
     // if reaction rate gets too low or high then undefined behaviour can occur
 
-    if(abs(rate) < mDelta_rate_min)
+    if (abs(rate) < mDelta_rate_min)
     {
         rate = 0.0;
-    }else if(abs(rate) > mDelta_rate_max)
+    }else if (abs(rate) > mDelta_rate_max)
     {
         rate = mDelta_rate_max;
     }
     return rate;
 }
 
-
-// file read functions
 void AbstractMembraneReaction::SetIrreversibleDelimiter(std::string delim)
 {
     mIrreversibleDelimiter = delim;

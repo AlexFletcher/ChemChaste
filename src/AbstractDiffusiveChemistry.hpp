@@ -8,11 +8,15 @@
 #include <tuple>
 #include <vector>
 
-// abstract property to contain information about the collection of chemical species in the system
-
+/**
+ * Abstract property to contain information about the collection of chemical 
+ * species in the system.
+ */
 class AbstractDiffusiveChemistry : public AbstractChemistry
 {
 private:
+
+    /** \todo Document member variable. */
     unsigned mNumberDiffusiveChemicals;
     
     using AbstractChemistry::CheckChemical;
@@ -21,160 +25,260 @@ private:
     using AbstractChemistry::AddChemistry;
 
 protected:
+
+    /** \todo Document member variable. */
     std::vector<std::string> mDiffusionChemicalNames;
 
-    // maybe these aren't necessary and the data structure of the AbstractDiffusiveChemicals is all that is necessary?
-    std::vector<std::vector<double>> mDiffusivityMatrix;
-    std::vector<std::vector<std::string>> mDiffusionDomainMatrix;
+    /** \todo Document member variable. Maybe this isn't necessary and the data structure of the AbstractDiffusiveChemicals is all that is necessary? */
+    std::vector<std::vector<double> > mDiffusivityMatrix;
+    
+    /** \todo Document member variable. Maybe this isn't necessary and the data structure of the AbstractDiffusiveChemicals is all that is necessary? */
+    std::vector<std::vector<std::string> > mDiffusionDomainMatrix;
 
 public:
 
+    /**
+     * Constructor.
+     */
     AbstractDiffusiveChemistry();
 
-    virtual ~AbstractDiffusiveChemistry()
-    {
-    };
+    /**
+     * Destructor.
+     */
+    virtual ~AbstractDiffusiveChemistry();
 
-    virtual void AddChemical(AbstractDiffusiveChemical*);
+    /**
+     * \todo Document method.
+     * 
+     * @param pChemical
+     */
+    virtual void AddChemical(AbstractDiffusiveChemical* pChemical);
 
-    virtual bool CheckChemical(AbstractDiffusiveChemical*); 
+    /**
+     * \todo Document method.
+     * 
+     * @param pChemical
+     * 
+     * @return whether chemical is already in class chemical vector.
+     */
+    virtual bool CheckChemical(AbstractDiffusiveChemical* pChemical); 
 
-    virtual void UpdateChemicalVectors(AbstractDiffusiveChemical*);
+    /**
+     * \todo Document method.
+     * 
+     * @param pChemical
+     */
+    virtual void UpdateChemicalVectors(AbstractDiffusiveChemical* pChemical);
 
-    virtual void UpdateDomainVector(AbstractDiffusiveChemical*);
+    /**
+     * \todo Document method.
+     * 
+     * @param pChemical
+     * 
+     * @return whether pChemical is already in class chemical vector.
+     */
+    virtual void UpdateDomainVector(AbstractDiffusiveChemical* pChemical);
 
-    virtual void AddChemistry(AbstractDiffusiveChemistry*);
+    /**
+     * Function to combine the chemistries in the effort to form an overall 
+     * union of chemistries, for use as domain chemistry determines the solver 
+     * state varaible ordering. Chemistry classes need not be of the same type, 
+     * hence derived classes will need to dertermine the "highest class" define 
+     * the highest class to be the parent chemistry.
+     */
+    virtual void AddChemistry(AbstractDiffusiveChemistry* pChemistry);
 
+    /**
+     * \todo Document method.
+     * 
+     * @return 
+     */
     virtual std::string GetChemistryType();
 
-    void SetDiffusivityMatrix(std::vector<std::vector<double>> );
+    /**
+     * Set mDiffusivityMatrix.
+     * 
+     * @param diffusivityMatrix the new value for mDiffusivityMatrix
+     */
+    void SetDiffusivityMatrix(std::vector<std::vector<double> > diffusivityMatrix);
 
-    std::vector<std::vector<double>> GetDiffusivityMatrix();
+    /**
+     * @return mDiffusivityMatrix.
+    */
+    std::vector<std::vector<double> > GetDiffusivityMatrix();
 
-    std::vector<double> GetDiffusivityVectorByIndex(unsigned);
+    /**
+     * \todo Document method.
+     * 
+     * @param index
+     * 
+     * @return 
+     */
+    std::vector<double> GetDiffusivityVectorByIndex(unsigned index);
 
-    double GetDiffusivityValueByChemicalAndDomainName(std::string, std::string);
+    /**
+     * \todo Document method.
+     * 
+     * @param chemicalName
+     * @param domainName
+     * 
+     * @return 
+     */
+    double GetDiffusivityValueByChemicalAndDomainName(std::string chemicalName, std::string domainName);
 
-    double GetDiffusivityValueByChemicalName(std::string);
+    /**
+     * \todo Document method.
+     * 
+     * @param chemicalName
+     * 
+     * @return 
+     */
+    double GetDiffusivityValueByChemicalName(std::string chemicalName);
 
-    void SetDiffusionDomainsMatrix(std::vector<std::vector<std::string>>);
+    /**
+     * Set mDiffusionDomainMatrix.
+     * 
+     * @param diffusionDomains the new value for mDiffusionDomainMatrix
+     */
+    void SetDiffusionDomainsMatrix(std::vector<std::vector<std::string> > diffusionDomains);
 
+    /**
+     * @return mDiffusionDomainMatrix
+     */
     std::vector<std::vector<std::string>> GetDiffusionDomainsMatrix();
 
-    std::vector<std::string> GetDiffusionDomainsVectorByIndex(unsigned);
+    /**
+     * \todo Document method.
+     * 
+     * @param index
+     * 
+     * @return 
+     */
+    std::vector<std::string> GetDiffusionDomainsVectorByIndex(unsigned index);
 
+    /**
+     * \todo Document method.
+     * 
+     * @return 
+     */
     unsigned GetNumberDiffusiveChemicals();
 
-    std::string GetDiffusiveChemicalNamesByIndex(unsigned);
+    /**
+     * \todo Document method.
+     * 
+     * @param index
+     * 
+     * @return 
+     */
+    std::string GetDiffusiveChemicalNamesByIndex(unsigned index);
 
-    unsigned GetDiffusiveChemicalIndexByName(std::string);
-
-
+    /**
+     * \todo Document method.
+     * 
+     * @param chemicalName
+     * 
+     * @return 
+     */
+    unsigned GetDiffusiveChemicalIndexByName(std::string chemicalName);
 };
 
 AbstractDiffusiveChemistry::AbstractDiffusiveChemistry()
 {
-    // chemical species (domain vector)
-    mDiffusivityMatrix = std::vector<std::vector<double>>();
-    mDiffusionDomainMatrix = std::vector<std::vector<std::string>>();
+    mDiffusivityMatrix = std::vector<std::vector<double> >();
+    mDiffusionDomainMatrix = std::vector<std::vector<std::string> >();
     mNumberDiffusiveChemicals = 0;
 }
 
-void  AbstractDiffusiveChemistry::AddChemical(AbstractDiffusiveChemical* chemical)
+AbstractDiffusiveChemistry::~AbstractDiffusiveChemistry()
 {
-    // add a chemical to the diffusive chemistry, check whether the diffusive domain of the chemical is new 
-    // if new then add to the chemical diffusion properties
-    bool isNewChem = false;
+}
 
-    if(mpChemicalVector.empty())
+void  AbstractDiffusiveChemistry::AddChemical(AbstractDiffusiveChemical* pChemical)
+{
+    /*
+     * Add a chemical to the diffusive chemistry, check whether the diffusive 
+     * domain of the chemical is new, and if it is new then add it to the 
+     * chemical diffusion properties.
+     */
+    bool is_new_chem = false;
+    if (mpChemicalVector.empty())
     {
-        isNewChem = true;
+        is_new_chem = true;
     }
     else
     {
-        isNewChem = CheckChemical(chemical);
+        is_new_chem = CheckChemical(pChemical);
     }
-    if(isNewChem)
+    if (is_new_chem)
     {
-        // if candidate is a new chemical then naturally the domain would be new for the chemical
-        UpdateChemicalVectors(chemical);
+        // If candidate is a new chemical then naturally the domain would be new for the chemical
+        UpdateChemicalVectors(pChemical);
     }
     else
     {
-        // check whether the existing chemical is in a new domain
-        UpdateDomainVector(chemical);
-        
+        // Check whether the existing chemical is in a new domain
+        UpdateDomainVector(pChemical);
     }
 }
 
-// same structure as the AbstractChemical, remove?
-bool AbstractDiffusiveChemistry::CheckChemical(AbstractDiffusiveChemical* chemical)
+///\todo same structure as the AbstractChemical, remove?
+bool AbstractDiffusiveChemistry::CheckChemical(AbstractDiffusiveChemical* pChemical)
 {
-    // function to return true if chemical is already in class chemical vector
-
-    bool isNewChem  = true;
-
-    std::vector<AbstractChemical*> :: iterator chemical_iter;
-    for(chemical_iter = mpChemicalVector.begin();
-        chemical_iter != mpChemicalVector.end();
-        ++chemical_iter )
+    bool is_new_chem  = true;
+    for (std::vector<AbstractChemical*>::iterator chem_iter = mpChemicalVector.begin();
+         chem_iter != mpChemicalVector.end();
+         ++chem_iter )
     {
-        AbstractDiffusiveChemical* query_chemical = dynamic_cast<AbstractDiffusiveChemical*>(*chemical_iter);
-        if(chemical -> GetChemicalName() ==  query_chemical -> GetChemicalName())
+        if (pChemical->GetChemicalName() == dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->GetChemicalName())
         {   
-            isNewChem = false;
+            is_new_chem = false;
             break;
         }
     }
-    return isNewChem;
+    return is_new_chem;
 }
 
-void AbstractDiffusiveChemistry::UpdateDomainVector(AbstractDiffusiveChemical* chemical)
+void AbstractDiffusiveChemistry::UpdateDomainVector(AbstractDiffusiveChemical* pChemical)
 {
-    // function to return true if chemical is already in class chemical vector
-    std::vector<AbstractChemical*> :: iterator chemical_iter;
-    for(chemical_iter = mpChemicalVector.begin();
-        chemical_iter != mpChemicalVector.end();
-        ++chemical_iter )
+    for (std::vector<AbstractChemical*>::iterator chem_iter = mpChemicalVector.begin();
+         chem_iter != mpChemicalVector.end();
+         ++chem_iter )
     {
-        // assume the new chemical is known in the system
-        AbstractDiffusiveChemical* query_chemical = dynamic_cast<AbstractDiffusiveChemical*>(*chemical_iter);
-        if(chemical -> GetChemicalName() ==  query_chemical -> GetChemicalName())
+        // Assume the new chemical is known in the system
+        if (pChemical->GetChemicalName() == dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->GetChemicalName())
         {   
-            unsigned number_candidate_domains = chemical -> GetNumberOfDiffusiveDomains();
+            unsigned num_candidate_domains = chemical->GetNumberOfDiffusiveDomains();
 
-            // chemical whose domain is to be tested has been found in the chemical data structure
-            for(unsigned candidate_domain_index=0; candidate_domain_index<number_candidate_domains; candidate_domain_index++)
+            // Chemical whose domain is to be tested has been found in the chemical data structure
+            for (unsigned candidate_domain_index = 0; candidate_domain_index < num_candidate_domains; ++candidate_domain_index)
             {
-                // test each of the potential new domains
-                // assume to be new
-                bool isNewDomain  = true;
-                unsigned indexRecord=0;
+                // Test each of the potential new domains, assume to be new
+                bool is_new_domain = true;
+                unsigned index_record = 0;
                 
-                for(unsigned domain_index=0; domain_index<query_chemical ->GetNumberOfDiffusiveDomains(); domain_index++)
+                for (unsigned domain_index = 0; domain_index < dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->GetChemicalName()->GetNumberOfDiffusiveDomains(); domain_index++)
                 {
-                    // for each of the current existing domains
-                    std::string existing_query_domain = query_chemical->GetDiffusiveDomainByIndex(domain_index);
+                    // For each of the current existing domains
+                    std::string existing_query_domain = dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->GetChemicalName()->GetDiffusiveDomainByIndex(domain_index);
                 
-                    if(chemical -> GetDiffusiveDomainByIndex(candidate_domain_index) ==  existing_query_domain)
+                    if (pChemical->GetDiffusiveDomainByIndex(candidate_domain_index) == existing_query_domain)
                     {
-                        // new domain has already be recorded
-                        isNewDomain = false;
-                        indexRecord = candidate_domain_index;
+                        // New domain has already be recorded
+                        is_new_domain = false;
+                        index_record = candidate_domain_index;
                         break;
                     }
                 }
-                if(isNewDomain)
+                if (is_new_domain)
                 {
-                    // then domain is new and add to DiffusiveChemical 
-                    query_chemical ->AddDiffusiveDomain(chemical -> GetDiffusiveDomainByIndex(indexRecord),chemical -> GetChemicalDiffusivityByIndex(indexRecord));
+                    // Then domain is new and add to DiffusiveChemical 
+                    dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->AddDiffusiveDomain(chemical->GetDiffusiveDomainByIndex(index_record),chemical->GetChemicalDiffusivityByIndex(index_record));
                 }
             }
             
             break;
         }
     }
-
 }
 
 void AbstractDiffusiveChemistry::UpdateChemicalVectors(AbstractDiffusiveChemical* chemical)
@@ -185,37 +289,32 @@ void AbstractDiffusiveChemistry::UpdateChemicalVectors(AbstractDiffusiveChemical
 
     UpdateDomainVector(chemical);
 
-    mDiffusivityMatrix.push_back(chemical -> GetChemicalDiffusivityVector());
-    mDiffusionDomainMatrix.push_back(chemical -> GetDiffusiveDomainVector());
-    mDiffusionChemicalNames.push_back(chemical -> GetChemicalName());
+    mDiffusivityMatrix.push_back(chemical->GetChemicalDiffusivityVector());
+    mDiffusionDomainMatrix.push_back(chemical->GetDiffusiveDomainVector());
+    mDiffusionChemicalNames.push_back(chemical->GetChemicalName());
     mNumberDiffusiveChemicals +=1;
 }
 
-void AbstractDiffusiveChemistry::AddChemistry(AbstractDiffusiveChemistry* newChemistry)
+void AbstractDiffusiveChemistry::AddChemistry(AbstractDiffusiveChemistry* pChemistry)
 {
-    // function to combine the chemistries in the effort to form an overall union of  chemistries, for use as domain
-    // domain chemistry determines the solver state varaible ordering.  chemistry classes need not be of the same type, 
-    // hence derived classes will need to dertermine the "highest class" define the highest class to be the parent chemistry
-
-    // want to add the chemical vectors while preventing duplicates
-
-    std::vector<AbstractChemical*> :: iterator chemical_iter;
-    std::vector<AbstractChemical*> chemicalVector = newChemistry->rGetChemicalVector();
-
-    for(chemical_iter = chemicalVector.begin(); chemical_iter != chemicalVector.end(); ++chemical_iter )
+    // Want to add the chemical vectors while preventing duplicates
+    std::vector<AbstractChemical*> chemical_vector = pChemistry->rGetChemicalVector();
+    for (std::vector<AbstractChemical*>::iterator chem_iter = chemical_vector.begin(); 
+         chem_iter != chemical_vector.end();
+         ++chem_iter)
     {
-        // add each of the chemicals from the additional chemistry in turn.  This checks for duplicates implicitly
-        AddChemical(dynamic_cast<AbstractDiffusiveChemical*>(*chemical_iter));
+        // Add each of the chemicals from the additional chemistry in turn; this checks for duplicates implicitly
+        AddChemical(dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter));
     }
 }
 
 std::string AbstractDiffusiveChemistry::GetChemistryType()
 {
-    // virtual function to be overriden in derived classes, used to identify properties to compy when adding chemistries
+    // Vvirtual function to be overriden in derived classes, used to identify properties to compy when adding chemistries
     return "AbstractDiffusiveChemistry";
 }
 
-void AbstractDiffusiveChemistry::SetDiffusivityMatrix(std::vector<std::vector<double>> diffusivityMatrix)
+void AbstractDiffusiveChemistry::SetDiffusivityMatrix(std::vector<std::vector<double> > diffusivityMatrix)
 {
     mDiffusivityMatrix=diffusivityMatrix;
 }
@@ -227,53 +326,52 @@ std::vector<std::vector<double>> AbstractDiffusiveChemistry::GetDiffusivityMatri
 
 std::vector<double> AbstractDiffusiveChemistry::GetDiffusivityVectorByIndex(unsigned index)
 {
-    if(index < mNumberDiffusiveChemicals)
+    if (index < mNumberDiffusiveChemicals)
     {
         return mDiffusivityMatrix[index];
     }
     else
     {
-        std::cout<<"Error: AbstractDiffusiveChemistry::GetDiffusivityByIndex(unsigned index), index out of bounds"<<std::endl;
-        std::vector<double> returnVec(1,0.0);
+        std::cout << "Error: AbstractDiffusiveChemistry::GetDiffusivityByIndex(unsigned index), index out of bounds" << std::endl;
+        std::vector<double> returnVec(1, 0.0);
         return returnVec;
     } 
 }
 
-double AbstractDiffusiveChemistry::GetDiffusivityValueByChemicalAndDomainName(std::string chemical_name, std::string domain_name)
+double AbstractDiffusiveChemistry::GetDiffusivityValueByChemicalAndDomainName(std::string chemicalName, std::string domainName)
 {
-    // return the diffusivity value for a given species with a given domain name
-    unsigned index = GetDiffusiveChemicalIndexByName(chemical_name);
+    // Return the diffusivity value for a given species with a given domain name
+    unsigned index = GetDiffusiveChemicalIndexByName(chemicalName);
 
-    std::vector<std::string>    domainsVector = GetDiffusionDomainsVectorByIndex(index);
-    std::vector<double>     diffusivityVector = GetDiffusivityVectorByIndex(index);
+    std::vector<std::string> domainsVector = GetDiffusionDomainsVectorByIndex(index);
+    std::vector<double> diffusivityVector = GetDiffusivityVectorByIndex(index);
 
-    bool IsDomainFound = false;
-    for(unsigned domain_index=0; domain_index<domainsVector.size();domain_index++)
+    bool is_domain_found = false;
+    for (unsigned domain_index = 0; domain_index < domainsVector.size(); domain_index++)
     {
-        if(domain_name == domainsVector[domain_index])
+        if (domainName == domainsVector[domain_index])
         {
-            IsDomainFound = true;
+            is_domain_found = true;
             return diffusivityVector[domain_index];
         }
     }
-    if(!IsDomainFound)
+    if (!is_domain_found)
     {
-        // the domain is unaccounted for in the AbstractDiffusiveChemical data structure
+        // The domain is unaccounted for in the AbstractDiffusiveChemical data structure
         return 0.0; // i.e not diffusive
     }
     return 0.0;
 }
 
-double AbstractDiffusiveChemistry::GetDiffusivityValueByChemicalName(std::string chemical_name)
+double AbstractDiffusiveChemistry::GetDiffusivityValueByChemicalName(std::string chemicalName)
 {
-    unsigned index = GetDiffusiveChemicalIndexByName(chemical_name);
+    unsigned index = GetDiffusiveChemicalIndexByName(chemicalName);
     return GetDiffusivityVectorByIndex(index)[0];
 }
 
-
-void AbstractDiffusiveChemistry::SetDiffusionDomainsMatrix(std::vector<std::vector<std::string>> diffusionDomains)
+void AbstractDiffusiveChemistry::SetDiffusionDomainsMatrix(std::vector<std::vector<std::string> > diffusionDomains)
 {
-    mDiffusionDomainMatrix=diffusionDomains;
+    mDiffusionDomainMatrix = diffusionDomains;
 }
 
 std::vector<std::vector<std::string>> AbstractDiffusiveChemistry::GetDiffusionDomainsMatrix()
@@ -283,16 +381,14 @@ std::vector<std::vector<std::string>> AbstractDiffusiveChemistry::GetDiffusionDo
 
 std::vector<std::string> AbstractDiffusiveChemistry::GetDiffusionDomainsVectorByIndex(unsigned index)
 {
-
-    if(index < mNumberDiffusiveChemicals)
+    if (index < mNumberDiffusiveChemicals)
     {
-        
         return mDiffusionDomainMatrix[index];
     }
     else
     {
-        std::cout<<"Error: AbstractDiffusiveChemistry::GetDiffusionDomainsByIndex(unsigned index), index out of bounds"<<std::endl;
-        std::vector<std::string> returnVec(1,"Null");
+        std::cout << "Error: AbstractDiffusiveChemistry::GetDiffusionDomainsByIndex(unsigned index), index out of bounds" << std::endl;
+        std::vector<std::string> returnVec(1, "Null");
         return returnVec;
     } 
 }
@@ -304,36 +400,34 @@ unsigned AbstractDiffusiveChemistry::GetNumberDiffusiveChemicals()
 
 std::string AbstractDiffusiveChemistry::GetDiffusiveChemicalNamesByIndex(unsigned index)
 {
-    if(index<mNumberDiffusiveChemicals)
+    if (index < mNumberDiffusiveChemicals)
     {
         return mDiffusionChemicalNames[index];
     }
     else
     {
-        std::cout<<"Error: AbstractDiffusiveChemistry::GetDiffusiveChemicalNamesByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractDiffusiveChemistry::GetDiffusiveChemicalNamesByIndex(unsigned index), index out of bounds" << std::endl;
         return "Error";
     }
-    
-    
 }
 
 unsigned AbstractDiffusiveChemistry::GetDiffusiveChemicalIndexByName(std::string chemicalName)
 {
-    bool IsFound=false;
-    for(unsigned index=0; index<mNumberDiffusiveChemicals; index++)
+    bool is_found = false;
+    for (unsigned index = 0; index < mNumberDiffusiveChemicals; index++)
     {
-        if(chemicalName == mDiffusionChemicalNames[index])
+        if (chemicalName == mDiffusionChemicalNames[index])
         {
-            IsFound = true;
+            is_found = true;
             return index;
         }
 
     }
-    if(!IsFound)
+    if (!is_found)
     {
         return mNumberDiffusiveChemicals; // should act out of bounds for future methods, yielding non-diffusive chemical
     }
     return mNumberDiffusiveChemicals;
 }
 
-#endif
+#endif /* ABSTRACTDIFFUSIVECHEMISTRY_HPP_ */

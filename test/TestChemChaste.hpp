@@ -3,19 +3,11 @@
 
 #include "Cell_virtual.hpp"
 #include "BoundaryConditionsContainer_extended.hpp"
-// chaste includes
 #include "ChasteHeaders.hpp"
-
-// general includes
 #include "GeneralHeaders.hpp"
-
-//ChemChaste includes
 #include "ChemChasteHeaders.hpp"
 #include "ChemicalCellFromFile.hpp"
-
-// test specific include
 #include "ChemicalStructuresForTests.hpp"
-
 #include "InhomogenousFisherPde.hpp"
 #include "InhomogenousFisherDiffusiveInhibitionPde.hpp"
 
@@ -35,14 +27,14 @@ public:
 
     void TestReactionSystemWithoutCells()
     {
-        if(control.ReactionSystemWithoutCells)
+        if (control.ReactionSystemWithoutCells)
         {
             std::cout<<"Mass action kinetics of Schnackenberg using the AbstractChemicalOdeSystem Class"<<std::endl;
             std::cout<<"-----------------------------"<<std::endl;
 
             ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
             chemical_structure->SetUpPdeChemicalReactionSystem();
-            AbstractReactionSystem* chemicalReactionSystem = chemical_structure -> rGetPtrPdeChemicalReactionSystem();
+            AbstractReactionSystem* chemicalReactionSystem = chemical_structure->rGetPtrPdeChemicalReactionSystem();
 
             // form ode system
             std::cout<<"SchnackenbergCoupledPdeOdeSystem  -As AbstractChemicalODeSystem"<<std::endl;
@@ -69,7 +61,7 @@ public:
             }
             for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {
-                if(areNeumannBoundaryConditions[pdeDim]==false)
+                if (areNeumannBoundaryConditions[pdeDim]==false)
                 {
                     for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                     node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -136,7 +128,7 @@ public:
 
     void TestFisher()
     {
-        if(control.Fisher)
+        if (control.Fisher)
         {
             // system properties
             const unsigned probDim =1;
@@ -184,7 +176,7 @@ public:
             
             for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {
-                if(areNeumannBoundaryConditions[pdeDim]==false)
+                if (areNeumannBoundaryConditions[pdeDim]==false)
                 {
                     for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                     node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -210,7 +202,7 @@ public:
             for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
             {   // set as being a random perturbation about the boundary values
                
-                if(spaceDim==2)
+                if (spaceDim==2)
                 {
                     columnNum = 0;
                     rowNum = 0;
@@ -223,7 +215,7 @@ public:
                     
                     columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
                  
-                    if(columnNum<10)
+                    if (columnNum<10)
                     {
                         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
                         {   // serialised for nodes
@@ -286,7 +278,7 @@ public:
 
     void TestFisherDiffusiveInhibition()
     {
-        if(control.FisherDiffusiveInhibition)
+        if (control.FisherDiffusiveInhibition)
         {
             // system properties
             const unsigned probDim =1;
@@ -334,7 +326,7 @@ public:
             
             for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {
-                if(areNeumannBoundaryConditions[pdeDim]==false)
+                if (areNeumannBoundaryConditions[pdeDim]==false)
                 {
                     for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                     node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -360,7 +352,7 @@ public:
             for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
             {   // set as being a random perturbation about the boundary values
               
-                if(spaceDim==2)
+                if (spaceDim==2)
                 {
                     columnNum = 0;
                     rowNum = 0;
@@ -372,7 +364,7 @@ public:
                     }
                     
                     columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                    if(columnNum<10)
+                    if (columnNum<10)
                     {
                         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
                         {   // serialised for nodes
@@ -428,7 +420,7 @@ public:
     void TestReactionSystemWithoutCellsInhomogenousSolver()
     {
 
-        if(control.ReactionSystemWithoutCellsUsingInhomogenousSolver)
+        if (control.ReactionSystemWithoutCellsUsingInhomogenousSolver)
         {
             std::cout<<"Mass action kinetics of Schnackenberg using the ChemicalDomain Class"<<std::endl;
             std::cout<<"-----------------------------"<<std::endl;
@@ -436,7 +428,7 @@ public:
             ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
             chemical_structure->SetUpPdeChemicalReactionSystem();
             chemical_structure->SetUpChemicalDomainField();
-            AbstractReactionSystem* chemicalReactionSystem = chemical_structure -> rGetPtrPdeChemicalReactionSystem();
+            AbstractReactionSystem* chemicalReactionSystem = chemical_structure->rGetPtrPdeChemicalReactionSystem();
 
             // form ode system
             std::cout<<"SchnackenbergCoupledPdeOdeSystem  -As AbstractChemicalODeSystem"<<std::endl;
@@ -481,7 +473,7 @@ public:
             
             for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {
-                if(areNeumannBoundaryConditions[pdeDim]==false)
+                if (areNeumannBoundaryConditions[pdeDim]==false)
                 {
                     for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                     node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -548,7 +540,7 @@ public:
     void TestReactionSystemInhibitedDiffusionWithoutCellsUsingInhomogenousSolver()
     {
 
-        if(control.ReactionSystemInhibitedDiffusionWithoutCellsUsingInhomogenousSolver)
+        if (control.ReactionSystemInhibitedDiffusionWithoutCellsUsingInhomogenousSolver)
         {
             std::cout<<"Mass action kinetics of Schnackenberg using the ChemicalDomain Class"<<std::endl;
             std::cout<<"-----------------------------"<<std::endl;
@@ -556,7 +548,7 @@ public:
             ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
             chemical_structure->SetUpPdeChemicalReactionSystem();
             chemical_structure->SetUpChemicalDomainField();
-            AbstractReactionSystem* chemicalReactionSystem = chemical_structure -> rGetPtrPdeChemicalReactionSystem();
+            AbstractReactionSystem* chemicalReactionSystem = chemical_structure->rGetPtrPdeChemicalReactionSystem();
 
             // form ode system
             std::cout<<"SchnackenbergCoupledPdeOdeSystem  -As AbstractChemicalODeSystem"<<std::endl;
@@ -600,7 +592,7 @@ public:
             
             for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {
-                if(areNeumannBoundaryConditions[pdeDim]==false)
+                if (areNeumannBoundaryConditions[pdeDim]==false)
                 {
                     for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                     node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -668,7 +660,7 @@ public:
     void TestReactionSystemWithCells()
     {
     
-        if(control.ReactionSystemWithCells)
+        if (control.ReactionSystemWithCells)
         {
             std::cout<<"=============================================="<<std::endl;
             std::cout<<"TestReactionSystemWithCells()"<<std::endl;
@@ -687,12 +679,12 @@ public:
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
                 ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
                 
-                if(i==0)
+                if (i==0)
                 {
                     CellPtr p_cell = chemical_structure->SetUpChemicalCellObjectA();
                     cells.push_back(p_cell);
                 }
-                //else if(i==8)
+                //else if (i==8)
                 //{
                 //    CellPtr p_cell = chemical_structure->SetUpChemicalCellObjectB();
                 //    cells.push_back(p_cell);
@@ -719,12 +711,12 @@ public:
             // set up chemical domain field
             ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
 
-            chemical_structure -> SetUpChemicalDomainFieldForCellCoupling();
+            chemical_structure->SetUpChemicalDomainFieldForCellCoupling();
             
-            ChemicalDomainFieldForCellCoupling<2,2,2>*& p_Pde_field = chemical_structure -> rGetPtrChemicalDomainFieldForCellCoupling();
+            ChemicalDomainFieldForCellCoupling<2,2,2>*& p_Pde_field = chemical_structure->rGetPtrChemicalDomainFieldForCellCoupling();
 
             std::cout<<"initial conditions"<<std::endl;
-            std::vector<double> init_conditions = p_Pde_field -> GetInitialNodeConditions();
+            std::vector<double> init_conditions = p_Pde_field->GetInitialNodeConditions();
             for(unsigned i=0; i<init_conditions.size(); i++)
             {
                 std::cout<<init_conditions[i]<<std::endl;
@@ -733,7 +725,7 @@ public:
             
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<2,2,2>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<2,2,2>(p_Pde_field, p_cuboid));
             
-            boost::shared_ptr<ChemicalTrackingModifier<2,2>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<2,2>()); //= chemical_structure -> rGetPtrChemicalTrackingModifier();
+            boost::shared_ptr<ChemicalTrackingModifier<2,2>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<2,2>()); //= chemical_structure->rGetPtrChemicalTrackingModifier();
             
             // writers
             cell_population.SetWriteVtkAsPoints(false);
@@ -766,7 +758,7 @@ public:
             simulator.AddForce(p_linear_force);
 
             std::cout<<"=============================================="<<std::endl;
-            std::cout<<"OffLatticeSimulation -> AbstractCellBasedSumulation :: Solve()"<<std::endl;
+            std::cout<<"OffLatticeSimulation->AbstractCellBasedSumulation :: Solve()"<<std::endl;
             std::cout<<"=============================================="<<std::endl;
             simulator.Solve();
         }
@@ -775,7 +767,7 @@ public:
 
     void TestReactionSystemWithNodeBasedCells()
     {
-        if(control.ReactionSystemWithNodeBasedCells)
+        if (control.ReactionSystemWithNodeBasedCells)
         {
             std::cout<<"=============================================="<<std::endl;
             std::cout<<"TestReactionSystemWithCellsNodes()"<<std::endl;
@@ -796,12 +788,12 @@ public:
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
                 ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
                 
-                if(i==0)
+                if (i==0)
                 {
                     CellPtr p_cell = chemical_structure->SetUpChemicalCellObjectA();
                     cells.push_back(p_cell);
                 }
-                //else if(i==8)
+                //else if (i==8)
                 //{
                 //    CellPtr p_cell = chemical_structure->SetUpChemicalCellObjectB();
                 //    cells.push_back(p_cell);
@@ -826,12 +818,12 @@ public:
             // set up chemical domain field
             ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
 
-            chemical_structure -> SetUpChemicalDomainFieldForCellCoupling();
+            chemical_structure->SetUpChemicalDomainFieldForCellCoupling();
             
-            ChemicalDomainFieldForCellCoupling<2,2,2>*& p_Pde_field = chemical_structure -> rGetPtrChemicalDomainFieldForCellCoupling();
+            ChemicalDomainFieldForCellCoupling<2,2,2>*& p_Pde_field = chemical_structure->rGetPtrChemicalDomainFieldForCellCoupling();
 
             std::cout<<"initial conditions"<<std::endl;
-            std::vector<double> init_conditions = p_Pde_field -> GetInitialNodeConditions();
+            std::vector<double> init_conditions = p_Pde_field->GetInitialNodeConditions();
             for(unsigned i=0; i<init_conditions.size(); i++)
             {
                 std::cout<<init_conditions[i]<<std::endl;
@@ -840,7 +832,7 @@ public:
             
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<2,2,2>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<2,2,2>(p_Pde_field, p_cuboid));
             
-            boost::shared_ptr<ChemicalTrackingModifier<2,2>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<2,2>()); //= chemical_structure -> rGetPtrChemicalTrackingModifier();
+            boost::shared_ptr<ChemicalTrackingModifier<2,2>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<2,2>()); //= chemical_structure->rGetPtrChemicalTrackingModifier();
             
         
         
@@ -858,7 +850,7 @@ public:
             simulator.AddForce(p_linear_force);
 
             std::cout<<"=============================================="<<std::endl;
-            std::cout<<"OffLatticeSimulation -> AbstractCellBasedSumulation :: Solve()"<<std::endl;
+            std::cout<<"OffLatticeSimulation->AbstractCellBasedSumulation :: Solve()"<<std::endl;
             std::cout<<"=============================================="<<std::endl;
             simulator.Solve();
 
@@ -923,7 +915,7 @@ public:
                                 given_cell_root+"MembraneReactions.txt"
                                 );
 
-            cells.push_back(p_cell_reader -> GetCellPtr());
+            cells.push_back(p_cell_reader->GetCellPtr());
         }   
 
 
@@ -935,7 +927,7 @@ public:
         MAKE_PTR_ARGS(ChasteCuboid<2>, p_cuboid, (lower, upper));
 
         std::cout<<"initial conditions"<<std::endl;
-        std::vector<double> init_conditions = p_Pde_field -> GetInitialNodeConditions();
+        std::vector<double> init_conditions = p_Pde_field->GetInitialNodeConditions();
         for(unsigned i=0; i<init_conditions.size(); i++)
         {
             std::cout<<init_conditions[i]<<std::endl;
@@ -944,7 +936,7 @@ public:
         
         boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
         
-        boost::shared_ptr<ChemicalTrackingModifier<2,2>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<2,2>()); //= chemical_structure -> rGetPtrChemicalTrackingModifier();
+        boost::shared_ptr<ChemicalTrackingModifier<2,2>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<2,2>()); //= chemical_structure->rGetPtrChemicalTrackingModifier();
         
         OffLatticeSimulation<2> simulator(cell_population);
 
@@ -960,7 +952,7 @@ public:
         simulator.AddForce(p_linear_force);
 
         std::cout<<"=============================================="<<std::endl;
-        std::cout<<"OffLatticeSimulation -> AbstractCellBasedSumulation :: Solve()"<<std::endl;
+        std::cout<<"OffLatticeSimulation->AbstractCellBasedSumulation :: Solve()"<<std::endl;
         std::cout<<"=============================================="<<std::endl;
         simulator.Solve();
 

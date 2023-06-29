@@ -8,7 +8,7 @@
 #include "AbstractChemicalOdeForCoupledPdeSystem.hpp"
 
 /**
-* The Fisher - KPP reaction diffusion equation with areas with inhibited diffusion
+* The Fisher - KPP reaction diffusion equation with areas with inhibited diffusion.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 class InhomogenousFisherDiffusiveInhibitionPde : public InhomogenousParabolicPdeForCoupledOdeSystemTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>
@@ -62,7 +62,7 @@ public:
 
         c_matrix<double, SPACE_DIM, SPACE_DIM> diffusion_term;
 
-        if(std::pow((rX[0]-50),2)+std::pow((rX[1]-45),2) <= 49 || std::pow((rX[0]-50),2)+std::pow((rX[1]-55),2) <= 49 )
+        if (std::pow((rX[0]-50),2)+std::pow((rX[1]-45),2) <= 49 || std::pow((rX[0]-50),2)+std::pow((rX[1]-55),2) <= 49 )
         {
             diffusion_term = (0.1*mDiffusionRates[pdeIndex])*identity_matrix<double>(SPACE_DIM);
         }

@@ -4,7 +4,9 @@
 #include "AbstractInhomogenousOdeSystemForCoupledPdeSystem.hpp"
 #include "OdeSystemInformation.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 class InhomogenousOdeSchnackenbergCoupledPdeOdeSystem : public AbstractInhomogenousOdeSystemForCoupledPdeSystem
 {
 private:
@@ -13,7 +15,6 @@ private:
     double mKappa_1; /**< Parameter kappa_1 in the Schnackenberg system. */
     double mKappa2;  /**< Parameter kappa2 in the Schnackenberg system. */
     double mKappa3;  /**< Parameter kappa3 in the Schnackenberg system. */
-
 
 public:
 

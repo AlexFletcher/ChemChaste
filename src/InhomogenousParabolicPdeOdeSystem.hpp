@@ -9,11 +9,12 @@
 #include "AbstractDomainField.hpp"
 #include "ChemicalDomainField.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 class InhomogenousParabolicPdeOdeSystem : public AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>
 {
-
 protected:
 
     // register for controlling the index values for variables to different ode systems
@@ -22,6 +23,7 @@ protected:
 
     // domain for spatially dependent diffusion and ODEs
     AbstractDomainField* mpDomainField;
+
     // switch for domain field diffusion data structure
     bool mIsDomainDiffusionField = false;
 
@@ -31,12 +33,10 @@ protected:
     // switch for non-constant diffusion rate
     bool mIsDomainDiffusionVector = false;
 
-
 public:
 
     InhomogenousParabolicPdeOdeSystem()
-        :   AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>()
-            
+        :   AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>()  
     {
     }
 
@@ -52,11 +52,10 @@ public:
             mpDomainField(p_domainField)
     {
         mIsDomainDiffusionField = true;
-        if(mpDomainField->GetFieldType()=="ChemicalDomainField")
+        if (mpDomainField->GetFieldType()=="ChemicalDomainField")
         {
             SetStateVariableRegister(dynamic_cast<ChemicalDomainField*>(mpDomainField) ->GetStateVariableVector());
         }
-
     }
 
     virtual ~InhomogenousParabolicPdeOdeSystem()
@@ -70,14 +69,13 @@ public:
 
     double ComputeSourceTerm(const ChastePoint<SPACE_DIM>& rX, c_vector<double,PROBLEM_DIM>& rU, std::vector<double>& rOdeSolution, unsigned pdeIndex)
     {
-        // the interpolated ode solution at a point rX, will be 0 if the surrounding nodes do not process the variable
+        // The interpolated ode solution at a point rX, will be 0 if the surrounding nodes do not process the variable
         return rOdeSolution[pdeIndex];
     }
 
     void SetDiffusionRateConstantVector(std::vector<double> diffusionRateConstantVector)
     {
         mIsDomainDiffusionVector = true;
-        
         mDiffusionRateConstantVector = diffusionRateConstantVector;
     }
 
@@ -98,18 +96,17 @@ public:
         return mDiffusionRateConstantVector[index];
     }
 
-
     virtual double DiffusionFunction(const ChastePoint<SPACE_DIM>& rX, unsigned pdeIndex, Element<ELEMENT_DIM,SPACE_DIM>* pElement=NULL)
     {
-        // virtual function, use constant value as base case
-        if(mIsDomainDiffusionVector == true)
+        // Virtual function, use constant value as base case
+        if (mIsDomainDiffusionVector == true)
         {
-            // use the pdeIndex and stateVaribale register to search for a species-domain pair to retrive value?
+            // Use the pdeIndex and stateVaribale register to search for a species-domain pair to retrive value?
             return GetDiffusionRateConstantByIndex(pdeIndex);
         }
-        else if(mIsDomainDiffusionField == true)
+        else if (mIsDomainDiffusionField == true)
         {
-            return mpDomainField -> GetDiffusionValueBasedOnPoint(rX,pdeIndex);
+            return mpDomainField->GetDiffusionValueBasedOnPoint(rX,pdeIndex);
         }
         else
         {
@@ -117,14 +114,10 @@ public:
         }
     }
 
-
-
-
     c_matrix<double, SPACE_DIM, SPACE_DIM> ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>& rX, unsigned pdeIndex, Element<ELEMENT_DIM,SPACE_DIM>* pElement=NULL)
     {
-        // get a pdeIndex and a point in space,  assume isotropic diffusion
+        // Get a pdeIndex and a point in space,  assume isotropic diffusion
         assert(pdeIndex < PROBLEM_DIM);
-
 
         c_matrix<double, SPACE_DIM, SPACE_DIM> diffusion_term;
 
@@ -133,18 +126,15 @@ public:
         return diffusion_term;
     }
 
-
     void SetStateVariableRegister(StateVariableRegister* p_stateVariableRegister)
     {
         mpStateVariableRegister = p_stateVariableRegister;
-    };
+    }
 
     StateVariableRegister* GetStateVariableRegister()
     {
         return mpStateVariableRegister;
     }
-
-    
 
     void SetIsDomainDiffusionVector(bool isDomainDiffusionVector)
     {
@@ -177,13 +167,10 @@ public:
         mpDomainField = p_domainField;
     }
 
-
     std::string GetPdeOdeSystemType()
     {
         return "InhomogenousParabolicPdeOdeSystem";
     }
-
 };
-
 
 #endif 

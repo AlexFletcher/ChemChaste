@@ -8,16 +8,19 @@
 #include <vector>
 #include <iostream>
 
-// abstract property to contain information about the collection of chemical species in the system
-// container operator for adding two AbstractReactionSystems to form union for bulk 
-// copy contructor for mutating reaction network
-
-// inherit? : public AbstractChemical
-
+/**
+ * Abstract property to contain information about the collection of chemical 
+ * species in the system container operator for adding two 
+ * AbstractReactionSystems to form union for bulk copy contructor for mutating 
+ * reaction network.
+ * 
+ * \todo inherit? : public AbstractChemical
+ */
 class AbstractChemistry 
 {
 private:
     unsigned mNumberChemicals;
+
 protected:
     std::vector<AbstractChemical*> mpChemicalVector;
 

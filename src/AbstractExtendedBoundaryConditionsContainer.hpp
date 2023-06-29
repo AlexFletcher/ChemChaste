@@ -9,15 +9,12 @@
 #include "PetscTools.hpp"
 
 
-//#include "AbstractExtendedBoundaryConditionsContainerImplementation.hpp"
-
-
 /**
  * Helper struct storing an operator for computing whether one node
  * has a lower index than another.
  */
 
-// redefinition of struct in AbstrctBoundaryConditionsContainer as expected
+// redefinition of struct in AbstractBoundaryConditionsContainer as expected
 template<unsigned SPACE_DIM>
 struct LessThanNode
 {
@@ -32,9 +29,6 @@ struct LessThanNode
         return (n1->GetIndex() < n2->GetIndex() );
     }
 };
-
-
-
 
 /**
  * Abstract boundary conditions container.
@@ -217,7 +211,5 @@ bool AbstractExtendedBoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_D
 
     return (this->mDirichIterator != this->mpDirichletMap[indexOfUnknown]->end());
 }
-
-
 
 #endif

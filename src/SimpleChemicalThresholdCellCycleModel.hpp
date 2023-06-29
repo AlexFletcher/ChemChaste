@@ -4,10 +4,12 @@
 #include "AbstractSimplePhaseBasedCellCycleModel.hpp"
 #include "AbstractChemistry.hpp"
 
-// simple cell cycle model wherein the concentrations of species within the cell are compared to 
-// maximum and minimum thresholds. If a single species is above the threshols then cell division
-// is initilaed while if below cell death is triggered
-
+/**
+ * Simple cell cycle model wherein the concentrations of species within the cell 
+ * are compared to maximum and minimum thresholds. If a single species is above 
+ * the threshols then cell division is initilaed while if below cell death is 
+ * triggered.
+ */
 class SimpleChemicalThresholdCellCycleModel : public AbstractSimplePhaseBasedCellCycleModel
 {
 protected:

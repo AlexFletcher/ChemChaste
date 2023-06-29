@@ -8,7 +8,7 @@
 #include "AbstractChemicalOdeForCoupledPdeSystem.hpp"
 
 /**
-* The Fisher - KPP reaction diffusion equation
+* The Fisher - KPP reaction diffusion equation.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 class InhomogenousFisherPde : public InhomogenousParabolicPdeForCoupledOdeSystemTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>
@@ -24,14 +24,11 @@ private:
     // carrying capacity
     std::vector<double> mCarryingCapacities;
 
-
 public:
 
-    InhomogenousFisherPde(
-        std::vector<double> diffusionRates,
-        std::vector<double> growthRates,
-        std::vector<double> carryingCapacities
-                        )
+    InhomogenousFisherPde(std::vector<double> diffusionRates,
+                          std::vector<double> growthRates,
+                          std::vector<double> carryingCapacities)
         : InhomogenousParabolicPdeForCoupledOdeSystemTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(diffusionRates),
           mDiffusionRates(diffusionRates),
           mGrowthRates(growthRates),

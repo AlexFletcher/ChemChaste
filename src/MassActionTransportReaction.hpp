@@ -1,20 +1,20 @@
 #ifndef MASSACTIONTRANSPORTREACTION_HPP_
 #define MASSACTIONTRANSPORTREACTION_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <cmath>
 
-// custom includes
 #include "AbstractChemical.hpp"
 #include "AbstractReversibleTransportReaction.hpp"
 
-// mass action reaction where the concentrations are derived from either side of a membrane
-// splitting the compartments. The mass action kinetics defined as being proportional
-// to the product of the species concentrations either side of the membrane.  
-
+/**
+ * Mass action reaction where the concentrations are derived from either side of 
+ * a membrane splitting the compartments. The mass action kinetics defined as 
+ * being proportional to the product of the species concentrations either side 
+ * of the membrane.
+ */
 class MassActionTransportReaction : public AbstractReversibleTransportReaction
 {
 private:
@@ -120,11 +120,11 @@ MassActionTransportReaction::MassActionTransportReaction(
         mReverseReactionRateConstant(ReverseReactionRateConstant)
 {
 
-    if(mIsGibbs)
+    if (mIsGibbs)
     {
         mGibbsFreeEnergy = ForwardReactionRateConstant;
     }
-    if(!mIsReversible)
+    if (!mIsReversible)
     {
         mReverseReactionRateConstant = 0.0;
     }
@@ -142,7 +142,7 @@ void MassActionTransportReaction::UpdateReactionRate(AbstractChemistry* bulkChem
     double kf = mForwardReactionRateConstant;
     double kr = mReverseReactionRateConstant;
  
-    if(mIsGibbs)
+    if (mIsGibbs)
     {
         kf = DeltaGtoKf(mGibbsFreeEnergy, kr);
     }
@@ -152,7 +152,7 @@ void MassActionTransportReaction::UpdateReactionRate(AbstractChemistry* bulkChem
     double forwardFlux=1.0;
     double reverseFlux=1.0;
 
-    std::vector<AbstractChemical*> p_chemical_vector = bulkChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_chemical_vector = bulkChemistry->rGetChemicalVector();
     unsigned index = 0;
     for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
@@ -162,7 +162,7 @@ void MassActionTransportReaction::UpdateReactionRate(AbstractChemistry* bulkChem
 
         for(unsigned j=0; j<mNumberOfBulkSpecies; j++)
         {
-            if(mpBulkReactionSpecies[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpBulkReactionSpecies[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 forwardFlux *=  std::pow(currentBulkConc[index],mStoichBulk[j]);
                 break;
@@ -170,7 +170,7 @@ void MassActionTransportReaction::UpdateReactionRate(AbstractChemistry* bulkChem
         }
     }
 
-    p_chemical_vector = cellChemistry -> rGetChemicalVector();
+    p_chemical_vector = cellChemistry->rGetChemicalVector();
     index = 0;
     for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
@@ -180,7 +180,7 @@ void MassActionTransportReaction::UpdateReactionRate(AbstractChemistry* bulkChem
 
         for(unsigned j=0; j<mNumberOfCellSpecies; j++)
         {
-            if(mpCellReactionSpecies[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpCellReactionSpecies[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 reverseFlux *=  std::pow(currentCellConc[index],mStoichCell[j]);
                 break;
@@ -197,9 +197,9 @@ void MassActionTransportReaction::ParseReactionInformation(std::string reaction_
     //std::cout<<"MassActionTransportReaction::ParseReactionInformation - start"<<std::endl;
     mIsReversible = IsReversible;
 
-    if(!mIsReversible)
+    if (!mIsReversible)
     {
-        if(reaction_information.find(mIrreversibleRateName) != std::string::npos)
+        if (reaction_information.find(mIrreversibleRateName) != std::string::npos)
         {
             size_t pos= reaction_information.find(mIrreversibleRateName);
             mForwardReactionRateConstant = atof(reaction_information.substr(pos+mIrreversibleRateName.size()+1,std::string::npos).c_str());
@@ -208,7 +208,7 @@ void MassActionTransportReaction::ParseReactionInformation(std::string reaction_
     }
     else
     {
-        if(reaction_information.find(mGibbsDelimiter) != std::string::npos)
+        if (reaction_information.find(mGibbsDelimiter) != std::string::npos)
         {
             size_t pos= reaction_information.find(mGibbsDelimiter);
             std::cout<<"Gibbs raw: "<<reaction_information.substr(pos+mGibbsDelimiter.size()+1,std::string::npos).c_str()<<std::endl;
@@ -234,7 +234,7 @@ double MassActionTransportReaction::CalculateReactionQuotient(AbstractChemistry*
 {
     double quotient = 1.0;
     
-    if(mNumberOfBulkSpecies ==0 || mNumberOfCellSpecies==0)
+    if (mNumberOfBulkSpecies ==0 || mNumberOfCellSpecies==0)
     {
         quotient = 0.0;
     }else{
@@ -242,7 +242,7 @@ double MassActionTransportReaction::CalculateReactionQuotient(AbstractChemistry*
         double substrates_concentrations = 1.0;
         // need to check against the concentration of each chemical in the system
         
-        std::vector<AbstractChemical*> p_chemical_vector = bulkChemistry -> rGetChemicalVector();
+        std::vector<AbstractChemical*> p_chemical_vector = bulkChemistry->rGetChemicalVector();
         unsigned index = 0;
         for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
                 chem_iter != p_chemical_vector.end();
@@ -252,14 +252,14 @@ double MassActionTransportReaction::CalculateReactionQuotient(AbstractChemistry*
 
             for(unsigned j=0; j<mNumberOfBulkSpecies; j++)
             {
-                if(mpBulkReactionSpecies[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+                if (mpBulkReactionSpecies[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
                     substrates_concentrations *=  std::pow(currentBulkConc[index],mStoichBulk[j]);
                     break;
                 }
             }
         }    
-        p_chemical_vector = cellChemistry -> rGetChemicalVector();
+        p_chemical_vector = cellChemistry->rGetChemicalVector();
         index = 0;
         for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
                 chem_iter != p_chemical_vector.end();
@@ -268,7 +268,7 @@ double MassActionTransportReaction::CalculateReactionQuotient(AbstractChemistry*
             AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
             for(unsigned j=0; j<mNumberOfCellSpecies; j++)
             {
-                if(mpCellReactionSpecies[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+                if (mpCellReactionSpecies[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
                 {
                     products_concentrations *=  std::pow(currentCellConc[index],mStoichCell[j]);
                     break;

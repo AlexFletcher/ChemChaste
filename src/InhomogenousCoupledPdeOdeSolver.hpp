@@ -16,9 +16,10 @@
 
 #include <boost/shared_ptr.hpp>
 
-// Same as other class but the numberOfStateVariables to the ode terms are not all equal.
-// The ode's change on a nodal basis
-
+/**
+ * Same as other class but the numberOfStateVariables to the ODE terms are not 
+ * all equal. The ODEs change on a nodal basis.
+ */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM=ELEMENT_DIM, unsigned PROBLEM_DIM=1>
 class InhomogenousCoupledPdeOdeSolver
     : public AbstractAssemblerSolverHybrid<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM, NORMAL>,
@@ -303,16 +304,16 @@ void InhomogenousCoupledPdeOdeSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Incre
     {
         unsigned matchedIndex;
         unsigned num_state_variables = mpPdeSystem->GetStateVariableRegister()->GetNumberOfStateVariables();
-        std::vector<std::string> pde_variable_register = mpPdeSystem->GetStateVariableRegister() -> GetStateVariableRegisterVector();
+        std::vector<std::string> pde_variable_register = mpPdeSystem->GetStateVariableRegister()->GetStateVariableRegisterVector();
 
         for (unsigned i=0; i<num_state_variables; i++)
         {
             // each node may not have the total number of states in the ode system
             // select using the statevariable registers at the nodes, if state variable isn't present the value is 0
 
-            if(mOdeSystemsAtNodes[pNode->GetIndex()] -> GetStateVariableRegister() -> IsStateVariablePresent(pde_variable_register[i]))
+            if (mOdeSystemsAtNodes[pNode->GetIndex()]->GetStateVariableRegister()->IsStateVariablePresent(pde_variable_register[i]))
             {
-                matchedIndex = mOdeSystemsAtNodes[pNode->GetIndex()] -> GetStateVariableRegister() -> RetrieveStateVariableIndex(pde_variable_register[i]);
+                matchedIndex = mOdeSystemsAtNodes[pNode->GetIndex()]->GetStateVariableRegister()->RetrieveStateVariableIndex(pde_variable_register[i]);
 
                 //rGetStateVariables() returns the current values of the state variables, index
                 mInterpolatedOdeStateVariables[i] += phiI * mOdeSystemsAtNodes[pNode->GetIndex()]->rGetStateVariables()[matchedIndex];
@@ -322,11 +323,8 @@ void InhomogenousCoupledPdeOdeSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Incre
             {
                 // if the state variable isn't a part of the ODE then interpolated the pde solution at the node
                 mInterpolatedOdeStateVariables[i] += phiI * 0.0;//mOdeSystemsAtNodes[pNode->GetIndex()]->rGetPdeSolution()[i];
-
-            }
-                                
+            }               
         }
-
     }
 }
 
@@ -570,7 +568,7 @@ void InhomogenousCoupledPdeOdeSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Write
     time << numTimeStepsElapsed;
     VtkMeshWriter<ELEMENT_DIM, SPACE_DIM> mesh_writer(this->mOutputDirectory, "results_"+time.str(), false);
     // need to ensure StateVariableRegister is defined
-    std::vector<std::string> p_pde_stateVariableNames = mpPdeSystem -> GetStateVariableRegister() ->GetStateVariableRegisterVector();
+    std::vector<std::string> p_pde_stateVariableNames = mpPdeSystem->GetStateVariableRegister() ->GetStateVariableRegisterVector();
     
     /*
      * We first loop over PDEs. For each PDE we store the solution
@@ -606,7 +604,7 @@ void InhomogenousCoupledPdeOdeSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Write
 
 
         std::vector<std::vector<double> > ode_data;
-        unsigned num_state_vars = mpPdeSystem -> GetStateVariableRegister() ->GetNumberOfStateVariables();
+        unsigned num_state_vars = mpPdeSystem->GetStateVariableRegister() ->GetNumberOfStateVariables();
         ode_data.resize(num_state_vars);
         for (unsigned state_var_index=0; state_var_index<num_state_vars; state_var_index++)
         {
@@ -619,11 +617,11 @@ void InhomogenousCoupledPdeOdeSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Write
             // this could be of variable size, is of only the states that the ode modifies
 
 
-            std::vector<std::string> ode_var_names = mOdeSystemsAtNodes[node_index]->GetStateVariableRegister() -> GetStateVariableRegisterVector();
+            std::vector<std::string> ode_var_names = mOdeSystemsAtNodes[node_index]->GetStateVariableRegister()->GetStateVariableRegisterVector();
             for (unsigned ode_index=0; ode_index<ode_var_names.size(); ode_index++)
             {
                 // for each state variable in the ode system, find and update the corresponding variable in the pde system 
-                ode_data[mpPdeSystem -> GetStateVariableRegister() -> RetrieveStateVariableIndex(ode_var_names[ode_index])][node_index] = all_odes_this_node[ode_index];
+                ode_data[mpPdeSystem->GetStateVariableRegister()->RetrieveStateVariableIndex(ode_var_names[ode_index])][node_index] = all_odes_this_node[ode_index];
                 
             }
 

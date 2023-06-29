@@ -8,7 +8,7 @@
 #include "AbstractChemicalOdeForCoupledPdeSystem.hpp"
 
 /**
-* The Heat diffusion equation with constant source term
+* The heat diffusion equation with constant source term.
  */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 class InhomogenousHeatEquationWithSourcePde : public InhomogenousParabolicPdeForCoupledOdeSystemTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>
@@ -19,7 +19,6 @@ private:
     std::vector<double> mDiffusionRates;      
 
     double mSource;
-
 
 public:
 

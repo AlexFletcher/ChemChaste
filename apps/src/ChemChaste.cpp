@@ -116,7 +116,7 @@ int main(int argc, char *argv[])
             std::cout<<"parse config file: "<<variables_map["config"].as<std::string>()<<" for run: "<<variables_map["ID"].as<unsigned>()<<std::endl;
             
             std::ifstream Config_File(variables_map["config"].as<std::string>());
-            if(Config_File)
+            if (Config_File)
             {
                 boost::program_options::store(parse_config_file(Config_File, config_options), variables_map);
             }
@@ -188,10 +188,10 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
     const unsigned elementDim=2;
 
 
-    if(variables_map["simulation_type"].as<std::string>()=="coupled_cell")
+    if (variables_map["simulation_type"].as<std::string>()=="coupled_cell")
     {
 
-        if(variables_map["cell_file"].as<std::string>()!="")
+        if (variables_map["cell_file"].as<std::string>()!="")
         {
             // cell population topology is defined so read cell layer from files
    
@@ -319,7 +319,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["membrane_property"].as<std::string>()
                                     );
 
-                if(IsFirstCell)
+                if (IsFirstCell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
                     IsFirstCell = false;
@@ -369,10 +369,10 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         }
 
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="complex_cell")
+    else if (variables_map["simulation_type"].as<std::string>()=="complex_cell")
     {
 
-        if(variables_map["cell_file"].as<std::string>()!="")
+        if (variables_map["cell_file"].as<std::string>()!="")
         {
             // cell population topology is defined so read cell layer from files
    
@@ -502,7 +502,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["membrane_property"].as<std::string>()
                                     );
 
-                if(IsFirstCell)
+                if (IsFirstCell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
                     IsFirstCell = false;
@@ -552,7 +552,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         }
 
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="domain_only")
+    else if (variables_map["simulation_type"].as<std::string>()=="domain_only")
     {
 
         // run the domain field set up and parse files
@@ -588,7 +588,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
 
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
+            if (boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                  node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -596,7 +596,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 {
                     bcc.AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[pdeDim], pdeDim);
                 }
-            }else if(boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
+            }else if (boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
             
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
@@ -628,7 +628,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
     
         solver.SetTimes(0.0, variables_map["simulation_end_time"].as<double>());
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -642,7 +642,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SolveAndWriteResultsToFile();
 
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="fisher_equation")
+    else if (variables_map["simulation_type"].as<std::string>()=="fisher_equation")
     {
 
         double MeshStepSize = 1.0;
@@ -686,7 +686,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -711,7 +711,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -723,7 +723,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -765,7 +765,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -779,7 +779,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="fisher_equation_long")
+    else if (variables_map["simulation_type"].as<std::string>()=="fisher_equation_long")
     {
 
         double MeshStepSize = 1.0;
@@ -823,7 +823,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -848,7 +848,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -860,7 +860,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -902,7 +902,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -916,7 +916,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="schnackenberg_equation_D")
+    else if (variables_map["simulation_type"].as<std::string>()=="schnackenberg_equation_D")
     {
 
 
@@ -975,7 +975,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areBCsNeumann[pdeDim]==false)
+            if (areBCsNeumann[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1025,7 +1025,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -1039,7 +1039,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="schnackenberg_equation_E")
+    else if (variables_map["simulation_type"].as<std::string>()=="schnackenberg_equation_E")
     {
 
         double a =0.2;
@@ -1086,7 +1086,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areBCsNeumann[pdeDim]==false)
+            if (areBCsNeumann[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1136,7 +1136,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -1150,7 +1150,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="schnackenberg_equation_F")
+    else if (variables_map["simulation_type"].as<std::string>()=="schnackenberg_equation_F")
     {
 
 
@@ -1198,7 +1198,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areBCsNeumann[pdeDim]==false)
+            if (areBCsNeumann[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1248,7 +1248,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -1262,7 +1262,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="heat_equation")
+    else if (variables_map["simulation_type"].as<std::string>()=="heat_equation")
     {
 
         double MeshStepSize = 1.0;
@@ -1304,7 +1304,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1329,7 +1329,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -1341,7 +1341,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -1382,7 +1382,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -1396,7 +1396,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="heat_equation_long")
+    else if (variables_map["simulation_type"].as<std::string>()=="heat_equation_long")
     {
 
         double MeshStepSize = 1.0;
@@ -1439,7 +1439,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1464,7 +1464,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -1476,7 +1476,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -1518,7 +1518,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -1532,7 +1532,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="heat_equation_source")
+    else if (variables_map["simulation_type"].as<std::string>()=="heat_equation_source")
     {
 
         double MeshStepSize = 1.0;
@@ -1575,7 +1575,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1599,7 +1599,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -1611,7 +1611,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -1653,7 +1653,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -1667,7 +1667,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="heat_equation_source_long")
+    else if (variables_map["simulation_type"].as<std::string>()=="heat_equation_source_long")
     {
 
         double MeshStepSize = 1.0;
@@ -1710,7 +1710,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1735,7 +1735,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -1747,7 +1747,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -1789,7 +1789,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -1803,7 +1803,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="chaste_fisher_equation")
+    else if (variables_map["simulation_type"].as<std::string>()=="chaste_fisher_equation")
     {
 
         double MeshStepSize = 1.0;
@@ -1847,7 +1847,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -1872,7 +1872,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -1884,7 +1884,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -1926,7 +1926,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -1940,7 +1940,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="chaste_fisher_equation_long")
+    else if (variables_map["simulation_type"].as<std::string>()=="chaste_fisher_equation_long")
     {
 
         double MeshStepSize = 1.0;
@@ -1984,7 +1984,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -2009,7 +2009,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -2021,7 +2021,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -2063,7 +2063,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -2077,7 +2077,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="chaste_schnackenberg_equation_D")
+    else if (variables_map["simulation_type"].as<std::string>()=="chaste_schnackenberg_equation_D")
     {
 
 
@@ -2136,7 +2136,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areBCsNeumann[pdeDim]==false)
+            if (areBCsNeumann[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -2186,7 +2186,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -2200,7 +2200,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="chaste_schnackenberg_equation_E")
+    else if (variables_map["simulation_type"].as<std::string>()=="chaste_schnackenberg_equation_E")
     {
 
         double a =0.2;
@@ -2247,7 +2247,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areBCsNeumann[pdeDim]==false)
+            if (areBCsNeumann[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -2297,7 +2297,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -2311,7 +2311,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="chaste_schnackenberg_equation_F")
+    else if (variables_map["simulation_type"].as<std::string>()=="chaste_schnackenberg_equation_F")
     {
 
 
@@ -2359,7 +2359,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
         {
-            if(areBCsNeumann[pdeDim]==false)
+            if (areBCsNeumann[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -2409,7 +2409,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -2423,7 +2423,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="a")
+    else if (variables_map["simulation_type"].as<std::string>()=="a")
     {
  
         double MeshStepSize = 1.0;
@@ -2564,9 +2564,9 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(bothBCs==false)
+            if (bothBCs==false)
             {
-                if(areBCsNeumann[pdeDim]==false)
+                if (areBCsNeumann[pdeDim]==false)
                 {
                     for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                     node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -2611,7 +2611,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -2623,7 +2623,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum==2 && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
+                if (columnNum==2 && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -2661,7 +2661,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         double startTime= 0.0;
         double endTime = variables_map["simulation_end_time"].as<double>();
 
-        if(scaleByDiffusion==true)
+        if (scaleByDiffusion==true)
         {
             endTime = endTime/diffusionRates[0];
         }
@@ -2670,9 +2670,9 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
-            if(scaleByDiffusion==true)
+            if (scaleByDiffusion==true)
             {
                 solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>()/diffusionRates[0]);
             }
@@ -2685,7 +2685,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         else
         {
           
-            if(scaleByDiffusion==true)
+            if (scaleByDiffusion==true)
             {
                 solver.SetSamplingTimeStep(variables_map["sampling_timestep"].as<double>()/diffusionRates[0]);
             }
@@ -2703,7 +2703,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SolveAndWriteResultsToFile();
         
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="chaste_heat_equation_long")
+    else if (variables_map["simulation_type"].as<std::string>()=="chaste_heat_equation_long")
     {
 
         double MeshStepSize = 1.0;
@@ -2746,7 +2746,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -2771,7 +2771,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -2783,7 +2783,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -2825,7 +2825,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -2839,7 +2839,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="chaste_heat_equation_source")
+    else if (variables_map["simulation_type"].as<std::string>()=="chaste_heat_equation_source")
     {
 
         double MeshStepSize = 1.0;
@@ -2883,7 +2883,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -2907,7 +2907,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -2919,7 +2919,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -2961,7 +2961,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }
@@ -2975,7 +2975,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         // solve
         solver.SolveAndWriteResultsToFile();
     }
-    else if(variables_map["simulation_type"].as<std::string>()=="chaste_heat_equation_source_long")
+    else if (variables_map["simulation_type"].as<std::string>()=="chaste_heat_equation_source_long")
     {
 
         double MeshStepSize = 1.0;
@@ -3018,7 +3018,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
         {
-            if(areNeumannBoundaryConditions[pdeDim]==false)
+            if (areNeumannBoundaryConditions[pdeDim]==false)
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                 node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
@@ -3043,7 +3043,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         unsigned rowNum = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {   // set as being a random perturbation about the boundary values
-            if(spaceDim==2)
+            if (spaceDim==2)
             {
                 columnNum = 0;
                 rowNum = 0;
@@ -3055,7 +3055,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if(columnNum<1)
+                if (columnNum<1)
                 {
                     for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -3097,7 +3097,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         solver.SetTimes(startTime, endTime);
 
         solver.SetTimeStep(variables_map["simulation_timestep"].as<double>());
-        if(variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
+        if (variables_map["simulation_timestep"].as<double>()>variables_map["sampling_timestep"].as<double>())
         {
             solver.SetSamplingTimeStep(variables_map["simulation_timestep"].as<double>());
         }

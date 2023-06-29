@@ -1,16 +1,10 @@
 #ifndef TESTCHEMCHASTEPAPER_HPP_
 #define TESTCHEMCHASTEPAPER_HPP_
 
-// chaste includes
 #include "BoundaryConditionsContainer_extended.hpp"
 #include "ChasteHeaders.hpp"
-
-// general includes
 #include "GeneralHeaders.hpp"
-
-//ChemChaste includes
 #include "ChemChasteHeaders.hpp"
-
 #include "ChemicalCellFromFile.hpp"
 
 struct ControlStruct {
@@ -195,7 +189,7 @@ public:
     void TestVariableDiffusionConstantCase()
     {
         
-        if(control.VariableDiffusionConstantCase)
+        if (control.VariableDiffusionConstantCase)
         {
 
             // System properties
@@ -248,12 +242,12 @@ public:
                                     VDCC.cellDataFileRoot+VDCC.transportPropertyFilename,
                                     VDCC.cellDataFileRoot+VDCC.membranePropertyFilename);
                 
-                if(IsFirstCell)
+                if (IsFirstCell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
                     IsFirstCell = false;
                 }
-                cells.push_back(p_cell_reader -> GetCellPtr());
+                cells.push_back(p_cell_reader->GetCellPtr());
             }
     
 
@@ -280,7 +274,7 @@ public:
             
             boost::shared_ptr<ChemicalTrackingModifier<elementDim,spaceDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<elementDim,spaceDim>());
             
-            if(VDCC.nodeBasedSimulation)
+            if (VDCC.nodeBasedSimulation)
             {
                 NodesOnlyMesh<spaceDim> mesh;
            
@@ -317,7 +311,7 @@ public:
                 simulator.AddForce(p_linear_force);
 
                 std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation -> AbstractCellBasedSimulation :: Solve()"<<std::endl;
+                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
                 std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
 
@@ -358,7 +352,7 @@ public:
                 simulator.AddForce(p_linear_force);
 
                 std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation -> AbstractCellBasedSimulation :: Solve()"<<std::endl;
+                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
                 std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
             }
@@ -369,7 +363,7 @@ public:
 
     void TestVariableDiffusionStepChangeCase()
     {
-        if(control.VariableDiffusionStepChangeCase)
+        if (control.VariableDiffusionStepChangeCase)
         {
             // System properties
             const unsigned probDim =2; // need to set manually to the number of diffusive variables for the pde solver to solve
@@ -421,12 +415,12 @@ public:
                                     VDSC.cellDataFileRoot+VDSC.transportPropertyFilename,
                                     VDSC.cellDataFileRoot+VDSC.membranePropertyFilename);
                 
-                if(IsFirstCell)
+                if (IsFirstCell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
                     IsFirstCell = false;
                 }
-                cells.push_back(p_cell_reader -> GetCellPtr());
+                cells.push_back(p_cell_reader->GetCellPtr());
             }
     
 
@@ -453,7 +447,7 @@ public:
             
             boost::shared_ptr<ChemicalTrackingModifier<elementDim,spaceDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<elementDim,spaceDim>());
             
-            if(VDSC.nodeBasedSimulation)
+            if (VDSC.nodeBasedSimulation)
             {
                 NodesOnlyMesh<spaceDim> mesh;
            
@@ -490,7 +484,7 @@ public:
                 simulator.AddForce(p_linear_force);
 
                 std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation -> AbstractCellBasedSimulation :: Solve()"<<std::endl;
+                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
                 std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
 
@@ -531,7 +525,7 @@ public:
                 simulator.AddForce(p_linear_force);
 
                 std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation -> AbstractCellBasedSimulation :: Solve()"<<std::endl;
+                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
                 std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
             }
@@ -544,7 +538,7 @@ public:
 
     void TestExtracellularReaction()
     {
-        if(control.ExtracellularReaction)
+        if (control.ExtracellularReaction)
         {
             // System properties
             const unsigned probDim =4; // need to set manually to the number of diffusive variables for the pde solver to solve
@@ -596,12 +590,12 @@ public:
                                     ER.cellDataFileRoot+ER.transportPropertyFilename,
                                     ER.cellDataFileRoot+ER.membranePropertyFilename);
                 
-                if(IsFirstCell)
+                if (IsFirstCell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
                     IsFirstCell = false;
                 }
-                cells.push_back(p_cell_reader -> GetCellPtr());
+                cells.push_back(p_cell_reader->GetCellPtr());
             }
     
 
@@ -628,7 +622,7 @@ public:
             
             boost::shared_ptr<ChemicalTrackingModifier<elementDim,spaceDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<elementDim,spaceDim>());
             
-            if(ER.nodeBasedSimulation)
+            if (ER.nodeBasedSimulation)
             {
                 NodesOnlyMesh<spaceDim> mesh;
            
@@ -665,7 +659,7 @@ public:
                 simulator.AddForce(p_linear_force);
 
                 std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation -> AbstractCellBasedSimulation :: Solve()"<<std::endl;
+                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
                 std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
 
@@ -706,7 +700,7 @@ public:
                 simulator.AddForce(p_linear_force);
 
                 std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation -> AbstractCellBasedSimulation :: Solve()"<<std::endl;
+                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
                 std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
             }
@@ -718,7 +712,7 @@ public:
 
     void TestMolenaarSystem()
     {
-        if(control.MolenaarSystem)
+        if (control.MolenaarSystem)
         {
             // System properties
             const unsigned probDim =1; // need to set manually to the number of diffusive variables for the pde solver to solve
@@ -770,12 +764,12 @@ public:
                                     ML.cellDataFileRoot+ML.transportPropertyFilename,
                                     ML.cellDataFileRoot+ML.membranePropertyFilename);
                 
-                if(IsFirstCell)
+                if (IsFirstCell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
                     IsFirstCell = false;
                 }
-                cells.push_back(p_cell_reader -> GetCellPtr());
+                cells.push_back(p_cell_reader->GetCellPtr());
             }
     
 
@@ -802,7 +796,7 @@ public:
             
             boost::shared_ptr<ChemicalTrackingModifier<elementDim,spaceDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<elementDim,spaceDim>());
             
-            if(ML.nodeBasedSimulation)
+            if (ML.nodeBasedSimulation)
             {
                 NodesOnlyMesh<spaceDim> mesh;
            
@@ -839,7 +833,7 @@ public:
                 simulator.AddForce(p_linear_force);
 
                 std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation -> AbstractCellBasedSimulation :: Solve()"<<std::endl;
+                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
                 std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
 
@@ -879,7 +873,7 @@ public:
                 simulator.AddForce(p_linear_force);
 
                 std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation -> AbstractCellBasedSimulation :: Solve()"<<std::endl;
+                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
                 std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
             }

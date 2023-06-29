@@ -1,12 +1,9 @@
 #include "CellAnalyticsProperty.hpp"
 
-
-
 CellAnalyticsProperty::CellAnalyticsProperty()
     : AbstractCellProperty()
 {
 }
-
 
 CellAnalyticsProperty::~CellAnalyticsProperty()
 {
@@ -23,7 +20,6 @@ void CellAnalyticsProperty::SetUp(CellPtr this_cellPtr,unsigned cellID)
 {
     SetCellID(cellID);
     SetCellPtr(this_cellPtr);
-
 }
 
 void CellAnalyticsProperty::PreparePostDivisionParent(double splitRatio)
@@ -36,7 +32,6 @@ void  CellAnalyticsProperty::PreparePostDivisionDaughter(const CellAnalyticsProp
     // split any properties that are shared
 }
 
-
 void CellAnalyticsProperty::SetCellPtr(CellPtr this_cellPtr)
 {
     mThis_cellPtr = this_cellPtr;
@@ -46,7 +41,6 @@ void CellAnalyticsProperty::SetCellID(unsigned cellID)
 {
     mCellID = cellID;
 }
-
 
 CellPtr CellAnalyticsProperty::GetCellPtr()
 {

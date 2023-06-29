@@ -1,7 +1,6 @@
 #ifndef TESTCELLWISEPDESYSTEM_HPP_
 #define TESTCELLWISEPDESYSTEM_HPP_
 
-// chaste includes
 #include <cxxtest/TestSuite.h>
 #include "UblasIncludes.hpp"
 #include "AbstractCellBasedTestSuite.hpp"
@@ -10,7 +9,6 @@
 #include "RandomNumberGenerator.hpp"
 #include "SmartPointers.hpp"
 
-// general includes
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -18,9 +16,6 @@
 #include <tuple>
 #include <cmath>
 
-
-
-// modified tumour spheroid simulation includes
 #include "HoneycombMeshGenerator.hpp"
 #include "GeneralisedLinearSpringForce.hpp"
 #include "SimpleOxygenBasedCellCycleModel.hpp"
@@ -31,10 +26,8 @@
 #include "EllipticGrowingDomainPdeModifier.hpp"
 #include "EllipticBoxDomainPdeModifier.hpp" 
 #include "OffLatticeSimulation.hpp"
-
 #include "ApoptoticCellProperty.hpp"
 #include "ArchiveOpener.hpp"
-//#include "AveragedSourceParabolicPde.hpp"
 #include "AveragedSourceParabolicPde_test.hpp"
 #include "CaBasedCellPopulation.hpp"
 #include "CellsGenerator.hpp"
@@ -45,20 +38,11 @@
 #include "ReplicatableVector.hpp"
 #include "UniformCellCycleModel.hpp"
 #include "UniformSourceParabolicPde.hpp"
-
 #include "NoCellCycleModel.hpp"
-
-// added classes
 #include "AbstractDomainField_templated.hpp"
-//#include "ParabolicBoxDomainPdeSystemModifier.hpp"
 #include "ChemicalDomainField_templated.hpp"
-
-
 #include "ChemicalDomainFieldForCellCoupling.hpp"
-
 #include "InhomogenousCoupledPdeOdeSolver_templated.hpp"
-
-
 #include "TransportCellProperty.hpp"
 #include "ChemicalCellProperty.hpp"
 #include "MembraneCellProperty.hpp"
@@ -67,9 +51,6 @@
 #include "AbstractTransportOutReaction.hpp"
 #include "AbstractTransportReactionSystemFromFile.hpp"
 #include "AbstractReversibleTransportReaction.hpp"
-
-
-//#include "AbstractPdeSystemModifier.hpp"
 
 class TestCellwisePdeSystem : public AbstractCellBasedTestSuite
 {
@@ -237,14 +218,14 @@ public:
         std::cout<< p_Pde_field->GetFieldType()<<std::endl;
 
         // solver
-        InhomogenousCoupledPdeOdeSolverTemplated<elementDim,spaceDim,probDim> solver(p_Pde_field->GetMeshGenerator() -> GetMesh(), p_Pde_field->ReturnSharedPtrPdeSystem().get(), p_Pde_field->ReturnSharedPtrBoundaryConditionsContainer().get(), p_Pde_field->GetNodalOdeSystems(), p_Pde_field->GetNodalOdeSolvers());
+        InhomogenousCoupledPdeOdeSolverTemplated<elementDim,spaceDim,probDim> solver(p_Pde_field->GetMeshGenerator()->GetMesh(), p_Pde_field->ReturnSharedPtrPdeSystem().get(), p_Pde_field->ReturnSharedPtrBoundaryConditionsContainer().get(), p_Pde_field->GetNodalOdeSystems(), p_Pde_field->GetNodalOdeSolvers());
 
         // solver properties
         solver.SetTimes(0, t_end);
         solver.SetTimeStep(simulationTimeStep);
         solver.SetSamplingTimeStep(samplingTimeStep);
         solver.SetOutputDirectory(output_filename);
-        Vec initial_condition = PetscTools::CreateVec(p_Pde_field -> GetInitialNodeConditions());
+        Vec initial_condition = PetscTools::CreateVec(p_Pde_field->GetInitialNodeConditions());
         solver.SetInitialCondition(initial_condition);
         // solve
         std::cout<<"Solve"<<std::endl;
@@ -282,13 +263,13 @@ public:
         std::vector<unsigned> stoich_cell_3 = std::vector<unsigned>();
 
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: U <-> U          forwardRate = 0.1 reverseRate = 0.2
         // r3: V <- V           forwardRate = 0.3
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_bulk_system_chemistry -> AddChemical(p_chemical_U);
-        p_cell_system_chemistry -> AddChemical(p_chemical_U);
+        p_bulk_system_chemistry->AddChemical(p_chemical_U);
+        p_cell_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_bulk_1.push_back(p_chemical_U);
         stoich_bulk_1.push_back(2);
@@ -300,8 +281,8 @@ public:
         stoich_cell_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_bulk_system_chemistry -> AddChemical(p_chemical_V);
-        p_cell_system_chemistry -> AddChemical(p_chemical_V);
+        p_bulk_system_chemistry->AddChemical(p_chemical_V);
+        p_cell_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_bulk_1.push_back(p_chemical_V);
         stoich_bulk_1.push_back(1);
@@ -312,7 +293,7 @@ public:
 
         // for the sake of testing multiple species in the bulk which do not take part in the transport
         AbstractChemical *p_chemical_C = new AbstractChemical("C");
-        p_bulk_system_chemistry -> AddChemical(p_chemical_C);
+        p_bulk_system_chemistry->AddChemical(p_chemical_C);
 
         double reaction_1_rate = 0.1;
         double reaction_2_forward_rate = 0.1;
@@ -342,10 +323,10 @@ public:
         std::vector<double> change_cell_concentration_vector= {0.0,0.0};
         //StateVariableRegister* cell_register  = new StateVariableRegister(cell_states); 
 
-        p_transport_reaction_system -> ReactSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
-        for(unsigned i=0; i<p_transport_reaction_system -> GetNumberOfReactions(); i++)
+        p_transport_reaction_system->ReactSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
+        for(unsigned i=0; i<p_transport_reaction_system->GetNumberOfReactions(); i++)
         {
-            std::cout<<"Reaction type: "<<i<<" "<< p_transport_reaction_system -> GetReactionByIndex(i) -> GetReactionType()<<std::endl;
+            std::cout<<"Reaction type: "<<i<<" "<< p_transport_reaction_system->GetReactionByIndex(i)->GetReactionType()<<std::endl;
         }
 
         for(unsigned i=0; i<environment_concentration_at_point.size();i++)
@@ -370,17 +351,17 @@ public:
         std::cout<<"Transport cell property"<<std::endl;
 
         boost::shared_ptr<TransportCellProperty> p_cell_transport(new TransportCellProperty());
-        p_cell_transport -> SetUp(p_transport_reaction_system);
+        p_cell_transport->SetUp(p_transport_reaction_system);
         change_environment_concentration_vector= {0.0,0.0,0.0};
         change_cell_concentration_vector= {0.0,0.0,0.0};
-        p_cell_transport -> PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
+        p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
 
 
         std::cout<<"Membrane cell property"<<std::endl;
 
         boost::shared_ptr<MembraneCellProperty> p_cell_membrane(new MembraneCellProperty());
         
-        p_cell_membrane -> SetMembraneThickness(1.0);
+        p_cell_membrane->SetMembraneThickness(1.0);
 
 
         AbstractTransportOdeSystem transportOde(p_transport_reaction_system);
@@ -399,10 +380,10 @@ public:
         std::cout<<"Transport cell property"<<std::endl;
 
         boost::shared_ptr<TransportCellProperty> p_cell_transport(new TransportCellProperty());
-        p_cell_transport -> SetUp(p_transport_reaction_system);
+        p_cell_transport->SetUp(p_transport_reaction_system);
         change_environment_concentration_vector= {0.0,0.0,0.0};
         change_cell_concentration_vector= {0.0,0.0,0.0};
-        p_cell_transport -> PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
+        p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
 
         for(unsigned i=0; i<environment_concentration_at_point.size();i++)
         {
@@ -419,9 +400,9 @@ public:
 
         boost::shared_ptr<MembraneCellProperty> p_cell_membrane(new MembraneCellProperty());
         
-        p_cell_membrane -> SetMembraneThickness(1.0);
+        p_cell_membrane->SetMembraneThickness(1.0);
 
-        std::cout<<"Membrane thickness: "<<p_cell_membrane -> GetMembraneThickness()<<std::endl;
+        std::cout<<"Membrane thickness: "<<p_cell_membrane->GetMembraneThickness()<<std::endl;
 
         
         // form the cells on a mesh
@@ -439,7 +420,7 @@ public:
 
         
 
-        for (unsigned i=0; i<p_mesh -> GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {
             std::vector<std::string> membrane_states = {"U", "V"};
             std::vector<double> cell_concentration = {1.0,1.0};
@@ -456,10 +437,10 @@ public:
 
             
             boost::shared_ptr<TransportCellProperty> p_cell_transport(new TransportCellProperty());
-            p_cell_transport -> SetUp(p_reaction_system_2_iter);
+            p_cell_transport->SetUp(p_reaction_system_2_iter);
 
             NoCellCycleModel* p_cell_cycle = new NoCellCycleModel();
-            p_cell_membrane_iter -> SetMembraneThickness((double)i);
+            p_cell_membrane_iter->SetMembraneThickness((double)i);
             collection.AddProperty(p_cell_transport);
             collection.AddProperty(p_cell_membrane_iter);
 
@@ -498,7 +479,7 @@ public:
                 boost::shared_ptr<TransportCellProperty> p_cell_transport = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
 
 
-                p_cell_transport -> PerformTransportSystem(environment_concentration_at_point,cell_concentration_vector[cell_count],change_environment_concentration_vector,change_cell_concentration_cell_vector[cell_count]);
+                p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration_vector[cell_count],change_environment_concentration_vector,change_cell_concentration_cell_vector[cell_count]);
 
                 std::cout<<"Cell "<<cell_count<<std::endl;
 
@@ -540,12 +521,12 @@ public:
         std::vector<unsigned> stoich_cell_3 = std::vector<unsigned>();
 
 
-        // r1: 2U + V -> 3U     forwardRate = 0.1
+        // r1: 2U + V->3U     forwardRate = 0.1
         // r2: U <-> U          forwardRate = 0.1 reverseRate = 0.2
         // r3: V <- V           forwardRate = 0.3
 
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
-        p_system_chemistry -> AddChemical(p_chemical_U);
+        p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_bulk_1.push_back(p_chemical_U);
         stoich_bulk_1.push_back(2);
@@ -557,7 +538,7 @@ public:
         stoich_cell_2.push_back(1);
 
         AbstractChemical *p_chemical_V = new AbstractChemical("V");
-        p_system_chemistry -> AddChemical(p_chemical_V);
+        p_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_bulk_1.push_back(p_chemical_V);
         stoich_bulk_1.push_back(1);
@@ -594,10 +575,10 @@ public:
         std::vector<double> change_cell_concentration_vector= {0.0,0.0};
         //StateVariableRegister* cell_register  = new StateVariableRegister(cell_states); 
 
-        p_transport_reaction_system -> ReactSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
-        for(unsigned i=0; i<p_transport_reaction_system -> GetNumberOfReactions(); i++)
+        p_transport_reaction_system->ReactSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
+        for(unsigned i=0; i<p_transport_reaction_system->GetNumberOfReactions(); i++)
         {
-            std::cout<<"Reaction type: "<<i<<" "<< p_transport_reaction_system -> GetReactionByIndex(i) -> GetReactionType()<<std::endl;
+            std::cout<<"Reaction type: "<<i<<" "<< p_transport_reaction_system->GetReactionByIndex(i)->GetReactionType()<<std::endl;
         }
 
         for(unsigned i=0; i<environment_concentration_at_point.size();i++)
@@ -613,10 +594,10 @@ public:
         std::cout<<"Transport cell property"<<std::endl;
 
         boost::shared_ptr<TransportCellProperty> p_cell_transport(new TransportCellProperty());
-        p_cell_transport -> SetUp(p_transport_reaction_system);
+        p_cell_transport->SetUp(p_transport_reaction_system);
         change_environment_concentration_vector= {0.0,0.0};
         change_cell_concentration_vector= {0.0,0.0};
-        p_cell_transport -> PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
+        p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
 
         for(unsigned i=0; i<environment_concentration_at_point.size();i++)
         {
@@ -633,9 +614,9 @@ public:
 
         boost::shared_ptr<MembraneCellProperty> p_cell_membrane(new MembraneCellProperty());
         
-        p_cell_membrane -> SetMembraneThickness(1.0);
+        p_cell_membrane->SetMembraneThickness(1.0);
 
-        std::cout<<"Membrane thickness: "<<p_cell_membrane -> GetMembraneThickness()<<std::endl;
+        std::cout<<"Membrane thickness: "<<p_cell_membrane->GetMembraneThickness()<<std::endl;
 
         
         // form the cells on a mesh
@@ -653,7 +634,7 @@ public:
 
         
 
-        for (unsigned i=0; i<p_mesh -> GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {
             CellPropertyCollection collection;
             boost::shared_ptr<MembraneCellProperty> p_cell_membrane_iter(new MembraneCellProperty());
@@ -662,10 +643,10 @@ public:
 
             
             boost::shared_ptr<TransportCellProperty> p_cell_transport(new TransportCellProperty());
-            p_cell_transport -> SetUp(p_reaction_system_2_iter);
+            p_cell_transport->SetUp(p_reaction_system_2_iter);
 
             NoCellCycleModel* p_cell_cycle = new NoCellCycleModel();
-            p_cell_membrane_iter -> SetMembraneThickness((double)i);
+            p_cell_membrane_iter->SetMembraneThickness((double)i);
             collection.AddProperty(p_cell_transport);
             collection.AddProperty(p_cell_membrane_iter);
 
@@ -755,14 +736,14 @@ public:
 
         
         // solver
-        InhomogenousCoupledPdeOdeSolverTemplated<elementDim,spaceDim,probDim> solver(p_Pde_field->GetMeshGenerator() -> GetMesh(), p_Pde_field->ReturnSharedPtrPdeSystem().get(), p_Pde_field->ReturnSharedPtrBoundaryConditionsContainer().get(), p_Pde_field->GetNodalOdeSystems(), p_Pde_field->GetNodalOdeSolvers());
+        InhomogenousCoupledPdeOdeSolverTemplated<elementDim,spaceDim,probDim> solver(p_Pde_field->GetMeshGenerator()->GetMesh(), p_Pde_field->ReturnSharedPtrPdeSystem().get(), p_Pde_field->ReturnSharedPtrBoundaryConditionsContainer().get(), p_Pde_field->GetNodalOdeSystems(), p_Pde_field->GetNodalOdeSolvers());
 
         // solver properties
         solver.SetTimes(0, t_end);
         solver.SetTimeStep(simulationTimeStep);
         solver.SetSamplingTimeStep(samplingTimeStep);
         solver.SetOutputDirectory(output_filename);
-        Vec initial_condition = PetscTools::CreateVec(p_Pde_field -> GetInitialNodeConditions());
+        Vec initial_condition = PetscTools::CreateVec(p_Pde_field->GetInitialNodeConditions());
         solver.SetInitialCondition(initial_condition);
         // solve
         std::cout<<"Solve"<<std::endl;
@@ -835,7 +816,7 @@ public:
         std::cout<<"File probDim: "<<p_Pde_field ->GetProblemDimensions()<<std::endl;
         std::cout<<"User probDim: "<<probDim<<std::endl;
 
-        std::vector<std::string> stateVariableNames = p_Pde_field -> GetStateVariableVector() -> GetStateVariableRegisterVector();
+        std::vector<std::string> stateVariableNames = p_Pde_field->GetStateVariableVector()->GetStateVariableRegisterVector();
 
 
         // cell mesh generator

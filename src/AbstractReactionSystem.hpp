@@ -1,18 +1,18 @@
 #ifndef ABSTRACTREACTIONSYSTEM_HPP_
 #define ABSTRACTREACTIONSYSTEM_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <iostream>
 
-// reaction includes
 #include "AbstractReaction.hpp"
 #include "AbstractChemistry.hpp"
 
-// class to hold the information and data structures defining a system of chemical reactions. 
-
+/**
+ * Class to hold the information and data structures defining a system of 
+ * chemical reactions.
+ */
 class AbstractReactionSystem
 {
 protected:
@@ -88,7 +88,7 @@ void AbstractReactionSystem::ReactSystem(const std::vector<double>& currentChemi
         
         AbstractReaction *p_system_reaction = dynamic_cast<AbstractReaction*>(*reaction_iter);
         
-        p_system_reaction -> React(mpSystemChemistry, currentChemistryConc, deltaConcentration);
+        p_system_reaction->React(mpSystemChemistry, currentChemistryConc, deltaConcentration);
        
         // update the change in concentration
         
@@ -114,7 +114,7 @@ std::vector<AbstractReaction*> AbstractReactionSystem::GetReactionVector()
 
 AbstractReaction* AbstractReactionSystem::GetReactionByIndex(unsigned index)
 {
-    if(index < mNumberOfReactions)
+    if (index < mNumberOfReactions)
     {
         return mpReactionVector[index];
     }else{
@@ -129,7 +129,7 @@ void AbstractReactionSystem::SetReactionVector(std::vector<AbstractReaction*> re
 
 void AbstractReactionSystem::SetReactionByIndex(AbstractReaction* reaction, unsigned index)
 {
-    if(index < mNumberOfReactions)
+    if (index < mNumberOfReactions)
     {
         mpReactionVector[index] = reaction;
     }

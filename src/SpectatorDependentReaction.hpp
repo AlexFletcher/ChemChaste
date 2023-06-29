@@ -1,20 +1,19 @@
 #ifndef SPECTATORDEPENDENTREACTION_HPP_
 #define SPECTATORDEPENDENTREACTION_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <cmath>
 
-// custom includes
 #include "AbstractChemical.hpp"
 #include "AbstractChemistry.hpp"
 #include "AbstractReaction.hpp"
 
-// reaction class which takes in chemical data for the whole system and uses
-// species not involved directly in the reaction to change the reaction rate 
-
+/**
+ * Reaction class which takes in chemical data for the whole system and uses
+ * species not involved directly in the reaction to change the reaction rate.
+ */
 class SpectatorDependentReaction : public AbstractReaction
 {
 protected:
@@ -103,13 +102,13 @@ void SpectatorDependentReaction::UpdateReactionRate(AbstractChemistry* systemChe
 
     unsigned spectatorCount=0;
 
-    std::vector<AbstractChemical*> p_chemical_vector = systemChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
     unsigned index = 0;
     for(std::vector<AbstractChemical*>::iterator chem_iter = p_chemical_vector.begin();
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
-        if(spectatorCount == mNumberOfSpectators)
+        if (spectatorCount == mNumberOfSpectators)
         {
             // don't need to continue processing the species
             break;
@@ -120,7 +119,7 @@ void SpectatorDependentReaction::UpdateReactionRate(AbstractChemistry* systemChe
 
             for(unsigned i=0; i<mNumberOfSpectators; i++)
             {
-                if(mSpectatorNames[i]==p_system_chemical -> GetChemicalName())
+                if (mSpectatorNames[i]==p_system_chemical->GetChemicalName())
                 {
                     // calculate the product of spectator concentrations
                     spectatorConcentration *=  currentSystemConc[index];
@@ -131,7 +130,7 @@ void SpectatorDependentReaction::UpdateReactionRate(AbstractChemistry* systemChe
             }
         }
     };
-    if(spectatorCount==0)
+    if (spectatorCount==0)
     {
         // if no spectators are in the system, default to zero rate
         spectatorConcentration=0.0;
@@ -153,7 +152,7 @@ void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_i
     size_t positionSpectator = reaction_information.find(mSpectatorDelimiter);
     // initialse a temporary position, used if there are more than one spectator species
     size_t tempPositionSpectator = reaction_information.find(mSpectatorDelimiter);
-    if(positionSpectator==std::string::npos)
+    if (positionSpectator==std::string::npos)
     {
         // spectator not found
         std::cout<<"Error SpectatorDependentReaction::ParseReactionInformation: spectator species not found"<<std::endl;
@@ -162,7 +161,7 @@ void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_i
     // assume that there must be reaction rate constant
     size_t positionRate = reaction_information.find(mIrreversibleRateName);
 
-    if(positionRate==std::string::npos)
+    if (positionRate==std::string::npos)
     {
         // spectator not found
         std::cout<<"Error SpectatorDependentReaction::ParseReactionInformation: reaction rate not found"<<std::endl;
@@ -177,7 +176,7 @@ void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_i
 
     while(positionSpectator != std::string::npos)
     {
-        if(positionRate<positionSpectator)
+        if (positionRate<positionSpectator)
         {
             // rate value is first in the string
             reactionRate = atof(reaction_information.substr(positionRate+mIrreversibleRateName.size()+1,positionSpectator).c_str());
@@ -193,13 +192,13 @@ void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_i
             tempPositionSpectator = tempString.find(mSpectatorDelimiter); // if no more spectators, should be npos
             positionRate = tempString.find(mIrreversibleRateName); // if rate already taken, should be npos
 
-            if(positionRate>tempPositionSpectator)
+            if (positionRate>tempPositionSpectator)
             {
                 // next value is spectator 
                 spectator = reaction_information.substr(positionSpectator+mSpectatorDelimiter.size()+1,tempPositionSpectator);
 
             }
-            else if(positionRate<tempPositionSpectator)
+            else if (positionRate<tempPositionSpectator)
             {
                 // next value is rate
                 spectator = reaction_information.substr(positionSpectator+mSpectatorDelimiter.size()+1,positionRate-1);
@@ -220,7 +219,7 @@ void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_i
         positionSpectator = reaction_information.find(mSpectatorDelimiter);
         positionRate = reaction_information.find(mIrreversibleRateName);
         
-        if(positionSpectator == std::string::npos && positionRate !=std::string::npos)
+        if (positionSpectator == std::string::npos && positionRate !=std::string::npos)
         {
             // there are no more species but the rate is still unknown and in the string
             reactionRate = atof(reaction_information.substr(positionRate+mIrreversibleRateName.size()+1,std::string::npos).c_str());
@@ -245,7 +244,7 @@ void SpectatorDependentReaction::UpdateSystemChemistry(std::vector<std::string> 
 
     for(unsigned i=0; i<mNumberOfSpectators; i++)
     {
-        mpSystemChemistry -> AddChemical(new AbstractChemical(spectatorNames[i]));
+        mpSystemChemistry->AddChemical(new AbstractChemical(spectatorNames[i]));
     }
 }
 

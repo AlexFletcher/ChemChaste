@@ -16,7 +16,9 @@
 #include "MembraneCellProperty.hpp"
 #include "TransportCellProperty.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 class CellSourceInhomogenousParabolicPdeOdeSystem : public InhomogenousParabolicPdeForCoupledOdeSystemTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>
 {
@@ -62,7 +64,6 @@ public:
     {   
     }
 
-
     virtual std::string GetPdeOdeSystemType()
     {
         return "AveragedSourceInhomogenousParabolicPdeOdeSystem";
@@ -72,17 +73,17 @@ public:
     {
         // virtual function, use constant value as base case
         double diffusion_rate=0.0;
-        if(mIsDomainDiffusionVector == true)
+        if (mIsDomainDiffusionVector == true)
         {
             // use the pdeIndex and stateVaribale register to search for a species-domain pair to retrive value?
             diffusion_rate = GetDiffusionRateConstantByIndex(pdeIndex);
         }
-        else if(mIsDomainDiffusionField == true)
+        else if (mIsDomainDiffusionField == true)
         {
-            diffusion_rate = mpDomainField -> GetDiffusionValueBasedOnPoint(rX,pdeIndex);
+            diffusion_rate = mpDomainField->GetDiffusionValueBasedOnPoint(rX,pdeIndex);
         }
 
-        if(mIsDiffusionCellDensityScaled && pElement != NULL)
+        if (mIsDiffusionCellDensityScaled && pElement != NULL)
         {
             diffusion_rate = diffusion_rate * ElementDensityScaleFunction(mCellDensityOnCoarseElements[pElement->GetIndex()])
         }
@@ -101,7 +102,6 @@ public:
     {
         return mrCellPopulation;
     }
-
 
     void SetupSourceTerms(TetrahedralMesh<ELEMENT_DIM,SPACE_DIM>& rFeMesh, std::map<CellPtr, unsigned>* pCellPdeElementMap) // must be called before solve
     {
@@ -170,9 +170,6 @@ public:
 
         return ode_contribution_at_rX + cell_contribution_at_rX;
     }
-
-
-
 };
 
 

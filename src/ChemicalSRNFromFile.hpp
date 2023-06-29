@@ -1,13 +1,11 @@
 #ifndef CHEMICALSRNFROMFILE_HPP_
 #define CHEMICALSRNFROMFILE_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 #include <iostream>
 
-// reaction includes
 #include "AbstractReactionSystem.hpp"
 #include "AbstractReactionSystemFromFile.hpp"
 #include "AbstractReaction.hpp"
@@ -15,6 +13,9 @@
 #include "ReactionTypeDatabase.hpp"
 #include "ChemicalSrnModel.hpp"
  
+/**
+ * \todo Document class.
+ */
 class ChemicalSRNFromFile
 {
 protected:
@@ -50,8 +51,8 @@ ChemicalSRNFromFile::ChemicalSRNFromFile(std::string reactionFilename)
     ChemicalSrnModel* pChemicalSrnModel = new ChemicalSrnModel(p_file_reaction_system);
     SetChemicalSrnModel(pChemicalSrnModel);
 
-    mpChemicalSrnModel -> SetReactionSystem(p_file_reaction_system);
-    mpChemicalSrnModel -> Initialise();
+    mpChemicalSrnModel->SetReactionSystem(p_file_reaction_system);
+    mpChemicalSrnModel->Initialise();
 }
 
 void ChemicalSRNFromFile::SetChemicalSrnModel(ChemicalSrnModel* pChemicalSrnModel)

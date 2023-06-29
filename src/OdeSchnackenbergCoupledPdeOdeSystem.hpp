@@ -4,7 +4,9 @@
 #include "AbstractOdeSystemForCoupledPdeSystem.hpp"
 #include "OdeSystemInformation.hpp"
 
-
+/**
+ * \todo Document this class.
+ */
 class OdeSchnackenbergCoupledPdeOdeSystem : public AbstractOdeSystemForCoupledPdeSystem
 {
 private:

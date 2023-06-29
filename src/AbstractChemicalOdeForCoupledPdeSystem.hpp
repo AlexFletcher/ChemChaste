@@ -5,11 +5,13 @@
 #include "AbstractReactionSystem.hpp"
 #include "ChemicalOdeSystemInformation.hpp"
 
-// chemcial ode system to be coupled to a pde system, coantins the emthods to evaluate a chemical reaction system 
-// also checks the output of the chemical reaction system to ensure non-negative concentrations (states) are removed
-
-// not used in the reaction-diffusion system as the chemcial ode is not required to be solved
-
+/**
+ * Chemical ODE system to be coupled to a PDE system, contains the methods to 
+ * evaluate a chemical reaction system. Also checks the output of the chemical 
+ * reaction system to ensure non-negative concentrations (states) are removed.
+ * Not used in the reaction-diffusion system as the chemical ODE is not required 
+ * to be solved.
+ */
 class AbstractChemicalOdeForCoupledPdeSystem: public AbstractOdeSystemForCoupledPdeSystem
 {
 private:
@@ -77,19 +79,19 @@ public:
 };
 
 AbstractChemicalOdeForCoupledPdeSystem::AbstractChemicalOdeForCoupledPdeSystem(AbstractReactionSystem* pReactionSystem)
-        :   AbstractOdeSystemForCoupledPdeSystem(pReactionSystem -> GetSystemChemistry() -> GetNumberChemicals(),pReactionSystem -> GetSystemChemistry() -> GetNumberChemicals())            
+        :   AbstractOdeSystemForCoupledPdeSystem(pReactionSystem->GetSystemChemistry()->GetNumberChemicals(), pReactionSystem->GetSystemChemistry()->GetNumberChemicals())            
 {
-    // set the reaction insformation
+    // Set the reaction insformation
     SetReactionSystem(pReactionSystem);
-    SetNumberOfSpecies(pReactionSystem -> GetSystemChemistry() -> GetNumberChemicals());
-    SetNumberOfReactions(pReactionSystem -> GetNumberOfReactions());
+    SetNumberOfSpecies(pReactionSystem->GetSystemChemistry()->GetNumberChemicals());
+    SetNumberOfReactions(pReactionSystem->GetNumberOfReactions());
 
-    // fulfil the Chaste Ode system requirement of initialising the ode system information
+    // Fulfil the Chaste Ode system requirement of initialising the ode system information
     mpSystemInfo.reset(new ChemicalOdeSystemInformation<AbstractChemicalOdeForCoupledPdeSystem>(pReactionSystem));
 
     SetStateVariables(GetInitialConditions());
 
-    // setup the data needed for checking the concentration checking procedures
+    // Setup the data needed for checking the concentration checking procedures
     SetIsCheckConcentration(true);
     SetDeltaError(1e-6);
 }
@@ -110,19 +112,19 @@ void AbstractChemicalOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, c
 {
     std::vector<double>& sol_pde  = this->rGetPdeSolution();
 
-    for(unsigned i=0; i<mNumberOfSpecies; i++)
+    for (unsigned i=0; i<mNumberOfSpecies; i++)
     {
         rDY[i] = 0.0;
     }
     
     // perform the reactions in the system updating rDY with the resultant change in concentrations
-    mpReactionSystem -> ReactSystem(rY, rDY);
+    mpReactionSystem->ReactSystem(rY, rDY);
 
     for(unsigned i=0; i<mNumberOfSpecies; i++)
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
-        if(rDY[i]<mDelta_error && rDY[i]>mDelta_error)
+        if (rDY[i]<mDelta_error && rDY[i]>mDelta_error)
         {
             rDY[i] = 0;
         }
@@ -150,7 +152,7 @@ void AbstractChemicalOdeForCoupledPdeSystem::CheckConcentration(const std::vecto
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
-        if(rY[i]<mDelta_error)
+        if (rY[i]<mDelta_error)
         {
             const_cast<double&>(rY[i]) = 0;
         }
@@ -216,10 +218,10 @@ void ChemicalOdeSystemInformation<AbstractChemicalOdeForCoupledPdeSystem>::Initi
 {
     // initilaise the ode information required by Chaste for all ode systems
     // derive the states from the chemical vectors of the system chemistry
-    for( unsigned i=0; i<mp_reaction_system -> GetSystemChemistry() -> GetNumberChemicals(); i++)
+    for( unsigned i=0; i<mp_reaction_system->GetSystemChemistry()->GetNumberChemicals(); i++)
     {
-        this->mVariableNames.push_back(mp_reaction_system -> GetSystemChemistry() -> GetChemicalNamesByIndex(i));
-        this->mVariableUnits.push_back(mp_reaction_system -> GetSystemChemistry() -> GetChemicalDimensionsByIndex(i));
+        this->mVariableNames.push_back(mp_reaction_system->GetSystemChemistry()->GetChemicalNamesByIndex(i));
+        this->mVariableUnits.push_back(mp_reaction_system->GetSystemChemistry()->GetChemicalDimensionsByIndex(i));
         this->mInitialConditions.push_back(1.0); // will be overridden
     }
     this->mInitialised = true;

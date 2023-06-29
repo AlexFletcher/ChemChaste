@@ -88,7 +88,7 @@ public:
             }
             
             columnNum = i - (rowNum-1)*(params.MeshDimensions[0]+1);
-            if((columnNum==3 || columnNum==4 || columnNum==5 || columnNum==6) && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
+            if ((columnNum==3 || columnNum==4 || columnNum==5 || columnNum==6) && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
             {
                 for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                 {   // serialised for nodes
@@ -180,7 +180,7 @@ std::cout<<"Here2"<<std::endl;
             }
             
             columnNum = i - (rowNum-1)*(params.MeshDimensions[0]+1);
-            if((columnNum==3 || columnNum==4 || columnNum==5 || columnNum==6) && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
+            if ((columnNum==3 || columnNum==4 || columnNum==5 || columnNum==6) && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
             {
                 for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
                 {   // serialised for nodes
@@ -209,7 +209,7 @@ std::cout<<"Here5"<<std::endl;
         solver.SetTimes(params.startTime, params.endTime);
 
         solver.SetTimeStep(params.timestep);
-        if(params.timestep>params.samplingTimestep)
+        if (params.timestep>params.samplingTimestep)
         {
             solver.SetSamplingTimeStep(params.timestep);   
         }

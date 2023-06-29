@@ -9,6 +9,9 @@
 #include "ChemicalCell.hpp"
 #include "AbstractMembraneReactionSystemFromFile.hpp"
 
+/**
+ * \todo Document this class.
+ */
 class MembraneCellPropertyFromFile
 {
 protected:
@@ -44,7 +47,7 @@ public:
         : mMembraneFilename(filename)
     {
 
-        if(filename != "")
+        if (filename != "")
         {
             SetMembraneFilename(filename);
         }
@@ -57,7 +60,7 @@ public:
         AbstractMembraneReactionSystemFromFile* p_membrane_system_from_file = new AbstractMembraneReactionSystemFromFile(mMembraneFilename);
 
   
-        p_membrane -> SetUp(p_membrane_system_from_file, p_cell);
+        p_membrane->SetUp(p_membrane_system_from_file, p_cell);
         SetMembraneProperty(p_membrane);
     }
 

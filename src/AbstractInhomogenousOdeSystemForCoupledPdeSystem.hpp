@@ -6,7 +6,9 @@
 #include "StateVariableRegister.hpp"
 #include <string>
 
-
+/**
+ * \todo Document class.
+ */
 class AbstractInhomogenousOdeSystemForCoupledPdeSystem : public AbstractOdeSystemForCoupledPdeSystem
 {
 protected:
@@ -29,7 +31,6 @@ public:
         mpStateVariableRegister = new StateVariableRegister(std::vector<std::string>());
         mpDomainStateVariableRegister = new StateVariableRegister(std::vector<std::string>());
     }
-
 
     void SetStateVariableRegister(StateVariableRegister* p_stateVariableRegister)
     {

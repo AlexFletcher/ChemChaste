@@ -1,17 +1,16 @@
 #ifndef ABSTRACTREVERSIBLEREACTION_HPP_
 #define ABSTRACTREVERSIBLEREACTION_HPP_
 
-// general includes
 #include <string>
 #include <tuple>
 #include <vector>
 
-// reaction includes
 #include "AbstractReaction.hpp"
 
-// reaction class formed from two individual AbstractReactions, handles running both reactions
-// in their coupled sense.
-
+/**
+ * Reaction class formed from two individual AbstractReactions, handles running 
+ * both reactions in their coupled sense.
+ */
 class AbstractReversibleReaction : public AbstractReaction
 {
 protected:
@@ -118,7 +117,7 @@ void AbstractReversibleReaction::SetForwardReactionRate(double reactionRate)
 
 void AbstractReversibleReaction::SetReverseReactionRate(double reactionRate)
 {
-    if(mIsRateCheck)
+    if (mIsRateCheck)
     {
         reactionRate = CheckRate(reactionRate);
     }
@@ -127,7 +126,7 @@ void AbstractReversibleReaction::SetReverseReactionRate(double reactionRate)
 
 void AbstractReversibleReaction::React(AbstractChemistry* systemChemistry, const std::vector<double>& currentChemistryConc, std::vector<double>& changeChemistryConc)
 {
-    std::vector<AbstractChemical*> p_chemical_vector = systemChemistry -> rGetChemicalVector();
+    std::vector<AbstractChemical*> p_chemical_vector = systemChemistry->rGetChemicalVector();
     
     UpdateReactionRate(systemChemistry, currentChemistryConc);
     
@@ -142,7 +141,7 @@ void AbstractReversibleReaction::React(AbstractChemistry* systemChemistry, const
         // for each system chemical, parse whether it is involved in this reaction.
         for(unsigned j=0; j<mNumberOfSubstrates; j++)
         {
-            if(mpSubstrates[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpSubstrates[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 changeChemistryConc[index] -= mStoichSubstrates[j]*GetForwardReactionRate();
                 changeChemistryConc[index] += mStoichSubstrates[j]*GetReverseReactionRate();
@@ -152,7 +151,7 @@ void AbstractReversibleReaction::React(AbstractChemistry* systemChemistry, const
         // a reactant may be present on both sides of the reaction and may convert at different functional rates
         for(unsigned j=0; j<mNumberOfProducts; j++)
         {
-            if(mpProducts[j] -> GetChemicalName()==p_system_chemical -> GetChemicalName())
+            if (mpProducts[j]->GetChemicalName()==p_system_chemical->GetChemicalName())
             {
                 changeChemistryConc[index] += mStoichProducts[j]*GetForwardReactionRate();
                 changeChemistryConc[index] -= mStoichProducts[j]*GetReverseReactionRate();
@@ -186,7 +185,7 @@ void AbstractReversibleReaction::ParseReactionInformation(std::string reaction_i
 {
      
 
-    if(!IsReversible)
+    if (!IsReversible)
     {
         AbstractReaction::ParseReactionInformation(reaction_information, false);
         SetReverseReactionRate(0.0);
@@ -201,21 +200,21 @@ void AbstractReversibleReaction::ParseReactionInformation(std::string reaction_i
         unsigned length_string_forward =0;
         unsigned length_string_reverse =0;
 
-        if(IsForward)
+        if (IsForward)
         {
             posForward = reaction_information.find(mIrreversibleRateName);
 
             length_string_forward = reaction_information.substr(posForward,std::string::npos).length();
         }
         
-        if(IsReverse)
+        if (IsReverse)
         {
             posReverse = reaction_information.find(mReversibleName);
 
             length_string_reverse = reaction_information.substr(posReverse,std::string::npos).length();
         }
 
-        if( length_string_forward<length_string_reverse )
+        if ( length_string_forward<length_string_reverse )
         {
             SetForwardReactionRate(atof(reaction_information.substr(posForward+mIrreversibleRateName.size()+1,std::string::npos).c_str()));
             reaction_information.erase(posForward,std::string::npos);

@@ -5,7 +5,9 @@
 #include "AbstractTransportReactionSystem.hpp"
 #include "ChemicalOdeSystemInformation.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 class AbstractTransportOdeForCoupledPdeSystem: public AbstractOdeSystemForCoupledPdeSystem
 {
 private:
@@ -96,7 +98,7 @@ AbstractTransportOdeForCoupledPdeSystem::AbstractTransportOdeForCoupledPdeSystem
 
     SetReactionSystem(pReactionSystem);
     SetNumberOfSpecies(pReactionSystem ->GetNumberOfBulkStates()+pReactionSystem ->GetNumberOfCellStates());
-    SetNumberOfReactions(pReactionSystem -> GetNumberOfReactions());
+    SetNumberOfReactions(pReactionSystem->GetNumberOfReactions());
 
     // initialise cell concentration vectors
     std::vector<double> cellConcentration(pReactionSystem ->GetNumberOfCellStates(),1.0);
@@ -116,16 +118,11 @@ AbstractTransportOdeForCoupledPdeSystem::AbstractTransportOdeForCoupledPdeSystem
     : AbstractOdeSystemForCoupledPdeSystem(existingSystem.mNumberOfSpecies,existingSystem.mNumberOfSpecies)
 {
     mpReactionSystem = existingSystem.mpReactionSystem;
-
     mNumberOfSpecies = existingSystem.mNumberOfSpecies;
-
     mNumberOfReactions = existingSystem.mNumberOfReactions;
-
     mDelta_error = existingSystem.mDelta_error;
-
     mIsCheckConcentration = existingSystem.mIsCheckConcentration;
 }
-
 
 void AbstractTransportOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, const std::vector<double>& rY, std::vector<double>& rDY)
 {
@@ -145,7 +142,7 @@ void AbstractTransportOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, 
         mReservedCellConcentration[i]= rY[i+number_of_bulk_states];
     }
 
-    if(mIsCheckConcentration)
+    if (mIsCheckConcentration)
     {
         CheckConcentration(bulkConcentrations);
         CheckConcentration(mReservedCellConcentration);
@@ -157,7 +154,7 @@ void AbstractTransportOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, 
         mChangeCellConc[i] =0.0;
     }
     
-    mpReactionSystem -> ReactSystem(bulkConcentrations, mReservedCellConcentration, changeBulkConcentrations, mChangeCellConc);
+    mpReactionSystem->ReactSystem(bulkConcentrations, mReservedCellConcentration, changeBulkConcentrations, mChangeCellConc);
 
     // reform rDY for passing to the solver
     for(unsigned i=0; i<number_of_bulk_states; i++)
@@ -228,7 +225,7 @@ void AbstractTransportOdeForCoupledPdeSystem::UpdateReservedCellConcentrationByI
 
 void AbstractTransportOdeForCoupledPdeSystem::UpdateReservedCellConcentrationByName(std::string name, double concentration)
 {
-    unsigned index = mpTransportReactionSystem -> GetSystemChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpTransportReactionSystem->GetSystemChemistry()->GetChemicalIndexByName(name);
 
     mReservedCellConcentration[index] = concentration;
 }
@@ -240,7 +237,7 @@ void AbstractTransportOdeForCoupledPdeSystem::UpdateChangeCellConcentrationByInd
 
 void AbstractTransportOdeForCoupledPdeSystem::UpdateChangeCellConcentrationByName(std::string name, double concentration)
 {
-    unsigned index = mpTransportReactionSystem -> GetSystemChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpTransportReactionSystem->GetSystemChemistry()->GetChemicalIndexByName(name);
 
     mChangeCellConc[index] = concentration;
 }
@@ -264,7 +261,7 @@ void AbstractTransportOdeForCoupledPdeSystem::CheckConcentration(const std::vect
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
-        if(rY[i]<mDelta_error)
+        if (rY[i]<mDelta_error)
         {
             const_cast<double&>(rY[i]) = 0;
         }
@@ -299,7 +296,7 @@ double AbstractTransportOdeForCoupledPdeSystem::RetrieveReservedCellConcentratio
 
 double AbstractTransportOdeForCoupledPdeSystem::RetrieveReservedCellConcentrationByName(std::string name)
 {
-    unsigned index = mpTransportReactionSystem -> GetSystemChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpTransportReactionSystem->GetSystemChemistry()->GetChemicalIndexByName(name);
 
     return mReservedCellConcentration[index];
 }
@@ -311,7 +308,7 @@ double AbstractTransportOdeForCoupledPdeSystem::RetrieveChangeCellConcentrationB
 
 double AbstractTransportOdeForCoupledPdeSystem::RetrieveChangeCellConcentrationByName(std::string name)
 {
-    unsigned index = mpTransportReactionSystem -> GetSystemChemistry() -> GetChemicalIndexByName(name);
+    unsigned index = mpTransportReactionSystem->GetSystemChemistry()->GetChemicalIndexByName(name);
 
     return mChangeCellConc[index];
 }
@@ -321,18 +318,18 @@ template<>
 void ChemicalOdeSystemInformation<AbstractTransportOdeForCoupledPdeSystem>::Initialise()
 {
     // initialise the bulk state varibles
-    for( unsigned i=0; i<mp_reaction_system -> GetBulkChemistry() -> GetNumberChemicals(); i++)
+    for( unsigned i=0; i<mp_reaction_system->GetBulkChemistry()->GetNumberChemicals(); i++)
     {
-        this->mVariableNames.push_back(mp_reaction_system -> GetBulkChemistry() -> GetChemicalNamesByIndex(i));
-        this->mVariableUnits.push_back(mp_reaction_system -> GetBulkChemistry() -> GetChemicalDimensionsByIndex(i));
+        this->mVariableNames.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalNamesByIndex(i));
+        this->mVariableUnits.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalDimensionsByIndex(i));
         this->mInitialConditions.push_back(1.0); // will be overridden
     }
     
     // initialise the cell state varibles; appended onto the end of the bulk state vectors
-    for( unsigned i=0; i<mp_reaction_system -> GetCellChemistry() -> GetNumberChemicals(); i++)
+    for( unsigned i=0; i<mp_reaction_system->GetCellChemistry()->GetNumberChemicals(); i++)
     {
-        this->mVariableNames.push_back(mp_reaction_system -> GetCellChemistry() -> GetChemicalNamesByIndex(i));
-        this->mVariableUnits.push_back(mp_reaction_system -> GetCellChemistry() -> GetChemicalDimensionsByIndex(i));
+        this->mVariableNames.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalNamesByIndex(i));
+        this->mVariableUnits.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalDimensionsByIndex(i));
         this->mInitialConditions.push_back(1.0); // will be overridden
     }
     this->mInitialised = true;

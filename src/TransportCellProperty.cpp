@@ -40,17 +40,17 @@ void TransportCellProperty::SetUp(AbstractTransportReactionSystem* transportReac
 
     UpdateTransportOdeSystem(p_ode_system);
 
-    StateVariableRegister* p_bulk_stateRegister = new StateVariableRegister(transportReactionSystem -> GetBulkChemistry() -> GetChemicalNames());
+    StateVariableRegister* p_bulk_stateRegister = new StateVariableRegister(transportReactionSystem->GetBulkChemistry()->GetChemicalNames());
 
-    StateVariableRegister* p_cell_stateRegister = new StateVariableRegister(transportReactionSystem -> GetCellChemistry() -> GetChemicalNames());
+    StateVariableRegister* p_cell_stateRegister = new StateVariableRegister(transportReactionSystem->GetCellChemistry()->GetChemicalNames());
    
     SetBulkStateVariableRegister(p_bulk_stateRegister);
     SetCellStateVariableRegister(p_cell_stateRegister);
 
-    SetUpCellConcentrationVector(p_cell_stateRegister -> GetNumberOfStateVariables());
-    SetUpBulkConcentrationVector(p_bulk_stateRegister -> GetNumberOfStateVariables());
-    SetUpChangeCellConcentrationVector(p_cell_stateRegister -> GetNumberOfStateVariables());
-    SetUpChangeBulkConcentrationVector(p_bulk_stateRegister -> GetNumberOfStateVariables());
+    SetUpCellConcentrationVector(p_cell_stateRegister->GetNumberOfStateVariables());
+    SetUpBulkConcentrationVector(p_bulk_stateRegister->GetNumberOfStateVariables());
+    SetUpChangeCellConcentrationVector(p_cell_stateRegister->GetNumberOfStateVariables());
+    SetUpChangeBulkConcentrationVector(p_bulk_stateRegister->GetNumberOfStateVariables());
 
 }
 
@@ -120,7 +120,7 @@ void  TransportCellProperty::PreparePostDivisionDaughter(const TransportCellProp
 double TransportCellProperty::RetrieveBoundarySourceByStateName(std::string stateName)
 {
     // if cell is on boundary add the result of the transport Ode system
-    unsigned index = mpBulkStateVariableRegister -> RetrieveStateVariableIndex(stateName);
+    unsigned index = mpBulkStateVariableRegister->RetrieveStateVariableIndex(stateName);
     //15/10/2020
     return GetExternalCellBoundaryConcentrationByIndex(index);// - mInitBulkBoundaryConcentrationVector[index];
 }
@@ -131,9 +131,9 @@ double TransportCellProperty::RetrieveChangeBoundarySourceByStateName(std::strin
     // if cell is on boundary add the result of the transport Ode system
 
     // check is named state is present on the bulk boundary side
-    if(mpBulkStateVariableRegister -> IsStateVariablePresent(stateName))
+    if (mpBulkStateVariableRegister->IsStateVariablePresent(stateName))
     {
-        unsigned index = mpBulkStateVariableRegister -> RetrieveStateVariableIndex(stateName);
+        unsigned index = mpBulkStateVariableRegister->RetrieveStateVariableIndex(stateName);
         //15/10/2020
         mNumberOCalls_this_reaction_step ++;
         return GetChangeExternalCellBoundaryConcentrationByIndex(index);// - mInitBulkBoundaryConcentrationVector[index];
@@ -270,7 +270,7 @@ std::vector<double> TransportCellProperty::GetInternalCellBoundaryConcentrationV
 
 double TransportCellProperty::GetInternalCellBoundaryConcentrationByIndex(unsigned index)
 {
-    if(index<mpCellStateVariableRegister -> GetNumberOfStateVariables())
+    if (index<mpCellStateVariableRegister->GetNumberOfStateVariables())
     {
         return mCellBoundaryConcentrationVector[index];
     }
@@ -282,7 +282,7 @@ double TransportCellProperty::GetInternalCellBoundaryConcentrationByName(std::st
 {
     unsigned index = mpCellStateVariableRegister->RetrieveStateVariableIndex(stateName);
 
-    if(index<mpCellStateVariableRegister -> GetNumberOfStateVariables())
+    if (index<mpCellStateVariableRegister->GetNumberOfStateVariables())
     {
         return mCellBoundaryConcentrationVector[index];
     }
@@ -295,7 +295,7 @@ double TransportCellProperty::GetChangeInternalCellBoundaryConcentrationByName(s
 {
     unsigned index = mpCellStateVariableRegister->RetrieveStateVariableIndex(stateName);
 
-    if(index<mpCellStateVariableRegister -> GetNumberOfStateVariables())
+    if (index<mpCellStateVariableRegister->GetNumberOfStateVariables())
     {
         return mChangeCellBoundaryConcentrationVector[index];
     }
@@ -311,7 +311,7 @@ std::vector<double> TransportCellProperty::GetExternalCellBoundaryConcentrationV
 
 double TransportCellProperty::GetExternalCellBoundaryConcentrationByIndex(unsigned index)
 {
-    if(index<mBulkBoundaryConcentrationVector.size())
+    if (index<mBulkBoundaryConcentrationVector.size())
     {
         return mBulkBoundaryConcentrationVector[index];
     }
@@ -321,7 +321,7 @@ double TransportCellProperty::GetExternalCellBoundaryConcentrationByIndex(unsign
 
 double TransportCellProperty::GetChangeExternalCellBoundaryConcentrationByIndex(unsigned index)
 {
-    if(index<mChangeBulkBoundaryConcentrationVector.size())
+    if (index<mChangeBulkBoundaryConcentrationVector.size())
     {
         return mChangeBulkBoundaryConcentrationVector[index];
     }
@@ -333,7 +333,7 @@ double TransportCellProperty::GetExternalCellBoundaryConcentrationByName(std::st
 {
     unsigned index = mpBulkStateVariableRegister->RetrieveStateVariableIndex(stateName);
 
-    if(index<mBulkBoundaryConcentrationVector.size())
+    if (index<mBulkBoundaryConcentrationVector.size())
     {
         return mBulkBoundaryConcentrationVector[index];
     }

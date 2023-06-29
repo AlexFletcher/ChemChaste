@@ -12,7 +12,9 @@
 #include "MembraneCellPropertyFromFile.hpp"
 #include "CellAnalyticsPropertyFromCellID.hpp"
 
-
+/**
+ * \todo Document class.
+ */
 class ChemicalCellFromFile
 {
 protected:
@@ -184,17 +186,17 @@ ChemicalCellFromFile::ChemicalCellFromFile(
             mIsCellIDSet(isCellIDSet)
 {
 
-    if(mCellCycleFilename != "")
+    if (mCellCycleFilename != "")
     {
         mIsCellCycleSet = true;
     }
 
-    if(mSrnFilename != "")
+    if (mSrnFilename != "")
     {
         mIsSRNSet = true;
     }
 
-    if(mInitialConditionsFilename != "")
+    if (mInitialConditionsFilename != "")
     {
         mIsInitConditionsSet = true;
         boost::shared_ptr<ChemicalCellProperty> p_cell_chemical(new ChemicalCellProperty());
@@ -202,7 +204,7 @@ ChemicalCellFromFile::ChemicalCellFromFile(
         SetChemicalCellProperty(p_cell_chemical);
     }
 
-    if(mTransportPropertyFilename != "")
+    if (mTransportPropertyFilename != "")
     {
         mIsTransportPropertySet = true;
         boost::shared_ptr<TransportCellProperty> p_cell_transport(new TransportCellProperty());
@@ -210,7 +212,7 @@ ChemicalCellFromFile::ChemicalCellFromFile(
         SetTransportCellProperty(p_cell_transport);
     }
 
-    if(mMembranePropertyFilename != "")
+    if (mMembranePropertyFilename != "")
     {
         mIsMembranePropertySet = true;
         boost::shared_ptr<MembraneCellProperty> p_cell_membrane(new MembraneCellProperty());
@@ -219,7 +221,7 @@ ChemicalCellFromFile::ChemicalCellFromFile(
     }
 
     
-    if(mIsCellIDSet)
+    if (mIsCellIDSet)
     {
         boost::shared_ptr<CellAnalyticsProperty> p_cell_analytics(new CellAnalyticsProperty());
 
@@ -239,45 +241,45 @@ ChemicalCellFromFile::ChemicalCellFromFile(
 
     // chemical species from initial conditions
     
-    std::vector<std::string> cellChemicalNames = mp_cell_chemical -> GetStateVariableRegister() -> GetStateVariableRegisterVector();
-    std::vector<double> cellConcentrationVector = mp_cell_chemical -> GetCellConcentrationVector();
+    std::vector<std::string> cellChemicalNames = mp_cell_chemical->GetStateVariableRegister()->GetStateVariableRegisterVector();
+    std::vector<double> cellConcentrationVector = mp_cell_chemical->GetCellConcentrationVector();
 
     StateVariableRegister* pFullStateVariableRegister = new StateVariableRegister(cellChemicalNames);
 
 
     // chemical species from srn
-    if(mIsSRNSet)
+    if (mIsSRNSet)
     {
-        std::vector<std::string> srn_chemical_names = mpChemicalSrnModel -> GetCellChemistry() -> GetChemicalNames();
-        pFullStateVariableRegister -> AddStateVariableVector(srn_chemical_names);
+        std::vector<std::string> srn_chemical_names = mpChemicalSrnModel->GetCellChemistry()->GetChemicalNames();
+        pFullStateVariableRegister->AddStateVariableVector(srn_chemical_names);
     }  
 
     // chemical species from cell cycle
-    if(mIsCellCycleSet)
+    if (mIsCellCycleSet)
     {
-        std::vector<std::string> cell_cycle_chemical_names = mpSimpleChemicalThresholdCellCycleModel -> GetThresholdChemistry() -> GetChemicalNames();
-        pFullStateVariableRegister -> AddStateVariableVector(cell_cycle_chemical_names);
+        std::vector<std::string> cell_cycle_chemical_names = mpSimpleChemicalThresholdCellCycleModel->GetThresholdChemistry()->GetChemicalNames();
+        pFullStateVariableRegister->AddStateVariableVector(cell_cycle_chemical_names);
     }    
 
     // chemical species from membrane property
-    if(mIsMembranePropertySet)
+    if (mIsMembranePropertySet)
     {
-        std::vector<std::string> cell_membrane_chemical_names = mp_cell_membrane -> GetCellStateVariableRegister() -> GetStateVariableRegisterVector();
-        pFullStateVariableRegister -> AddStateVariableVector(cell_membrane_chemical_names);
+        std::vector<std::string> cell_membrane_chemical_names = mp_cell_membrane->GetCellStateVariableRegister()->GetStateVariableRegisterVector();
+        pFullStateVariableRegister->AddStateVariableVector(cell_membrane_chemical_names);
     }    
 
     // chemical species from transport property
-    if(mIsTransportPropertySet)
+    if (mIsTransportPropertySet)
     {
-        std::vector<std::string> cell_transport_chemical_names = mp_cell_transport -> GetCellStateVariableRegister() -> GetStateVariableRegisterVector();
-        pFullStateVariableRegister -> AddStateVariableVector(cell_transport_chemical_names);
+        std::vector<std::string> cell_transport_chemical_names = mp_cell_transport->GetCellStateVariableRegister()->GetStateVariableRegisterVector();
+        pFullStateVariableRegister->AddStateVariableVector(cell_transport_chemical_names);
     } 
 
 
     // ensure all species are accounted for in initial conditions
 
-    std::vector<std::string> fullChemicalNames = pFullStateVariableRegister -> GetStateVariableRegisterVector();
-    if(cellChemicalNames.size() != fullChemicalNames.size())
+    std::vector<std::string> fullChemicalNames = pFullStateVariableRegister->GetStateVariableRegisterVector();
+    if (cellChemicalNames.size() != fullChemicalNames.size())
     {
         for(unsigned i=cellChemicalNames.size(); i<fullChemicalNames.size(); i++)
         {
@@ -295,46 +297,46 @@ ChemicalCellFromFile::ChemicalCellFromFile(
 void ChemicalCellFromFile::SetUpCellProperties()
 {
     //std::cout<<"ChemicalCellFromFile::SetUpCellProperties - start"<<std::endl;
-    if(mIsInitConditionsSet)
+    if (mIsInitConditionsSet)
     {
 
         InitialCellConditionsFromFile* p_init_conditions_from_file = new InitialCellConditionsFromFile(mInitialConditionsFilename);
         
-        StateVariableRegister* p_state_register = new StateVariableRegister(p_init_conditions_from_file -> GetChemicalNamesVector());
+        StateVariableRegister* p_state_register = new StateVariableRegister(p_init_conditions_from_file->GetChemicalNamesVector());
 
-        mp_cell_chemical -> InitialiseCell(p_state_register,p_init_conditions_from_file -> GetConcentrationVector());
+        mp_cell_chemical->InitialiseCell(p_state_register,p_init_conditions_from_file->GetConcentrationVector());
 
-        SetUpCellInitialConditions(mpCell, p_state_register -> GetStateVariableRegisterVector(), p_init_conditions_from_file -> GetConcentrationVector());
+        SetUpCellInitialConditions(mpCell, p_state_register->GetStateVariableRegisterVector(), p_init_conditions_from_file->GetConcentrationVector());
   
     }
 
-    if(mIsTransportPropertySet)
+    if (mIsTransportPropertySet)
     {
         TransportCellPropertyFromFile* p_transport_property_from_file = new TransportCellPropertyFromFile(mTransportPropertyFilename);
 
-        p_transport_property_from_file -> SetUpTransportProperty(mpCell);
+        p_transport_property_from_file->SetUpTransportProperty(mpCell);
 
-        mp_cell_transport = p_transport_property_from_file -> GetTransportProperty();
+        mp_cell_transport = p_transport_property_from_file->GetTransportProperty();
     }
 
-    if(mIsMembranePropertySet)
+    if (mIsMembranePropertySet)
     {
         MembraneCellPropertyFromFile* p_membrane_property_from_file = new MembraneCellPropertyFromFile(mMembranePropertyFilename);
 
-        p_membrane_property_from_file -> SetUpMembraneProperty(mpCell);
+        p_membrane_property_from_file->SetUpMembraneProperty(mpCell);
 
-        mp_cell_membrane = p_membrane_property_from_file -> GetMembraneProperty();
+        mp_cell_membrane = p_membrane_property_from_file->GetMembraneProperty();
 
-        mp_cell_membrane -> SetMembraneThickness(5.0);
+        mp_cell_membrane->SetMembraneThickness(5.0);
     }
 
-    if(mIsCellIDSet)
+    if (mIsCellIDSet)
     {
         CellAnalyticsPropertyFromCellID* p_cell_analytics_property_from_cellID = new CellAnalyticsPropertyFromCellID(mCellID);
 
-        p_cell_analytics_property_from_cellID -> SetUpCellAnalyticsProperty(mpCell);
+        p_cell_analytics_property_from_cellID->SetUpCellAnalyticsProperty(mpCell);
 
-        mp_cell_analytics = p_cell_analytics_property_from_cellID -> GetCellAnalyticsProperty();
+        mp_cell_analytics = p_cell_analytics_property_from_cellID->GetCellAnalyticsProperty();
     }
 
 
@@ -344,24 +346,20 @@ void ChemicalCellFromFile::SetUpCellProperties()
 
 void ChemicalCellFromFile::SetUpSRNandCellCycle()
 {
-    if(mIsSRNSet)
-    {
- 
+    if (mIsSRNSet)
+    { 
         ChemicalSRNFromFile* p_srn_reaction_system_from_file = new ChemicalSRNFromFile(mSrnFilename);
-        SetChemicalSrnModel(p_srn_reaction_system_from_file -> GetChemicalSrnModel());
-
+        SetChemicalSrnModel(p_srn_reaction_system_from_file->GetChemicalSrnModel());
 
         AbstractChemistry* this_cell_chemistry = mpChemicalSrnModel->GetCellChemistry();
         unsigned numberOfChemicals = this_cell_chemistry->GetNumberChemicals();
-  
-    }
+      }
 
-
-    if(mIsCellCycleSet)
+    if (mIsCellCycleSet)
     {
         SimpleChemicalThresholdCellCycleFromFile* pCellCycle = new SimpleChemicalThresholdCellCycleFromFile(mCellCycleFilename);
 
-        pCellCycle -> SetUp();
+        pCellCycle->SetUp();
         SetChemicalCellCycleModel(pCellCycle);
     }
 
@@ -373,22 +371,22 @@ void ChemicalCellFromFile::SetUpCellObject()
     // form cell
     CellPropertyCollection collection;
     MAKE_PTR(WildTypeCellMutationState, p_state);
-    if(mIsInitConditionsSet)
+    if (mIsInitConditionsSet)
     {
         collection.AddProperty(mp_cell_chemical);
     }
 
-    if(mIsTransportPropertySet)
+    if (mIsTransportPropertySet)
     {
         collection.AddProperty(mp_cell_transport);
     }
     
-    if(mIsMembranePropertySet)
+    if (mIsMembranePropertySet)
     {
         collection.AddProperty(mp_cell_membrane);
     }
 
-    if(mIsCellIDSet)
+    if (mIsCellIDSet)
     {
         collection.AddProperty(mp_cell_analytics);
     }
@@ -396,14 +394,14 @@ void ChemicalCellFromFile::SetUpCellObject()
     // check if srn and cell cycle are set, if not provide default models
     AbstractSrnModel* pSrnModel=nullptr;
 
-    if(mIsSRNSet)
+    if (mIsSRNSet)
     {
         pSrnModel = GetChemicalSrnModel();
     }
     
     AbstractCellCycleModel* pCellCycleModel = new NoCellCycleModel();
 
-    if(mIsCellCycleSet)
+    if (mIsCellCycleSet)
     {
         pCellCycleModel = GetChemicalCellCycleModel();
     }
@@ -541,7 +539,7 @@ StateVariableRegister* ChemicalCellFromFile::GetFullChemicalStateRegister()
 
 std::vector<std::string> ChemicalCellFromFile::GetFullChemicalNamesVector()
 {
-    return mpFullChemicalStateRegister -> GetStateVariableRegisterVector();
+    return mpFullChemicalStateRegister->GetStateVariableRegisterVector();
 }
 
 
