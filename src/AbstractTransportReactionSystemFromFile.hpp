@@ -73,7 +73,7 @@ public:
 AbstractTransportReactionSystemFromFile::AbstractTransportReactionSystemFromFile(std::string InputFileName)
     : mInputFileName(InputFileName)
 {
-    //"AbstractTransportReactionSystemFromFile::AbstractTransportReactionSystemFromFile - start"<<std::endl;
+    //"AbstractTransportReactionSystemFromFile::AbstractTransportReactionSystemFromFile - start" << std::endl;
     std::vector<AbstractTransportReaction*> mpReactionVector = std::vector<AbstractTransportReaction*>();
 
     SetFileDeliminator();
@@ -185,7 +185,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
             {
                 if (line.at(0)=='#')
                 {
-                    //std::cout<<"Escape line: "<<line<<std::endl;
+                    //std::cout << "Escape line: "<<line << std::endl;
                 }
                 else
                 {
@@ -226,7 +226,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
     }
     else
     {
-        std::cout<<"Error: Filename not found: "<<mInputFileName<<std::endl;
+        std::cout << "Error: Filename not found: "<<mInputFileName << std::endl;
     }
 
     return system;

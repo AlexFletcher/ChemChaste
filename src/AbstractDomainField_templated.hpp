@@ -385,7 +385,7 @@ AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::AbstractDomainF
         mCartesianOdeScaleXY(cartesianOdeScale)
         
         
-{   //std::cout<<"AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::AbstractDomainFieldTemplated"<<std::endl;
+{   //std::cout << "AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::AbstractDomainFieldTemplated" << std::endl;
 
     if (mLabelOrigin.empty())
     {
@@ -412,7 +412,7 @@ AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::AbstractDomainF
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetUpDomainFromFiles()
-{//std::cout<<"AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetUpDomainFromFiles"<<std::endl;
+{//std::cout << "AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetUpDomainFromFiles" << std::endl;
     // read the domain labels and label keys form files
 
     SetupAndInitialiseLabelDomain();
@@ -783,7 +783,7 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Ret
 
     for (unsigned key_index=0; key_index<mOdeKeys.size(); key_index++)
     {
-        //std::cout<<"key_index: "<<key_index<<std::endl;
+        //std::cout << "key_index: "<<key_index << std::endl;
         if (mOdeKeys[key_index][0] == nodeLabel)
         {
             return mOdeKeys[key_index][1];
@@ -793,7 +793,7 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Ret
     }
     if (!IsFound)
     {
-        std::cout<<"Error: AbstractDomainFieldTemplated::ReturnKeyValueFromNodeLabel, node label not found"<<std::endl;
+        std::cout << "Error: AbstractDomainFieldTemplated::ReturnKeyValueFromNodeLabel, node label not found" << std::endl;
         return "Null";
     }
     return "Null";
@@ -816,7 +816,7 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Ret
     }
     if (!IsFound)
     {
-        std::cout<<"Error: AbstractDomainFieldTemplated::ReturnDomainKeyFromDomainLabel, domain label not found"<<std::endl;
+        std::cout << "Error: AbstractDomainFieldTemplated::ReturnDomainKeyFromDomainLabel, domain label not found" << std::endl;
         return "Null";
     }
     return "Null";
@@ -1057,7 +1057,7 @@ double AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::GetDiffu
     else
     {
         // state hasn't been found therefore return a diffusion value of 0.0
-        std::cout<<"Error: AbstractDomainFieldTemplated::GetDiffusionValueBasedOnPoint: State not in state variable"<<std::endl;
+        std::cout << "Error: AbstractDomainFieldTemplated::GetDiffusionValueBasedOnPoint: State not in state variable" << std::endl;
         return 0.0;
     }
 }
@@ -1212,7 +1212,7 @@ std::vector<std::vector<std::string>> AbstractDomainFieldTemplated<ELEMENT_DIM,S
             if (!line.empty()){
                 if (line.at(0)=='#')
                 {
-                    //std::cout<<"Escape line: "<<line<<std::endl;
+                    //std::cout << "Escape line: "<<line << std::endl;
                 }
                 else
                 {
@@ -1224,7 +1224,7 @@ std::vector<std::vector<std::string>> AbstractDomainFieldTemplated<ELEMENT_DIM,S
 
         return outputMatrix;
     }else{
-        std::cout<<"Error: Unable to open file: "<<filename<<std::endl;
+        std::cout << "Error: Unable to open file: "<<filename << std::endl;
         return outputMatrix;
     }
 }
@@ -1424,9 +1424,9 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::printMatri
     {
       std::cout << matrix[i][j]<< ' ';
     }
-    std::cout<<std::endl;
+    std::cout << std::endl;
   }
-  std::cout<<std::endl;
+  std::cout << std::endl;
 
     return;
 };
@@ -1438,7 +1438,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::printVecto
   {
     std::cout << vec[i]<< ' ';
   }
-  std::cout<<std::endl;
+  std::cout << std::endl;
 
     return;
 };
@@ -1446,49 +1446,49 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::printVecto
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PrintDiffusionDomain()
 {
-    std::cout<<"Diffusion domain:"<<std::endl;
+    std::cout << "Diffusion domain:" << std::endl;
     printMatrix(mDomainLabels);
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PrintMappedDiffusionDomain()
 {
-    std::cout<<"Mapped diffusion domain:"<<std::endl;
+    std::cout << "Mapped diffusion domain:" << std::endl;
     printMatrix(mCartesianChasteDomain);
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PrintDomainLabelKeys()
 {
-    std::cout<<"Domain label keys:"<<std::endl;
+    std::cout << "Domain label keys:" << std::endl;
     printMatrix(mDomainKeys);
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PrintODEDomain()
 {
-    std::cout<<"ODE domain:"<<std::endl;
+    std::cout << "ODE domain:" << std::endl;
     printMatrix(mOdeLabels);
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PrintMappedODEDomain()
 {
-    std::cout<<"Mapped ODE domain:"<<std::endl;
+    std::cout << "Mapped ODE domain:" << std::endl;
     printMatrix(mCartesianOdeDomain);
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PrintODELabelKeys()
 {
-    std::cout<<"ODE label keys:"<<std::endl;
+    std::cout << "ODE label keys:" << std::endl;
     printMatrix(mOdeKeys);
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PrintDiffusionDatabase()
 {
-    std::cout<<"Diffusion database:"<<std::endl;
+    std::cout << "Diffusion database:" << std::endl;
     printMatrix(mDiffusionDatabase);
 }
 
@@ -1691,7 +1691,7 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Get
     }
     else
     {
-        std::cout<<"Error: AbstractDomainFieldTemplated::GetDomainLabelByIndex: index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractDomainFieldTemplated::GetDomainLabelByIndex: index out of bounds" << std::endl;
         return "Error";
     }
     

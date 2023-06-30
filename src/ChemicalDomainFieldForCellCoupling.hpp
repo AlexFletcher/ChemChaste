@@ -642,7 +642,7 @@ unsigned ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::
             return i;
         }
     }
-    std::cout<<"Error: unsigned ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnUnsignedIDFromCellKeyString(std::string) index out of bounds"<<std::endl;
+    std::cout << "Error: unsigned ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnUnsignedIDFromCellKeyString(std::string) index out of bounds" << std::endl;
     return keyVector.size()+1;
 }
 
@@ -738,7 +738,7 @@ std::string ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM
     }
     if (!IsFound)
     {
-        std::cout<<"Error: ChemicalDomainFieldForCellCoupling::ReturnCellKeyFromCellLabel, cell label not found"<<std::endl;
+        std::cout << "Error: ChemicalDomainFieldForCellCoupling::ReturnCellKeyFromCellLabel, cell label not found" << std::endl;
         return "Null";
     }
     return "Null";
@@ -790,10 +790,10 @@ template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PrintCellIDWithKey()
 {
     std::vector<std::string> keyVector = GetCellKeyVector();
-    std::cout<<"CellID,CellKey"<<std::endl;
+    std::cout << "CellID,CellKey" << std::endl;
     for (unsigned i=0; i<keyVector.size(); i++)
     {
-        std::cout<<ReturnUnsignedIDFromCellKeyString(keyVector[i])<<","<<keyVector[i]<<std::endl;
+        std::cout << ReturnUnsignedIDFromCellKeyString(keyVector[i])<<","<<keyVector[i] << std::endl;
     }
 }
 
@@ -801,10 +801,10 @@ template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PrintCellIDWithCellLabel()
 {
     std::vector<std::string> labelVector = GetCellLabelVector();
-    std::cout<<"CellID,CellKey"<<std::endl;
+    std::cout << "CellID,CellKey" << std::endl;
     for (unsigned i=0; i<labelVector.size(); i++)
     {
-        std::cout<<ReturnUnsignedIDFromCellKeyString(ReturnCellKeyFromCellLabel(labelVector[i]))<<","<<labelVector[i]<<std::endl;
+        std::cout << ReturnUnsignedIDFromCellKeyString(ReturnCellKeyFromCellLabel(labelVector[i]))<<","<<labelVector[i] << std::endl;
     }
 }
 
@@ -871,7 +871,7 @@ std::string ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM
     }
     else
     {
-        std::cout<<"Error: ChemicalDomainFieldForCellCoupling::GetCellLabelByIndex: index out of bounds"<<std::endl;
+        std::cout << "Error: ChemicalDomainFieldForCellCoupling::GetCellLabelByIndex: index out of bounds" << std::endl;
         return "Error";
     }
 }

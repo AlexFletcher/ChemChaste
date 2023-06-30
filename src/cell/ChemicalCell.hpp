@@ -34,9 +34,8 @@ class ChemicalCell : public Cell
 {
 protected:
     using Cell::Divide;
-    //using Cell::ReadyToDivide;
 
-    double mSplitRatio =0.5; // proportion of parent cell volume retained, rest goes to daughter 
+    double mSplitRatio = 0.5; // proportion of parent cell volume retained, rest goes to daughter 
 
 public:
 
@@ -52,16 +51,13 @@ public:
 
     virtual CellPtr Divide();
 
-    virtual void DetermineSplitRation();
+    virtual void DetermineSplitRatio();
 
     virtual double SplitParentCellData(double);
 
-    //virtual bool ReadyToDivide();
+    double GetSplitRatio();
 
-    double GetSplitRation();
-
-    void SetSplitRation(double);
-
+    void SetSplitRatio(double);
 };
 
 ChemicalCell::ChemicalCell(
@@ -71,7 +67,7 @@ ChemicalCell::ChemicalCell(
         bool archiving,
         CellPropertyCollection cellPropertyCollection)
 
-    : Cell(pMutationState,pCellCycleModel,pSrnModel,archiving,cellPropertyCollection)
+    : Cell(pMutationState, pCellCycleModel, pSrnModel, archiving, cellPropertyCollection)
 {
 }
 
@@ -114,47 +110,49 @@ CellPtr ChemicalCell::Divide()
     }
 
     // record the cell chemistry for splitting cell data
-    AbstractChemistry* cellChemistry = new AbstractChemistry();
+    AbstractChemistry* p_cell_chemistry = new AbstractChemistry();
 
     if (static_cast<ChemicalSrnModel*>(mpSrnModel)->SRNType()=="Chemical")
     {
         ChemicalSrnModel* p_srn_model = static_cast<ChemicalSrnModel*>(mpSrnModel);
-        cellChemistry->AddChemistry(p_srn_model->GetCellChemistry()); // from SRN
+        p_cell_chemistry->AddChemistry(p_srn_model->GetCellChemistry()); // from SRN
     }
 
     if (static_cast<SimpleChemicalThresholdCellCycleModel*>(mpCellCycleModel)->CellCycleType()=="Chemical")
     {
         SimpleChemicalThresholdCellCycleModel* p_cc_model = static_cast<SimpleChemicalThresholdCellCycleModel*>(mpCellCycleModel);
-        cellChemistry->AddChemistry(p_cc_model->GetThresholdChemistry()); // from cell cycle model
+        p_cell_chemistry->AddChemistry(p_cc_model->GetThresholdChemistry()); // from cell cycle model
     }
 
-    // transport property
+    // Transport property
     if (mCellPropertyCollection.HasProperty<TransportCellProperty>())
     {
-        boost::shared_ptr<TransportCellProperty> transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(mCellPropertyCollection.GetPropertiesType<TransportCellProperty>().GetProperty());
-        AbstractChemistry* transportChemistry = transport_cell_property ->GetTransportReactionSystem()->GetCellChemistry();
-        // add the cell chemistry due to transport
-        cellChemistry->AddChemistry(transportChemistry);
+        boost::shared_ptr<TransportCellProperty> p_transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(mCellPropertyCollection.GetPropertiesType<TransportCellProperty>().GetProperty());
+        AbstractChemistry* p_transport_chemistry = p_transport_cell_property->GetTransportReactionSystem()->GetCellChemistry();
+
+        // Add the cell chemistry due to transport
+        p_cell_chemistry->AddChemistry(p_transport_chemistry);
     }
 
-    // membrane property
+    // Membrane property
     if (mCellPropertyCollection.HasProperty<MembraneCellProperty>())
     {
-        boost::shared_ptr<MembraneCellProperty> membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(mCellPropertyCollection.GetPropertiesType<MembraneCellProperty>().GetProperty());
-        AbstractChemistry* membraneChemistry = membrane_cell_property ->GetMembraneReactionSystem()->GetCellChemistry();
-        // add the cell chemistry due to membrane
-        cellChemistry->AddChemistry(membraneChemistry);
+        boost::shared_ptr<MembraneCellProperty> p_membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(mCellPropertyCollection.GetPropertiesType<MembraneCellProperty>().GetProperty());
+        AbstractChemistry* membraneChemistry = p_membrane_cell_property->GetMembraneReactionSystem()->GetCellChemistry();
+
+        // Add the cell chemistry due to membrane
+        p_cell_chemistry->AddChemistry(membraneChemistry);
     }
 
-    // based on the parent cell data determine the split ratio
-    DetermineSplitRation();
+    // Based on the parent cell data determine the split ratio
+    DetermineSplitRatio();
 
-    // share the two cellDatas between the two cells, use cellChemistry
+    // share the two cellDatas between the two cells, use p_cell_chemistry
     // split chemical cell data
     double parent_species_concentration=0.0;
     double new_parent_species_concentration=0.0;
     double daughter_species_concentration=0.0;
-    unsigned numChemicals = cellChemistry->GetNumberChemicals();
+    unsigned numChemicals = p_cell_chemistry->GetNumberChemicals();
 
     for (unsigned i=0; i<numChemicals; i++)
     {
@@ -182,59 +180,60 @@ CellPtr ChemicalCell::Divide()
     if (mCellPropertyCollection.HasProperty<TransportCellProperty>())
     {
         // parent property
-        boost::shared_ptr<TransportCellProperty> transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(mCellPropertyCollection.GetPropertiesType<TransportCellProperty>().GetProperty());
-        AbstractChemistry* transportChemistry = transport_cell_property ->GetTransportReactionSystem()->GetCellChemistry();
+        boost::shared_ptr<TransportCellProperty> p_transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(mCellPropertyCollection.GetPropertiesType<TransportCellProperty>().GetProperty());
+        AbstractChemistry* p_transport_chemistry = p_transport_cell_property ->GetTransportReactionSystem()->GetCellChemistry();
 
         // create new transport cell property
-        daughter_property_collection.RemoveProperty(transport_cell_property);
+        daughter_property_collection.RemoveProperty(p_transport_cell_property);
         // use copy construtor
-        boost::shared_ptr<TransportCellProperty> p_daughter_transport_property(new TransportCellProperty(*transport_cell_property));
+        boost::shared_ptr<TransportCellProperty> p_daughter_transport_property(new TransportCellProperty(*p_transport_cell_property));
         daughter_property_collection.AddProperty(p_daughter_transport_property);
 
         // split the properties betwene the two cells
-        transport_cell_property->PreparePostDivisionParent(mSplitRatio);
-        p_daughter_transport_property->PreparePostDivisionDaughter(*transport_cell_property, mSplitRatio);
+        p_transport_cell_property->PreparePostDivisionParent(mSplitRatio);
+        p_daughter_transport_property->PreparePostDivisionDaughter(*p_transport_cell_property, mSplitRatio);
     }
 
-    // membrane property
+    // Membrane cell property
     if (mCellPropertyCollection.HasProperty<MembraneCellProperty>())
     {
-        boost::shared_ptr<MembraneCellProperty> membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(mCellPropertyCollection.GetPropertiesType<MembraneCellProperty>().GetProperty());
+        boost::shared_ptr<MembraneCellProperty> p_membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(mCellPropertyCollection.GetPropertiesType<MembraneCellProperty>().GetProperty());
 
         // create new membrane cell property
-        daughter_property_collection.RemoveProperty(membrane_cell_property);
-        boost::shared_ptr<MembraneCellProperty> p_daughter_membrane_property(new MembraneCellProperty(*membrane_cell_property));
+        daughter_property_collection.RemoveProperty(p_membrane_cell_property);
+        boost::shared_ptr<MembraneCellProperty> p_daughter_membrane_property(new MembraneCellProperty(*p_membrane_cell_property));
         daughter_property_collection.AddProperty(p_daughter_membrane_property);
 
         // split the properties betwene the two cells
-        membrane_cell_property->PreparePostDivisionParent(mSplitRatio);
-        p_daughter_membrane_property->PreparePostDivisionDaughter(*membrane_cell_property, mSplitRatio);
+        p_membrane_cell_property->PreparePostDivisionParent(mSplitRatio);
+        p_daughter_membrane_property->PreparePostDivisionDaughter(*p_membrane_cell_property, mSplitRatio);
     }
 
-    // cellAnalytics property
+    // Cell analytics property
     if (mCellPropertyCollection.HasProperty<CellAnalyticsProperty>())
     {
-        // parent property
-        boost::shared_ptr<CellAnalyticsProperty> cellAnalytics_cell_property = boost::static_pointer_cast<CellAnalyticsProperty>(mCellPropertyCollection.GetPropertiesType<CellAnalyticsProperty>().GetProperty());
+        // Parent property
+        boost::shared_ptr<CellAnalyticsProperty> p_cell_analytics_property = boost::static_pointer_cast<CellAnalyticsProperty>(mCellPropertyCollection.GetPropertiesType<CellAnalyticsProperty>().GetProperty());
 
-        // create new transport cell property
-        daughter_property_collection.RemoveProperty(cellAnalytics_cell_property);
-        // use copy construtor
-        boost::shared_ptr<CellAnalyticsProperty> p_daughter_cellAnalytics_property(new CellAnalyticsProperty(*cellAnalytics_cell_property));
+        // Create new transport cell property
+        daughter_property_collection.RemoveProperty(p_cell_analytics_property);
+
+        // Use copy construtor
+        boost::shared_ptr<CellAnalyticsProperty> p_daughter_cellAnalytics_property(new CellAnalyticsProperty(*p_cell_analytics_property));
         daughter_property_collection.AddProperty(p_daughter_cellAnalytics_property);
 
-        // split the properties betwene the two cells
-        cellAnalytics_cell_property->PreparePostDivisionParent(mSplitRatio);
-        p_daughter_cellAnalytics_property->PreparePostDivisionDaughter(*cellAnalytics_cell_property, mSplitRatio);
+        // Split the properties between the two cells
+        p_cell_analytics_property->PreparePostDivisionParent(mSplitRatio);
+        p_daughter_cellAnalytics_property->PreparePostDivisionDaughter(*p_cell_analytics_property, mSplitRatio);
     }
 
-    // create new chemical cell
+    // Create new chemical cell
+
     // Create daughter cell with modified cell property collection
     CellPtr p_new_cell(new ChemicalCell(GetMutationState(), mpCellCycleModel->CreateCellCycleModel(), mpSrnModel->CreateSrnModel(), false, daughter_property_collection));
+
     // Initialise properties of daughter cell
-
     p_new_cell->GetCellCycleModel()->InitialiseDaughterCell();
-
     p_new_cell->GetSrnModel()->InitialiseDaughterCell();
 
     // Set the daughter cell to inherit the apoptosis time of the parent cell
@@ -243,58 +242,55 @@ CellPtr ChemicalCell::Divide()
     std::vector<double> prime_cell_threshold_species_concentrations(static_cast<SimpleChemicalThresholdCellCycleModel*>(this->GetCellCycleModel())->GetNumberThresholdSpecies(),0.0);
     std::vector<double> daughter_cell_threshold_species_concentrations(static_cast<SimpleChemicalThresholdCellCycleModel*>(p_new_cell->GetCellCycleModel())->GetNumberThresholdSpecies(),0.0);
 
-    AbstractChemistry* thresholdChemistry = static_cast<SimpleChemicalThresholdCellCycleModel*>(this->GetCellCycleModel())->GetThresholdChemistry();
-    std::string chemicalName;
+    AbstractChemistry* p_threshold_chemistry = static_cast<SimpleChemicalThresholdCellCycleModel*>(this->GetCellCycleModel())->GetThresholdChemistry();
+    std::string chemical_name;
 
     for (unsigned i=0; i<numChemicals; i++)
     {
-        chemicalName = cellChemistry->GetChemicalNamesByIndex(i);
+        chemical_name = p_cell_chemistry->GetChemicalNamesByIndex(i);
 
-        if (!thresholdChemistry->CheckChemical(new AbstractChemical(chemicalName)))
+        if (!p_threshold_chemistry->CheckChemical(new AbstractChemical(chemical_name)))
         {
-            prime_cell_threshold_species_concentrations[thresholdChemistry->GetChemicalIndexByName(chemicalName)] = p_cell_data->GetItem(chemicalName);
-            //std::cout<<"parent concentration: "<<chemicalName<<" : "<<p_cell_data->GetItem(chemicalName)<<std::endl;
+            prime_cell_threshold_species_concentrations[p_threshold_chemistry->GetChemicalIndexByName(chemical_name)] = p_cell_data->GetItem(chemical_name);
         }
     }
 
     for (unsigned i=0; i<numChemicals; i++)
     {
-        chemicalName = cellChemistry->GetChemicalNamesByIndex(i);
-        //std::cout<<chemicalName<<": "<<p_daughter_cell_data->GetItem(chemicalName)<<std::endl;
-        if (!thresholdChemistry->CheckChemical(new AbstractChemical(chemicalName)))
+        chemical_name = p_cell_chemistry->GetChemicalNamesByIndex(i);
+        if (!p_threshold_chemistry->CheckChemical(new AbstractChemical(chemical_name)))
         {
-            daughter_cell_threshold_species_concentrations[thresholdChemistry->GetChemicalIndexByName(chemicalName)] = p_daughter_cell_data->GetItem(chemicalName);
-            //std::cout<<"daughter concentration: "<<chemicalName<<" : "<<p_daughter_cell_data->GetItem(chemicalName)<<std::endl;
+            daughter_cell_threshold_species_concentrations[p_threshold_chemistry->GetChemicalIndexByName(chemical_name)] = p_daughter_cell_data->GetItem(chemical_name);
         }
     }
 
-    // update chemical cell cycles for each of the daughter cells
+    // Update chemical cell cycles for each of the daughter cells
     static_cast<SimpleChemicalThresholdCellCycleModel*>(this->GetCellCycleModel())->SetSpeciesConcentrations(prime_cell_threshold_species_concentrations);
     static_cast<SimpleChemicalThresholdCellCycleModel*>(p_new_cell->GetCellCycleModel())->SetSpeciesConcentrations(daughter_cell_threshold_species_concentrations);
 
-    // update Ode from cell data for each of the daughter cells
+    // Update ODE from cell data for each of the daughter cells
     static_cast<ChemicalSrnModel*>(this->GetSrnModel())->UpdateOdeStatesFromCellData();
     static_cast<ChemicalSrnModel*>(p_new_cell->GetSrnModel())->UpdateOdeStatesFromCellData();
     
     return p_new_cell;
 }
 
-void ChemicalCell::DetermineSplitRation()
+void ChemicalCell::DetermineSplitRatio()
 {
     mSplitRatio = 0.5;
 }
 
 double ChemicalCell::SplitParentCellData(double current_parent_value)
 {
-    return current_parent_value*GetSplitRation();
+    return current_parent_value*GetSplitRatio();
 }
 
-double ChemicalCell::GetSplitRation()
+double ChemicalCell::GetSplitRatio()
 {
     return mSplitRatio;
 }
 
-void ChemicalCell::SetSplitRation(double split_ratio)
+void ChemicalCell::SetSplitRatio(double split_ratio)
 {
     mSplitRatio = split_ratio;
 }

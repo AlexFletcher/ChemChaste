@@ -43,109 +43,93 @@ public:
 
     void TestStateVariableRegister()
     {
-        std::cout<<"-----------------------"<<std::endl;
-        std::cout<<"StateVariableRegister"<<std::endl;
-        std::cout<<"-----------------------"<<std::endl;
-
-
         std::vector<std::string> system_1 = {"A", "B"};
         std::vector<std::string> system_2 = {"B", "C"};
-        
 
         StateVariableRegister* register_1_2  = new StateVariableRegister(system_1); 
 
-        std::cout<<"Read state variable register:"<<std::endl;
+        std::cout << "Read state variable register:" << std::endl;
         for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
         {
-            std::cout<<register_1_2->RetrieveStateVariableName(i)<<std::endl;
+            std::cout << register_1_2->RetrieveStateVariableName(i) << std::endl;
         }
 
-        std::cout<<"Add new system to state register"<<std::endl;
+        std::cout << "Add new system to state register" << std::endl;
 
         register_1_2->AddStateVariableVector(system_2);
 
-        std::cout<<"Read state variable register:"<<std::endl;
+        std::cout << "Read state variable register:" << std::endl;
         for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
         {
-            std::cout<<register_1_2->RetrieveStateVariableName(i)<<std::endl;
+            std::cout << register_1_2->RetrieveStateVariableName(i) << std::endl;
         }
 
-        std::cout<<"Add new variable D to state register"<<std::endl;
+        std::cout << "Add new variable D to state register" << std::endl;
 
         register_1_2->AddStateVariable("D");
 
-        std::cout<<"Read state variable register:"<<std::endl;
+        std::cout << "Read state variable register:" << std::endl;
         for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
         {
-            std::cout<<register_1_2->RetrieveStateVariableName(i)<<std::endl;
+            std::cout << register_1_2->RetrieveStateVariableName(i) << std::endl;
         }
 
-        std::cout<<"Read index of variable in state register"<<std::endl;
+        std::cout << "Read index of variable in state register" << std::endl;
 
         std::vector<std::string> variable_set = {"A","C"};
         for (unsigned i=0; i<variable_set.size(); i++)
         {
-            std::cout<<variable_set[i]<<": "<<register_1_2->RetrieveStateVariableIndex(variable_set[i])<<std::endl;
+            std::cout << variable_set[i]<<": "<<register_1_2->RetrieveStateVariableIndex(variable_set[i]) << std::endl;
         }
 
-
-        std::cout<<"Remove variable B from state register"<<std::endl;
+        std::cout << "Remove variable B from state register" << std::endl;
 
         register_1_2->RemoveStateVariable("B");
 
-        std::cout<<"Read state variable register:"<<std::endl;
+        std::cout << "Read state variable register:" << std::endl;
         for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
         {
-            std::cout<<register_1_2->RetrieveStateVariableName(i)<<std::endl;
+            std::cout << register_1_2->RetrieveStateVariableName(i) << std::endl;
         }
 
-        
-
-        std::cout<<"Match registers and crossreference indices: "<<std::endl;
+        std::cout << "Match registers and crossreference indices: " << std::endl;
         std::vector<std::string> system_3 = {"D", "C"};
         StateVariableRegister* register_3  = new StateVariableRegister(system_3); 
 
-        std::cout<<"Read state variable register_3:"<<std::endl;
+        std::cout << "Read state variable register_3:" << std::endl;
         for (unsigned i=0; i<register_3->GetNumStateVariables(); i++)
         {
-            std::cout<<register_3->RetrieveStateVariableName(i)<<std::endl;
+            std::cout << register_3->RetrieveStateVariableName(i) << std::endl;
         }
-        
-        
-        
 
-        std::cout<<"Common variables: "<<std::endl;
+        std::cout << "Common variables: " << std::endl;
         std::vector<std::string> matchedNames = register_1_2 ->FindCommonNamesInRegisters(register_3);
         for (unsigned i=0; i<matchedNames.size(); i++)
         {
-            std::cout<<matchedNames[i]<<std::endl;
+            std::cout << matchedNames[i] << std::endl;
         }
-        std::cout<<"System_3 variables locations in systems_1_2: "<<std::endl;
+        std::cout << "System_3 variables locations in systems_1_2: " << std::endl;
         std::vector<unsigned> matchedIndicesThis = register_1_2 ->FindIndicesInThisRegister(register_3);
         for (unsigned i=0; i<matchedIndicesThis.size(); i++)
         {
-            std::cout<<matchedIndicesThis[i]<<std::endl;
+            std::cout << matchedIndicesThis[i] << std::endl;
         }
-        std::cout<<"System_1_2 variables locations in systems_3: "<<std::endl;
+        std::cout << "System_1_2 variables locations in systems_3: " << std::endl;
         std::vector<unsigned> matchedIndicesThat = register_1_2 ->FindIndicesInThatRegister(register_3);
         for (unsigned i=0; i<matchedIndicesThat.size(); i++)
         {
-            std::cout<<matchedIndicesThat[i]<<std::endl;
+            std::cout << matchedIndicesThat[i] << std::endl;
         }
-
     }
 
     void TestHomogenousDiffusionInhomogenousOde()
     {
-
         // direct call to solver for a hard code mesh 
-
 
         // make mixed nodal ode vector of consumerproducer and schnackenberg odes
         // consumerproducer acting on state variables A, U
 
         // scnackenberg acting on state variables U, V
-
 
         // system properties
         const unsigned probDim =3;
@@ -160,12 +144,13 @@ public:
         MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
 
         // Process Boundary Conditions
-        std::cout<<"Process Boundary Conditions"<<std::endl;
+        std::cout << "Process Boundary Conditions" << std::endl;
         BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
         std::vector<bool> areNeumannBoundaryConditions(probDim, false);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+        {
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -189,7 +174,7 @@ public:
                 }
             }
         }
-        std::cout<<"Initial conditions"<<std::endl;
+        std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
@@ -200,17 +185,15 @@ public:
             }
         }
         // PETSc Vec
-        std::cout<<"PETSc Vec"<<std::endl;
+        std::cout << "PETSc Vec" << std::endl;
         Vec initial_condition = PetscTools::CreateVec(init_conds);
 
-
-
         // pde system
-        std::cout<<"Pde"<<std::endl;
+        std::cout << "Pde" << std::endl;
         InhomogenousParabolicPdeOdeSystem<elementDim, spaceDim, probDim> pde(diffusionVector);
         pde.SetStateVariableRegister(new StateVariableRegister({"A","U","V"}));
         // coupled ode system
-        std::cout<<"Ode loop"<<std::endl;
+        std::cout << "Ode loop" << std::endl;
         std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
 
         //EulerIvpOdeSolver euler_solver;
@@ -227,12 +210,14 @@ public:
                 p_ConPro_new->SetStateVariableRegister(new StateVariableRegister({"A","U"}));
                 odeSystem.push_back(p_ConPro_new);
 
-            }else if (i==27 || i==72)
+            }
+            else if (i==27 || i==72)
             {
                 InhomogenousOdeConsumerProducer* p_ConPro_new = new InhomogenousOdeConsumerProducer(0, 1, 0, 0);
                 p_ConPro_new->SetStateVariableRegister(new StateVariableRegister({"A","U"}));
                 odeSystem.push_back(p_ConPro_new); 
-            }else{
+            }
+            else{
                 InhomogenousOdeSchnackenbergCoupledPdeOdeSystem* p_Sch_new = new InhomogenousOdeSchnackenbergCoupledPdeOdeSystem(1, 1, 1, 1);
                 p_Sch_new->SetStateVariableRegister(new StateVariableRegister({"U","V"}));
                 odeSystem.push_back(p_Sch_new);
@@ -240,11 +225,11 @@ public:
             boost::shared_ptr<EulerIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
             odeSolverSystem.push_back(p_solver);
         }
-        std::cout<<"Number odesAtNodes: "<<p_mesh->GetNumNodes()<<std::endl;
+        std::cout << "Number odesAtNodes: "<<p_mesh->GetNumNodes() << std::endl;
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
 
-        std::cout<<"Solver"<<std::endl;
+        std::cout << "Solver" << std::endl;
         // solver
         InhomogenousCoupledPdeOdeSolver<elementDim,spaceDim,probDim> solver(p_mesh, &pde, &bcc, odeSystem, odeSolverSystem);
 
@@ -256,20 +241,16 @@ public:
         solver.SetOutputDirectory("TestHomogenousDiffusionInhomogenousOde_test");
         solver.SetInitialCondition(initial_condition);
         // solve
-        std::cout<<"Solve"<<std::endl;
+        std::cout << "Solve" << std::endl;
         solver.SolveAndWriteResultsToFile();
-        std::cout<<"Clean"<<std::endl;
+        std::cout << "Clean" << std::endl;
 
         // clean
         PetscTools::Destroy(initial_condition); //double free or corruption (out)
-
-
     }
 
     void TestDomainField()
     {
-        std::cout<<"TestAbstractDomainField"<<std::endl;
-
         std::string domainFilename = "/home/chaste/projects/ChemicalChaste/src/Data/Domain.csv";
         std::string domainKeyFilename = "/home/chaste/projects/ChemicalChaste/src/Data/DomainKey.csv";
         std::string odeLabelFilename = "/home/chaste/projects/ChemicalChaste/src/Data/NodeSelector.csv";
@@ -277,7 +258,6 @@ public:
         std::string diffusionFilename = "/home/chaste/projects/ChemicalChaste/src/Data/DiffusionDatabaseFile.csv";
         std::string initialConditionsFilename = "/home/chaste/projects/ChemicalChaste/src/Data/InitialConditionFile.csv";
         std::string boundaryConditionsFilename = "/home/chaste/projects/ChemicalChaste/src/Data/BoundaryConditionFile.csv";
-
 
         AbstractDomainField* p_field = new AbstractDomainField(domainFilename, domainKeyFilename, odeLabelFilename, odeKeyFilename, diffusionFilename);
         p_field->ParseInitialConditionsFromFile(initialConditionsFilename);
@@ -288,27 +268,20 @@ public:
         std::vector<double> boundaryConditions = p_field->GetBoundaryConditionValues();
         std::vector<std::string> boundaryTypes = p_field->GetBoundaryConditionTypes();
         
-        
         for (unsigned i=0; i<initialConditions.size();i++)
         {
-            std::cout<<"init: "<<initialConditions[i]<<std::endl;
+            std::cout << "init: "<<initialConditions[i] << std::endl;
         }
 
         for (unsigned i=0; i<boundaryConditions.size();i++)
         {
-            std::cout<<"value: "<<boundaryConditions[i]<<std::endl;
-            std::cout<<"type : "<<boundaryTypes[i]<<std::endl;
-        }
-        
-        
+            std::cout << "value: "<<boundaryConditions[i] << std::endl;
+            std::cout << "type : "<<boundaryTypes[i] << std::endl;
+        }        
     }
 
     void TestChemicalDomainField()
     {
-        
-        std::cout<<"----------------------------------------------"<<std::endl;
-        std::cout<<"TestChemicalDomainField"<<std::endl;
-        std::cout<<"----------------------------------------------"<<std::endl;
         // system properties        
         std::string reactionFileRoot = "/home/chaste/projects/ChemicalChaste/src/Data/";
         std::string domainFilename = "/home/chaste/projects/ChemicalChaste/src/Data/Domain.csv";
@@ -334,14 +307,13 @@ public:
         // print out the diffusion database
         p_field->PrintDiffusionDatabase();
 
-
         // get domain variable register
-        std::cout<<"Read domain state variable register"<<std::endl;
+        std::cout << "Read domain state variable register" << std::endl;
         StateVariableRegister* chemical_domain_register = p_field->GetDomainStateVariableRegister();
-        std::cout<<"number of state variables: "<<chemical_domain_register->GetNumStateVariables()<<std::endl;
+        std::cout << "number of state variables: "<<chemical_domain_register->GetNumStateVariables() << std::endl;
         for (unsigned index=0; index<chemical_domain_register->GetNumStateVariables(); index++)
         {
-            std::cout<<"State: "<<index<<" : "<<chemical_domain_register->RetrieveStateVariableName(index)<<std::endl;
+            std::cout << "State: "<<index<<" : "<<chemical_domain_register->RetrieveStateVariableName(index) << std::endl;
         }
     
         // get diffusion value at point
@@ -349,13 +321,13 @@ public:
 
         double diffusionValueAtPoint = p_field->GetDiffusionValueBasedOnPoint(chastePoint,1);
 
-        std::cout<<"Diffusion value at 1.0,1.0: "<<diffusionValueAtPoint<<std::endl;
+        std::cout << "Diffusion value at 1.0,1.0: "<<diffusionValueAtPoint << std::endl;
 
         // run a singlar ode system
         unsigned node_selector = 92;
         AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem* p_ode_system = p_field->GetOdeSystem()[node_selector];
-        std::cout<<"number of Species: "<<p_ode_system->GetNumSpecies()<<std::endl;
-        std::cout<<"number of Reactions: "<<p_ode_system->GetNumReactions()<<std::endl;
+        std::cout << "number of Species: "<<p_ode_system->GetNumSpecies() << std::endl;
+        std::cout << "number of Reactions: "<<p_ode_system->GetNumReactions() << std::endl;
         std::vector<double> rY(p_ode_system->GetNumSpecies(),1.0);
         std::vector<double> rDY(p_ode_system->GetNumSpecies(),0.0);
 
@@ -363,18 +335,12 @@ public:
 
         for (unsigned index=0; index < p_ode_system->GetNumSpecies(); index++)
         {
-            std::cout<<"Species "<<index<<": "<<"rDY: "<<rDY[index]<<std::endl;
-        }
-
-        
+            std::cout << "Species " << index << ": " << "rDY: " << rDY[index] << std::endl;
+        }        
     }
 
     void TestInhomogenousChemicalPde()
     {
-        
-        std::cout<<"----------------------------------------------"<<std::endl;
-        std::cout<<"TestInhomogenousChemicalPde"<<std::endl;
-        std::cout<<"----------------------------------------------"<<std::endl;
         // system properties        
         std::string reactionFileRoot = "/home/chaste/projects/ChemicalChaste/src/Data/";
         std::string domainFilename = "/home/chaste/projects/ChemicalChaste/src/Data/Domain.csv";
@@ -385,21 +351,20 @@ public:
 
         ChemicalDomainField* p_field = new ChemicalDomainField(reactionFileRoot,domainFilename, domainKeyFilename, odeLabelFilename, odeKeyFilename, diffusionFilename);
 
-        std::cout<<"File probDim: "<<p_field ->GetProblemDimensions()<<std::endl;
+        std::cout << "File probDim: "<<p_field ->GetProblemDimensions() << std::endl;
         MutableMesh<2,2>* p_mesh = p_field ->GetMeshGenerator()->GetMesh();
-        std::cout<<"File mesh number nodes: "<<p_mesh->GetNumNodes()<<std::endl;
+        std::cout << "File mesh number nodes: "<<p_mesh->GetNumNodes() << std::endl;
         
         // System properties
         const unsigned probDim =3; // need to set manually
         const unsigned spaceDim=2;
         const unsigned elementDim=2;
 
-
         std::vector<double> initValues(probDim,1.0);
         std::vector<double> bcValues = initValues;
 
         // Process Boundary Conditions
-        std::cout<<"Process Boundary Conditions"<<std::endl;
+        std::cout << "Process Boundary Conditions" << std::endl;
         BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
         std::vector<bool> areNeumannBoundaryConditions(probDim, false);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
@@ -429,7 +394,7 @@ public:
             }
         }
       
-        std::cout<<"Initial conditions"<<std::endl;
+        std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_field->GetDomainMesh()->GetNumNodes());
         for (unsigned i=0; i<p_field->GetDomainMesh()->GetNumNodes(); i++)
@@ -439,20 +404,14 @@ public:
                 init_conds[probDim*i + pdeDim] =fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
             }
         }
-
         
         // PETSc Vec
-        std::cout<<"PETSc Vec"<<std::endl;
+        std::cout << "PETSc Vec" << std::endl;
         Vec initial_condition = PetscTools::CreateVec(init_conds);
 
         // pde system
-        std::cout<<"Pde"<<std::endl;
+        std::cout << "Pde" << std::endl;
         InhomogenousParabolicPdeOdeSystem<elementDim, spaceDim, probDim> pde(p_field);
-  
-
-
-   
-        std::cout<<"Number odesAtNodes: "<<p_mesh->GetNumNodes()<<std::endl;
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver>> odeSolverSystem;
@@ -464,7 +423,7 @@ public:
             odeSolverSystem.push_back(p_solver);
         }
 
-        std::cout<<"Solver"<<std::endl;
+        std::cout << "Solver" << std::endl;
         // solver
 
         InhomogenousCoupledPdeOdeSolver<elementDim,spaceDim,probDim> solver(p_mesh, &pde, &bcc, odeSystem, odeSolverSystem);
@@ -477,22 +436,21 @@ public:
         solver.SetOutputDirectory("TestInhomogenousParabolicPdeOdeSystemFromFile");
         solver.SetInitialCondition(initial_condition);
         // solve
-        std::cout<<"Solve"<<std::endl;
+        std::cout << "Solve" << std::endl;
 
         solver.SolveAndWriteResultsToFile();
-        std::cout<<"Clean"<<std::endl;
+        std::cout << "Clean" << std::endl;
 
         // clean
         PetscTools::Destroy(initial_condition);
-        
     }
     
     void TestExtendedBoundaryConditionsContainer()
     {
         // set get test for 2D from TestBoundaryConditionsContainer
-        std::cout<<"----------------------------------------------"<<std::endl;
-        std::cout<<"TestExtendedBoundaryConditionsContainer"<<std::endl;
-        std::cout<<"----------------------------------------------"<<std::endl;
+        std::cout << "----------------------------------------------" << std::endl;
+        std::cout << "TestExtendedBoundaryConditionsContainer" << std::endl;
+        std::cout << "----------------------------------------------" << std::endl;
 
         unsigned num_nodes = 10;
         const unsigned probDim =5;
@@ -502,7 +460,8 @@ public:
 
         std::vector<Node<2>*> nodes(num_nodes);
 
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+        {
             vectorConstBCs.push_back(new ConstBoundaryCondition<2>(pdeDim*bcValues[pdeDim]));
         }
         
@@ -514,9 +473,7 @@ public:
             {
                 bcc.AddDirichletBoundaryCondition(nodes[i], vectorConstBCs[pdeDim], pdeDim);
             }
-
         }
-            
 
         for (unsigned i=0; i<num_nodes; i++)
         {
@@ -524,7 +481,7 @@ public:
             for (unsigned j=0; j<probDim;j++)
             {
                 double value = bcc.GetDirichletBCValue(nodes[i],j);
-                std::cout<<"value node: "<<i<<" "<<value<<std::endl;
+                std::cout << "value node: "<<i<<" "<<value << std::endl;
             }
             
         }
@@ -534,9 +491,6 @@ public:
             delete nodes[i];
         }
     }
-
-
 };
-
 
 #endif

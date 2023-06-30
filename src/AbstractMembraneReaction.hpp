@@ -374,7 +374,7 @@ AbstractChemical* AbstractMembraneReaction::GetBulkSubstratesByIndex(unsigned in
     }
     else
     {
-        std::cout<<"Error: AbstractMembraneReaction::GetBulkSubstratesByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractMembraneReaction::GetBulkSubstratesByIndex(unsigned index), index out of bounds" << std::endl;
         return new AbstractChemical();
     } 
 }
@@ -392,7 +392,7 @@ AbstractChemical* AbstractMembraneReaction::GetCellSubstratesByIndex(unsigned in
     }
     else
     {
-        std::cout<<"Error: AbstractMembraneReaction::GetCellSubstratesByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractMembraneReaction::GetCellSubstratesByIndex(unsigned index), index out of bounds" << std::endl;
         return new AbstractChemical();
     } 
 }
@@ -410,7 +410,7 @@ AbstractChemical* AbstractMembraneReaction::GetBulkProductsByIndex(unsigned inde
     }
     else
     {
-        std::cout<<"Error: AbstractMembraneReaction::GetBulkProductsByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractMembraneReaction::GetBulkProductsByIndex(unsigned index), index out of bounds" << std::endl;
         return new AbstractChemical();
     } 
 }
@@ -428,7 +428,7 @@ AbstractChemical* AbstractMembraneReaction::GetCellProductsByIndex(unsigned inde
     }
     else
     {
-        std::cout<<"Error: AbstractMembraneReaction::GetCellProductsByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractMembraneReaction::GetCellProductsByIndex(unsigned index), index out of bounds" << std::endl;
         return new AbstractChemical();
     } 
 }
@@ -466,7 +466,7 @@ unsigned AbstractMembraneReaction::GetBulkStoichSubstratesByIndex(unsigned index
     }
     else
     {
-        std::cout<<"Error: AbstractMembraneReaction::GetBulkStoichSubstratesByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractMembraneReaction::GetBulkStoichSubstratesByIndex(unsigned index), index out of bounds" << std::endl;
         return 0;
     } 
 }
@@ -489,7 +489,7 @@ unsigned AbstractMembraneReaction::GetCellStoichSubstratesByIndex(unsigned index
     }
     else
     {
-        std::cout<<"Error: AbstractMembraneReaction::GetCellStoichSubstratesByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractMembraneReaction::GetCellStoichSubstratesByIndex(unsigned index), index out of bounds" << std::endl;
         return 0;
     } 
 }
@@ -512,7 +512,7 @@ unsigned AbstractMembraneReaction::GetBulkStoichProductsByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractMembraneReaction::GetBulkStoichProductsByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractMembraneReaction::GetBulkStoichProductsByIndex(unsigned index), index out of bounds" << std::endl;
         return 0;
     } 
 }
@@ -535,7 +535,7 @@ unsigned AbstractMembraneReaction::GetCellStoichProductsByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractMembraneReaction::GetCellStoichProductsByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractMembraneReaction::GetCellStoichProductsByIndex(unsigned index), index out of bounds" << std::endl;
         return 0;
     } 
 }

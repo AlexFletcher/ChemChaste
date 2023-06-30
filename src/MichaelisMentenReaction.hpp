@@ -127,7 +127,7 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
     // a basic multiplicative rate constant, Michaelis-Menten constant and enzyme (catalytic) identifiers (names)
     // There may be multiple spectator species but only one catalytic reaction rate or 
     // Michaelis-Menten constant, they can be in any order
-    //std::cout<<"MichaelisMentenReaction::ParseReactionInformation( - start"<<std::endl;
+    //std::cout << "MichaelisMentenReaction::ParseReactionInformation( - start" << std::endl;
     // form the vector of delimiters
     unsigned numDelimiters = 3;
     std::vector<std::string> delimiterVector(numDelimiters,"");
@@ -146,19 +146,19 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
     if (positionSpectator==std::string::npos)
     {
         // spectator not found
-        std::cout<<"Error MichaelisMentenReaction::ParseReactionInformation: Enzyme not found"<<std::endl;
+        std::cout << "Error MichaelisMentenReaction::ParseReactionInformation: Enzyme not found" << std::endl;
     }
 
     if (positionRate==std::string::npos)
     {
         // spectator not found
-        std::cout<<"Error MichaelisMentenReaction::ParseReactionInformation: reaction rate not found: "<< mIrreversibleRateName<<std::endl;
+        std::cout << "Error MichaelisMentenReaction::ParseReactionInformation: reaction rate not found: "<< mIrreversibleRateName << std::endl;
     }
 
     if (positionMichaelisMenten==std::string::npos)
     {
         // spectator not found
-        std::cout<<"Error MichaelisMentenReaction::ParseReactionInformation: Michaelis-Menten constant not found"<<std::endl;
+        std::cout << "Error MichaelisMentenReaction::ParseReactionInformation: Michaelis-Menten constant not found" << std::endl;
     }
 
     double reactionRate;
@@ -224,7 +224,7 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
     SetSpectatorNames(spectatorNames);
     SetNumSpectators(spectatorNames.size());
     UpdateSystemChemistry(spectatorNames);
-    //std::cout<<"MichaelisMentenReaction::ParseReactionInformation( - end"<<std::endl;
+    //std::cout << "MichaelisMentenReaction::ParseReactionInformation( - end" << std::endl;
 }
 
 void MichaelisMentenReaction::SetKm(double Km)

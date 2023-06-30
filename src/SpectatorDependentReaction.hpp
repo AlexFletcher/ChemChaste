@@ -152,7 +152,7 @@ void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_i
     if (positionSpectator==std::string::npos)
     {
         // spectator not found
-        std::cout<<"Error SpectatorDependentReaction::ParseReactionInformation: spectator species not found"<<std::endl;
+        std::cout << "Error SpectatorDependentReaction::ParseReactionInformation: spectator species not found" << std::endl;
     }
 
     // assume that there must be reaction rate constant
@@ -161,7 +161,7 @@ void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_i
     if (positionRate==std::string::npos)
     {
         // spectator not found
-        std::cout<<"Error SpectatorDependentReaction::ParseReactionInformation: reaction rate not found"<<std::endl;
+        std::cout << "Error SpectatorDependentReaction::ParseReactionInformation: reaction rate not found" << std::endl;
     }
 
     double reactionRate;

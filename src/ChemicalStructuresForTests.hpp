@@ -580,14 +580,14 @@ class ChemicalStructuresForTests
             // generate domain
             // run the domain field set up and parse files
             ChemicalDomainFieldTemplated<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldTemplated<elementDim,spaceDim,probDim>(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
-            //std::cout<<"chemical structure number of mesh nodes: "<<p_Pde_field ->rGetDomainFeMesh()->GetNumNodes()<<std::endl;
+            //std::cout << "chemical structure number of mesh nodes: "<<p_Pde_field ->rGetDomainFeMesh()->GetNumNodes() << std::endl;
             
             SetPtrChemicalDomain(p_Pde_field);
         }
 
         void SetUpChemicalDomainFieldForCellCoupling()
         {
-            //std::cout<<"SetUpChemicalDomainFieldForCellCoupling()"<<std::endl; 
+            //std::cout << "SetUpChemicalDomainFieldForCellCoupling()" << std::endl; 
             // Variables for the user modify
             std::string dataFileRoot = "/home/chaste/projects/ChemChaste/src/Data/TemplateChemicalSimulation/";
             std::string cellLabelFilename = "";
@@ -611,7 +611,7 @@ class ChemicalStructuresForTests
             ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>(dataFileRoot,dataFileRoot+cellLabelFilename,dataFileRoot+cellKeyFilename,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename, dataFileRoot+initialConditionsFilename, dataFileRoot+boundaryConditionsFilename);
 
             SetPtrChemicalDomainFieldForCellCoupling(p_Pde_field);
-            //std::cout<<"SetUpChemicalDomainFieldForCellCoupling() - end"<<std::endl; 
+            //std::cout << "SetUpChemicalDomainFieldForCellCoupling() - end" << std::endl; 
         }
 
         void SetUpSrnChemicalReactionSystem()

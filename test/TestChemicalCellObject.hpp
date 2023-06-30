@@ -96,7 +96,8 @@
 #include "ChemicalStructuresForTests.hpp"
 #include "ChemicalCellFromFile.hpp"
 
-struct ControlStruct {
+struct ControlStruct
+{
     bool ChemicalCellObjectReadFromFile = false;
     bool ChemicalCellObjectInPde = true;
 } control;
@@ -124,30 +125,30 @@ public:
                                     dataFileRoot+transportPropertyFilename,
                                     dataFileRoot+membranePropertyFilename);
 
-            std::cout<<"===================================================="<<std::endl;
+            std::cout << "====================================================" << std::endl;
 
             CellPtr p_cell = p_cell_reader->GetCellPtr();
 
-            std::cout<<"Chemical cell property"<<std::endl;
+            std::cout << "Chemical cell property" << std::endl;
         
             boost::shared_ptr<ChemicalCellProperty> p_cell_chemical = p_cell_reader->GetChemicalCellProperty();
 
-            std::cout<<"Transport cell property"<<std::endl;
+            std::cout << "Transport cell property" << std::endl;
 
             boost::shared_ptr<TransportCellProperty> p_cell_transport = p_cell_reader->GetTransportCellProperty();
 
             StateVariableRegister* p_transport_bulk_register = p_cell_transport->GetBulkStateVariableRegister();
-            std::cout<<"size register: "<< p_transport_bulk_register->GetNumStateVariables()<<std::endl;
+            std::cout << "size register: "<< p_transport_bulk_register->GetNumStateVariables() << std::endl;
             for (unsigned i=0; i<p_transport_bulk_register->GetNumStateVariables(); i++)
             {
-                std::cout<<"bulk: "<< p_transport_bulk_register->RetrieveStateVariableName(i)<<std::endl;
+                std::cout << "bulk: "<< p_transport_bulk_register->RetrieveStateVariableName(i) << std::endl;
             }
             
             StateVariableRegister* p_transport_cell_register = p_cell_transport->GetCellStateVariableRegister();
-            std::cout<<"size register: "<< p_transport_cell_register->GetNumStateVariables()<<std::endl;
+            std::cout << "size register: "<< p_transport_cell_register->GetNumStateVariables() << std::endl;
             for (unsigned i=0; i<p_transport_cell_register->GetNumStateVariables(); i++)
             {
-                std::cout<<"cell: "<< p_transport_cell_register->RetrieveStateVariableName(i)<<std::endl;
+                std::cout << "cell: "<< p_transport_cell_register->RetrieveStateVariableName(i) << std::endl;
             }
 
 
@@ -161,28 +162,28 @@ public:
             p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
 
 
-            std::cout<<"Membrane cell property"<<std::endl;
+            std::cout << "Membrane cell property" << std::endl;
 
             boost::shared_ptr<MembraneCellProperty> p_cell_membrane = p_cell_reader->GetMembraneCellProperty();
 
             StateVariableRegister* p_membrane_bulk_register = p_cell_membrane->GetBulkStateVariableRegister();
-            std::cout<<"size register: "<< p_membrane_bulk_register->GetNumStateVariables()<<std::endl;
+            std::cout << "size register: "<< p_membrane_bulk_register->GetNumStateVariables() << std::endl;
             for (unsigned i=0; i<p_membrane_bulk_register->GetNumStateVariables(); i++)
             {
-                std::cout<<"bulk: "<< p_membrane_bulk_register->RetrieveStateVariableName(i)<<std::endl;
+                std::cout << "bulk: "<< p_membrane_bulk_register->RetrieveStateVariableName(i) << std::endl;
             }
 
             StateVariableRegister* p_membrane_cell_register = p_cell_membrane->GetCellStateVariableRegister();
-            std::cout<<"size register: "<< p_membrane_cell_register->GetNumStateVariables()<<std::endl;
+            std::cout << "size register: "<< p_membrane_cell_register->GetNumStateVariables() << std::endl;
             for (unsigned i=0; i<p_membrane_cell_register->GetNumStateVariables(); i++)
             {
-                std::cout<<"cell: "<< p_membrane_cell_register->RetrieveStateVariableName(i)<<std::endl;
+                std::cout << "cell: "<< p_membrane_cell_register->RetrieveStateVariableName(i) << std::endl;
             }
             
 
 
             
-            std::cout<<"Membrane thickness :"<<p_cell_membrane->GetMembraneThickness()<<std::endl;
+            std::cout << "Membrane thickness :"<<p_cell_membrane->GetMembraneThickness() << std::endl;
         /*
             AbstractTransportOdeSystem transportOde(p_cell_transport->GetTransportReactionSystem());
             EulerIvpOdeSolver euler_solver;
@@ -199,12 +200,7 @@ public:
           
             AbstractChemistry* this_cell_chemistry = p_model->GetCellChemistry();
             unsigned numChemicals = this_cell_chemistry->GetNumberChemicals();
-            std::cout<<"number of chemicals: "<<numChemicals<<std::endl;
-
-
-
-
-
+            std::cout << "number of chemicals: "<<numChemicals << std::endl;
         }
     }
 
@@ -219,7 +215,6 @@ public:
             std::string transportPropertyFilename = "TransportReactions.txt";
             std::string srnFilename = "Srn.txt";
             std::string cellCycleFilename = "SpeciesThreshold.csv";
-
 
             // make mesh of cell with associated mesh based cell population
             HoneycombMeshGenerator generator(2, 2);    // Parameters are: cells across, cells up
@@ -240,12 +235,7 @@ public:
                                     dataFileRoot+transportPropertyFilename,
                                     dataFileRoot+membranePropertyFilename);
 
-
-                //CellPtr p_cell = ;
-
                 cells.push_back(p_cell_reader->GetCellPtr());
-                
-                
             }
         
             MeshBasedCellPopulation<2> cell_population(*p_mesh, cells, location_indices);
@@ -262,13 +252,12 @@ public:
             
             ChemicalDomainFieldForCellCoupling<2,2,2>*& p_Pde_field = chemical_structure->rGetPtrChemicalDomainFieldForCellCoupling();
 
-            std::cout<<"initial conditions"<<std::endl;
+            std::cout << "initial conditions" << std::endl;
             std::vector<double> init_conditions = p_Pde_field->GetInitialNodeConditions();
             for (unsigned i=0; i<init_conditions.size(); i++)
             {
-                std::cout<<init_conditions[i]<<std::endl;
+                std::cout << init_conditions[i] << std::endl;
             }
-
             
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<2,2,2>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<2,2,2>(p_Pde_field, p_cuboid));
             
@@ -289,8 +278,7 @@ public:
                 boost::shared_ptr<CellDataItemWriter<2,2>> dataWriter(new CellDataItemWriter<2,2>(chemicalCellASpeciesNames[i]));
                 cell_population.AddCellWriter(dataWriter);
             }
-                
-        
+      
             OffLatticeSimulation<2> simulator(cell_population);
 
             simulator.AddSimulationModifier(p_pde_modifier);
@@ -304,16 +292,9 @@ public:
             p_linear_force->SetCutOffLength(1.5);
             simulator.AddForce(p_linear_force);
 
-            std::cout<<"=============================================="<<std::endl;
-            std::cout<<"OffLatticeSimulation->AbstractCellBasedSumulation :: Solve()"<<std::endl;
-            std::cout<<"=============================================="<<std::endl;
             simulator.Solve();
-
-
-
         }
     }
-
 };
 
 #endif

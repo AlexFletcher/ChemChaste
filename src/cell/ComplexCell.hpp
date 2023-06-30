@@ -61,15 +61,15 @@ public:
 
     virtual CellPtr Divide();
 
-    virtual void DetermineSplitRation();
+    virtual void DetermineSplitRatio();
 
     virtual double SplitParentCellData(double);
 
     bool IsChemicalShared(std::string);
 
-    double GetSplitRation();
+    double GetSplitRatio();
 
-    void SetSplitRation(double);
+    void SetSplitRatio(double);
 
     std::vector<std::string> GetShareKey();
 
@@ -168,7 +168,7 @@ CellPtr ComplexCell::Divide()
     }
 
     // based on the parent cell data determine the split ratio
-    DetermineSplitRation();
+    DetermineSplitRatio();
 
     // share the two cellDatas between the two cells, use cellChemistry
     // split chemical cell data
@@ -285,7 +285,7 @@ CellPtr ComplexCell::Divide()
         if (!thresholdChemistry->CheckChemical(new AbstractChemical(chemicalName)))
         {
             prime_cell_threshold_species_concentrations[thresholdChemistry->GetChemicalIndexByName(chemicalName)] = p_cell_data->GetItem(chemicalName);
-            //std::cout<<"parent concentration: "<<chemicalName<<" : "<<p_cell_data->GetItem(chemicalName)<<std::endl;
+            //std::cout << "parent concentration: "<<chemicalName<<" : "<<p_cell_data->GetItem(chemicalName) << std::endl;
         }
     }
 
@@ -309,14 +309,14 @@ CellPtr ComplexCell::Divide()
     return p_new_cell;
 }
 
-void ComplexCell::DetermineSplitRation()
+void ComplexCell::DetermineSplitRatio()
 {
     mSplitRatio = 0.5;
 }
 
 double ComplexCell::SplitParentCellData(double current_parent_value)
 {
-    return current_parent_value*GetSplitRation();
+    return current_parent_value*GetSplitRatio();
 }
 
 bool ComplexCell::IsChemicalShared(std::string chemical_name)
@@ -343,12 +343,12 @@ bool ComplexCell::IsChemicalShared(std::string chemical_name)
     return isChemicalShared; 
 }
 
-double ComplexCell::GetSplitRation()
+double ComplexCell::GetSplitRatio()
 {
     return mSplitRatio;
 }
 
-void ComplexCell::SetSplitRation(double split_ratio)
+void ComplexCell::SetSplitRatio(double split_ratio)
 {
     mSplitRatio = split_ratio;
 }

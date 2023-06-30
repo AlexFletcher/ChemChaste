@@ -233,7 +233,7 @@ void SimpleChemicalThresholdCellCycleModel::SetSpeciesConcentrationsByIndex(doub
     else
     {
         ///\todo Replace with EXCEPTION
-        std::cout<<"Error: SimpleChemicalThresholdCellCycleModel::SetSpeciesConcentrationsByIndex, index out of bounds"<<std::endl;
+        std::cout << "Error: SimpleChemicalThresholdCellCycleModel::SetSpeciesConcentrationsByIndex, index out of bounds" << std::endl;
     }
 }
 
@@ -261,7 +261,7 @@ void SimpleChemicalThresholdCellCycleModel::SetMaximumThresholdCheckByIndex(bool
     else
     {
         ///\todo Replace with EXCEPTION
-        std::cout<<"Error: SimpleChemicalThresholdCellCycleModel::SetMaximumThresholdCheckByIndex, index out of bounds"<<std::endl;
+        std::cout << "Error: SimpleChemicalThresholdCellCycleModel::SetMaximumThresholdCheckByIndex, index out of bounds" << std::endl;
     }
 }
 
@@ -274,7 +274,7 @@ void SimpleChemicalThresholdCellCycleModel::SetMinimumThresholdCheckByIndex(bool
     else
     {
         ///\todo Replace with EXCEPTION
-        std::cout<<"Error: SimpleChemicalThresholdCellCycleModel::SetMinimumThresholdCheckByIndex, index out of bounds"<<std::endl;
+        std::cout << "Error: SimpleChemicalThresholdCellCycleModel::SetMinimumThresholdCheckByIndex, index out of bounds" << std::endl;
     }
 }
 

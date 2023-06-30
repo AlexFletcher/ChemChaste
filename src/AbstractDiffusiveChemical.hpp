@@ -174,7 +174,7 @@ void AbstractDiffusiveChemical::AddDiffusiveDomainVector(std::vector<std::string
     }
     else
     {
-        std::cout<<"Error: AbstractDiffusiveChemical::AddDiffusiveDomainVector:   Domain vector and diffusivity vector not of equla size"<<std::endl;
+        std::cout << "Error: AbstractDiffusiveChemical::AddDiffusiveDomainVector:   Domain vector and diffusivity vector not of equla size" << std::endl;
     }
 }
 
@@ -221,7 +221,7 @@ std::string AbstractDiffusiveChemical::GetDiffusiveDomainByIndex(unsigned index)
     }
     else
     {    
-        std::cout<<"Error: AbstractDiffusiveChemical::GetDiffusiveDomainByIndex:   index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractDiffusiveChemical::GetDiffusiveDomainByIndex:   index out of bounds" << std::endl;
         return "Error";
     }
     
@@ -235,7 +235,7 @@ double AbstractDiffusiveChemical::GetChemicalDiffusivityByIndex(unsigned index)
     }
     else
     {    
-        std::cout<<"Error: AbstractDiffusiveChemical::GetChemicalDiffusivityByIndex:   index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractDiffusiveChemical::GetChemicalDiffusivityByIndex:   index out of bounds" << std::endl;
         return 0.0;
     }
 }

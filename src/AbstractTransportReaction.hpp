@@ -276,7 +276,7 @@ AbstractChemical* AbstractTransportReaction::GetBulkSpeciesByIndex(unsigned inde
     }
     else
     {
-        std::cout<<"Error: AbstractTransportReaction::GetBulkSpeciesByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractTransportReaction::GetBulkSpeciesByIndex(unsigned index), index out of bounds" << std::endl;
         return new AbstractChemical();
     } 
 }
@@ -294,7 +294,7 @@ AbstractChemical* AbstractTransportReaction::GetCellSpeciesByIndex(unsigned inde
     }
     else
     {
-        std::cout<<"Error: AbstractTransportReaction::GetCellSpeciesByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractTransportReaction::GetCellSpeciesByIndex(unsigned index), index out of bounds" << std::endl;
         return new AbstractChemical();
     } 
 }
@@ -322,7 +322,7 @@ unsigned AbstractTransportReaction::GetStoichBulkByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractTransportReaction::GetStoichBulkByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractTransportReaction::GetStoichBulkByIndex(unsigned index), index out of bounds" << std::endl;
         return 0;
     } 
 }
@@ -345,7 +345,7 @@ unsigned AbstractTransportReaction::GetStoichCellByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractTransportReaction::GetStoichCellByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractTransportReaction::GetStoichCellByIndex(unsigned index), index out of bounds" << std::endl;
         return 0;
     } 
 }

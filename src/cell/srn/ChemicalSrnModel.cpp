@@ -6,7 +6,7 @@ ChemicalSrnModel::ChemicalSrnModel(AbstractReactionSystem* pReactionSystem,boost
     //mpChemicalOdeSystem(new AbstractChemicalOdeSystem(pReactionSystem)),
     mpCellChemistry(pReactionSystem->GetSystemChemistry())
 {
-    //std::cout<<"ChemicalSrnModel::ChemicalSrnModel - start"<<std::endl;
+    //std::cout << "ChemicalSrnModel::ChemicalSrnModel - start" << std::endl;
     if (mpOdeSolver == boost::shared_ptr<AbstractCellCycleModelOdeSolver>())
     {
 #ifdef CHASTE_CVODE
@@ -20,7 +20,7 @@ ChemicalSrnModel::ChemicalSrnModel(AbstractReactionSystem* pReactionSystem,boost
 #endif //CHASTE_CVODE
     }
     assert(mpOdeSolver->IsSetUp());
-    //std::cout<<"ChemicalSrnModel::ChemicalSrnModel - end"<<std::endl;
+    //std::cout << "ChemicalSrnModel::ChemicalSrnModel - end" << std::endl;
 }
 
 ChemicalSrnModel::ChemicalSrnModel(const ChemicalSrnModel& rModel)

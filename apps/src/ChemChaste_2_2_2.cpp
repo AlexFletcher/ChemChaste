@@ -112,7 +112,7 @@ boost::program_options::store(parse_command_line(argc, argv, cmdline_options), v
 
 if (variables_map.count("config"))
 {
-std::cout<<"parse config file: "<<variables_map["config"].as<std::string>()<<" for run: "<<variables_map["ID"].as<unsigned>()<<std::endl;
+std::cout << "parse config file: "<<variables_map["config"].as<std::string>()<<" for run: "<<variables_map["ID"].as<unsigned>() << std::endl;
 
 std::ifstream Config_File(variables_map["config"].as<std::string>());
 if (Config_File)
@@ -121,7 +121,7 @@ boost::program_options::store(parse_config_file(Config_File, config_options), va
 }
 else
 {
-std::cout<<"Error: config file not found: "<<variables_map["config"].as<std::string>()<<std::endl;
+std::cout << "Error: config file not found: "<<variables_map["config"].as<std::string>() << std::endl;
 }
 }
 boost::program_options::notify(variables_map);
@@ -141,7 +141,7 @@ DestroySingletons();
 auto finish = std::chrono::high_resolution_clock::now();
 std::chrono::duration<double> elapsed = finish - start;
 
-std::cout<<"Simulation end: "<<variables_map["config"].as<std::string>()<<" for run: "<<variables_map["ID"].as<unsigned>()<<std::endl;
+std::cout << "Simulation end: "<<variables_map["config"].as<std::string>()<<" for run: "<<variables_map["ID"].as<unsigned>() << std::endl;
 std::cout << "Elapsed time: " << elapsed.count() << " s\n";
 }
 catch (const Exception& e)
@@ -581,11 +581,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(boundaryConditionValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {
 if (boundaryConditionTypes[pdeDim]=="Dirichlet"||boundaryConditionTypes[pdeDim]=="dirichlet"||boundaryConditionTypes[pdeDim]=="D"||boundaryConditionTypes[pdeDim]=="d")
 {
@@ -679,11 +679,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -724,14 +724,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -739,7 +739,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -816,11 +816,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -861,14 +861,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -876,7 +876,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -968,11 +968,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 //std::vector<bool> areNeumannBoundaryConditions(probDim, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {
 if (areBCsNeumann[pdeDim]==false)
 {
@@ -1000,7 +1000,7 @@ unsigned rowNum = 0;
 for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
 {   // set as being a random perturbation about the boundary values
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {   // serialised for nodes
 init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1079,11 +1079,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {
 if (areBCsNeumann[pdeDim]==false)
 {
@@ -1111,7 +1111,7 @@ unsigned rowNum = 0;
 for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
 {   // set as being a random perturbation about the boundary values
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {   // serialised for nodes
 init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1191,11 +1191,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {
 if (areBCsNeumann[pdeDim]==false)
 {
@@ -1223,7 +1223,7 @@ unsigned rowNum = 0;
 for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
 {   // set as being a random perturbation about the boundary values
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {   // serialised for nodes
 init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1297,11 +1297,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -1342,14 +1342,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1357,7 +1357,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1432,11 +1432,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -1477,14 +1477,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1492,7 +1492,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1568,11 +1568,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -1612,14 +1612,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1627,7 +1627,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1703,11 +1703,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -1748,14 +1748,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1763,7 +1763,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1840,11 +1840,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -1885,14 +1885,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1900,7 +1900,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -1977,11 +1977,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -2022,14 +2022,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -2037,7 +2037,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -2129,11 +2129,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 //std::vector<bool> areNeumannBoundaryConditions(probDim, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {
 if (areBCsNeumann[pdeDim]==false)
 {
@@ -2161,7 +2161,7 @@ unsigned rowNum = 0;
 for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
 {   // set as being a random perturbation about the boundary values
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {   // serialised for nodes
 init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -2240,11 +2240,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {
 if (areBCsNeumann[pdeDim]==false)
 {
@@ -2272,7 +2272,7 @@ unsigned rowNum = 0;
 for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
 {   // set as being a random perturbation about the boundary values
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {   // serialised for nodes
 init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -2352,11 +2352,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {
 if (areBCsNeumann[pdeDim]==false)
 {
@@ -2384,7 +2384,7 @@ unsigned rowNum = 0;
 for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
 {   // set as being a random perturbation about the boundary values
 
-for(unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
 {   // serialised for nodes
 init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -2557,11 +2557,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 //std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (bothBCs==false)
 {
@@ -2624,14 +2624,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum==2 && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -2639,7 +2639,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -2739,11 +2739,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -2784,14 +2784,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -2799,7 +2799,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -2876,11 +2876,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -2920,14 +2920,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -2935,7 +2935,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -3011,11 +3011,11 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {
 if (areNeumannBoundaryConditions[pdeDim]==false)
 {
@@ -3056,14 +3056,14 @@ rowNum = rowNum + 1;
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
 if (columnNum<1)
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
 }
@@ -3071,7 +3071,7 @@ init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerato
 }
 else
 {
-for(unsigned pdeDim=0; pdeDim<1; pdeDim++)
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
 init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
 }
@@ -3113,7 +3113,7 @@ solver.SolveAndWriteResultsToFile();
 
 else
 {
-std::cout<<"Simulation type ("<<variables_map["simulation_type"].as<std::string>()<<") not recognised"<<std::endl;
+std::cout << "Simulation type ("<<variables_map["simulation_type"].as<std::string>()<<") not recognised" << std::endl;
 }
 
 }

@@ -364,43 +364,43 @@ void AbstractDomainField::ParseBoundaryConditionsFromFile(std::string boundaryCo
 
 void AbstractDomainField::PrintDiffusionDomain()
 {
-    std::cout<<"Diffusion domain:"<<std::endl;
+    std::cout << "Diffusion domain:" << std::endl;
     printMatrix(mDomainLabels);
 }
 
 void AbstractDomainField::PrintMappedDiffusionDomain()
 {
-    std::cout<<"Mapped diffusion domain:"<<std::endl;
+    std::cout << "Mapped diffusion domain:" << std::endl;
     printMatrix(mCartesianChasteDomain);
 }
 
 void AbstractDomainField::PrintDomainLabelKeys()
 {
-    std::cout<<"Domain label keys:"<<std::endl;
+    std::cout << "Domain label keys:" << std::endl;
     printMatrix(mDomainKeys);
 }
 
 void AbstractDomainField::PrintODEDomain()
 {
-    std::cout<<"ODE domain:"<<std::endl;
+    std::cout << "ODE domain:" << std::endl;
     printMatrix(mOdeLabels);
 }
 
 void AbstractDomainField::PrintMappedODEDomain()
 {
-    std::cout<<"Mapped ODE domain:"<<std::endl;
+    std::cout << "Mapped ODE domain:" << std::endl;
     printMatrix(mCartesianOdeDomain);
 }
 
 void AbstractDomainField::PrintODELabelKeys()
 {
-    std::cout<<"ODE label keys:"<<std::endl;
+    std::cout << "ODE label keys:" << std::endl;
     printMatrix(mOdeKeys);
 }
 
 void AbstractDomainField::PrintDiffusionDatabase()
 {
-    std::cout<<"Diffusion database:"<<std::endl;
+    std::cout << "Diffusion database:" << std::endl;
     printMatrix(mDiffusionDatabase);
 }
 
@@ -562,7 +562,7 @@ double AbstractDomainField::GetDiffusionValueBasedOnPoint(const ChastePoint<2>& 
     else
     {
         // state hasn't been found therefore return a diffusion value of 0.0
-        std::cout<<"Error: AbstractDomainField::GetDiffusionValueBasedOnPoint: State not in state variable"<<std::endl;
+        std::cout << "Error: AbstractDomainField::GetDiffusionValueBasedOnPoint: State not in state variable" << std::endl;
         return 0.0;
     }
 }
@@ -713,7 +713,7 @@ std::vector<std::vector<std::string>> AbstractDomainField::ReadMatrix(std::strin
             if (!line.empty()){
                 if (line.at(0)=='#')
                 {
-                    //std::cout<<"Escape line: "<<line<<std::endl;
+                    //std::cout << "Escape line: "<<line << std::endl;
                 }
                 else
                 {
@@ -725,7 +725,7 @@ std::vector<std::vector<std::string>> AbstractDomainField::ReadMatrix(std::strin
 
         return outputMatrix;
     }else{
-        std::cout<<"Error: Unable to open file: "<<filename<<std::endl;
+        std::cout << "Error: Unable to open file: "<<filename << std::endl;
         return outputMatrix;
     }
 }
@@ -916,9 +916,9 @@ void AbstractDomainField::printMatrix(std::vector<std::vector<std::string>> matr
     {
       std::cout << matrix[i][j]<< ' ';
     }
-    std::cout<<std::endl;
+    std::cout << std::endl;
   }
-  std::cout<<std::endl;
+  std::cout << std::endl;
 
     return;
 };
@@ -929,7 +929,7 @@ void AbstractDomainField::printVector(std::vector<std::string> vec)
   {
     std::cout << vec[i]<< ' ';
   }
-  std::cout<<std::endl;
+  std::cout << std::endl;
 
     return;
 };
@@ -969,7 +969,7 @@ std::string AbstractDomainField::GetDomainLabelByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractDomainField::GetDomainLabelByIndex: index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractDomainField::GetDomainLabelByIndex: index out of bounds" << std::endl;
         return "Error";
     }
     
@@ -1245,7 +1245,7 @@ std::string AbstractDomainField::ReturnKeyValueFromNodeLabel(std::string nodeLab
     }
     if (!IsFound)
     {
-        std::cout<<"Error: AbstractDomainField::ReturnKeyValueFromNodeLabel, node label not found"<<std::endl;
+        std::cout << "Error: AbstractDomainField::ReturnKeyValueFromNodeLabel, node label not found" << std::endl;
         return "Null";
     }
     return "Null";
@@ -1267,7 +1267,7 @@ std::string AbstractDomainField::ReturnDomainKeyFromDomainLabel(std::string doma
     }
     if (!IsFound)
     {
-        std::cout<<"Error: AbstractDomainField::ReturnDomainKeyFromDomainLabel, domain label not found"<<std::endl;
+        std::cout << "Error: AbstractDomainField::ReturnDomainKeyFromDomainLabel, domain label not found" << std::endl;
         return "Null";
     }
     return "Null";

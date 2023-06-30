@@ -324,7 +324,7 @@ double ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::GetDiffu
     }
     else
     {
-        std::cout<<"Error: ChemicalDomainFieldTemplated::GetDiffusionValueBasedOnPoint: State not in state variable"<<std::endl;
+        std::cout << "Error: ChemicalDomainFieldTemplated::GetDiffusionValueBasedOnPoint: State not in state variable" << std::endl;
         return 0.0;
     }
 }

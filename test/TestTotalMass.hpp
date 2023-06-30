@@ -1,31 +1,24 @@
 #ifndef TESTTOTALMASS_HPP_
 #define TESTTOTALMASS_HPP_
 
-
-#include "ChemChasteVolumeAssembler.hpp"
-#include "ChemChasteSurfaceAssembler.hpp"
-
 #include <cxxtest/TestSuite.h>
-#include "UblasIncludes.hpp"
+
 #include "AbstractCellBasedTestSuite.hpp"
 #include "CheckpointArchiveTypes.hpp"
-#include "PetscSetupAndFinalize.hpp"
-#include "RandomNumberGenerator.hpp"
-
-
-#include "TetrahedralMesh.hpp"
+#include "ChemChasteVolumeAssembler.hpp"
+#include "ChemChasteSurfaceAssembler.hpp"
 #include "EulerIvpOdeSolver.hpp"
 #include "InhomogenousCoupledPdeOdeSolver_templated.hpp"
-#include "LinearParabolicPdeSystemWithCoupledOdeSystemSolver.hpp"
-#include "SimpleLinearParabolicSolver.hpp"
-
 #include "InhomogenousHeatEquationPde.hpp"
+#include "LinearParabolicPdeSystemWithCoupledOdeSystemSolver.hpp"
+#include "PetscSetupAndFinalize.hpp"
 #include "SimpleHeatEquation.hpp"
+#include "SimpleLinearParabolicSolver.hpp"
+#include "UblasIncludes.hpp"
 
-
-
-struct ParameterStruct {
-    // standard values
+struct ParameterStruct
+{
+    // Standard values
     double MeshStepSize = 1.0;
     std::vector<unsigned> MeshDimensions = {100,10};
     std::vector<double> initValuesHigh = {1.0};
@@ -34,24 +27,14 @@ struct ParameterStruct {
     std::vector<double> bcValuesNeu = {0.0};
     std::vector<double> diffusionRates = {100.0};
 
-    // solver properties
+    // Solver properties
     double startTime= 0.0;
     double endTime = 10.0;
     double timestep = 0.01;
     double samplingTimestep = 0.1;
-    std::string outputDirName = "TotalMass"; //+ specific test solver
+    std::string outputDirName = "TotalMass";
 
 } params;
-
-/*
-const c_vector<double, SPACE_DIM> node_loc = rSurfaceElement.GetNode(i)->rGetLocation();
-            x.rGetLocation() += phi(i)*node_loc;
-
-            // Allow the concrete version of the assembler to interpolate any desired quantities
-            this->IncrementInterpolatedQuantities(phi(i), rSurfaceElement.GetNode(i));
-
-*/
-
 
 class TestTotalMass : public AbstractCellBasedTestSuite
 {
@@ -59,94 +42,74 @@ public:
 
     void TestTotalMassHeatDiffusionWithoutSource()
     {
-std::cout<<"Here0"<<std::endl;
-
         ofstream myfile("/home/chaste/testoutput/totalMassExample.txt");
         if (myfile.is_open())
         {
             myfile << "Writing this to a file.\n";
             myfile.close();
-        }else{
-            std::cout<<"not open"<<std::endl;
         }
+        else
+        {
+            std::cout << "not open" << std::endl;
+        }    
 
-      
-
-        // mesh
+        // Mesh
         TetrahedralMesh<2,2>* p_mesh = new TetrahedralMesh<2,2>();
-
         p_mesh->ConstructRegularSlabMesh(params.MeshStepSize, params.MeshDimensions[0], params.MeshDimensions[1]);
     
-        
-        // Process Boundary Conditions
+        // Process boundary conditions
         BoundaryConditionsContainer<2,2,1> bcc;
-    
-        std::vector<ConstBoundaryCondition<2>*> vectorConstBCs;
-        
-        vectorConstBCs.push_back(new ConstBoundaryCondition<2>(params.bcValuesDir[0]));
-        vectorConstBCs.push_back(new ConstBoundaryCondition<2>(params.bcValuesNeu[0]));
-        
-     std::cout<<"Here1"<<std::endl;   
-/*
-        for (TetrahedralMesh<2,2>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
-        node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
-        ++node_iter)
-        {
+        std::vector<ConstBoundaryCondition<2>*> vector_const_bcs;        
+        vector_const_bcs.push_back(new ConstBoundaryCondition<2>(params.bcValuesDir[0]));
+        vector_const_bcs.push_back(new ConstBoundaryCondition<2>(params.bcValuesNeu[0]));
 
-            bcc.AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[0]);
-        }
-*/
         for (TetrahedralMesh<2,2>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
-        boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
-        boundary_iter++)
+             boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
+             boundary_iter++)
         {
-            bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[1]);
+            bcc.AddNeumannBoundaryCondition(*boundary_iter, vector_const_bcs[1]);
         }
     
-
-std::cout<<"Here2"<<std::endl;
-        // initial conditions
+        // Initial conditions
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
-        unsigned columnNum = 0;
-        unsigned rowNum = 0;
+        unsigned column_num = 0;
+        unsigned row_num = 0;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
-        {   // set as being a random perturbation about the boundary values
-            
-            columnNum = 0;
-            rowNum = 0;
-
-            while (i >= rowNum*(params.MeshDimensions[0]+1))
+        {
+            // Set as being a random perturbation about the boundary values            
+            column_num = 0;
+            row_num = 0;
+            while (i >= row_num*(params.MeshDimensions[0]+1))
             {
-                rowNum = rowNum + 1;
-            
+                row_num = row_num + 1;            
             }
             
-            columnNum = i - (rowNum-1)*(params.MeshDimensions[0]+1);
-            if ((columnNum==3 || columnNum==4 || columnNum==5 || columnNum==6) && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
+            column_num = i - (row_num-1)*(params.MeshDimensions[0]+1);
+            if ((column_num==3 || column_num==4 || column_num==5 || column_num==6) && (row_num ==3 || row_num ==4 || row_num ==5 || row_num ==6 ))
             {
-                for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
-                {   // serialised for nodes
-                    init_conds[1*i + pdeDim] = fabs(params.initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
+                for (unsigned pde_dim=0; pde_dim<1; pde_dim++)
+                {
+                    // Serialised for nodes
+                    init_conds[1*i + pde_dim] = fabs(params.initValuesHigh[pde_dim]);// + RandomNumberGenerator::Instance()->ranf());
                 }
             }
             else
             {
-                for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
-                {   // serialised for nodes
-                    init_conds[1*i + pdeDim] = fabs(params.initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
+                for (unsigned pde_dim=0; pde_dim<1; pde_dim++)
+                {
+                    // Serialised for nodes
+                    init_conds[1*i + pde_dim] = fabs(params.initValuesLow[pde_dim]);// + RandomNumberGenerator::Instance()->ranf());
                 }
             }
 
         }
         // PETSc Vec
         Vec initial_condition = PetscTools::CreateVec(init_conds);
-std::cout<<"Here3"<<std::endl;
 
         InhomogenousHeatEquationPde<2, 2, 1> pde(params.diffusionRates);
-        std::cout<<"Here4"<<std::endl;
-        // solver
+
+        // Solver
         InhomogenousCoupledPdeOdeSolverTemplated<2,2,1> solver(p_mesh, &pde, &bcc);
-std::cout<<"Here5"<<std::endl;
 
         solver.SetTimes(params.startTime, params.endTime);
 
@@ -159,17 +122,12 @@ std::cout<<"Here5"<<std::endl;
         {
             solver.SetSamplingTimeStep(params.samplingTimestep);
         }
-   std::cout<<"Here6"<<std::endl;
-        solver.SetOutputDirectory(params.outputDirName+"LinearParabolicPdeSystemWithCoupledOdeSystemSolver");
+        solver.SetOutputDirectory(params.outputDirName);
         solver.SetInitialCondition(initial_condition);
-        // solve
+
+        // Solve
         solver.SolveAndWriteResultsToFile();
-        
-
     }
-
-
-
 };
 
 #endif

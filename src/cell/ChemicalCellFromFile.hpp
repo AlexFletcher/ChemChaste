@@ -296,7 +296,7 @@ ChemicalCellFromFile::ChemicalCellFromFile(
 
 void ChemicalCellFromFile::SetUpCellProperties()
 {
-    //std::cout<<"ChemicalCellFromFile::SetUpCellProperties - start"<<std::endl;
+    //std::cout << "ChemicalCellFromFile::SetUpCellProperties - start" << std::endl;
     if (mIsInitConditionsSet)
     {
 
@@ -341,7 +341,7 @@ void ChemicalCellFromFile::SetUpCellProperties()
 
 
 
-    //std::cout<<"ChemicalCellFromFile::SetUpCellProperties - end"<<std::endl;
+    //std::cout << "ChemicalCellFromFile::SetUpCellProperties - end" << std::endl;
 }
 
 void ChemicalCellFromFile::SetUpSRNandCellCycle()
@@ -367,7 +367,7 @@ void ChemicalCellFromFile::SetUpSRNandCellCycle()
 
 void ChemicalCellFromFile::SetUpCellObject()
 {
-    //std::cout<<"ChemicalCellFromFile::SetUpCellObject - start"<<std::endl;
+    //std::cout << "ChemicalCellFromFile::SetUpCellObject - start" << std::endl;
     // form cell
     CellPropertyCollection collection;
     MAKE_PTR(WildTypeCellMutationState, p_state);
@@ -415,7 +415,7 @@ void ChemicalCellFromFile::SetUpCellObject()
     p_cell->SetCellProliferativeType(p_stem_type);
     
     SetCellPtr(p_cell);
-    //std::cout<<"ChemicalCellFromFile::SetUpCellObject - end"<<std::endl;
+    //std::cout << "ChemicalCellFromFile::SetUpCellObject - end" << std::endl;
 }
 
 

@@ -112,7 +112,7 @@ std::string AbstractChemistry::GetChemicalNamesByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractChemistry::GetChemicalNamesByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractChemistry::GetChemicalNamesByIndex(unsigned index), index out of bounds" << std::endl;
         return "Null";
     } 
 }
@@ -149,7 +149,7 @@ std::string AbstractChemistry::GetChemicalDimensionsByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractChemistry::GetChemicalDimensionsByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractChemistry::GetChemicalDimensionsByIndex(unsigned index), index out of bounds" << std::endl;
        return "Null";
     } 
     

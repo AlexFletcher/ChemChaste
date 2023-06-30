@@ -130,7 +130,7 @@ std::vector<std::vector<std::string>> InitialCellConditionsFromFile::ReadMatrix(
 
         return outputMatrix;
     }else{
-        std::cout<<"Error: Unable to open file: "<<filename<<std::endl;
+        std::cout << "Error: Unable to open file: "<<filename << std::endl;
         return outputMatrix;
     }
 }

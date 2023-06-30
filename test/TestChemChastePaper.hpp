@@ -96,21 +96,21 @@
 
 #include "ChemicalCellFromFile.hpp"
 
-struct ControlStruct {
+struct ControlStruct
+{
     bool VariableDiffusionConstantCase = false;
     bool VariableDiffusionStepChangeCase = false;
     bool ExtracellularReaction = false;
     bool MolenaarSystem = true;
 } control;
 
-struct VariableDiffusionConstantCaseStruct {
+struct VariableDiffusionConstantCaseStruct
     
     // Variables for the user modify
 
     // simulation
     std::string outputFilename = "TestChemChastePaperHetergenousCellTest2";
     double simultationEndTime = 10.0;
-
 
     // bulk
     std::string bulkDataFileRoot = "/home/chaste/projects/ChemChaste/src/Data/VariableDiffusionConstantCase/DomainField/";
@@ -137,20 +137,15 @@ struct VariableDiffusionConstantCaseStruct {
     double nodesOnlyCutOff = 1.5; // for node based simulation case
     double originOfCellMeshRelativePdeFEMesh = -4.0;
     double linearForceCutOffLength = 1.5;
-
-    
-
-
 }VDCC;
 
-struct VariableDiffusionStepChangeCaseStruct {
-        
+struct VariableDiffusionStepChangeCaseStruct
+{        
     // Variables for the user modify
 
     // simulation
     std::string outputFilename = "TestChemChastePaperVariableDiffusionStepChangeCase";
     double simultationEndTime = 100.0;
-
 
     // bulk
     std::string bulkDataFileRoot = "/home/chaste/projects/ChemChaste/src/Data/VariableDiffusionStepChangeCase/DomainField/";
@@ -182,11 +177,10 @@ struct VariableDiffusionStepChangeCaseStruct {
     const unsigned probDim =2; // need to set manually to the number of diffusive variables for the pde solver to solve
     const unsigned spaceDim=2;
     const unsigned elementDim=2;
-
 }VDSC;
 
-struct ExtracellularReactionCaseStruct {
-        
+struct ExtracellularReactionCaseStruct
+{
     // Variables for the user modify
 
     // simulation
@@ -224,11 +218,10 @@ struct ExtracellularReactionCaseStruct {
     const unsigned probDim =3; // need to set manually to the number of diffusive variables for the pde solver to solve
     const unsigned spaceDim=2;
     const unsigned elementDim=2;
-
 }ER;
 
-struct MolenaarSystemCaseStruct {
-        
+struct MolenaarSystemCaseStruct
+{        
     // Variables for the user modify
 
     // simulation
@@ -266,21 +259,16 @@ struct MolenaarSystemCaseStruct {
     const unsigned probDim =1; // need to set manually to the number of diffusive variables for the pde solver to solve
     const unsigned spaceDim=2;
     const unsigned elementDim=2;
-
 }ML;
-
-
 
 class TestChemChastePaper : public AbstractCellBasedTestSuite
 {
 public:
 
     void TestVariableDiffusionConstantCase()
-    {
-        
+    {        
         if (control.VariableDiffusionConstantCase)
         {
-
             // System properties
             const unsigned probDim =2; // need to set manually to the number of diffusive variables for the pde solver to solve
             const unsigned spaceDim=2;
@@ -305,12 +293,10 @@ public:
             std::string transportPropertyFilename = VDCC.transportPropertyFilename;
             std::string srnFilename = VDCC.srnFilename;
             std::string cellCycleFilename = VDCC.cellCycleFilename;
-
         
             // make mesh of cell with associated mesh based cell population
             HoneycombMeshGenerator generator(VDCC.numCellsAcross,VDCC.numCellsUpwards);    // Parameters are: cells across, cells up
             MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
-
 
             std::vector<unsigned> location_indices = generator.GetCellLocationIndices();
 
@@ -338,7 +324,6 @@ public:
                 }
                 cells.push_back(p_cell_reader->GetCellPtr());
             }
-    
 
             // Create a ChasteCuboid on which to base the finite element mesh used to solve the PDE
             ChastePoint<spaceDim> lower(VDCC.originOfCellMeshRelativePdeFEMesh,VDCC.originOfCellMeshRelativePdeFEMesh);
@@ -358,7 +343,6 @@ public:
                                         VDCC.bulkDataFileRoot+VDCC.initialConditionsFilename, 
                                         VDCC.bulkDataFileRoot+VDCC.boundaryConditionsFilename);
 
-            
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
             boost::shared_ptr<ChemicalTrackingModifier<elementDim,spaceDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<elementDim,spaceDim>());
@@ -377,15 +361,12 @@ public:
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
 
-                
-
                 for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
                 }
                     
-            
                 OffLatticeSimulation<spaceDim> simulator(cell_population);
 
                 simulator.AddSimulationModifier(p_pde_modifier);
@@ -399,23 +380,19 @@ public:
                 p_linear_force->SetCutOffLength(VDCC.linearForceCutOffLength);
                 simulator.AddForce(p_linear_force);
 
-                std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
-                std::cout<<"=============================================="<<std::endl;
+                std::cout << "==============================================" << std::endl;
+                std::cout << "OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()" << std::endl;
+                std::cout << "==============================================" << std::endl;
                 simulator.Solve();
-
             }
             else
             {
-                
                 MeshBasedCellPopulation<spaceDim> cell_population(*p_mesh, cells, location_indices);
-                // writers
 
+                // writers
                 cell_population.AddCellWriter<CellIdWriter>();
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
-
-                
 
                 for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
@@ -423,7 +400,6 @@ public:
                     cell_population.AddCellWriter(dataWriter);
                 }
                     
-            
                 OffLatticeSimulation<spaceDim> simulator(cell_population);
 
                 cell_population.SetWriteVtkAsPoints(false);
@@ -440,14 +416,12 @@ public:
                 p_linear_force->SetCutOffLength(VDCC.linearForceCutOffLength);
                 simulator.AddForce(p_linear_force);
 
-                std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
-                std::cout<<"=============================================="<<std::endl;
+                std::cout << "==============================================" << std::endl;
+                std::cout << "OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()" << std::endl;
+                std::cout << "==============================================" << std::endl;
                 simulator.Solve();
             }
-
         }
-    
     }
 
     void TestVariableDiffusionStepChangeCase()
@@ -479,11 +453,9 @@ public:
             std::string srnFilename = VDSC.srnFilename;
             std::string cellCycleFilename = VDSC.cellCycleFilename;
 
-        
             // make mesh of cell with associated mesh based cell population
             HoneycombMeshGenerator generator(VDSC.numCellsAcross,VDSC.numCellsUpwards);    // Parameters are: cells across, cells up
             MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
-
 
             std::vector<unsigned> location_indices = generator.GetCellLocationIndices();
 
@@ -511,7 +483,6 @@ public:
                 }
                 cells.push_back(p_cell_reader->GetCellPtr());
             }
-    
 
             // Create a ChasteCuboid on which to base the finite element mesh used to solve the PDE
             ChastePoint<spaceDim> lower(VDSC.originOfCellMeshRelativePdeFEMesh,VDSC.originOfCellMeshRelativePdeFEMesh);
@@ -531,7 +502,6 @@ public:
                                         VDSC.bulkDataFileRoot+VDSC.initialConditionsFilename, 
                                         VDSC.bulkDataFileRoot+VDSC.boundaryConditionsFilename);
 
-            
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
             boost::shared_ptr<ChemicalTrackingModifier<elementDim,spaceDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<elementDim,spaceDim>());
@@ -545,20 +515,16 @@ public:
                 NodeBasedCellPopulation<spaceDim> cell_population(mesh, cells);   
 
                 // writers
-
                 cell_population.AddCellWriter<CellIdWriter>();
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
-
-                
 
                 for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
                 }
-                    
-            
+        
                 OffLatticeSimulation<spaceDim> simulator(cell_population);
 
                 simulator.AddSimulationModifier(p_pde_modifier);
@@ -572,31 +538,23 @@ public:
                 p_linear_force->SetCutOffLength(VDSC.linearForceCutOffLength);
                 simulator.AddForce(p_linear_force);
 
-                std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
-                std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
-
             }
             else
-            {
-                
+            {                
                 MeshBasedCellPopulation<spaceDim> cell_population(*p_mesh, cells, location_indices);
-                // writers
 
+                // writers
                 cell_population.AddCellWriter<CellIdWriter>();
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
-
-                
 
                 for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
                 }
-                    
-            
+
                 OffLatticeSimulation<spaceDim> simulator(cell_population);
 
                 cell_population.SetWriteVtkAsPoints(false);
@@ -613,16 +571,12 @@ public:
                 p_linear_force->SetCutOffLength(VDSC.linearForceCutOffLength);
                 simulator.AddForce(p_linear_force);
 
-                std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
-                std::cout<<"=============================================="<<std::endl;
+                std::cout << "==============================================" << std::endl;
+                std::cout << "OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()" << std::endl;
+                std::cout << "==============================================" << std::endl;
                 simulator.Solve();
             }
-
         }
-    
-
-
     }
 
     void TestExtracellularReaction()
@@ -653,12 +607,10 @@ public:
             std::string transportPropertyFilename = ER.transportPropertyFilename;
             std::string srnFilename = ER.srnFilename;
             std::string cellCycleFilename = ER.cellCycleFilename;
-
         
             // make mesh of cell with associated mesh based cell population
             HoneycombMeshGenerator generator(ER.numCellsAcross,ER.numCellsUpwards);    // Parameters are: cells across, cells up
             MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
-
 
             std::vector<unsigned> location_indices = generator.GetCellLocationIndices();
 
@@ -687,7 +639,6 @@ public:
                 cells.push_back(p_cell_reader->GetCellPtr());
             }
     
-
             // Create a ChasteCuboid on which to base the finite element mesh used to solve the PDE
             ChastePoint<spaceDim> lower(ER.originOfCellMeshRelativePdeFEMesh,ER.originOfCellMeshRelativePdeFEMesh);
             ChastePoint<spaceDim> upper(10.0, 10.0);
@@ -705,7 +656,6 @@ public:
                                         ER.bulkDataFileRoot+ER.diffusionFilename, 
                                         ER.bulkDataFileRoot+ER.initialConditionsFilename, 
                                         ER.bulkDataFileRoot+ER.boundaryConditionsFilename);
-
             
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
@@ -720,20 +670,16 @@ public:
                 NodeBasedCellPopulation<spaceDim> cell_population(mesh, cells);   
 
                 // writers
-
                 cell_population.AddCellWriter<CellIdWriter>();
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
-
-                
 
                 for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
                 }
-                    
-            
+
                 OffLatticeSimulation<spaceDim> simulator(cell_population);
 
                 simulator.AddSimulationModifier(p_pde_modifier);
@@ -747,26 +693,18 @@ public:
                 p_linear_force->SetCutOffLength(ER.linearForceCutOffLength);
                 simulator.AddForce(p_linear_force);
 
-                std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
-                std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
-
             }
             else
-            {
-                
+            {                
                 MeshBasedCellPopulation<spaceDim> cell_population(*p_mesh, cells, location_indices);
+
                 // writers
-
                 cell_population.SetWriteVtkAsPoints(false);
-            cell_population.AddPopulationWriter<VoronoiDataWriter>();
-
+                cell_population.AddPopulationWriter<VoronoiDataWriter>();
                 cell_population.AddCellWriter<CellIdWriter>();
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
-
-                
 
                 for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
@@ -774,7 +712,6 @@ public:
                     cell_population.AddCellWriter(dataWriter);
                 }
                     
-            
                 OffLatticeSimulation<spaceDim> simulator(cell_population);
 
                 simulator.AddSimulationModifier(p_pde_modifier);
@@ -788,15 +725,9 @@ public:
                 p_linear_force->SetCutOffLength(ER.linearForceCutOffLength);
                 simulator.AddForce(p_linear_force);
 
-                std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
-                std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
             }
-
         }
-
-
     }
 
     void TestMolenaarSystem()
@@ -827,12 +758,10 @@ public:
             std::string transportPropertyFilename = ML.transportPropertyFilename;
             std::string srnFilename = ML.srnFilename;
             std::string cellCycleFilename = ML.cellCycleFilename;
-
         
             // make mesh of cell with associated mesh based cell population
             HoneycombMeshGenerator generator(ML.numCellsAcross,ML.numCellsUpwards);    // Parameters are: cells across, cells up
             MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
-
 
             std::vector<unsigned> location_indices = generator.GetCellLocationIndices();
 
@@ -845,7 +774,6 @@ public:
             for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
             {
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
-
                 ChemicalCellFromFile* p_cell_reader = new ChemicalCellFromFile(
                                     ML.cellDataFileRoot+ML.cellCycleFilename, 
                                     ML.cellDataFileRoot+ML.srnFilename,
@@ -880,7 +808,6 @@ public:
                                         ML.bulkDataFileRoot+ML.initialConditionsFilename, 
                                         ML.bulkDataFileRoot+ML.boundaryConditionsFilename);
 
-            
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
             boost::shared_ptr<ChemicalTrackingModifier<elementDim,spaceDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<elementDim,spaceDim>());
@@ -894,19 +821,15 @@ public:
                 NodeBasedCellPopulation<spaceDim> cell_population(mesh, cells);   
 
                 // writers
-
                 cell_population.AddCellWriter<CellIdWriter>();
                 cell_population.AddCellWriter<CellAgesWriter>();
-                cell_population.AddCellWriter<CellLocationIndexWriter>();
-
-                
+                cell_population.AddCellWriter<CellLocationIndexWriter>();                
 
                 for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
-                }
-                    
+                }                    
             
                 OffLatticeSimulation<spaceDim> simulator(cell_population);
 
@@ -921,33 +844,25 @@ public:
                 p_linear_force->SetCutOffLength(ML.linearForceCutOffLength);
                 simulator.AddForce(p_linear_force);
 
-                std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
-                std::cout<<"=============================================="<<std::endl;
                 simulator.Solve();
-
             }
             else
-            {
-                
+            {                
                 MeshBasedCellPopulation<spaceDim> cell_population(*p_mesh, cells, location_indices);
+
                 // writers
                 cell_population.SetWriteVtkAsPoints(false);
                 cell_population.AddPopulationWriter<VoronoiDataWriter>();
-
                 cell_population.AddCellWriter<CellIdWriter>();
                 cell_population.AddCellWriter<CellAgesWriter>();
-                cell_population.AddCellWriter<CellLocationIndexWriter>();
-
-                
+                cell_population.AddCellWriter<CellLocationIndexWriter>();              
 
                 for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
                 }
-                    
-            
+
                 OffLatticeSimulation<spaceDim> simulator(cell_population);
 
                 simulator.AddSimulationModifier(p_pde_modifier);
@@ -961,17 +876,13 @@ public:
                 p_linear_force->SetCutOffLength(ML.linearForceCutOffLength);
                 simulator.AddForce(p_linear_force);
 
-                std::cout<<"=============================================="<<std::endl;
-                std::cout<<"OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()"<<std::endl;
-                std::cout<<"=============================================="<<std::endl;
+                std::cout << "==============================================" << std::endl;
+                std::cout << "OffLatticeSimulation->AbstractCellBasedSimulation :: Solve()" << std::endl;
+                std::cout << "==============================================" << std::endl;
                 simulator.Solve();
             }
-
         }
-
-
     }
-
 };
 
 #endif

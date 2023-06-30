@@ -289,7 +289,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                 {
                     // line starts with escape character
 
-                    //std::cout<<"Escape line: "<<line<<std::endl;
+                    //std::cout << "Escape line: "<<line << std::endl;
                 }
                 else
                 {
@@ -384,7 +384,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
     }
     else
     {
-        std::cout<<"Error: Filename not found: "<<mInputFileName<<std::endl;
+        std::cout << "Error: Filename not found: "<<mInputFileName << std::endl;
     }
 
     return system;

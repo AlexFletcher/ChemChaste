@@ -93,7 +93,7 @@ public:
 AbstractMembraneReactionSystemFromFile::AbstractMembraneReactionSystemFromFile(std::string InputFileName)
     : mInputFileName(InputFileName)
 {
-    //std::cout<<"AbstractMembraneReactionSystemFromFile::AbstractMembraneReactionSystemFromFile( - start"<<std::endl;
+    //std::cout << "AbstractMembraneReactionSystemFromFile::AbstractMembraneReactionSystemFromFile( - start" << std::endl;
     std::vector<AbstractMembraneReaction*> mpReactionVector = std::vector<AbstractMembraneReaction*>();
     
 
@@ -148,7 +148,7 @@ AbstractMembraneReactionSystemFromFile::AbstractMembraneReactionSystemFromFile(s
     // form the vector of membrane reaction systems and initilaise throuigh referencing the membrane tablet
     FormReactionSystemObjectFromTuple(system);
 
-    //std::cout<<"AbstractMembraneReactionSystemFromFile::AbstractMembraneReactionSystemFromFile( - end"<<std::endl;
+    //std::cout << "AbstractMembraneReactionSystemFromFile::AbstractMembraneReactionSystemFromFile( - end" << std::endl;
 }
 
 void AbstractMembraneReactionSystemFromFile::SetFileDeliminator()
@@ -167,7 +167,7 @@ void AbstractMembraneReactionSystemFromFile::FormReactionSystemObjectFromTuple(s
 {
     // for each reaction whose data is in the tuple, form the corresponding reaction class
     // denote in the reaction class the function necessary to parse reaction information
-    //std::cout<<"AbstractMembraneReactionSystemFromFile::FormReactionSystemObjectFromTuple - start"<<std::endl;
+    //std::cout << "AbstractMembraneReactionSystemFromFile::FormReactionSystemObjectFromTuple - start" << std::endl;
     SetNumReactions(system.size());
 
     unsigned numBulkSubstrates=0;
@@ -233,7 +233,7 @@ void AbstractMembraneReactionSystemFromFile::FormReactionSystemObjectFromTuple(s
         
         mpReactionVector.push_back(p_reaction);
     }
-    //std::cout<<"AbstractMembraneReactionSystemFromFile::FormReactionSystemObjectFromTuple - end"<<std::endl;
+    //std::cout << "AbstractMembraneReactionSystemFromFile::FormReactionSystemObjectFromTuple - end" << std::endl;
 }
 
 
@@ -296,7 +296,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                 {
                     // line starts with escape character
 
-                    //std::cout<<"Escape line: "<<line<<std::endl;
+                    //std::cout << "Escape line: "<<line << std::endl;
                 }
                 else
                 {
@@ -396,7 +396,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
     }
     else
     {
-        std::cout<<"Error: filename not found: "<<mInputFileName<<std::endl;
+        std::cout << "Error: filename not found: "<<mInputFileName << std::endl;
     }
     
 

@@ -39,31 +39,31 @@
 
 void ReactionTablet(AbstractReaction*& p_reaction,  std::string reactionType = "", std::vector<AbstractChemical*> substrates = std::vector<AbstractChemical*>(), std::vector<AbstractChemical*> products = std::vector<AbstractChemical*>(), std::vector<unsigned> stoichSubstrates = std::vector<unsigned>(), std::vector<unsigned> stoichProducts = std::vector<unsigned>(), std::string reactionInformation = "", bool IsReversible = false, AbstractChemistry* p_systemChemistry = new AbstractChemistry())
 {
-    //std::cout<<"Candidate reaction type: "<<reactionType<<std::endl;
+    //std::cout << "Candidate reaction type: "<<reactionType << std::endl;
     //delete p_reaction_vector;
     if (reactionType == "ZerothOrderReaction")
     {
-        //std::cout<<"ZerothOrderReaction"<<std::endl;
+        //std::cout << "ZerothOrderReaction" << std::endl;
         delete p_reaction;
         p_reaction = new AbstractReaction(substrates, products, stoichSubstrates, stoichProducts);
         p_reaction->ParseReactionInformation(reactionInformation, IsReversible);
     }
     else if (reactionType == "ZerothOrderReversibleReaction")
     {
-        //std::cout<<"ZerothOrderReversibleReaction"<<std::endl;
+        //std::cout << "ZerothOrderReversibleReaction" << std::endl;
         delete p_reaction;
         p_reaction = new AbstractReversibleReaction(substrates, products, stoichSubstrates, stoichProducts);
         p_reaction->ParseReactionInformation(reactionInformation, IsReversible);
     }
     else if (reactionType == "MassActionReaction")
     {
-        //std::cout<<"MassActionReaction"<<std::endl;
+        //std::cout << "MassActionReaction" << std::endl;
         
         delete p_reaction;
         p_reaction = new MassActionReaction(substrates, products, stoichSubstrates, stoichProducts);
 
         // need to have it in the dynamic cast form to access function of downcast form, object natively of upcast form
-        //std::cout<<"Reaction temp: "<<dynamic_cast<MassActionReaction*>(p_reaction) ->GetReactionTemperature()<<std::endl;
+        //std::cout << "Reaction temp: "<<dynamic_cast<MassActionReaction*>(p_reaction) ->GetReactionTemperature() << std::endl;
 
         p_reaction->ParseReactionInformation(reactionInformation, IsReversible);
     }
@@ -82,7 +82,7 @@ void ReactionTablet(AbstractReaction*& p_reaction,  std::string reactionType = "
     // add more else if (reactionType == "...")
     else
     {
-        std::cout<<"ReactionTablet Error: "<<reactionType<<" is unknown to the ReactionTypeDataBase."<<std::endl;
+        std::cout << "ReactionTablet Error: "<<reactionType<<" is unknown to the ReactionTypeDataBase." << std::endl;
     }
 };
 
@@ -119,7 +119,7 @@ void TransportTablet(AbstractTransportReaction*& p_reaction,  std::string reacti
     }
     else
     {
-        std::cout<<"TransportTablet Error: "<<reactionType<<" is unknown to the ReactionTypeDataBase."<<std::endl;
+        std::cout << "TransportTablet Error: "<<reactionType<<" is unknown to the ReactionTypeDataBase." << std::endl;
     }
 };
 
@@ -151,7 +151,7 @@ void MembraneTablet(AbstractMembraneReaction*& p_reaction,  std::string reaction
     }
     else
     {
-        std::cout<<"MembraneTablet Error: "<<reactionType<<" is unknown to the ReactionTypeDataBase."<<std::endl;
+        std::cout << "MembraneTablet Error: "<<reactionType<<" is unknown to the ReactionTypeDataBase." << std::endl;
     }
 }
 

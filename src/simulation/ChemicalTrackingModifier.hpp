@@ -72,9 +72,9 @@ ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::~ChemicalTrackingModifier()
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void ChemicalTrackingModifier<ELEMENT_DIM, SPACE_DIM>::UpdateAtEndOfTimeStep(AbstractCellPopulation<ELEMENT_DIM,SPACE_DIM>& rCellPopulation)
 {
-    //std::cout<<"ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateAtEndOfTimeStep - start"<<std::endl;
+    //std::cout << "ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateAtEndOfTimeStep - start" << std::endl;
     UpdateCellData(rCellPopulation);
-    //std::cout<<"ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateAtEndOfTimeStep - end"<<std::endl;
+    //std::cout << "ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateAtEndOfTimeStep - end" << std::endl;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

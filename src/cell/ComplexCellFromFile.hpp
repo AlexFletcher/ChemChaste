@@ -302,7 +302,7 @@ ComplexCellFromFile::ComplexCellFromFile(
 
 void ComplexCellFromFile::SetUpCellProperties()
 {
-    //std::cout<<"ComplexCellFromFile::SetUpCellProperties - start"<<std::endl;
+    //std::cout << "ComplexCellFromFile::SetUpCellProperties - start" << std::endl;
     if (mIsInitConditionsSet)
     {
         InitialCellConditionsFromFile* p_init_conditions_from_file = new InitialCellConditionsFromFile(mInitialConditionsFilename);
@@ -468,7 +468,7 @@ std::vector<std::vector<std::string>> ComplexCellFromFile::ReadMatrix(std::strin
             {
                 if (line.at(0)=='#')
                 {
-                    //std::cout<<"Escape line: "<<line<<std::endl;
+                    //std::cout << "Escape line: "<<line << std::endl;
                 }
                 else
                 {
@@ -482,7 +482,7 @@ std::vector<std::vector<std::string>> ComplexCellFromFile::ReadMatrix(std::strin
     }
     else
     {
-        std::cout<<"Error: Unable to open file: "<<filename<<std::endl;
+        std::cout << "Error: Unable to open file: "<<filename << std::endl;
         return outputMatrix;
     }
 }

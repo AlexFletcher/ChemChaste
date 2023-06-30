@@ -115,7 +115,7 @@ void AbstractReactionSystemFromFile::SetFileDeliminator()
 
 void AbstractReactionSystemFromFile::FormReactionSystemObjectFromTuple(std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string>> system_tuple)
 {
-    //std::cout<<"AbstractReactionSystemFromFile::FormReactionSystemObjectFromTuple - start"<<std::endl;
+    //std::cout << "AbstractReactionSystemFromFile::FormReactionSystemObjectFromTuple - start" << std::endl;
     // for each reaction whose data is in the tuple, form the corresponding reaction class
     // denote in the reaction class the function necessary to parse reaction information
 
@@ -221,7 +221,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
     }
     else
     {
-        std::cout<<"Error: Filename not found: "<<mInputFileName<<std::endl;
+        std::cout << "Error: Filename not found: "<<mInputFileName << std::endl;
     }
 
     return system;

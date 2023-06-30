@@ -392,7 +392,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
                 for (unsigned i=0; i<SPACE_DIM; i++)
                 {
                     thisSlicePosition.push_back(X[i]);
-                    //std::cout<<"x: "<<X[i]<<std::endl;
+                    //std::cout << "x: "<<X[i] << std::endl;
                 }
 
                 for (unsigned j=0; j<PROBLEM_DIM; j++)
@@ -505,7 +505,7 @@ InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::~
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::PrepareForSetupLinearSystem(Vec currentPdeSolution)
 {   
-    //std::cout<<"InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::PrepareForSetupLinearSystem( - start"<<std::endl;
+    //std::cout << "InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::PrepareForSetupLinearSystem( - start" << std::endl;
     if (mOdeSystemsPresent)
     {
         double time = PdeSimulationTime::GetTime();
@@ -577,7 +577,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
 //#ifdef CHASTE_VTK
     ResetInterpolatedQuantitiesOnNewTimeStep();
     // Create a .pvd output file
-    //std::cout<<"outputfilehandeler: "<<this->mOutputDirectory<<std::endl;
+    //std::cout << "outputfilehandeler: "<<this->mOutputDirectory << std::endl;
 
     OutputFileHandler output_file_handler(this->mOutputDirectory, mClearOutputDirectory);
    
@@ -586,9 +586,9 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
     *mpVtkMetaFile << "<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\" compressor=\"vtkZLibDataCompressor\">\n";
     *mpVtkMetaFile << "    <Collection>\n";
 
-    std::cout<<"Get output loc: "<<output_file_handler.GetChasteTestOutputDirectory()<<std::endl;
-    std::cout<<"Get output dir full path: "<<output_file_handler.GetOutputDirectoryFullPath()<<std::endl;
-    std::cout<<"Get relative path: "<<output_file_handler.GetRelativePath()<<std::endl;
+    std::cout << "Get output loc: "<<output_file_handler.GetChasteTestOutputDirectory() << std::endl;
+    std::cout << "Get output dir full path: "<<output_file_handler.GetOutputDirectoryFullPath() << std::endl;
+    std::cout << "Get relative path: "<<output_file_handler.GetRelativePath() << std::endl;
 
     // Write initial condition to VTK
     Vec initial_condition = this->mInitialCondition;
@@ -608,24 +608,24 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
     {
     //    std::ofstream sliceMassFile;
      //   std::string sliceMassFilename = "/home/chaste/testoutput/"+this->mOutputDirectory+"sliceMass_"+p_pde_stateVariableNames[i]+".csv";
-     //   std::cout<<"sliceMassFilename: "<<sliceMassFilename<<std::endl;
+     //   std::cout << "sliceMassFilename: "<<sliceMassFilename << std::endl;
      //   sliceMassFile.open(sliceMassFilename);
      //   sliceMassFiles.push_back(sliceMassFile);
         std::shared_ptr<std::ofstream> sliceMassFile(new std::ofstream);
         std::string sliceMassFilename = "/home/chaste/testoutput/"+this->mOutputDirectory+"sliceMass_"+p_pde_stateVariableNames[i]+".csv";
-        std::cout<<"sliceMassFilename: "<<sliceMassFilename<<std::endl;
+        std::cout << "sliceMassFilename: "<<sliceMassFilename << std::endl;
         sliceMassFile->open(sliceMassFilename);
         sliceMassFiles.push_back(sliceMassFile);
     }
 
     std::ofstream slicePositionFile;
     std::string slicePositionFilename = "/home/chaste/testoutput/"+this->mOutputDirectory+"slicePosition.csv";
-    std::cout<<"slicePositionFilename: "<<slicePositionFilename<<std::endl;
+    std::cout << "slicePositionFilename: "<<slicePositionFilename << std::endl;
     slicePositionFile.open (slicePositionFilename);
 
     std::ofstream sumCoeffFile;
     std::string sumCoeffFilename = "/home/chaste/testoutput/"+this->mOutputDirectory+"sumCoeff.csv";
-    std::cout<<"sumCoeffFilename: "<<sumCoeffFilename<<std::endl;
+    std::cout << "sumCoeffFilename: "<<sumCoeffFilename << std::endl;
     sumCoeffFile.open (sumCoeffFilename);
 
     for (unsigned pde_index=0; pde_index<PROBLEM_DIM; pde_index++)
@@ -641,17 +641,17 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
 
     std::ofstream totalMassFile;
     std::string totalMassFilename = "/home/chaste/testoutput/"+this->mOutputDirectory+"totalMass.csv";
-    std::cout<<"totalMassFilename: "<<totalMassFilename<<std::endl;
+    std::cout << "totalMassFilename: "<<totalMassFilename << std::endl;
     totalMassFile.open (totalMassFilename);
 
     std::ofstream totalMassOldFile;
     std::string totalMassOldFilename = "/home/chaste/testoutput/"+this->mOutputDirectory+"totalMassOld.csv";
-    std::cout<<"totalMassFilename: "<<totalMassOldFilename<<std::endl;
+    std::cout << "totalMassFilename: "<<totalMassOldFilename << std::endl;
     totalMassOldFile.open (totalMassOldFilename);
 
     std::ofstream timeFile;
     std::string timeFilename = "/home/chaste/testoutput/"+this->mOutputDirectory+"time.csv";
-    std::cout<<"timeFilename: "<<timeFilename<<std::endl;
+    std::cout << "timeFilename: "<<timeFilename << std::endl;
     timeFile.open (timeFilename);
 
     if (mCalculateTotalMass)
@@ -758,7 +758,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
 //    WARNING("VTK is not installed and is required for this functionality");
 // LCOV_EXCL_STOP
 //#endif //CHASTE_VTK
-//std::cout<<"InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::SolveAndWriteResultsToFile( - end"<<std::endl;
+//std::cout << "InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::SolveAndWriteResultsToFile( - end" << std::endl;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
@@ -768,7 +768,7 @@ void InhomogenousCoupledPdeOdeSolverTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DI
     // Create a new VTK file for this time step
     std::stringstream time;
     time << numTimeStepsElapsed;
-    //std::cout<<this->mOutputDirectory<<std::endl;
+    //std::cout << this->mOutputDirectory << std::endl;
     VtkMeshWriter<ELEMENT_DIM, SPACE_DIM> mesh_writer(this->mOutputDirectory, "results_"+time.str(), false);
     // need to ensure StateVariableRegister is defined
   

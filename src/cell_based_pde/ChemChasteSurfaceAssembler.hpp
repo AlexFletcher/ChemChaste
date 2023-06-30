@@ -165,7 +165,7 @@ void AbstractFeSurfaceIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::As
             const BoundaryElement<ELEMENT_DIM-1,SPACE_DIM>& rSurfaceElement,
             c_vector<double, PROBLEM_DIM*ELEMENT_DIM>& rBSurfElem)
 {
-    //std::cout<<"ChemChasteSurface"<<std::endl;
+    //std::cout << "ChemChasteSurface" << std::endl;
     c_vector<double, SPACE_DIM> weighted_direction;
     double jacobian_determinant;
     mpMesh->GetWeightedDirectionForBoundaryElement(rSurfaceElement.GetIndex(), weighted_direction, jacobian_determinant);

@@ -261,7 +261,7 @@ AbstractChemical* AbstractReaction::GetSubstratesByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractReaction::GetSubstratesByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractReaction::GetSubstratesByIndex(unsigned index), index out of bounds" << std::endl;
         return new AbstractChemical();
     } 
 }
@@ -279,7 +279,7 @@ AbstractChemical* AbstractReaction::GetProductsByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractReaction::GetProductsByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractReaction::GetProductsByIndex(unsigned index), index out of bounds" << std::endl;
         return new AbstractChemical();
     } 
 }
@@ -307,7 +307,7 @@ unsigned AbstractReaction::GetStoichSubstratesByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractReaction::GetStoichSubstratesByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractReaction::GetStoichSubstratesByIndex(unsigned index), index out of bounds" << std::endl;
         return 0;
     } 
 }
@@ -330,7 +330,7 @@ unsigned AbstractReaction::GetStoichProductsByIndex(unsigned index)
     }
     else
     {
-        std::cout<<"Error: AbstractReaction::GetStoichProductsByIndex(unsigned index), index out of bounds"<<std::endl;
+        std::cout << "Error: AbstractReaction::GetStoichProductsByIndex(unsigned index), index out of bounds" << std::endl;
         return 0;
     } 
 }

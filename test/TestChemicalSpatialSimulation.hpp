@@ -2,10 +2,8 @@
 #define TESTCHEMICALSPATIALSIMULATION_HPP_
 
 #include <cxxtest/TestSuite.h>
-#include "UblasIncludes.hpp"
+
 #include "AbstractCellBasedTestSuite.hpp"
-#include "CheckpointArchiveTypes.hpp"
-#include "PetscSetupAndFinalize.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -14,37 +12,36 @@
 #include <tuple>
 #include <cmath>
 
-#include "BoundaryConditionsContainer_extended.hpp"
-#include "HoneycombMeshGenerator.hpp"
-#include "EulerIvpOdeSolver.hpp"
-#include "LinearParabolicPdeSystemWithCoupledOdeSystemSolver.hpp"
+#include "AbstractDomainField.hpp"
+#include "AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem.hpp"
 #include "BoundaryConditionsContainer.hpp"
+#include "BoundaryConditionsContainer_extended.hpp"
+#include "CheckpointArchiveTypes.hpp"
 #include "ConstBoundaryCondition.hpp"
-#include "OutputFileHandler.hpp"
-#include "RandomNumberGenerator.hpp"
-#include "TrianglesMeshReader.hpp"
-#include "StateVariableRegister.hpp"
+#include "ChemicalDomainField.hpp"
+#include "EulerIvpOdeSolver.hpp"
+#include "HoneycombMeshGenerator.hpp"
 #include "InhomogenousParabolicPdeOdeSystem.hpp"
 #include "InhomogenousCoupledPdeOdeSolver.hpp"
 #include "InhomogenousOdeSchnackenbergCoupledPdeOdeSystem.hpp"
 #include "InhomogenousOdeConsumerProducer.hpp"
-#include "AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem.hpp"
-#include "PdeSchnackenbergCoupledPdeOdeSystem.hpp"
-#include "PdeConsumerProducer.hpp"
 #include "InhomogenousParabolicPdeOdeSystem.hpp"
-#include "AbstractDomainField.hpp"
-#include "ChemicalDomainField.hpp"
+#include "LinearParabolicPdeSystemWithCoupledOdeSystemSolver.hpp"
+#include "OutputFileHandler.hpp"
+#include "PdeConsumerProducer.hpp"
+#include "PdeSchnackenbergCoupledPdeOdeSystem.hpp"
+#include "PetscSetupAndFinalize.hpp"
+#include "StateVariableRegister.hpp"
+#include "TrianglesMeshReader.hpp"
+#include "UblasIncludes.hpp"
 
 class TestChemicalSpatialSimulation : public AbstractCellBasedTestSuite
 {
 public:
 
     void TestTemplateForChemicalSimulation()
-    {
-        
-        //------------------------------------------------------------------------------//
-        //                          Experiment variables                                //
-        //------------------------------------------------------------------------------//
+    {        
+        // Experiment variables
 
         // Variables for the user modify
         std::string dataFileRoot = "/home/chaste/projects/ChemChaste/src/Data/TemplateChemicalSimulation/";
@@ -63,33 +60,28 @@ public:
         double samplingTimeStep = 1e-2;
         std::string output_filename = "TestTemplateForChemicalSimulation";
         
-        //------------------------------------------------------------------------------//
-        //                          Simulation construct                                //
-        //------------------------------------------------------------------------------//
+        // Simulation construct
 
         // run the domain field set up and parse files
         ChemicalDomainField* p_field = new ChemicalDomainField(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
 
         // check that the file input problem dimension is the same as the user defined problem dimension
-        std::cout<<"File probDim: "<<p_field ->GetProblemDimensions()<<std::endl;
-        std::cout<<"User probDim: "<<probDim<<std::endl;
+        std::cout << "File probDim: "<<p_field ->GetProblemDimensions() << std::endl;
+        std::cout << "User probDim: "<<probDim << std::endl;
 
         MutableMesh<2,2>* p_mesh = p_field ->GetMeshGenerator()->GetMesh();
         const unsigned spaceDim=2;
         const unsigned elementDim=2;
-        
     
-        std::cout<<"Domain numNodes: "<<p_field->GetDomainMesh()->GetNumNodes()<<std::endl;
-        std::cout<<"Class numNodes: "<<p_mesh->GetNumNodes()<<std::endl;
+        std::cout << "Domain numNodes: "<<p_field->GetDomainMesh()->GetNumNodes() << std::endl;
+        std::cout << "Class numNodes: "<<p_mesh->GetNumNodes() << std::endl;
         // process initial conditions
-        std::cout<<"Process initial conditions"<<std::endl;
+        std::cout << "Process initial conditions" << std::endl;
 
         p_field->ParseInitialConditionsFromFile(dataFileRoot+initialConditionsFilename);
         
         // PETSc Vec
         Vec initial_condition = PetscTools::CreateVec(p_field->GetInitialNodeConditions());
-
-        
 
         // process boundary conditions
         p_field->ParseBoundaryConditionsFromFile(dataFileRoot+boundaryConditionsFilename);
@@ -99,12 +91,13 @@ public:
         std::vector<double> boundaryConditionValues = p_field->GetBoundaryConditionValues();
 
         // Process Boundary Conditions
-        std::cout<<"Process Boundary Conditions"<<std::endl;
+        std::cout << "Process Boundary Conditions" << std::endl;
         BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+        {
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(boundaryConditionValues[pdeDim]));
         }
 
@@ -118,7 +111,8 @@ public:
                 {
                     bcc.AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[pdeDim], pdeDim);
                 }
-            }else if (boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
+            }
+            else if (boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
             
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
@@ -128,14 +122,11 @@ public:
                     bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
                 }
             }
-        }
-      
-        
+        }       
 
         // pde system
-        std::cout<<"Pde"<<std::endl;
+        std::cout << "Pde" << std::endl;
         InhomogenousParabolicPdeOdeSystem<elementDim, spaceDim, probDim> pde(p_field);
-  
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver>> odeSolverSystem;
@@ -147,7 +138,7 @@ public:
             odeSolverSystem.push_back(p_solver);
         }
 
-        std::cout<<"Solver"<<std::endl;
+        std::cout << "Solver" << std::endl;
         // solver
         InhomogenousCoupledPdeOdeSolver<elementDim,spaceDim,probDim> solver(p_mesh, &pde, &bcc, odeSystem, odeSolverSystem);
 
@@ -158,22 +149,19 @@ public:
         solver.SetOutputDirectory(output_filename);
         solver.SetInitialCondition(initial_condition);
         // solve
-        std::cout<<"Solve"<<std::endl;
+        std::cout << "Solve" << std::endl;
 
         solver.SolveAndWriteResultsToFile();
-        std::cout<<"Clean"<<std::endl;
+        std::cout << "Clean" << std::endl;
 
         // clean
         PetscTools::Destroy(initial_condition);
         */
     }
 
-
     void TestMembraneModel()
     {
-         //------------------------------------------------------------------------------//
-        //                          Experiment variables                                //
-        //------------------------------------------------------------------------------//
+        // Experiment variables
 
         // Variables for the user modify
         std::string dataFileRoot = "/home/chaste/projects/ChemChaste/src/Data/MembraneModel/";
@@ -192,34 +180,29 @@ public:
         double samplingTimeStep = 1e-3;
         std::string output_filename = "TestMembraneModelOutput_SMB_test";
         
-        //------------------------------------------------------------------------------//
-        //                          Simulation construct                 
-                       //
-        //------------------------------------------------------------------------------//
+        // Simulation construct
 
         // run the domain field set up and parse files
         ChemicalDomainField* p_field = new ChemicalDomainField(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
 
         // check that the file input problem dimension is the same as the user defined problem dimension
-        std::cout<<"File probDim: "<<p_field ->GetProblemDimensions()<<std::endl;
-        std::cout<<"User probDim: "<<probDim<<std::endl;
+        std::cout << "File probDim: "<<p_field ->GetProblemDimensions() << std::endl;
+        std::cout << "User probDim: "<<probDim << std::endl;
 
         MutableMesh<2,2>* p_mesh = p_field ->GetMeshGenerator()->GetMesh();
         const unsigned spaceDim=2;
         const unsigned elementDim=2;
         
     
-        std::cout<<"Domain numNodes: "<<p_field->GetDomainMesh()->GetNumNodes()<<std::endl;
-        std::cout<<"Class numNodes: "<<p_mesh->GetNumNodes()<<std::endl;
+        std::cout << "Domain numNodes: "<<p_field->GetDomainMesh()->GetNumNodes() << std::endl;
+        std::cout << "Class numNodes: "<<p_mesh->GetNumNodes() << std::endl;
         // process initial conditions
-        std::cout<<"Process initial conditions"<<std::endl;
+        std::cout << "Process initial conditions" << std::endl;
 
         p_field->ParseInitialConditionsFromFile(dataFileRoot+initialConditionsFilename);
         
         // PETSc Vec
         Vec initial_condition = PetscTools::CreateVec(p_field->GetInitialNodeConditions());
-
-        
 
         // process boundary conditions
         p_field->ParseBoundaryConditionsFromFile(dataFileRoot+boundaryConditionsFilename);
@@ -229,12 +212,13 @@ public:
         std::vector<double> boundaryConditionValues = p_field->GetBoundaryConditionValues();
 
         // Process Boundary Conditions
-        std::cout<<"Process Boundary Conditions"<<std::endl;
+        std::cout << "Process Boundary Conditions" << std::endl;
         BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+        {
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(boundaryConditionValues[pdeDim]));
         }
 
@@ -248,7 +232,8 @@ public:
                 {
                     bcc.AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[pdeDim], pdeDim);
                 }
-            }else if (boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
+            }
+            else if (boundaryConditionTypes[pdeDim]=="Neumann"||boundaryConditionTypes[pdeDim]=="neumann"||boundaryConditionTypes[pdeDim]=="N"||boundaryConditionTypes[pdeDim]=="n")
             
             {
                 for (TetrahedralMesh<elementDim,spaceDim>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
@@ -259,23 +244,20 @@ public:
                 }
             }
         }
-      
-        
 
         // pde system
-        std::cout<<"Pde"<<std::endl;
+        std::cout << "Pde" << std::endl;
         InhomogenousParabolicPdeOdeSystem<elementDim, spaceDim, probDim> pde(p_field);
-        
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver>> odeSolverSystem;
         std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
         {
-            std::cout<<"node number: "<<i<<std::endl;
+            std::cout << "node number: "<<i << std::endl;
             for (unsigned j=0; j<p_field->GetOdeSystem()[i]->GetReactionSystem()->GetReactionVector().size();j++)
             {
-                std::cout<< p_field->GetOdeSystem()[i]->GetReactionSystem()->GetReactionVector()[j]->GetReactionType()<<std::endl;
+                std::cout <<  p_field->GetOdeSystem()[i]->GetReactionSystem()->GetReactionVector()[j]->GetReactionType() << std::endl;
             }
             
             odeSystem.push_back(p_field->GetOdeSystem()[i]);
@@ -283,7 +265,7 @@ public:
             odeSolverSystem.push_back(p_solver);
         }
 
-        std::cout<<"Solver"<<std::endl;
+        std::cout << "Solver" << std::endl;
         // solver
         InhomogenousCoupledPdeOdeSolver<elementDim,spaceDim,probDim> solver(p_mesh, &pde, &bcc, odeSystem, odeSolverSystem);
 
@@ -294,16 +276,14 @@ public:
         solver.SetOutputDirectory("TestMembraneModelOutput_SMB_test_oldWay");
         solver.SetInitialCondition(initial_condition);
         // solve
-        std::cout<<"Solve"<<std::endl;
+        std::cout << "Solve" << std::endl;
 
         solver.SolveAndWriteResultsToFile();
-        std::cout<<"Clean"<<std::endl;
+        std::cout << "Clean" << std::endl;
 
         // clean
         PetscTools::Destroy(initial_condition);
     }
-
 };
-
 
 #endif
