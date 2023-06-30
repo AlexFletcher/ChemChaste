@@ -2,55 +2,55 @@
 #define TESTCELLWISEPDESYSTEM_HPP_
 
 #include <cxxtest/TestSuite.h>
-#include "UblasIncludes.hpp"
+
 #include "AbstractCellBasedTestSuite.hpp"
 #include "CheckpointArchiveTypes.hpp"
 #include "PetscSetupAndFinalize.hpp"
-#include "RandomNumberGenerator.hpp"
 #include "SmartPointers.hpp"
+#include "UblasIncludes.hpp"
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <tuple>
 #include <cmath>
-
-#include "HoneycombMeshGenerator.hpp"
-#include "GeneralisedLinearSpringForce.hpp"
-#include "SimpleOxygenBasedCellCycleModel.hpp"
-#include "WildTypeCellMutationState.hpp"
-#include "StemCellProliferativeType.hpp"
-#include "CellwiseSourceEllipticPde.hpp"
-#include "ConstBoundaryCondition.hpp"
-#include "EllipticGrowingDomainPdeModifier.hpp"
-#include "EllipticBoxDomainPdeModifier.hpp" 
-#include "OffLatticeSimulation.hpp"
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <tuple>
+#include <vector>
+ 
+#include "AbstractDomainField_templated.hpp"
+#include "AbstractTransportOutReaction.hpp"
+#include "AbstractTransportReaction.hpp"
+#include "AbstractTransportReactionSystem.hpp"
+#include "AbstractTransportReactionSystemFromFile.hpp"
+#include "AbstractReversibleTransportReaction.hpp"
 #include "ApoptoticCellProperty.hpp"
 #include "ArchiveOpener.hpp"
 #include "AveragedSourceParabolicPde_test.hpp"
 #include "CaBasedCellPopulation.hpp"
 #include "CellsGenerator.hpp"
+#include "CellwiseSourceEllipticPde.hpp"
 #include "CheckpointArchiveTypes.hpp"
-#include "DifferentiatedCellProliferativeType.hpp"
-#include "HoneycombVertexMeshGenerator.hpp"
-#include "ParabolicBoxDomainPdeModifier.hpp"
-#include "ReplicatableVector.hpp"
-#include "UniformCellCycleModel.hpp"
-#include "UniformSourceParabolicPde.hpp"
-#include "NoCellCycleModel.hpp"
-#include "AbstractDomainField_templated.hpp"
+#include "ChemicalCellProperty.hpp"
 #include "ChemicalDomainField_templated.hpp"
 #include "ChemicalDomainFieldForCellCoupling.hpp"
+#include "ConstBoundaryCondition.hpp"
+#include "DifferentiatedCellProliferativeType.hpp"
+#include "EllipticBoxDomainPdeModifier.hpp"
+#include "EllipticGrowingDomainPdeModifier.hpp"
+#include "GeneralisedLinearSpringForce.hpp"
+#include "HoneycombMeshGenerator.hpp"
+#include "HoneycombVertexMeshGenerator.hpp"
 #include "InhomogenousCoupledPdeOdeSolver_templated.hpp"
-#include "TransportCellProperty.hpp"
-#include "ChemicalCellProperty.hpp"
 #include "MembraneCellProperty.hpp"
-#include "AbstractTransportReactionSystem.hpp"
-#include "AbstractTransportReaction.hpp"
-#include "AbstractTransportOutReaction.hpp"
-#include "AbstractTransportReactionSystemFromFile.hpp"
-#include "AbstractReversibleTransportReaction.hpp"
+#include "NoCellCycleModel.hpp"
+#include "OffLatticeSimulation.hpp"
+#include "ParabolicBoxDomainPdeModifier.hpp"
+#include "ReplicatableVector.hpp"
+#include "SimpleOxygenBasedCellCycleModel.hpp"
+#include "StemCellProliferativeType.hpp"
+#include "TransportCellProperty.hpp"
+#include "UniformCellCycleModel.hpp"
+#include "UniformSourceParabolicPde.hpp"
+#include "WildTypeCellMutationState.hpp"
 
 class TestCellwisePdeSystem : public AbstractCellBasedTestSuite
 {
@@ -59,14 +59,12 @@ public:
     {
         EXIT_IF_PARALLEL;
 
+        // Create mesh
         HoneycombMeshGenerator generator(5, 5, 0);
         MutableMesh<2,2>* p_mesh = generator.GetMesh();
 
+        // Create cells
         std::vector<CellPtr> cells;
-
-        // set up cells at each of the nodes in the mesh
-        // generic unmodified cell state
-        //WildTypeCellMutationState* p_state = new WildTypeCellMutationState();
         boost::shared_ptr<WildTypeCellMutationState> p_state(new WildTypeCellMutationState);
         boost::shared_ptr<StemCellProliferativeType> p_stem_type(new StemCellProliferativeType);
         for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
@@ -77,51 +75,52 @@ public:
             p_cell->SetCellProliferativeType(p_stem_type);
             p_model->SetStemCellG1Duration(8.0);
             p_model->SetTransitCellG1Duration(8.0);
-            double birth_time = - RandomNumberGenerator::Instance()->ranf() *(  p_model->GetStemCellG1Duration() + p_model->GetSG2MDuration() );
+            double birth_time = - RandomNumberGenerator::Instance()->ranf()*(p_model->GetStemCellG1Duration() + p_model->GetSG2MDuration());
             p_cell->SetBirthTime(birth_time);
             cells.push_back(p_cell);
         }
-        // cell population where cells are attached to the nodes on the mesh
+
+        // Create cell population
         MeshBasedCellPopulation<2> cell_population(*p_mesh, cells);
 
-        // define rank 1 PDE system with knowledge of the cell population and a parameter
-        boost::shared_ptr<CellwiseSourceEllipticPde<2>> p_pde(new CellwiseSourceEllipticPde<2>(cell_population, -0.03));
+        // Define rank 1 PDE system with knowledge of the cell population and a parameter
+        boost::shared_ptr<CellwiseSourceEllipticPde<2> > p_pde(new CellwiseSourceEllipticPde<2>(cell_population, -0.03));
 
-        // dirichlet boundary conditions held at 1.0 for the diffusiong species 
-        boost::shared_ptr<ConstBoundaryCondition<2>> p_bc(new ConstBoundaryCondition<2>(1.0));
+        // Dirichlet boundary conditions held at 1.0 for the diffusiong species 
+        boost::shared_ptr<ConstBoundaryCondition<2> > p_bc(new ConstBoundaryCondition<2>(1.0));
         bool is_neumann_bc = false;
 
-        // create domain box
+        // Create domain box
         ChastePoint<2> lower(-5.0, -5.0);
         ChastePoint<2> upper(15.0, 15.0);
-        boost::shared_ptr<ChasteCuboid<2>> p_cuboid (new ChasteCuboid<2>(lower, upper));
+        boost::shared_ptr<ChasteCuboid<2> > p_cuboid (new ChasteCuboid<2>(lower, upper));
 
-        // make a pde modifier for the elliptic pde with a box domain
-
-        //boost::shared_ptr<EllipticBoxDomainPdeModifier<2>> p_pde_modifier(new EllipticBoxDomainPdeModifier<2>(p_pde, p_bc, is_neumann_bc, p_cuboid));
-        boost::shared_ptr<EllipticGrowingDomainPdeModifier<2>> p_pde_modifier(new EllipticGrowingDomainPdeModifier<2>(p_pde, p_bc, is_neumann_bc));
+        // mCreate a PDE modifier for the elliptic pde with a box domain
+        boost::shared_ptr<EllipticGrowingDomainPdeModifier<2> > p_pde_modifier(new EllipticGrowingDomainPdeModifier<2>(p_pde, p_bc, is_neumann_bc));
         p_pde_modifier->SetDependentVariableName("oxygen");
 
-        // run simulation
+        // Create simulation
         OffLatticeSimulation<2> simulator(cell_population);
         simulator.AddSimulationModifier(p_pde_modifier);
-
         simulator.SetOutputDirectory("TestBoxTumourSpheroid_test");
         simulator.SetEndTime(1.0);
 
-        // add linear force to the simulation mesh
-        boost::shared_ptr<GeneralisedLinearSpringForce<2>> p_linear_force (new GeneralisedLinearSpringForce<2>());
+        // Add linear force to the simulation mesh
+        boost::shared_ptr<GeneralisedLinearSpringForce<2> > p_linear_force (new GeneralisedLinearSpringForce<2>());
         p_linear_force->SetCutOffLength(3);
         simulator.AddForce(p_linear_force);
 
+        // Run simulation
         simulator.Solve();
     }
 
     void TestMeshBasedSquareMonolayerWithNeumanBcs()
     {
-        HoneycombMeshGenerator generator(5,5,0);
+        // Create mesh
+        HoneycombMeshGenerator generator(5, 5, 0);
         MutableMesh<2,2>* p_mesh = generator.GetMesh();
 
+        // Create cells
         std::vector<CellPtr> cells;
         MAKE_PTR(DifferentiatedCellProliferativeType, p_differentiated_type);
         CellsGenerator<UniformCellCycleModel, 2> cells_generator;
@@ -136,14 +135,13 @@ public:
             if (cell_location(0) < 3.0 || cell_location(0) < 3.6 )
             {
                 cells[i]->AddCellProperty(p_apoptotic_property);
-                
             }
-            std::cout << "Cell index: "<<i<<" cell x: "<<cell_location(0)<<" Cell y: "<<cell_location(1) << std::endl;
-            // Set initial condition for PDE
-            cells[i]->GetCellData()->SetItem("variable",1.0);
-        }
-        //TS_ASSERT_EQUALS(p_apoptotic_property->GetCellCount(), 25u);
 
+            // Set initial condition for PDE
+            cells[i]->GetCellData()->SetItem("variable", 1.0);
+        }
+
+        // Create cell population
         MeshBasedCellPopulation<2> cell_population(*p_mesh, cells);
 
         // Set up simulation time for file output
@@ -179,47 +177,43 @@ public:
     void TestChemicalDomainFieldForCellCoupling()
     {
         // Variables for the user modify
-        std::string dataFileRoot = "/home/chaste/projects/ChemChaste/src/Data/CellwiseSchnakenberg/";
-        std::string domainFilename = "CellwiseDomain.csv";
-        std::string domainKeyFilename = "CellwiseDomainLabelKey.csv";
-        std::string odeLabelFilename = "CellwiseDomain.csv";
-        std::string odeKeyFilename = "CellwiseOdeKey.csv";
-        std::string diffusionFilename = "Cellwise_DiffusionDatabase.csv";
-        std::string initialConditionsFilename = "CellwiseInitialConditions.csv";
-        std::string boundaryConditionsFilename = "Cellwise_Boundary_Conditions.csv";
+        std::string data_file_root = "/home/chaste/projects/ChemChaste/src/Data/CellwiseSchnakenberg/";
+        std::string domain_file_name = "CellwiseDomain.csv";
+        std::string domain_key_file_name = "CellwiseDomainLabelKey.csv";
+        std::string ode_label_file_name = "CellwiseDomain.csv";
+        std::string ode_key_file_name = "CellwiseOdeKey.csv";
+        std::string diffusion_file_name = "Cellwise_DiffusionDatabase.csv";
+        std::string initial_conditions_file_name = "CellwiseInitialConditions.csv";
+        std::string boundary_conditions_file_name = "Cellwise_Boundary_Conditions.csv";
 
         // System properties
-        const unsigned probDim =2; // need to set manually to the number of diffusive variables for the pde solver to solve
-        const unsigned spaceDim=2;
-        const unsigned elementDim=2;
+        const unsigned prob_dim = 2; // need to set manually to the number of diffusive variables for the pde solver to solve
+        const unsigned space_dim = 2;
+        const unsigned element_dim = 2;
 
         // solver properties
         double t_end = 10;
-        double simulationTimeStep = 1e-2;
-        double samplingTimeStep = 1e-2;
+        double simulation_time_step = 1e-2;
+        double sampling_time_step = 1e-2;
         std::string output_filename = "TestChemicalDomainFieldForCellCoupling";
     
         // generate domain
         // run the domain field set up and parse files
-        ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
-
-        std::cout <<  p_Pde_field->GetFieldType() << std::endl;
+        ChemicalDomainFieldForCellCoupling<element_dim,space_dim,prob_dim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<element_dim,space_dim,prob_dim>(data_file_root,data_file_root+domain_file_name, data_file_root+domain_key_file_name, data_file_root+domain_file_name, data_file_root+domain_key_file_name, data_file_root+ode_label_file_name, data_file_root+ode_key_file_name, data_file_root+diffusion_file_name);
 
         // solver
-        InhomogenousCoupledPdeOdeSolverTemplated<elementDim,spaceDim,probDim> solver(p_Pde_field->GetMeshGenerator()->GetMesh(), p_Pde_field->ReturnSharedPtrPdeSystem().get(), p_Pde_field->ReturnSharedPtrBoundaryConditionsContainer().get(), p_Pde_field->GetNodalOdeSystems(), p_Pde_field->GetNodalOdeSolvers());
+        InhomogenousCoupledPdeOdeSolverTemplated<element_dim,space_dim,prob_dim> solver(p_Pde_field->GetMeshGenerator()->GetMesh(), p_Pde_field->ReturnSharedPtrPdeSystem().get(), p_Pde_field->ReturnSharedPtrBoundaryConditionsContainer().get(), p_Pde_field->GetNodalOdeSystems(), p_Pde_field->GetNodalOdeSolvers());
 
         // solver properties
         solver.SetTimes(0, t_end);
-        solver.SetTimeStep(simulationTimeStep);
-        solver.SetSamplingTimeStep(samplingTimeStep);
+        solver.SetTimeStep(simulation_time_step);
+        solver.SetSamplingTimeStep(sampling_time_step);
         solver.SetOutputDirectory(output_filename);
         Vec initial_condition = PetscTools::CreateVec(p_Pde_field->GetInitialNodeConditions());
         solver.SetInitialCondition(initial_condition);
+    
         // solve
-        std::cout << "Solve" << std::endl;
-
         solver.SolveAndWriteResultsToFile();
-        std::cout << "Clean" << std::endl;
 
         // clean
         PetscTools::Destroy(initial_condition);
@@ -228,7 +222,6 @@ public:
     void TestCellTransportProperty()
     {
         AbstractChemistry* p_bulk_system_chemistry = new AbstractChemistry();
-
         AbstractChemistry* p_cell_system_chemistry = new AbstractChemistry();
 
         std::vector<AbstractChemical*> p_bulk_1 = std::vector<AbstractChemical*>();
@@ -252,6 +245,7 @@ public:
         AbstractChemical *p_chemical_U = new AbstractChemical("U");
         p_bulk_system_chemistry->AddChemical(p_chemical_U);
         p_cell_system_chemistry->AddChemical(p_chemical_U);
+
         // add U to reactions
         p_bulk_1.push_back(p_chemical_U);
         stoich_bulk_1.push_back(2);
@@ -294,64 +288,33 @@ public:
         AbstractTransportReactionSystem* p_transport_reaction_system = new AbstractTransportReactionSystem(p_system_chemistry, p_reaction_vector_2);
 
         // states in the bulk environemnt
-        std::vector<std::string> environment_states = {"U", "V","C"};
-        std::vector<double> environment_concentration_at_point = {1.0,1.0,1.0};
-        std::vector<double> change_environment_concentration_vector= {0.0,0.0,0.0};
-        //StateVariableRegister* environment_register  = new StateVariableRegister(environment_states); 
+        std::vector<std::string> environment_states = {"U", "V", "C"};
+        std::vector<double> environment_concentration_at_point = {1.0, 1.0, 1.0};
+        std::vector<double> change_environment_concentration_vector = {0.0, 0.0, 0.0};
 
         // states bound within the cell
         std::vector<std::string> cell_states = {"U", "V"};
-        std::vector<double> cell_concentration = {1.0,1.0};
-        std::vector<double> change_cell_concentration_vector= {0.0,0.0};
-        //StateVariableRegister* cell_register  = new StateVariableRegister(cell_states); 
+        std::vector<double> cell_concentration = {1.0, 1.0};
+        std::vector<double> change_cell_concentration_vector = {0.0, 0.0};
 
         p_transport_reaction_system->ReactSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
-        for (unsigned i=0; i<p_transport_reaction_system->GetNumReactions(); i++)
-        {
-            std::cout << "Reaction type: "<<i<<" "<< p_transport_reaction_system->GetReactionByIndex(i)->GetReactionType() << std::endl;
-        }
 
-        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
-        {
-            std::cout << "Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i] << std::endl;
-        }
-
-        for (unsigned i=0; i<cell_concentration.size();i++)
-        {
-            std::cout << "Cell State "<<cell_states[i]<<": initial: "<<cell_concentration[i]<<" change: "<<change_cell_concentration_vector[i] << std::endl;
-        }
-
-
-        // Make a single cell object
-        std::cout << "Chemical cell property" << std::endl;
-        
+        // Make a single cell object        
         boost::shared_ptr<ChemicalCellProperty> p_cell_chemical(new ChemicalCellProperty());
-
-        std::cout << "Transport cell property" << std::endl;
-
         boost::shared_ptr<TransportCellProperty> p_cell_transport(new TransportCellProperty());
         p_cell_transport->SetUp(p_transport_reaction_system);
-        change_environment_concentration_vector= {0.0,0.0,0.0};
-        change_cell_concentration_vector= {0.0,0.0,0.0};
+        change_environment_concentration_vector = {0.0, 0.0, 0.0};
+        change_cell_concentration_vector = {0.0, 0.0, 0.0};
         p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
 
-
-        std::cout << "Membrane cell property" << std::endl;
-
         boost::shared_ptr<MembraneCellProperty> p_cell_membrane(new MembraneCellProperty());
-        
         p_cell_membrane->SetMembraneThickness(1.0);
-
 
         AbstractTransportOdeSystem transportOde(p_transport_reaction_system);
         EulerIvpOdeSolver euler_solver;
         std::vector<double> initial_condition = {1.0, 1.0};
 
         OdeSolution solutions = euler_solver.Solve(&chemicalOde, initial_condition, 0, 1, 0.01, 0.1);
-        for (unsigned i=0; i<solutions.rGetTimes().size(); i++)
-        {
-            std::cout << solutions.rGetTimes()[i] << " " << solutions.rGetSolutions()[i][0] << " " << solutions.rGetSolutions()[i][1]<< "\n";
-        }
 
         /*
         std::cout << "Transport cell property" << std::endl;
@@ -443,18 +406,6 @@ public:
                 boost::shared_ptr<TransportCellProperty> p_cell_transport = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
 
                 p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration_vector[cell_count],change_environment_concentration_vector,change_cell_concentration_cell_vector[cell_count]);
-
-                std::cout << "Cell "<<cell_count << std::endl;
-
-                for (unsigned i=0; i<environment_concentration_at_point.size();i++)
-                {
-                    std::cout << "Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i] << std::endl;
-                }
-
-                for (unsigned i=0; i<cell_concentration_vector[cell_count].size();i++)
-                {
-                    std::cout << "Cell State "<<cell_states[i]<<": initial: "<<cell_concentration_vector[cell_count][i]<<" change: "<<change_cell_concentration_cell_vector[cell_count][i] << std::endl;
-                }
             }
             cell_count++;
         }
@@ -532,25 +483,8 @@ public:
         std::vector<std::string> cell_states = {"U", "V"};
         std::vector<double> cell_concentration = {1.0,1.0};
         std::vector<double> change_cell_concentration_vector= {0.0,0.0};
-        //StateVariableRegister* cell_register  = new StateVariableRegister(cell_states); 
 
         p_transport_reaction_system->ReactSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
-        for (unsigned i=0; i<p_transport_reaction_system->GetNumReactions(); i++)
-        {
-            std::cout << "Reaction type: "<<i<<" "<< p_transport_reaction_system->GetReactionByIndex(i)->GetReactionType() << std::endl;
-        }
-
-        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
-        {
-            std::cout << "Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i] << std::endl;
-        }
-
-        for (unsigned i=0; i<cell_concentration.size();i++)
-        {
-            std::cout << "Cell State "<<cell_states[i]<<": initial: "<<cell_concentration[i]<<" change: "<<change_cell_concentration_vector[i] << std::endl;
-        }
-
-        std::cout << "Transport cell property" << std::endl;
 
         boost::shared_ptr<TransportCellProperty> p_cell_transport(new TransportCellProperty());
         p_cell_transport->SetUp(p_transport_reaction_system);
@@ -558,23 +492,8 @@ public:
         change_cell_concentration_vector= {0.0,0.0};
         p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
 
-        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
-        {
-            std::cout << "Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i] << std::endl;
-        }
-
-        for (unsigned i=0; i<cell_concentration.size();i++)
-        {
-            std::cout << "Cell State "<<cell_states[i]<<": initial: "<<cell_concentration[i]<<" change: "<<change_cell_concentration_vector[i] << std::endl;
-        }
-
-        std::cout << "Membrane cell property" << std::endl;
-
         boost::shared_ptr<MembraneCellProperty> p_cell_membrane(new MembraneCellProperty());
-        
         p_cell_membrane->SetMembraneThickness(1.0);
-
-        std::cout << "Membrane thickness: "<<p_cell_membrane->GetMembraneThickness() << std::endl;
         
         // form the cells on a mesh
         HoneycombMeshGenerator generator(5, 5, 0);
@@ -615,44 +534,41 @@ public:
 
         MeshBasedCellPopulation<2> cell_population(*p_mesh, cells);
 
-        std::string dataFileRoot = "/home/chaste/projects/ChemChaste/src/Data/CellwiseSchnakenberg/";
-        std::string domainFilename = "CellwiseDomain.csv";
-        std::string domainKeyFilename = "CellwiseDomainLabelKey.csv";
-        std::string odeLabelFilename = "CellwiseDomain.csv";
-        std::string odeKeyFilename = "CellwiseOdeKey.csv";
-        std::string diffusionFilename = "Cellwise_DiffusionDatabase.csv";
-        std::string initialConditionsFilename = "CellwiseInitialConditions.csv";
-        std::string boundaryConditionsFilename = "Cellwise_Boundary_Conditions.csv";
+        std::string data_file_root = "/home/chaste/projects/ChemChaste/src/Data/CellwiseSchnakenberg/";
+        std::string domain_file_name = "CellwiseDomain.csv";
+        std::string domain_key_file_name = "CellwiseDomainLabelKey.csv";
+        std::string ode_label_file_name = "CellwiseDomain.csv";
+        std::string ode_key_file_name = "CellwiseOdeKey.csv";
+        std::string diffusion_file_name = "Cellwise_DiffusionDatabase.csv";
+        std::string initial_conditions_file_name = "CellwiseInitialConditions.csv";
+        std::string boundary_conditions_file_name = "Cellwise_Boundary_Conditions.csv";
+
         // System properties
-        const unsigned probDim =2; // need to set manually to the number of diffusive variables for the pde solver to solve
-        const unsigned spaceDim=2;
-        const unsigned elementDim=2;
+        const unsigned prob_dim =2; // need to set manually to the number of diffusive variables for the pde solver to solve
+        const unsigned space_dim = 2;
+        const unsigned element_dim = 2;
 
         // solver properties
         double t_end = 10;
-        double simulationTimeStep = 1e-2;
-        double samplingTimeStep = 1e-2;
+        double simulation_time_step = 1e-2;
+        double sampling_time_step = 1e-2;
         std::string output_filename = "TestAbstractCellCoupling";        
         
         // generate domain
         // run the domain field set up and parse files
-        ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
-
-        std::cout <<  p_Pde_field->GetFieldType() << std::endl;
+        ChemicalDomainFieldForCellCoupling<element_dim,space_dim,prob_dim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<element_dim,space_dim,prob_dim>(data_file_root,data_file_root+domain_file_name, data_file_root+domain_key_file_name, data_file_root+domain_file_name, data_file_root+domain_key_file_name, data_file_root+ode_label_file_name, data_file_root+ode_key_file_name, data_file_root+diffusion_file_name);
 
         // create domain box
         ChastePoint<2> lower(-5.0, -5.0);
         ChastePoint<2> upper(15.0, 15.0);
-        boost::shared_ptr<ChasteCuboid<2>> p_cuboid (new ChasteCuboid<2>(lower, upper));
+        boost::shared_ptr<ChasteCuboid<2> > p_cuboid (new ChasteCuboid<2>(lower, upper));
 
-        boost::shared_ptr<AbstractPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new AbstractPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field));
+        boost::shared_ptr<AbstractPdeSystemModifier<element_dim,space_dim,prob_dim>> p_pde_modifier(new AbstractPdeSystemModifier<element_dim,space_dim,prob_dim>(p_Pde_field));
     */
 
         /*
-        // make a pde modifier for the elliptic pde with a box domain
-
-        //boost::shared_ptr<EllipticBoxDomainPdeModifier<2>> p_pde_modifier(new EllipticBoxDomainPdeModifier<2>(p_pde, p_bc, is_neumann_bc, p_cuboid));
-        boost::shared_ptr<EllipticGrowingDomainPdeModifier<2>> p_pde_modifier(new EllipticGrowingDomainPdeModifier<2>(p_pde, p_bc, is_neumann_bc));
+        // Make a PDE modifier for the elliptic pde with a box domain
+        boost::shared_ptr<EllipticGrowingDomainPdeModifier<2> > p_pde_modifier(new EllipticGrowingDomainPdeModifier<2>(p_pde, p_bc, is_neumann_bc));
         p_pde_modifier->SetDependentVariableName("oxygen");
 
         // run simulation
@@ -663,28 +579,26 @@ public:
         simulator.SetEndTime(t_end);
 
         // add linear force to the simulation mesh
-        boost::shared_ptr<GeneralisedLinearSpringForce<2>> p_linear_force (new GeneralisedLinearSpringForce<2>());
+        boost::shared_ptr<GeneralisedLinearSpringForce<2> > p_linear_force (new GeneralisedLinearSpringForce<2>());
         p_linear_force->SetCutOffLength(3);
         simulator.AddForce(p_linear_force);
 
         simulator.Solve();
         
         // solver
-        InhomogenousCoupledPdeOdeSolverTemplated<elementDim,spaceDim,probDim> solver(p_Pde_field->GetMeshGenerator()->GetMesh(), p_Pde_field->ReturnSharedPtrPdeSystem().get(), p_Pde_field->ReturnSharedPtrBoundaryConditionsContainer().get(), p_Pde_field->GetNodalOdeSystems(), p_Pde_field->GetNodalOdeSolvers());
+        InhomogenousCoupledPdeOdeSolverTemplated<element_dim,space_dim,prob_dim> solver(p_Pde_field->GetMeshGenerator()->GetMesh(), p_Pde_field->ReturnSharedPtrPdeSystem().get(), p_Pde_field->ReturnSharedPtrBoundaryConditionsContainer().get(), p_Pde_field->GetNodalOdeSystems(), p_Pde_field->GetNodalOdeSolvers());
 
         // solver properties
         solver.SetTimes(0, t_end);
-        solver.SetTimeStep(simulationTimeStep);
-        solver.SetSamplingTimeStep(samplingTimeStep);
+        solver.SetTimeStep(simulation_time_step);
+        solver.SetSamplingTimeStep(sampling_time_step);
         solver.SetOutputDirectory(output_filename);
         Vec initial_condition = PetscTools::CreateVec(p_Pde_field->GetInitialNodeConditions());
         solver.SetInitialCondition(initial_condition);
+        
         // solve
-        std::cout << "Solve" << std::endl;
-
         solver.SolveAndWriteResultsToFile();
-        std::cout << "Clean" << std::endl;
-
+        
         // clean
         PetscTools::Destroy(initial_condition);
         */
@@ -693,27 +607,27 @@ public:
     void TestCellBasedPdesWithKnownSolution()
     {
         /*
-        //------------------------------------------------------------------------------//
-        //                          PDE variables                                //
-        //------------------------------------------------------------------------------//
+        // PDE variables
 
         // Variables for the user modify
-        std::string dataFileRoot = "/home/chaste/projects/ChemChaste/src/Data/CellwiseSchnakenberg/";
-        std::string domainFilename = "CellwiseDomain.csv";
-        std::string domainKeyFilename = "CellwiseDomainLabelKey.csv";
-        std::string odeLabelFilename = "CellwiseOdeSelector.csv";
-        std::string odeKeyFilename = "CellwiseOdeKey.csv";
-        std::string diffusionFilename = "Cellwise_DiffusionDatabase.csv";
-        std::string initialConditionsFilename = "CellwiseInitialConditions.csv";
-        std::string boundaryConditionsFilename = "Cellwise_Boundary_Conditions.csv";
+        std::string data_file_root = "/home/chaste/projects/ChemChaste/src/Data/CellwiseSchnakenberg/";
+        std::string domain_file_name = "CellwiseDomain.csv";
+        std::string domain_key_file_name = "CellwiseDomainLabelKey.csv";
+        std::string ode_label_file_name = "CellwiseOdeSelector.csv";
+        std::string ode_key_file_name = "CellwiseOdeKey.csv";
+        std::string diffusion_file_name = "Cellwise_DiffusionDatabase.csv";
+        std::string initial_conditions_file_name = "CellwiseInitialConditions.csv";
+        std::string boundary_conditions_file_name = "Cellwise_Boundary_Conditions.csv";
+        
         // System properties
-        const unsigned probDim =2; // need to set manually to the number of diffusive variables for the pde solver to solve
-        const unsigned spaceDim=2;
-        const unsigned elementDim=2;
+        const unsigned prob_dim = 2; // need to set manually to the number of diffusive variables for the pde solver to solve
+        const unsigned space_dim = 2;
+        const unsigned element_dim = 2;
+        
         // solver properties
         double t_end = 10;
-        double simulationTimeStep = 1e-2;
-        double samplingTimeStep = 1e-2;
+        double simulation_time_step = 1e-2;
+        double sampling_time_step = 1e-2;
         std::string output_filename = "TestCellBasedPdesWithKnownSolution";
 
         // cell properties
@@ -726,26 +640,25 @@ public:
         // Create a ChasteCuboid on which to base the finite element mesh used to solve the PDE
         ChastePoint<2> lower(-5.0, -5.0);
         ChastePoint<2> upper(15.0, 15.0);
-        MAKE_PTR_ARGS(ChasteCuboid<spaceDim>, p_cuboid, (lower, upper));
+        MAKE_PTR_ARGS(ChasteCuboid<space_dim>, p_cuboid, (lower, upper));
 
         // generate domain
         // run the domain field set up and parse files
-        ChemicalDomainField* p_Pde_field = new ChemicalDomainField(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
+        ChemicalDomainField* p_Pde_field = new ChemicalDomainField(data_file_root,data_file_root+domain_file_name, data_file_root+domain_key_file_name, data_file_root+ode_label_file_name, data_file_root+ode_key_file_name, data_file_root+diffusion_file_name);
 
         // check that the file input problem dimension is the same as the user defined problem dimension
-        std::cout << "File probDim: "<<p_Pde_field ->GetProblemDimensions() << std::endl;
-        std::cout << "User probDim: "<<probDim << std::endl;
+        std::cout << "File prob_dim: "<<p_Pde_field ->GetProblemDimensions() << std::endl;
+        std::cout << "User prob_dim: "<<prob_dim << std::endl;
 
         std::vector<std::string> stateVariableNames = p_Pde_field->GetStateVariableVector()->GetStateVariableRegisterVector();
 
         // cell mesh generator
         HoneycombMeshGenerator generator(5,5,0);
-        MutableMesh<elementDim,spaceDim>* p_cell_mesh = generator.GetMesh();
+        MutableMesh<element_dim,space_dim>* p_cell_mesh = generator.GetMesh();
         cells_generator.GenerateBasicRandom(cells, p_cell_mesh->GetNumNodes(), p_differentiated_type);
 
         // Make cells with x<5.0 apoptotic (so no source term)
-        boost::shared_ptr<AbstractCellProperty> p_apoptotic_property =
-            cells[0]->rGetCellPropertyCollection().GetCellPropertyRegistry()->Get<ApoptoticCellProperty>();
+        boost::shared_ptr<AbstractCellProperty> p_apoptotic_property = cells[0]->rGetCellPropertyCollection().GetCellPropertyRegistry()->Get<ApoptoticCellProperty>();
         for (unsigned i=0; i<cells.size(); i++)
         {
             c_vector<double,2> cell_location;
@@ -756,7 +669,7 @@ public:
             }
 
             // Set initial condition for PDE
-            for (unsigned i=0; i<probDim; i++)
+            for (unsigned i=0; i<prob_dim; i++)
             {
                 cells[i]->GetCellData()->SetItem(stateVariableNames[0],initialCellValuesOfStateVariables[0]);
                 cells[i]->GetCellData()->SetItem(stateVariableNames[1],initialCellValuesOfStateVariables[1]);
@@ -764,13 +677,12 @@ public:
         }
         TS_ASSERT_EQUALS(p_apoptotic_property->GetCellCount(), 50u);
 
-        MeshBasedCellPopulation<spaceDim> cell_population(*p_cell_mesh, cells);
+        MeshBasedCellPopulation<space_dim> cell_population(*p_cell_mesh, cells);
 
         // Set up simulation time for file output
         SimulationTime::Instance()->SetEndTimeAndNumberOfTimeSteps(1.0, 10);
 
-        boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
-
+        boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<element_dim,space_dim,prob_dim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<element_dim,space_dim,prob_dim>(p_Pde_field, p_cuboid));
         p_pde_modifier->SetDependentVariableNameVector(stateVariableNames); //needs to happen before SetupSolve
 
         // dont change below
