@@ -99,17 +99,17 @@ public:
 };
 
 AbstractTransportOdeSystem::AbstractTransportOdeSystem(AbstractTransportReactionSystem* pReactionSystem)
-    : AbstractOdeSystem(pReactionSystem ->GetNumBulkStates()+pReactionSystem ->GetNumCellStates()),
+    : AbstractOdeSystem(pReactionSystem->GetNumBulkStates() + pReactionSystem->GetNumCellStates()),
       mpTransportReactionSystem(pReactionSystem)
 {
     SetReactionSystem(mpTransportReactionSystem);
-    SetNumSpecies(mpTransportReactionSystem ->GetNumBulkStates()+mpTransportReactionSystem ->GetNumCellStates());
+    SetNumSpecies(mpTransportReactionSystem->GetNumBulkStates()+mpTransportReactionSystem->GetNumCellStates());
     SetNumReactions(mpTransportReactionSystem->GetNumReactions());
 
     // Initialsie cell concentration vectors
-    std::vector<double> cellConcentration(mpTransportReactionSystem ->GetNumCellStates(),1.0);
+    std::vector<double> cellConcentration(mpTransportReactionSystem->GetNumCellStates(), 1.0);
     SetReservedCellConcentration(cellConcentration);
-    std::vector<double> cellConcentrationChange(mpTransportReactionSystem ->GetNumCellStates(),0.0);
+    std::vector<double> cellConcentrationChange(mpTransportReactionSystem->GetNumCellStates(), 0.0);
     SetChangeCellConcentration(cellConcentrationChange);
 
     mpSystemInfo.reset(new TransportOdeSystemInformation<AbstractTransportOdeSystem>(mpTransportReactionSystem));
@@ -132,29 +132,29 @@ AbstractTransportOdeSystem::AbstractTransportOdeSystem(const AbstractTransportOd
 
 void AbstractTransportOdeSystem::EvaluateYDerivatives(double time, const std::vector<double>& rY, std::vector<double>& rDY)
 {
-    unsigned number_of_bulk_states=mpTransportReactionSystem ->GetNumBulkStates();
-    unsigned number_of_cell_states=mpTransportReactionSystem ->GetNumCellStates();
+    unsigned num_bulk_states = mpTransportReactionSystem->GetNumBulkStates();
+    unsigned num_cell_states = mpTransportReactionSystem->GetNumCellStates();
 
-    std::vector<double> bulkConcentrations(number_of_bulk_states,0.0);
-    std::vector<double> changeBulkConcentrations(number_of_bulk_states,0.0);
+    std::vector<double> bulkConcentrations(num_bulk_states, 0.0);
+    std::vector<double> changeBulkConcentrations(num_bulk_states, 0.0);
 
-    std::vector<double> cellConcentrations(number_of_cell_states,0.0);
-    std::vector<double> changeCellConcentrations(number_of_cell_states,0.0);
+    std::vector<double> cellConcentrations(num_cell_states, 0.0);
+    std::vector<double> changeCellConcentrations(num_cell_states, 0.0);
     
     // Parse the different concentration state vectors from the solver output to the different concentration systems
-    std::string this_state="";
-    for (unsigned i=0; i<number_of_bulk_states; i++)
+    std::string this_state = "";
+    for (unsigned i=0; i<num_bulk_states; ++i)
     {
         bulkConcentrations[i] = rY.at(i);
     }
 
-    for (unsigned i=0; i<number_of_cell_states; i++)
+    for (unsigned i=0; i<num_cell_states; ++i)
     {
-        cellConcentrations[i] = rY.at(i+number_of_bulk_states);
+        cellConcentrations[i] = rY.at(i+num_bulk_states);
     }
     
     // Reset rDY
-    for (unsigned i=0; i<rDY.size();i++)
+    for (unsigned i=0; i<rDY.size();++i)
     {
         rDY[i] = 0.0;
     }
@@ -168,14 +168,14 @@ void AbstractTransportOdeSystem::EvaluateYDerivatives(double time, const std::ve
     mpTransportReactionSystem->ReactSystem(bulkConcentrations, cellConcentrations, changeBulkConcentrations, changeCellConcentrations);
 
     // Reform rDY for passing to the solver
-    for (unsigned i=0; i<number_of_bulk_states; i++)
+    for (unsigned i=0; i<num_bulk_states; ++i)
     {
         rDY.at(i)= changeBulkConcentrations.at(i);
     }   
 
-    for (unsigned i=0; i<number_of_cell_states; i++)
+    for (unsigned i=0; i<num_cell_states; ++i)
     {
-        rDY.at(i+number_of_bulk_states) = changeCellConcentrations.at(i);
+        rDY.at(i+num_bulk_states) = changeCellConcentrations.at(i);
     }
 }  
 
@@ -271,7 +271,7 @@ void AbstractTransportOdeSystem::SetPdeStateRegister(StateVariableRegister* pReg
 void AbstractTransportOdeSystem::CheckConcentration(const std::vector<double>& rY)
 {
     // if chemical concentration gets too low then NaNs can occur, concentration must be +ve
-    for (unsigned i=0; i<rY.size(); i++)
+    for (unsigned i=0; i<rY.size(); ++i)
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
@@ -335,7 +335,7 @@ template<>
 void TransportOdeSystemInformation<AbstractTransportOdeSystem>::Initialise()
 {
     // Initialise the bulk state varibles
-    for (unsigned i=0; i<mp_reaction_system->GetBulkChemistry()->GetNumberChemicals(); i++)
+    for (unsigned i=0; i<mp_reaction_system->GetBulkChemistry()->GetNumberChemicals(); ++i)
     {
         this->mVariableNames.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalNamesByIndex(i));
         this->mVariableUnits.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalDimensionsByIndex(i));
@@ -343,7 +343,7 @@ void TransportOdeSystemInformation<AbstractTransportOdeSystem>::Initialise()
     }
     
     // Initialise the cell state varibles; appended onto the end of the bulk state vectors
-    for (unsigned i=0; i<mp_reaction_system->GetCellChemistry()->GetNumberChemicals(); i++)
+    for (unsigned i=0; i<mp_reaction_system->GetCellChemistry()->GetNumberChemicals(); ++i)
     {
         this->mVariableNames.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalNamesByIndex(i));
         this->mVariableUnits.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalDimensionsByIndex(i));

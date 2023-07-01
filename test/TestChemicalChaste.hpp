@@ -58,11 +58,11 @@ public:
         AbstractDiffusiveChemical *p_chemical_diffusive = new AbstractDiffusiveChemical("B");
         p_chemical_diffusive->AddDiffusiveDomain("test",1.0);
 
-        std::cout << "Name: "<<p_chemical ->GetChemicalName()  << std::endl;
-        std::cout << "Type: "<<p_chemical ->GetChemicalType()  << std::endl;
-        std::cout << "Name: "<<p_chemical_diffusive ->GetChemicalName()  << std::endl;
-        std::cout << "Type: "<<p_chemical_diffusive ->GetChemicalType()  << std::endl;
-        std::cout << "Diffusivity: "<<p_chemical_diffusive ->GetDiffusiveDomainVector()[0]  << std::endl;
+        std::cout << "Name: "<<p_chemical->GetChemicalName()  << std::endl;
+        std::cout << "Type: "<<p_chemical->GetChemicalType()  << std::endl;
+        std::cout << "Name: "<<p_chemical_diffusive->GetChemicalName()  << std::endl;
+        std::cout << "Type: "<<p_chemical_diffusive->GetChemicalType()  << std::endl;
+        std::cout << "Diffusivity: "<<p_chemical_diffusive->GetDiffusiveDomainVector()[0]  << std::endl;
 
         // vectorise the pointers
         std::cout << "Chemical vector" << std::endl;
@@ -100,7 +100,7 @@ public:
         
         std::cout << "Chemical names: " << std::endl;
 
-        for (unsigned i=0; i<Number_of_species; i++)
+        for (unsigned i=0; i<Number_of_species; ++i)
         {
             std::cout << ChemNames[i] << std::endl;
         }
@@ -117,7 +117,7 @@ public:
         }
         std::cout << "Chemical diffusivities: " << std::endl;
 
-        for (unsigned i=0; i<Number_of_species; i++)
+        for (unsigned i=0; i<Number_of_species; ++i)
         {
             std::cout << p_diffusive_chemistry->GetChemicalNamesByIndex(i) << std::endl;
             std::cout << p_diffusive_chemistry->GetDiffusivityVectorByIndex(i)[0] << std::endl;
@@ -132,7 +132,7 @@ public:
 
         p_chemistry->AddChemistry(p_newChemistry);
         std::vector<std::string> ChemistryNames = p_chemistry->GetChemicalNames();
-        for (unsigned i=0; i<Number_of_species; i++)
+        for (unsigned i=0; i<Number_of_species; ++i)
         {
             std::cout << ChemistryNames[i] << std::endl;
         }
@@ -154,9 +154,9 @@ public:
 
         p_diffusive_chemistry->AddChemistry(p_newDiffusiveChemistry);
         
-        std::cout << "Number of chemicals: "<<p_diffusive_chemistry ->GetNumberChemicals() << std::endl;
-        std::cout << "Number of diffusive chemicals: "<<p_diffusive_chemistry ->GetNumberDiffusiveChemicals() << std::endl;
-        for (unsigned i=0; i<4; i++)
+        std::cout << "Number of chemicals: "<<p_diffusive_chemistry->GetNumberChemicals() << std::endl;
+        std::cout << "Number of diffusive chemicals: "<<p_diffusive_chemistry->GetNumberDiffusiveChemicals() << std::endl;
+        for (unsigned i=0; i<4; ++i)
         {
             std::cout << p_diffusive_chemistry->GetChemicalNamesByIndex(i) << std::endl;
             std::cout << p_diffusive_chemistry->GetDiffusivityValueByChemicalName(p_diffusive_chemistry->GetChemicalNamesByIndex(i)) << std::endl;
@@ -330,7 +330,7 @@ public:
         p_reaction_system_2->ReactSystem(concentration_vector,change_concentration_vector);
         std::cout << "Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1] << std::endl;
         std::cout << "Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1] << std::endl;
-        for (unsigned i=0; i<p_reaction_system_2->GetNumReactions(); i++)
+        for (unsigned i=0; i<p_reaction_system_2->GetNumReactions(); ++i)
         {
             std::cout << "Reaction type: "<<i<<" "<< p_reaction_system_2->GetReactionByIndex(i)->GetReactionType() << std::endl;
         }
@@ -428,7 +428,7 @@ public:
         p_mass_action_reaction_system->ReactSystem(concentration_vector,change_concentration_vector);
         std::cout << "Concentration (U,V): "<<concentration_vector[0]<<" "<<concentration_vector[1] << std::endl;
         std::cout << "Concentration change (U,V): "<<change_concentration_vector[0]<<" "<<change_concentration_vector[1] << std::endl;
-        for (unsigned i=0; i<p_mass_action_reaction_system->GetNumReactions(); i++)
+        for (unsigned i=0; i<p_mass_action_reaction_system->GetNumReactions(); ++i)
         {
             std::cout << "Reaction type: "<<i<<" "<< p_mass_action_reaction_system->GetReactionByIndex(i)->GetReactionType() << std::endl;
         }
@@ -482,7 +482,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
@@ -493,14 +493,14 @@ public:
         std::cout << "PETSc Vec" << std::endl;
         Vec initial_condition = PetscTools::CreateVec(init_conds);
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(1e-4, 1e-2);
   
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             if (i==22 || i==77)
             {
@@ -604,7 +604,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
@@ -615,14 +615,14 @@ public:
         std::cout << "PETSc Vec" << std::endl;
         Vec initial_condition = PetscTools::CreateVec(init_conds);
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         PdeConsumerProducer<elementDim, spaceDim, probDim> pde(Da, Db);
   
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             if (i==22)
             {
@@ -743,7 +743,7 @@ public:
         std::vector<double> initial_condition = {1.0, 1.0};
 
         OdeSolution solutions = euler_solver.Solve(&chemicalOde, initial_condition, 0, 1, 0.01, 0.1);
-        for (unsigned i=0; i<solutions.rGetTimes().size(); i++)
+        for (unsigned i=0; i<solutions.rGetTimes().size(); ++i)
         {
             std::cout << solutions.rGetTimes()[i] << " " << solutions.rGetSolutions()[i][0] << " " << solutions.rGetSolutions()[i][1]<< "\n";
         }
@@ -873,7 +873,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
@@ -889,13 +889,13 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
         std::cout << "Number odesAtNodes: "<<p_mesh->GetNumNodes() << std::endl;
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
 
@@ -922,8 +922,7 @@ public:
         std::cout << "Clean" << std::endl;
 
         // clean
-        PetscTools::Destroy(initial_condition);
-        
+        PetscTools::Destroy(initial_condition);        
     }
 
     void TestReactionSystemFromFile()
@@ -1025,7 +1024,7 @@ public:
         std::cout << "Read out reaction details: " << std::endl;
         std::cout << "-----------------------------" << std::endl;
         std::cout << "Number of reactions: "<<p_file_reaction_system->GetNumReactions() << std::endl;
-        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); i++)
+        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); ++i)
         {
             std::cout << "Reaction: "<<i<<" "<< p_file_reaction_system->GetReactionByIndex(i)->GetReactionType() << std::endl;
             std::cout << "Reaction: "<<i<<" "<< dynamic_cast<MassActionReaction*>(p_file_reaction_system->GetReactionByIndex(i))->GetForwardReactionRateConstant() << std::endl;
@@ -1034,24 +1033,24 @@ public:
 
         std::vector<std::string> chemNames = p_file_reaction_system->GetSystemChemistry()->GetChemicalNames();
         std::cout << "System chemical names:" << std::endl;
-        for (unsigned i=0; i<chemNames.size();i++)
+        for (unsigned i=0; i<chemNames.size();++i)
         {
             std::cout << chemNames[i] << std::endl;
         }
 
-        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); i++ )
+        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); ++i )
         {
             AbstractReaction* p_reaction = p_file_reaction_system->GetReactionByIndex(i);
 
-            std::cout << "Reaction type: "<<p_reaction ->GetReactionType() << std::endl;
+            std::cout << "Reaction type: "<<p_reaction->GetReactionType() << std::endl;
             for (unsigned j=0; j<p_reaction->GetNumSubstrates(); j++)
             {
-                std::cout << "Substrate: "<<p_reaction->GetSubstratesByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichSubstratesByIndex(j) << std::endl;
+                std::cout << "Substrate: "<<p_reaction->GetSubstratesByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction->GetStoichSubstratesByIndex(j) << std::endl;
             }
 
             for (unsigned j=0; j<p_reaction->GetNumProducts(); j++)
             {
-                std::cout << "Product: "<<p_reaction->GetProductsByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichProductsByIndex(j) << std::endl;
+                std::cout << "Product: "<<p_reaction->GetProductsByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction->GetStoichProductsByIndex(j) << std::endl;
             }
 
         }
@@ -1062,7 +1061,7 @@ public:
         std::cout << "Read out reaction details: " << std::endl;
         std::cout << "-----------------------------" << std::endl;
         std::cout << "Number of reactions: "<<p_mass_action_reaction_system->GetNumReactions() << std::endl;
-        for (unsigned i=0; i<p_mass_action_reaction_system->GetNumReactions(); i++)
+        for (unsigned i=0; i<p_mass_action_reaction_system->GetNumReactions(); ++i)
         {
             std::cout << "Reaction: "<<i<<" "<< p_mass_action_reaction_system->GetReactionByIndex(i)->GetReactionType() << std::endl;
             std::cout << "Reaction: "<<i<<" "<< dynamic_cast<MassActionReaction*>(p_mass_action_reaction_system->GetReactionByIndex(i))->GetForwardReactionRateConstant() << std::endl;
@@ -1071,24 +1070,24 @@ public:
 
         std::vector<std::string> chemNames_hard_coded = p_mass_action_reaction_system->GetSystemChemistry()->GetChemicalNames();
         std::cout << "System chemical names:" << std::endl;
-        for (unsigned i=0; i<chemNames_hard_coded.size();i++)
+        for (unsigned i=0; i<chemNames_hard_coded.size();++i)
         {
             std::cout << chemNames_hard_coded[i] << std::endl;
         }
 
-        for (unsigned i=0; i<p_mass_action_reaction_system->GetNumReactions(); i++ )
+        for (unsigned i=0; i<p_mass_action_reaction_system->GetNumReactions(); ++i )
         {
             AbstractReaction* p_reaction = p_mass_action_reaction_system->GetReactionByIndex(i);
 
-            std::cout << "Reaction type: "<<p_reaction ->GetReactionType() << std::endl;
+            std::cout << "Reaction type: "<<p_reaction->GetReactionType() << std::endl;
             for (unsigned j=0; j<p_reaction->GetNumSubstrates(); j++)
             {
-                std::cout << "Substrate: "<<p_reaction->GetSubstratesByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichSubstratesByIndex(j) << std::endl;
+                std::cout << "Substrate: "<<p_reaction->GetSubstratesByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction->GetStoichSubstratesByIndex(j) << std::endl;
             }
 
             for (unsigned j=0; j<p_reaction->GetNumProducts(); j++)
             {
-                std::cout << "Product: "<<p_reaction->GetProductsByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichProductsByIndex(j) << std::endl;
+                std::cout << "Product: "<<p_reaction->GetProductsByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction->GetStoichProductsByIndex(j) << std::endl;
             }
 
         }
@@ -1105,7 +1104,7 @@ public:
         std::vector<double> initial_condition = {1.0, 1.0};
 
         OdeSolution solutions = euler_solver.Solve(&chemicalOde, initial_condition, 0, 1, 0.1, 0.1);
-        for (unsigned i=0; i<solutions.rGetTimes().size(); i++)
+        for (unsigned i=0; i<solutions.rGetTimes().size(); ++i)
         {
             std::cout << solutions.rGetTimes()[i] << " " << solutions.rGetSolutions()[i][0] << " " << solutions.rGetSolutions()[i][1]<< "\n";
         }
@@ -1120,7 +1119,7 @@ public:
         std::vector<double> initial_condition_file = {1.0, 1.0};
         EulerIvpOdeSolver euler_solver_file;
         OdeSolution solutions_file = euler_solver_file.Solve(&chemical_ode_file, initial_condition_file, 0, 1, 0.1, 0.1);
-        for (unsigned i=0; i<solutions_file.rGetTimes().size(); i++)
+        for (unsigned i=0; i<solutions_file.rGetTimes().size(); ++i)
         {
             std::cout << solutions_file.rGetTimes()[i] << " " << solutions_file.rGetSolutions()[i][0] << " " << solutions_file.rGetSolutions()[i][1]<< "\n";
         }
@@ -1189,7 +1188,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
@@ -1200,14 +1199,14 @@ public:
         std::cout << "PETSc Vec" << std::endl;
         Vec initial_condition = PetscTools::CreateVec(init_conds);
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         PdeConsumerProducer<elementDim, spaceDim, probDim> pde(Da, Db);
   
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             if (i==22)
             {
@@ -1270,7 +1269,7 @@ public:
         MAKE_PTR(WildTypeCellMutationState, p_state);
         MAKE_PTR(StemCellProliferativeType, p_stem_type);
 
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             SimpleOxygenBasedCellCycleModel* p_model = new SimpleOxygenBasedCellCycleModel;
             p_model->SetDimension(2);
@@ -1313,8 +1312,6 @@ public:
 
         simulator.Solve();
 */
-
-
     }
     
     void TestChemicalSpheroid()
@@ -1350,7 +1347,7 @@ public:
         solver.SetOutputDirectory("TestSchnackenbergSystemOnHoneycombMesh");
 
         std::vector<double> init_conds(2*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             init_conds[2*i] = fabs(2.0 + RandomNumberGenerator::Instance()->ranf());
             init_conds[2*i + 1] = fabs(0.75 + RandomNumberGenerator::Instance()->ranf());
@@ -1366,8 +1363,7 @@ public:
     }
 
     void TestChemicalSpheroidPAPER()
-    {
-        
+    {        
         std::vector<double> initValues = {2.0, 0.75};
         std::vector<double> bcValues = {2.0, 0.75};
 
@@ -1398,7 +1394,7 @@ public:
         solver.SetOutputDirectory("TestSchnackenbergSystemOnHoneycombMesh_paper_test");
 
         std::vector<double> init_conds(2*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             init_conds[2*i] = fabs(2.0 + RandomNumberGenerator::Instance()->ranf());
             init_conds[2*i + 1] = fabs(0.75 + RandomNumberGenerator::Instance()->ranf());
@@ -1408,8 +1404,7 @@ public:
 
         solver.SolveAndWriteResultsToFile();
 
-        PetscTools::Destroy(initial_condition);
-        
+        PetscTools::Destroy(initial_condition);        
     }
 
     void TestSpectatorDependentReactionClass()
@@ -1430,7 +1425,7 @@ public:
         std::cout << "Read out reaction details: " << std::endl;
         std::cout << "-----------------------------" << std::endl;
         std::cout << "Number of reactions: "<<p_file_reaction_system->GetNumReactions() << std::endl;
-        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); i++)
+        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); ++i)
         {
             std::cout << "Reaction: "<<i<<" "<< p_file_reaction_system->GetReactionByIndex(i)->GetReactionType() << std::endl;
             std::cout << "Number of spectators: "<<i<<" "<< dynamic_cast<SpectatorDependentReaction*>(p_file_reaction_system->GetReactionByIndex(i))->GetNumSpectators() << std::endl;
@@ -1438,24 +1433,24 @@ public:
 
         std::vector<std::string> chemNames = p_file_reaction_system->GetSystemChemistry()->GetChemicalNames();
         std::cout << "System chemical names:" << std::endl;
-        for (unsigned i=0; i<chemNames.size();i++)
+        for (unsigned i=0; i<chemNames.size();++i)
         {
             std::cout << chemNames[i] << std::endl;
         }
 
-        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); i++ )
+        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); ++i )
         {
             AbstractReaction* p_reaction = p_file_reaction_system->GetReactionByIndex(i);
 
-            std::cout << "Reaction type: "<<p_reaction ->GetReactionType() << std::endl;
+            std::cout << "Reaction type: "<<p_reaction->GetReactionType() << std::endl;
             for (unsigned j=0; j<p_reaction->GetNumSubstrates(); j++)
             {
-                std::cout << "Substrate: "<<p_reaction->GetSubstratesByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichSubstratesByIndex(j) << std::endl;
+                std::cout << "Substrate: "<<p_reaction->GetSubstratesByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction->GetStoichSubstratesByIndex(j) << std::endl;
             }
 
             for (unsigned j=0; j<p_reaction->GetNumProducts(); j++)
             {
-                std::cout << "Product: "<<p_reaction->GetProductsByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction ->GetStoichProductsByIndex(j) << std::endl;
+                std::cout << "Product: "<<p_reaction->GetProductsByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction->GetStoichProductsByIndex(j) << std::endl;
             }
 
         }
@@ -1475,7 +1470,7 @@ public:
 
         EulerIvpOdeSolver euler_solver_file;
         OdeSolution solutions_file = euler_solver_file.Solve(&chemical_ode_file, initial_condition, 0, 1, 0.1, 0.1);
-        for (unsigned i=0; i<solutions_file.rGetTimes().size(); i++)
+        for (unsigned i=0; i<solutions_file.rGetTimes().size(); ++i)
         {
             std::cout << "Time: "<<solutions_file.rGetTimes()[i] << " " << solutions_file.rGetSolutions()[i][0] << " " << solutions_file.rGetSolutions()[i][1]<< " " << solutions_file.rGetSolutions()[i][2]<< "\n";
         }
@@ -1606,7 +1601,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
@@ -1622,13 +1617,13 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
         std::cout << "Number odesAtNodes: "<<p_mesh->GetNumNodes() << std::endl;
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
 
@@ -1740,8 +1735,7 @@ public:
 
         // clean
         PetscTools::Destroy(initial_condition);
-        */
-        
+        */        
     }
 
     void TestChemicalOdePdeParameters()
@@ -1867,7 +1861,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
@@ -1883,13 +1877,13 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
         std::cout << "Number odesAtNodes: "<<p_mesh->GetNumNodes() << std::endl;
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
 
@@ -1917,7 +1911,6 @@ public:
 
         // clean
         PetscTools::Destroy(initial_condition);
-        
     }
 
     void TestChemicalOdePdeParameters2()
@@ -2043,7 +2036,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
@@ -2058,13 +2051,13 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
         std::cout << "Number odesAtNodes: "<<p_mesh->GetNumNodes() << std::endl;
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
 
@@ -2216,7 +2209,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -2232,13 +2225,13 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
         std::cout << "Number odesAtNodes: "<<p_mesh->GetNumNodes() << std::endl;
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
 
@@ -2388,7 +2381,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
@@ -2403,13 +2396,13 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
         std::cout << "Number odesAtNodes: "<<p_mesh->GetNumNodes() << std::endl;
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-3, 1e-1 );
 
@@ -2559,10 +2552,12 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
-        {   // set as being a random perturbation about the boundary values
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+        {   
+            // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
-            {   // serialised for nodes
+            {   
+                // serialised for nodes
                 init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
             }
         }
@@ -2574,13 +2569,13 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
         std::cout << "Number odesAtNodes: "<<p_mesh->GetNumNodes() << std::endl;
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-2, 1 );
 

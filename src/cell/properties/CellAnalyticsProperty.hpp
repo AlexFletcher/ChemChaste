@@ -1,13 +1,7 @@
-#ifndef CELLANALYTICSPROPERTY_HPP
-#define CELLANALYTICSPROPERTY_HPP
+#ifndef CELLANALYTICSPROPERTY_HPP_
+#define CELLANALYTICSPROPERTY_HPP_
 
-//general includes
-#include <vector>
-#include <boost/shared_ptr.hpp>
-
-// chaste includes
 #include "Cell.hpp"
-#include "AbstractCellProperty.hpp"
 
 /**
  * \todo Document class.
@@ -19,29 +13,35 @@ protected:
     // CellPtr to a given cell for access to cell data and for properties
     CellPtr mpCell;
 
-    unsigned mCellID;
+    unsigned mCellId;
 
 public:
 
+    /**
+     * Constructor.
+     */
     CellAnalyticsProperty();
 
+    /**
+     * Destructor.
+     */
     virtual ~CellAnalyticsProperty();
 
-    CellAnalyticsProperty(const CellAnalyticsProperty&);
+    CellAnalyticsProperty(const CellAnalyticsProperty& rOtherProperty);
 
-    virtual void SetUp(CellPtr,unsigned);
+    virtual void SetUp(CellPtr pCell, unsigned cellId);
 
-    virtual void PreparePostDivisionParent(double);
+    virtual void PreparePostDivisionParent(double splitRatio);
     
-    virtual void PreparePostDivisionDaughter(const CellAnalyticsProperty&, double);
+    virtual void PreparePostDivisionDaughter(const CellAnalyticsProperty& rParentProperty, double splitRatio);
 
-    void SetCellPtr(CellPtr);
+    void SetCellPtr(CellPtr pCell);
 
-    void SetCellID(unsigned);
+    void SetCellId(unsigned cellId);
 
     CellPtr GetCellPtr();
 
-    unsigned GetCellID();
+    unsigned GetCellId();
 };
 
-#endif
+#endif /* CELLANALYTICSPROPERTY_HPP_ */

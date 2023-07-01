@@ -107,7 +107,7 @@ void MembraneCellProperty::UpdateMembraneOdeSystem(AbstractMembraneOdeSystem* p_
 void MembraneCellProperty::PreparePostDivisionParent(double splitRatio)
 {
     // Split any properties that are shared
-    for (unsigned i=0; i<mMembraneConcentrationVector.size(); i++)
+    for (unsigned i = 0; i < mMembraneConcentrationVector.size(); ++i)
     {
         mMembraneConcentrationVector[i] = splitRatio*mMembraneConcentrationVector[i];
     }
@@ -118,9 +118,9 @@ void MembraneCellProperty::PreparePostDivisionDaughter(const MembraneCellPropert
     // Split any properties that are shared
     std::vector<double> parentConcentrationVector = parentProperty.mMembraneConcentrationVector;
 
-    for (unsigned i=0; i<parentConcentrationVector.size(); i++)
+    for (unsigned i = 0; i < parentConcentrationVector.size(); ++i)
     {
-        mMembraneConcentrationVector[i] = (1-splitRatio)*parentConcentrationVector[i];
+        mMembraneConcentrationVector[i] = (1 - splitRatio)*parentConcentrationVector[i];
     }
 }
 
@@ -140,23 +140,24 @@ void MembraneCellProperty::InitialiseMembrane(StateVariableRegister* p_StateVari
 
 double MembraneCellProperty::RetrieveBoundarySourceByStateName(std::string stateName)
 {
-    // if cell is on boundary add the result of the transport Ode system
+    // If cell is on boundary add the result of the transport Ode system
     unsigned index = mpBulkStateVariableRegister->RetrieveStateVariableIndex(stateName);
     return GetExternalCellBoundaryConcentrationByIndex(index);// - mInitBulkBoundaryConcentrationVector[index];
 }
 
 double MembraneCellProperty::RetrieveChangeBoundarySourceByStateName(std::string stateName)
 {
-    // if cell is on boundary add the result of the transport Ode system
+    // If cell is on boundary add the result of the transport ODE system
 
-    // check is named state is present on the bulk boundary side
+    // Check is named state is present on the bulk boundary side
     if (mpBulkStateVariableRegister->IsStateVariablePresent(stateName))
     {
         unsigned index = mpBulkStateVariableRegister->RetrieveStateVariableIndex(stateName);
         mNumCallsThisReactionStep++;
-        return GetChangeExternalCellBoundaryConcentrationByIndex(index);// - mInitBulkBoundaryConcentrationVector[index];
+        return GetChangeExternalCellBoundaryConcentrationByIndex(index);
     }
-    // else return 0 change
+
+    // Else return 0 change
     return 0.0;
 }
 
@@ -168,36 +169,36 @@ void MembraneCellProperty::AppendInternalCellBoundaryConcentrations(std::vector<
 void MembraneCellProperty::ReplaceBoundaryStateVariables(std::vector<double>& rY)
 {
     // Partition the ODE state variable vector into the constitient internal and bulk state vectors
-    unsigned number_of_bulk_states = mBulkBoundaryConcentrationVector.size();
-    for (unsigned i=0; i<number_of_bulk_states; i++)
+    unsigned num_bulk_states = mBulkBoundaryConcentrationVector.size();
+    for (unsigned i = 0; i < num_bulk_states; ++i)
     {
         mBulkBoundaryConcentrationVector[i] = rY[i];
     }
 
-    unsigned number_of_cell_states = mCellBoundaryConcentrationVector.size();
-    for (unsigned i=0; i<number_of_cell_states; i++)
+    unsigned num_cell_states = mCellBoundaryConcentrationVector.size();
+    for (unsigned i = 0; i < num_cell_states; ++i)
     {
-        mCellBoundaryConcentrationVector[i] = rY[i + number_of_bulk_states];
+        mCellBoundaryConcentrationVector[i] = rY[i + num_bulk_states];
     }
 }
 
 void MembraneCellProperty::ReplaceChangeBoundaryStateVariables(std::vector<double>& rDY)
 {
     // Partition the ODE state variable vector into the constitient internal and bulk state vectors
-    unsigned number_of_cell_states = mCellBoundaryConcentrationVector.size();
+    unsigned num_cell_states = mCellBoundaryConcentrationVector.size();
  
     AbstractChemistry* p_bulk_chemistry = mpMembraneReactionSystem->GetBulkChemistry();
     std::string this_state = "";
-    unsigned number_bulk_reaction_states = p_bulk_chemistry->GetNumberChemicals();
+    unsigned num_bulk_reaction_states = p_bulk_chemistry->GetNumberChemicals();
 
-    for (unsigned i=0; i<number_bulk_reaction_states; i++)
+    for (unsigned i = 0; i < num_bulk_reaction_states; ++i)
     {
         mChangeBulkBoundaryConcentrationVector[i] = rDY[i];
     }
 
-    for (unsigned i=0; i<number_of_cell_states; i++)
+    for (unsigned i = 0; i < num_cell_states; ++i)
     {
-        mChangeCellBoundaryConcentrationVector[i] = rDY[i + number_bulk_reaction_states];
+        mChangeCellBoundaryConcentrationVector[i] = rDY[i + num_bulk_reaction_states];
     }
 }
 
@@ -226,14 +227,14 @@ void MembraneCellProperty::SetDoubleMembraneBool(bool isDouble)
     mIsDoubleMembrane = isDouble;
 }
 
-void MembraneCellProperty::SetBulkStateVariableRegister(StateVariableRegister* p_state_register)
+void MembraneCellProperty::SetBulkStateVariableRegister(StateVariableRegister* pStateRegister)
 {
-    mpBulkStateVariableRegister = p_state_register;
+    mpBulkStateVariableRegister = pStateRegister;
 }
 
-void MembraneCellProperty::SetCellStateVariableRegister(StateVariableRegister* p_state_register)
+void MembraneCellProperty::SetCellStateVariableRegister(StateVariableRegister* pStateRegister)
 {
-    mpCellStateVariableRegister = p_state_register;
+    mpCellStateVariableRegister = pStateRegister;
 }
 
 void MembraneCellProperty::SetConstantCellConcentrationBool(bool isConstantCellConcentration)
@@ -256,9 +257,9 @@ void MembraneCellProperty::SetInitBulkBoundaryConcentrationVector(std::vector<do
     mInitBulkBoundaryConcentrationVector = concentrationVector;
 }
 
-void MembraneCellProperty::SetMembraneOdeSolver(boost::shared_ptr<AbstractIvpOdeSolver> p_solver)
+void MembraneCellProperty::SetMembraneOdeSolver(boost::shared_ptr<AbstractIvpOdeSolver> pSolver)
 {
-    mpMembraneOdeSolver = p_solver;
+    mpMembraneOdeSolver = pSolver;
 }
  
 void MembraneCellProperty::SetIncludeMembraneOdeInterpolationOnBoundary(bool includeOdeInterpolationOnBoundary)
@@ -320,7 +321,7 @@ double MembraneCellProperty::GetInternalCellBoundaryConcentrationByName(std::str
 {
     unsigned index = mpCellStateVariableRegister->RetrieveStateVariableIndex(stateName);
 
-    if (index<mpCellStateVariableRegister->GetNumStateVariables())
+    if (index < mpCellStateVariableRegister->GetNumStateVariables())
     {
         return mCellBoundaryConcentrationVector[index];
     }
@@ -331,7 +332,7 @@ double MembraneCellProperty::GetInternalCellBoundaryConcentrationByName(std::str
 double MembraneCellProperty::GetChangeInternalCellBoundaryConcentrationByName(std::string stateName)
 {
     unsigned index = mpCellStateVariableRegister->RetrieveStateVariableIndex(stateName);
-    if (index<mpCellStateVariableRegister->GetNumStateVariables())
+    if (index < mpCellStateVariableRegister->GetNumStateVariables())
     {
         return mChangeCellBoundaryConcentrationVector[index];
     }

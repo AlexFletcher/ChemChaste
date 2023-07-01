@@ -4,13 +4,13 @@
 #include "ComplexCell.hpp"
 #include "SimpleChemicalThresholdCellCycleFromFile.hpp"
 #include "AbstractSrnModel.hpp"
-#include "ChemicalSRNFromFile.hpp"
+#include "ChemicalSrnFromFile.hpp"
 #include "AbstractCellCycleModel.hpp"
 #include "NoCellCycleModel.hpp"
 #include "InitialCellConditionsFromFile.hpp"
 #include "TransportCellPropertyFromFile.hpp"
 #include "MembraneCellPropertyFromFile.hpp"
-#include "CellAnalyticsPropertyFromCellID.hpp"
+#include "CellAnalyticsPropertyFromCellId.hpp"
 
 /**
  * \todo Document class.
@@ -55,9 +55,9 @@ protected:
 
     bool mIsMembranePropertySet = false;
 
-    unsigned mCellID;
+    unsigned mCellId;
 
-    bool mIsCellIDSet = false;
+    bool mIsCellIdSet = false;
 
 
 
@@ -75,8 +75,8 @@ public:
                             std::string initialConditionFilename="",
                             std::string transportPropertyFilename="",
                             std::string membranePropertyFilename="",
-                            unsigned cellID =0,
-                            bool isCellIDSet = false);
+                            unsigned cellId =0,
+                            bool isCellIdSet = false);
 
     virtual ~ComplexCellFromFile()
     {
@@ -136,9 +136,9 @@ public:
 
     bool GetIsMembranePropertySet();
 
-    unsigned GetCellID();
+    unsigned GetCellId();
 
-    bool GetIsCellIDSet();
+    bool GetIsCellIdSet();
 
     StateVariableRegister* GetFullChemicalStateRegister();
 
@@ -182,16 +182,16 @@ ComplexCellFromFile::ComplexCellFromFile(
                         std::string initialConditionFilename,
                         std::string transportPropertyFilename,
                         std::string membranePropertyFilename,
-                        unsigned cellID,
-                        bool isCellIDSet)
+                        unsigned cellId,
+                        bool isCellIdSet)
     : mCellCycleFilename(cellCycleFilename),
       mDivisionRulesFilename(divisionRulesFilename),
       mSrnFilename(srnFilename),
       mInitialConditionsFilename(initialConditionFilename),
       mTransportPropertyFilename(transportPropertyFilename),
       mMembranePropertyFilename(membranePropertyFilename),
-      mCellID(cellID),
-      mIsCellIDSet(isCellIDSet)
+      mCellId(cellId),
+      mIsCellIdSet(isCellIdSet)
 {
     if (mCellCycleFilename != "")
     {
@@ -232,7 +232,7 @@ ComplexCellFromFile::ComplexCellFromFile(
         SetMembraneCellProperty(p_cell_membrane);
     }
     
-    if (mIsCellIDSet)
+    if (mIsCellIdSet)
     {
         boost::shared_ptr<CellAnalyticsProperty> p_cell_analytics(new CellAnalyticsProperty());
 
@@ -289,7 +289,7 @@ ComplexCellFromFile::ComplexCellFromFile(
     std::vector<std::string> fullChemicalNames = pFullStateVariableRegister->GetStateVariableRegisterVector();
     if (cellChemicalNames.size() != fullChemicalNames.size())
     {
-        for (unsigned i=cellChemicalNames.size(); i<fullChemicalNames.size(); i++)
+        for (unsigned i=cellChemicalNames.size(); i<fullChemicalNames.size(); ++i)
         {
             cellConcentrationVector.push_back(0.0);
         }
@@ -302,7 +302,6 @@ ComplexCellFromFile::ComplexCellFromFile(
 
 void ComplexCellFromFile::SetUpCellProperties()
 {
-    //std::cout << "ComplexCellFromFile::SetUpCellProperties - start" << std::endl;
     if (mIsInitConditionsSet)
     {
         InitialCellConditionsFromFile* p_init_conditions_from_file = new InitialCellConditionsFromFile(mInitialConditionsFilename);
@@ -329,13 +328,13 @@ void ComplexCellFromFile::SetUpCellProperties()
         mpCellMembraneProperty->SetMembraneThickness(5.0);
     }
 
-    if (mIsCellIDSet)
+    if (mIsCellIdSet)
     {
-        CellAnalyticsPropertyFromCellID* p_cell_analytics_property_from_cellID = new CellAnalyticsPropertyFromCellID(mCellID);
+        CellAnalyticsPropertyFromCellId* p_cell_analytics_property_from_cellId = new CellAnalyticsPropertyFromCellId(mCellId);
 
-        p_cell_analytics_property_from_cellID->SetUpCellAnalyticsProperty(mpCell);
+        p_cell_analytics_property_from_cellId->SetUpCellAnalyticsProperty(mpCell);
 
-        mpCellAnalyticsProperty = p_cell_analytics_property_from_cellID->GetCellAnalyticsProperty();
+        mpCellAnalyticsProperty = p_cell_analytics_property_from_cellId->GetCellAnalyticsProperty();
     }
 }
 
@@ -343,7 +342,7 @@ void ComplexCellFromFile::SetUpSRNandCellCycle()
 {
     if (mIsSRNSet)
     {
-         ChemicalSRNFromFile* p_srn_reaction_system_from_file = new ChemicalSRNFromFile(mSrnFilename);
+         ChemicalSrnFromFile* p_srn_reaction_system_from_file = new ChemicalSrnFromFile(mSrnFilename);
         SetChemicalSrnModel(p_srn_reaction_system_from_file->GetChemicalSrnModel());
         AbstractChemistry* this_cell_chemistry = mpChemicalSrnModel->GetCellChemistry();
         unsigned numChemicals = this_cell_chemistry->GetNumberChemicals();
@@ -378,7 +377,7 @@ void ComplexCellFromFile::SetUpCellObject()
         collection.AddProperty(mpCellMembraneProperty);
     }
 
-    if (mIsCellIDSet)
+    if (mIsCellIdSet)
     {
         collection.AddProperty(mpCellAnalyticsProperty);
     }
@@ -415,7 +414,7 @@ void ComplexCellFromFile::SetUpCellObject()
 
 void ComplexCellFromFile::SetUpCellInitialConditions(CellPtr p_cell, std::vector<std::string> speciesNames, std::vector<double> initValue)
 {
-    for (unsigned i=0; i<speciesNames.size();i++)
+    for (unsigned i=0; i<speciesNames.size(); ++i)
     {
         p_cell->GetCellData()->SetItem(speciesNames[i],initValue[i]);
     }
@@ -466,11 +465,7 @@ std::vector<std::vector<std::string>> ComplexCellFromFile::ReadMatrix(std::strin
             // read line left to right, top to bottom.
             if (!line.empty())
             {
-                if (line.at(0)=='#')
-                {
-                    //std::cout << "Escape line: "<<line << std::endl;
-                }
-                else
+                if (line.at(0) != '#')
                 {
                     outputMatrix.push_back(parseMatrixLineString(line));
                 }   
@@ -482,6 +477,7 @@ std::vector<std::vector<std::string>> ComplexCellFromFile::ReadMatrix(std::strin
     }
     else
     {
+        ///\todo replace with EXCEPTION
         std::cout << "Error: Unable to open file: "<<filename << std::endl;
         return outputMatrix;
     }
@@ -489,36 +485,36 @@ std::vector<std::vector<std::string>> ComplexCellFromFile::ReadMatrix(std::strin
 
 std::vector<std::string> ComplexCellFromFile::parseMatrixLineString(std::string line)
 {
-    // for a line string in the matrix read, parse into vector data entries based on delimiters ','
+    // For a line string in the matrix read, parse into vector data entries based on delimiters ','
     std::vector<std::string> rowVector = std::vector<std::string>();
 
-    // delimiter, may be modified by further methods
+    // Delimiter, may be modified by further methods
     std::string delim = ",";
     std::string matrixCell;
 
-    // determine the position of the delimiter
-    size_t posSnew=line.find(delim);
+    // Determine the position of the delimiter
+    size_t delimiter_pos = line.find(delim);
 
-    bool IsEndOfLine = false;
+    bool is_end_of_line = false;
     
-    while (!IsEndOfLine)
+    while (!is_end_of_line)
     {
         // while not at the end of the file, sample sub strings from the posiiton of the delimiter
-        if (posSnew == std::string::npos)
+        if (delimiter_pos == std::string::npos)
         {
-            IsEndOfLine = true;
+            is_end_of_line = true;
         }
         
         // sample substring from begining of the string to the delimiter positioon, store as data entry
-        matrixCell = line.substr(0,posSnew);
+        matrixCell = line.substr(0,delimiter_pos);
 
         // remove the sampled entry from the string
-        line = line.substr(posSnew+1, std::string::npos);
+        line = line.substr(delimiter_pos+1, std::string::npos);
 
         rowVector.push_back(matrixCell);
 
         // update delimiter position
-        posSnew = line.find(delim);
+        delimiter_pos = line.find(delim);
     }
     return rowVector;
 }
@@ -613,14 +609,14 @@ bool ComplexCellFromFile::GetIsMembranePropertySet()
     return mIsMembranePropertySet;
 }
 
-unsigned ComplexCellFromFile::GetCellID()
+unsigned ComplexCellFromFile::GetCellId()
 {
-    return mCellID;
+    return mCellId;
 }
 
-bool ComplexCellFromFile::GetIsCellIDSet()
+bool ComplexCellFromFile::GetIsCellIdSet()
 {
-    return mIsCellIDSet;
+    return mIsCellIdSet;
 }
 
 StateVariableRegister* ComplexCellFromFile::GetFullChemicalStateRegister()

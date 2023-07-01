@@ -1,7 +1,7 @@
-#ifndef CHEMICALCELLFROMFILE_HPP
-#define CHEMICALCELLFROMFILE_HPP
+#ifndef COMPLEXCELLFROMFILE_HPP
+#define COMPLEXCELLFROMFILE_HPP
 
-#include "ChemicalCell.hpp"
+#include "ComplexCell.hpp"
 #include "SimpleChemicalThresholdCellCycleFromFile.hpp"
 #include "AbstractSrnModel.hpp"
 #include "ChemicalSrnFromFile.hpp"
@@ -15,7 +15,7 @@
 /**
  * \todo Document class.
  */
-class ChemicalCellFromFile
+class ComplexCellFromFile
 {
 protected:
 
@@ -34,6 +34,10 @@ protected:
     std::string mCellCycleFilename;
 
     bool mIsCellCycleSet = false;
+
+    std::string mDivisionRulesFilename;
+
+    bool mIsDivisionRulesSet = false;
 
     std::string mSrnFilename;
 
@@ -57,21 +61,22 @@ protected:
 
     StateVariableRegister* mpFullChemicalStateRegister; 
 
-    SimpleChemicalThresholdCellCycleModel*  mpSimpleChemicalThresholdCellCycleModel;
+    SimpleChemicalThresholdCellCycleModel* mpSimpleChemicalThresholdCellCycleModel;
 
-    ChemicalSrnModel*   mpChemicalSrnModel;
+    ChemicalSrnModel* mpChemicalSrnModel;
 
 public:
 
-    ChemicalCellFromFile(std::string cellCycleFilename="", 
-                         std::string srnFilename="",
-                         std::string initialConditionFilename="",
-                         std::string transportPropertyFilename="",
-                         std::string membranePropertyFilename="",
-                         unsigned cellId=0,
-                         bool isCellIdSet=false);
+    ComplexCellFromFile(    std::string cellCycleFilename="",
+                            std::string divisionRulesFilename="", 
+                            std::string srnFilename="",
+                            std::string initialConditionFilename="",
+                            std::string transportPropertyFilename="",
+                            std::string membranePropertyFilename="",
+                            unsigned cellId =0,
+                            bool isCellIdSet = false);
 
-    virtual ~ChemicalCellFromFile()
+    virtual ~ComplexCellFromFile()
     {
     };
 
@@ -82,6 +87,12 @@ public:
     void SetUpCellProperties();
 
     void SetUpCellInitialConditions(CellPtr, std::vector<std::string>, std::vector<double>);
+
+    void SetUpCellDivisionRules(CellPtr);
+
+    std::vector<std::string> parseMatrixLineString(std::string);
+
+    std::vector<std::vector<std::string>> ReadMatrix(std::string);
 
     CellPtr GetCellPtr();
 
@@ -102,6 +113,10 @@ public:
     std::string GetCellCycleFilename();
 
     bool GetIsCellCycleSet();
+
+    std::string GetDivisionRulesFilename();
+
+    bool GetIsDivisionRulesSet();
 
     std::string GetSrnFilename();
 
@@ -144,6 +159,8 @@ public:
     void SetChemicalCellCycleModel(SimpleChemicalThresholdCellCycleModel*);
 
     void SetCellCycleFilename(std::string);
+
+    void SetDivisionRulesFilename(std::string);
 
     void SetSrnFilename(std::string);
 

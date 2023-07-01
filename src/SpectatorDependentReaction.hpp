@@ -114,7 +114,7 @@ void SpectatorDependentReaction::UpdateReactionRate(AbstractChemistry* systemChe
         {
             AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
-            for (unsigned i=0; i<mNumSpectators; i++)
+            for (unsigned i=0; i<mNumSpectators; ++i)
             {
                 if (mSpectatorNames[i]==p_system_chemical->GetChemicalName())
                 {
@@ -233,7 +233,7 @@ void SpectatorDependentReaction::UpdateSystemChemistry(std::vector<std::string> 
     // be present in the system chemistry.  As the chemical ODE system derives the state variable vector,
     // which controls the concentrations data flow, from the reaction system chemistry the spectators need 
     // to be in the chemistry for the concentrations to be avaliable
-    for (unsigned i=0; i<mNumSpectators; i++)
+    for (unsigned i=0; i<mNumSpectators; ++i)
     {
         mpSystemChemistry->AddChemical(new AbstractChemical(spectatorNames[i]));
     }

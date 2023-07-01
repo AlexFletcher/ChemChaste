@@ -499,8 +499,7 @@ class ChemicalStructuresForTests
             // generate domain
             // run the domain field set up and parse files
             ChemicalDomainFieldTemplated<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldTemplated<elementDim,spaceDim,probDim>(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
-            //std::cout << "chemical structure number of mesh nodes: "<<p_Pde_field ->rGetDomainFeMesh()->GetNumNodes() << std::endl;
-            
+
             SetPtrChemicalDomain(p_Pde_field);
         }
 
@@ -528,7 +527,7 @@ class ChemicalStructuresForTests
             // generate domain
             // run the domain field set up and parse files
             ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>(dataFileRoot,dataFileRoot+cellLabelFilename,dataFileRoot+cellKeyFilename,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename, dataFileRoot+initialConditionsFilename, dataFileRoot+boundaryConditionsFilename);
-            std::cout << "chemical structure number of mesh nodes: "<<p_Pde_field ->rGetDomainFeMesh()->GetNumNodes() << std::endl;
+            std::cout << "chemical structure number of mesh nodes: "<<p_Pde_field->rGetDomainFeMesh()->GetNumNodes() << std::endl;
             
             SetPtrChemicalDomainFieldForCellCoupling(p_Pde_field);
             std::cout << "SetUpChemicalDomainFieldForCellCoupling() - end" << std::endl; 
@@ -578,7 +577,7 @@ class ChemicalStructuresForTests
             SetPtrCellChemicalOdeSystem(p_chemical_ode);
         }
 
-        void SetUpChemicalSRNModel()
+        void SetUpChemicalSrnModel()
         {
             SetUpCellChemicalOdeSystem();
 
@@ -635,7 +634,7 @@ class ChemicalStructuresForTests
 
         void SetUpCellInitialConditions(CellPtr p_cell, std::vector<std::string> speciesNames, std::vector<double> initValue)
         {
-            for (unsigned i=0; i<speciesNames.size();i++)
+            for (unsigned i=0; i<speciesNames.size();++i)
             {
                 std::cout << speciesNames[i] << std::endl;
                 p_cell->GetCellData()->SetItem(speciesNames[i],initValue[i]);
@@ -790,7 +789,7 @@ class ChemicalStructuresForTests
             SimpleChemicalThresholdCellCycleModel* p_cell_cycle = rGetPtrSimpleChemicalThresholdCellCycleModel();
 
             // set up SRN model
-            SetUpChemicalSRNModel();
+            SetUpChemicalSrnModel();
             ChemicalSrnModel* p_srn_model = rGetPtrChemicalSrnModel();
 
             // set up cell properties of the Chemical Cell Property(not needed?)
@@ -1145,13 +1144,13 @@ public:
         AbstractChemistry* systemChemistry = chemicalOde->GetReactionSystem()->GetSystemChemistry();
 
         std::cout << "Time: ";
-        for (unsigned i=0; i<systemChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<systemChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << systemChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
         std::cout << std::endl;
 
-        for (unsigned i=0; i<solutions.rGetTimes().size(); i++)
+        for (unsigned i=0; i<solutions.rGetTimes().size(); ++i)
         {
             std::cout << solutions.rGetTimes()[i] << " " << solutions.rGetSolutions()[i][0] << " " << solutions.rGetSolutions()[i][1]<< "\n";
         }
@@ -1178,25 +1177,25 @@ public:
 
         p_transport_reaction_system->ReactSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
         
-        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
+        for (unsigned i=0; i<environment_concentration_at_point.size();++i)
         {
             environment_concentration_at_point[i] = environment_concentration_at_point[i] + change_environment_concentration_vector[i];
         }
-        for (unsigned i=0; i<cell_concentration.size();i++)
+        for (unsigned i=0; i<cell_concentration.size();++i)
         {
             cell_concentration[i] = cell_concentration[i] + change_cell_concentration_vector[i];
         }
-        for (unsigned i=0; i<p_transport_reaction_system->GetNumReactions(); i++)
+        for (unsigned i=0; i<p_transport_reaction_system->GetNumReactions(); ++i)
         {
             std::cout << "Reaction type: "<<i<<" "<< p_transport_reaction_system->GetReactionByIndex(i)->GetReactionType() << std::endl;
         }
 
-        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
+        for (unsigned i=0; i<environment_concentration_at_point.size();++i)
         {
             std::cout << "Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i] << std::endl;
         }
 
-        for (unsigned i=0; i<cell_concentration.size();i++)
+        for (unsigned i=0; i<cell_concentration.size();++i)
         {
             std::cout << "Cell State "<<cell_states[i]<<": initial: "<<cell_concentration[i]<<" change: "<<change_cell_concentration_vector[i] << std::endl;
         }        
@@ -1222,17 +1221,17 @@ public:
         AbstractChemistry* bulkChemistry = transportOde->GetReactionSystem()->GetBulkChemistry();
         AbstractChemistry* cellChemistry = transportOde->GetReactionSystem()->GetCellChemistry();
         std::cout << "Time: ";
-        for (unsigned i=0; i<bulkChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<bulkChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Bulk: "<< bulkChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
-        for (unsigned i=0; i<cellChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<cellChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Cell: "<< cellChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
         std::cout << std::endl;
         
-        for (unsigned i=0; i<solutions.rGetTimes().size(); i++)
+        for (unsigned i=0; i<solutions.rGetTimes().size(); ++i)
         {
             std::cout << solutions.rGetTimes()[i] << " , " << solutions.rGetSolutions()[i][0] << " , " << solutions.rGetSolutions()[i][1]<< " , " << solutions.rGetSolutions()[i][2] << " , " << solutions.rGetSolutions()[i][3]<<" , " << solutions.rGetSolutions()[i][4]<<"\n";
         }        
@@ -1261,25 +1260,25 @@ public:
 
         p_membrane_reaction_system->ReactSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
         
-        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
+        for (unsigned i=0; i<environment_concentration_at_point.size();++i)
         {
             //environment_concentration_at_point[i] = environment_concentration_at_point[i] + change_environment_concentration_vector[i];
         }
-        for (unsigned i=0; i<cell_concentration.size();i++)
+        for (unsigned i=0; i<cell_concentration.size();++i)
         {
           //  cell_concentration[i] = cell_concentration[i] + change_cell_concentration_vector[i];
         }
-        for (unsigned i=0; i<p_membrane_reaction_system->GetNumReactions(); i++)
+        for (unsigned i=0; i<p_membrane_reaction_system->GetNumReactions(); ++i)
         {
             std::cout << "Reaction type: "<<i<<" "<< p_membrane_reaction_system->GetReactionByIndex(i)->GetReactionType() << std::endl;
         }
 
-        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
+        for (unsigned i=0; i<environment_concentration_at_point.size();++i)
         {
             std::cout << "Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i] << std::endl;
         }
 
-        for (unsigned i=0; i<cell_concentration.size();i++)
+        for (unsigned i=0; i<cell_concentration.size();++i)
         {
             std::cout << "Cell State "<<cell_states[i]<<": initial: "<<cell_concentration[i]<<" change: "<<change_cell_concentration_vector[i] << std::endl;
         }
@@ -1307,28 +1306,28 @@ public:
         AbstractChemistry* bulkChemistry = membraneOde->GetReactionSystem()->GetBulkChemistry();
         AbstractChemistry* cellChemistry = membraneOde->GetReactionSystem()->GetCellChemistry();
         std::cout << "Time: ";
-        for (unsigned i=0; i<bulkChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<bulkChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Bulk: "<< bulkChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
-        for (unsigned i=0; i<cellChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<cellChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Cell: "<< cellChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
         std::cout << std::endl;
 
-        for (unsigned i=0; i<solutions.rGetTimes().size(); i++)
+        for (unsigned i=0; i<solutions.rGetTimes().size(); ++i)
         {
             std::cout << solutions.rGetTimes()[i] << " , " << solutions.rGetSolutions()[i][0] << " , " << solutions.rGetSolutions()[i][1]<< " , " << solutions.rGetSolutions()[i][2] << " , " << solutions.rGetSolutions()[i][3]<<" , " << solutions.rGetSolutions()[i][4]<<"\n";
         }
     */
     }
 
-    void TestChemicalSRNModel()
+    void TestChemicalSrnModel()
     {
     /*   
         ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
-        chemical_structure->SetUpChemicalSRNModel();
+        chemical_structure->SetUpChemicalSrnModel();
         
         ChemicalSrnModel* p_srn_model = chemical_structure->rGetPtrChemicalSrnModel();
 
@@ -1383,7 +1382,7 @@ public:
         chemical_structure->SetUpCellInitialConditions(p_cell, speciesNames, initValue);
         SimulationTime* p_simulation_time = SimulationTime::Instance();
         p_simulation_time->SetEndTimeAndNumberOfTimeSteps(10.0, 10);
-        for (unsigned i = 0; i < 10; i++)
+        for (unsigned i = 0; i < 10; ++i)
         {
             std::cout << "Timestep: "<<i << std::endl;
             p_simulation_time->IncrementTimeOneStep();
@@ -1413,7 +1412,7 @@ public:
         chemical_structure->SetUpCellInitialConditions(p_cell, speciesNames, initValue);
         SimulationTime* p_simulation_time = SimulationTime::Instance();
         p_simulation_time->SetEndTimeAndNumberOfTimeSteps(10.0, 10);
-        for (unsigned i = 0; i < 10; i++)
+        for (unsigned i = 0; i < 10; ++i)
         {
             std::cout << "Timestep: "<<i << std::endl;
             p_simulation_time->IncrementTimeOneStep();
@@ -1453,7 +1452,7 @@ public:
 
         TetrahedralMesh<2,2>* p_mesh = p_Pde_field->rGetDomainFeMesh();
 
-        std::cout << "number of mesh nodes: "<<p_mesh ->GetNumNodes() << std::endl;
+        std::cout << "number of mesh nodes: "<<p_mesh->GetNumNodes() << std::endl;
         */
     }
 
@@ -1484,18 +1483,18 @@ public:
 
         std::cout << "initial conditions" << std::endl;
         std::vector<double> init_conditions = p_Pde_field->GetInitialNodeConditions();
-        for (unsigned i=0; i<init_conditions.size(); i++)
+        for (unsigned i=0; i<init_conditions.size(); ++i)
         {
             std::cout << init_conditions[i] << std::endl;
         }
 
         TetrahedralMesh<2,2>* p_mesh = p_Pde_field->rGetDomainFeMesh();
 
-        std::cout << "number of mesh nodes: "<<p_mesh ->GetNumNodes() << std::endl;
+        std::cout << "number of mesh nodes: "<<p_mesh->GetNumNodes() << std::endl;
         
         StateVariableRegister* testRegister = p_Pde_field->GetStateVariableVector();
 
-        for (unsigned index=0; index<testRegister ->GetNumStateVariables(); index++)
+        for (unsigned index=0; index<testRegister->GetNumStateVariables(); index++)
         {
             std::cout << "state name: "<<testRegister->RetrieveStateVariableName(index) << std::endl;
         }
@@ -1548,17 +1547,17 @@ public:
         AbstractChemistry* bulkTransportChemistry = p_membrane_ode_property->GetReactionSystem()->GetBulkChemistry();
         AbstractChemistry* cellTransportChemistry = p_membrane_ode_property->GetReactionSystem()->GetCellChemistry();
         std::cout << "Time: ";
-        for (unsigned i=0; i<bulkTransportChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<bulkTransportChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Bulk: "<< bulkTransportChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
-        for (unsigned i=0; i<cellTransportChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<cellTransportChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Cell: "<< cellTransportChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
         std::cout << std::endl;
 
-        for (unsigned i=0; i<membrane_solutions.rGetTimes().size(); i++)
+        for (unsigned i=0; i<membrane_solutions.rGetTimes().size(); ++i)
         {
             std::cout << membrane_solutions.rGetTimes()[i] << " , " << membrane_solutions.rGetSolutions()[i][0] << " , " << membrane_solutions.rGetSolutions()[i][1]<< " , " << membrane_solutions.rGetSolutions()[i][2] << " , " << membrane_solutions.rGetSolutions()[i][3]<<" , " << membrane_solutions.rGetSolutions()[i][4]<<"\n";
         }
@@ -1583,17 +1582,17 @@ public:
         AbstractChemistry* bulkMembraneChemistry = p_ode_property->GetReactionSystem()->GetBulkChemistry();
         AbstractChemistry* cellMembraneChemistry = p_ode_property->GetReactionSystem()->GetCellChemistry();
         std::cout << "Time: ";
-        for (unsigned i=0; i<bulkMembraneChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<bulkMembraneChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Bulk: "<< bulkMembraneChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
-        for (unsigned i=0; i<cellMembraneChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<cellMembraneChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Cell: "<< cellMembraneChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
         std::cout << std::endl;
         
-        for (unsigned i=0; i<solutions.rGetTimes().size(); i++)
+        for (unsigned i=0; i<solutions.rGetTimes().size(); ++i)
         {
             std::cout << solutions.rGetTimes()[i] << " , " << solutions.rGetSolutions()[i][0] << " , " << solutions.rGetSolutions()[i][1]<< " , " << solutions.rGetSolutions()[i][2] << " , " << solutions.rGetSolutions()[i][3]<<" , " << solutions.rGetSolutions()[i][4]<<"\n";
         }
@@ -1644,17 +1643,17 @@ public:
         AbstractChemistry* bulkMembraneChemistry = p_membrane_ode_property->GetReactionSystem()->GetBulkChemistry();
         AbstractChemistry* cellMembraneChemistry = p_membrane_ode_property->GetReactionSystem()->GetCellChemistry();
         std::cout << "Time: ";
-        for (unsigned i=0; i<bulkMembraneChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<bulkMembraneChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Bulk: "<< bulkMembraneChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
-        for (unsigned i=0; i<cellMembraneChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<cellMembraneChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Cell: "<< cellMembraneChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
         std::cout << std::endl;
         
-        for (unsigned i=0; i<membrane_solutions.rGetTimes().size(); i++)
+        for (unsigned i=0; i<membrane_solutions.rGetTimes().size(); ++i)
         {
             std::cout << membrane_solutions.rGetTimes()[i] << " , " << membrane_solutions.rGetSolutions()[i][0] << " , " << membrane_solutions.rGetSolutions()[i][1]<< " , " << membrane_solutions.rGetSolutions()[i][2] << " , " << membrane_solutions.rGetSolutions()[i][3]<<" , " << membrane_solutions.rGetSolutions()[i][4]<<"\n";
         }
@@ -1679,17 +1678,17 @@ public:
         AbstractChemistry* bulkTransportChemistry = p_ode_property->GetReactionSystem()->GetBulkChemistry();
         AbstractChemistry* cellTransportChemistry = p_ode_property->GetReactionSystem()->GetCellChemistry();
         std::cout << "Time: ";
-        for (unsigned i=0; i<bulkTransportChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<bulkTransportChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Bulk: "<< bulkTransportChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
-        for (unsigned i=0; i<cellTransportChemistry->GetNumberChemicals(); i++)
+        for (unsigned i=0; i<cellTransportChemistry->GetNumberChemicals(); ++i)
         {
             std::cout << "Cell: "<< cellTransportChemistry->GetChemicalNamesByIndex(i)<<" ";
         }
         std::cout << std::endl;
 
-        for (unsigned i=0; i<solutions.rGetTimes().size(); i++)
+        for (unsigned i=0; i<solutions.rGetTimes().size(); ++i)
         {
             std::cout << solutions.rGetTimes()[i] << " , " << solutions.rGetSolutions()[i][0] << " , " << solutions.rGetSolutions()[i][1]<< " , " << solutions.rGetSolutions()[i][2] << " , " << solutions.rGetSolutions()[i][3]<<" , " << solutions.rGetSolutions()[i][4]<<"\n";
         }
@@ -1709,7 +1708,7 @@ public:
 
         std::vector<CellPtr> cells;
         // assume cell at each node in cell layer mesh
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
             ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
@@ -1749,7 +1748,7 @@ public:
 
         std::cout << "initial conditions" << std::endl;
         std::vector<double> init_conditions = p_Pde_field->GetInitialNodeConditions();
-        for (unsigned i=0; i<init_conditions.size(); i++)
+        for (unsigned i=0; i<init_conditions.size(); ++i)
         {
             std::cout << init_conditions[i] << std::endl;
         }

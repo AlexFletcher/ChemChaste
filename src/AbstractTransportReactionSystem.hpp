@@ -123,12 +123,12 @@ void AbstractTransportReactionSystem::ReactSystem(const std::vector<double>& cur
         p_system_reaction->React(mpBulkChemistry, mpCellChemistry, currentBulkConcentration, currentCellConcentration, deltaBulkConcentration, deltaCellConcentration);
 
         // update the change in concentrations
-        for (unsigned i=0; i<mNumBulkStates; i++)
+        for (unsigned i=0; i<mNumBulkStates; ++i)
         {
             changeBulkConc.at(i) += deltaBulkConcentration.at(i);
         }
 
-        for (unsigned i=0; i<mNumCellStates; i++)
+        for (unsigned i=0; i<mNumCellStates; ++i)
         {
             changeCellConc.at(i) += deltaCellConcentration.at(i);
         }

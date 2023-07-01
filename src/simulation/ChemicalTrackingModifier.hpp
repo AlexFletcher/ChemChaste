@@ -72,9 +72,7 @@ ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::~ChemicalTrackingModifier()
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void ChemicalTrackingModifier<ELEMENT_DIM, SPACE_DIM>::UpdateAtEndOfTimeStep(AbstractCellPopulation<ELEMENT_DIM,SPACE_DIM>& rCellPopulation)
 {
-    //std::cout << "ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateAtEndOfTimeStep - start" << std::endl;
     UpdateCellData(rCellPopulation);
-    //std::cout << "ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateAtEndOfTimeStep - end" << std::endl;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
@@ -106,7 +104,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::SetupSRNFromCellData(Abstr
         std::vector<double> this_SRN_concentration_vector(numChemicals,0.0);
         std::string this_chemical_name="";
  
-        for (unsigned i=0; i<numChemicals;i++)
+        for (unsigned i=0; i<numChemicals;++i)
         {
             this_chemical_name = this_cell_chemistry->GetChemicalNamesByIndex(i);
             this_SRN_concentration_vector[i] = cell_iter->GetCellData()->GetItem(this_chemical_name);
@@ -136,7 +134,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCel
         // Retrieve the cell data values for the SRN model 
         double this_concentration = 0;
         std::string this_name = "";
-        for (unsigned i=0; i<numSrnChemicals;i++)
+        for (unsigned i=0; i<numSrnChemicals;++i)
         {
             this_name = this_cell_srn_chemistry->GetChemicalNamesByIndex(i);
            
@@ -154,7 +152,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCel
             AbstractChemistry* this_cell_transport_chemistry = transport_cell_property->GetTransportReactionSystem()->GetCellChemistry();
             unsigned numTransportChemicals = this_cell_transport_chemistry->GetNumberChemicals();
             
-            for (unsigned i=0; i<numTransportChemicals; i++)
+            for (unsigned i=0; i<numTransportChemicals; ++i)
             {
                 this_name = this_cell_transport_chemistry->GetChemicalNamesByIndex(i);
 
@@ -174,7 +172,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCel
             AbstractChemistry* this_cell_membrane_chemistry = membrane_cell_property->GetMembraneReactionSystem()->GetCellChemistry();
             unsigned numMembraneChemicals = this_cell_membrane_chemistry->GetNumberChemicals();
             
-            for (unsigned i=0; i<numMembraneChemicals; i++)
+            for (unsigned i=0; i<numMembraneChemicals; ++i)
             {
                 this_name = this_cell_membrane_chemistry->GetChemicalNamesByIndex(i);
            
@@ -197,7 +195,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCel
             std::vector<double> transportStateVector(numTransportChemicals,0.0);
             
             std::string this_state="";
-            for (unsigned i=0; i<numTransportChemicals; i++)
+            for (unsigned i=0; i<numTransportChemicals; ++i)
             {
                 this_state = this_cell_transport_chemistry->GetChemicalNamesByIndex(i);
             
@@ -216,7 +214,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCel
             std::vector<double> membraneStateVector(numMembraneChemicals,0.0);
             
             std::string this_state="";
-            for (unsigned i=0; i<numMembraneChemicals; i++)
+            for (unsigned i=0; i<numMembraneChemicals; ++i)
             {
                 this_state = this_cell_membrane_chemistry->GetChemicalNamesByIndex(i);
             
@@ -256,7 +254,7 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::CheckConcentration(const std::vector<double>& rY)
 {
     // If chemical concentration gets too low then nan can occur, concentration must be +ve
-    for (unsigned i=0; i<rY.size(); i++)
+    for (unsigned i=0; i<rY.size(); ++i)
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0

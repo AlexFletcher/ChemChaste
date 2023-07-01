@@ -1,5 +1,5 @@
-#ifndef CELLANALYTICSPROPERTYFROMCELLID_HPP
-#define CELLANALYTICSPROPERTYFROMCELLID_HPP
+#ifndef CELLANALYTICSPROPERTYFROMCELLID_HPP_
+#define CELLANALYTICSPROPERTYFROMCELLID_HPP_
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
@@ -11,64 +11,31 @@
 /**
  * \todo Document class.
  */
-class CellAnalyticsPropertyFromCellID
+class CellAnalyticsPropertyFromCellId
 {
 protected:
 
-    unsigned mCellID;
+    unsigned mCellId;
 
     boost::shared_ptr<CellAnalyticsProperty> mpCellAnalyticsProperty;
 
 public:
 
-    CellAnalyticsPropertyFromCellID(unsigned);
+    CellAnalyticsPropertyFromCellId(unsigned);
 
-    ~CellAnalyticsPropertyFromCellID()
+    ~CellAnalyticsPropertyFromCellId()
     {
     };
 
     void SetUpCellAnalyticsProperty(CellPtr);
 
-    void SetCellID(unsigned);
+    void SetCellId(unsigned);
 
     void SetCellAnalyticsProperty(boost::shared_ptr<CellAnalyticsProperty>);
 
-    unsigned GetCellID();
+    unsigned GetCellId();
 
     boost::shared_ptr<CellAnalyticsProperty> GetCellAnalyticsProperty();
 };
-
-CellAnalyticsPropertyFromCellID::CellAnalyticsPropertyFromCellID(unsigned cellID)
-    : mCellID(cellID)
-{
-    SetCellID(cellID);
-}
-
-void CellAnalyticsPropertyFromCellID::SetUpCellAnalyticsProperty(CellPtr p_cell)
-{
-    boost::shared_ptr<CellAnalyticsProperty> p_analytics = boost::static_pointer_cast<CellAnalyticsProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<CellAnalyticsProperty>().GetProperty());
-    p_analytics->SetUp(p_cell, mCellID);
-    SetCellAnalyticsProperty(p_analytics);
-}
-
-void CellAnalyticsPropertyFromCellID::SetCellID(unsigned cellID)
-{
-    mCellID = cellID;
-}
-
-void CellAnalyticsPropertyFromCellID::SetCellAnalyticsProperty(boost::shared_ptr<CellAnalyticsProperty> pCellAnalyticsProperty)
-{
-    mpCellAnalyticsProperty = pCellAnalyticsProperty;
-}
-
-unsigned CellAnalyticsPropertyFromCellID::GetCellID()
-{
-    return mCellID;
-}
-
-boost::shared_ptr<CellAnalyticsProperty> CellAnalyticsPropertyFromCellID::GetCellAnalyticsProperty()
-{
-    return mpCellAnalyticsProperty;
-}
 
 #endif /* CELLANALYTICPROPERTYFROMCELLID_HPP_ */

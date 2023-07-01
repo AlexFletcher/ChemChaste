@@ -45,7 +45,7 @@ public:
     double ComputeSourceTerm(const ChastePoint<SPACE_DIM>& rX, c_vector<double,PROBLEM_DIM>& rU, std::vector<double>& rOdeSolution, unsigned pdeIndex)
     {
         std::vector<double> rUvec(PROBLEM_DIM,0.0);
-        for (unsigned i=0;i<PROBLEM_DIM;i++)
+        for (unsigned i=0;i<PROBLEM_DIM;++i)
         {
             rUvec[i] = rU(i);
         }

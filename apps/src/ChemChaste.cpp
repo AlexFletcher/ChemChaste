@@ -16,7 +16,7 @@
 #include <fstream>
 #include <iostream>
 #include <chrono>
-#include "Cell_virtual.hpp"
+#include "Cell.hpp"
 //ChemChaste includes
 #include "ChemChasteExecutableHeaders.hpp"
 
@@ -219,7 +219,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             unsigned numericalCellID;
             std::string cell_key;
             std::string given_cell_root;
-            for (unsigned i=0; i<p_cell_mesh->GetNumNodes(); i++)
+            for (unsigned i=0; i<p_cell_mesh->GetNumNodes(); ++i)
             {
                 cell_label = p_Pde_field->GetCellLabelByIndex(i);
                 cell_key = p_Pde_field->ReturnCellKeyFromCellLabel(cell_label);
@@ -306,8 +306,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             std::vector<std::string> chemicalCellSpeciesNames;
 
             // assume cell at each node in cell layer mesh
-            bool IsFirstCell = true;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+            bool is_first_cell = true;
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
 
@@ -319,10 +319,10 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["membrane_property"].as<std::string>()
                                     );
 
-                if (IsFirstCell)
+                if (is_first_cell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
-                    IsFirstCell = false;
+                    is_first_cell = false;
                 }
                 cells.push_back(p_cell_reader->GetCellPtr());
             }
@@ -400,7 +400,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             unsigned numericalCellID;
             std::string cell_key;
             std::string given_cell_root;
-            for (unsigned i=0; i<p_cell_mesh->GetNumNodes(); i++)
+            for (unsigned i=0; i<p_cell_mesh->GetNumNodes(); ++i)
             {
                 cell_label = p_Pde_field->GetCellLabelByIndex(i);
                 cell_key = p_Pde_field->ReturnCellKeyFromCellLabel(cell_label);
@@ -488,8 +488,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             std::vector<std::string> chemicalCellSpeciesNames;
 
             // assume cell at each node in cell layer mesh
-            bool IsFirstCell = true;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+            bool is_first_cell = true;
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
 
@@ -502,10 +502,10 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["membrane_property"].as<std::string>()
                                     );
 
-                if (IsFirstCell)
+                if (is_first_cell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
-                    IsFirstCell = false;
+                    is_first_cell = false;
                 }
                 cells.push_back(p_cell_reader->GetCellPtr());
             }
@@ -565,7 +565,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                     variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>() 
                     );
 
-        TetrahedralMesh<elementDim,spaceDim>* p_mesh = p_field ->rGetDomainFeMesh();
+        TetrahedralMesh<elementDim,spaceDim>* p_mesh = p_field->rGetDomainFeMesh();
 
         p_field->ParseInitialConditionsFromFile(variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>());
 
@@ -610,7 +610,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
 
         std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver> > solverSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(p_field->GetOdeSystem()[i]);
             boost::shared_ptr<AbstractIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
@@ -709,7 +709,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
@@ -846,7 +846,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
@@ -998,7 +998,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -1109,7 +1109,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -1221,7 +1221,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -1327,7 +1327,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
@@ -1462,7 +1462,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
@@ -1597,7 +1597,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
@@ -1733,7 +1733,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
@@ -1870,7 +1870,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
@@ -2007,7 +2007,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
@@ -2159,7 +2159,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -2270,7 +2270,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -2382,7 +2382,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -2551,14 +2551,14 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             default:
                 NEVER_REACHED;
         }
-        
 
         // Process Boundary Conditions
         BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
         //std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+        {
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -2601,16 +2601,15 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                     bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
                 }
             }
-
         }
-
 
         // initial conditions
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
-        {   // set as being a random perturbation about the boundary values
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+        {   
+            // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
                 columnNum = 0;
@@ -2645,8 +2644,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                     init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
                 }
             }
-
         }
+
         // PETSc Vec
         Vec initial_condition = PetscTools::CreateVec(init_conds);
 
@@ -2654,6 +2653,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver> > solverSystem;
 
         LinearParabolicHeatEquationPde<elementDim, spaceDim, 1> pde(diffusionRates);
+    
         // solver
         LinearParabolicPdeSystemWithCoupledOdeSystemSolver<elementDim,spaceDim,1> solver(p_mesh, &pde, &bcc);
 
@@ -2665,7 +2665,6 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         {
             endTime = endTime/diffusionRates[0];
         }
-
 
         solver.SetTimes(startTime, endTime);
 
@@ -2683,9 +2682,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
        
         }
         else
-        {
-          
-            if (scaleByDiffusion==true)
+        {          
+            if (scaleByDiffusion == true)
             {
                 solver.SetSamplingTimeStep(variables_map["sampling_timestep"].as<double>()/diffusionRates[0]);
             }
@@ -2700,12 +2698,10 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         //solver.SetOutputDirectory("ChemChaste/chaste_test/Heat/5"+"/");
         solver.SetInitialCondition(initial_condition);
         // solve
-        solver.SolveAndWriteResultsToFile();
-        
+        solver.SolveAndWriteResultsToFile();        
     }
     else if (variables_map["simulation_type"].as<std::string>()=="chaste_heat_equation_long")
     {
-
         double MeshStepSize = 1.0;
         std::vector<unsigned> MeshDimensions = {100,10,0};
         std::vector<double> initValuesHigh = {1.0};
@@ -2713,8 +2709,6 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> bcValues = {0.0};
         std::vector<double> areBCsNeumann = {true};
         std::vector<double> diffusionRates = {100.0};
-
-
 
         // mesh
         TetrahedralMesh<elementDim,spaceDim>* p_mesh = new TetrahedralMesh<elementDim,spaceDim>();
@@ -2769,7 +2763,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
@@ -2905,7 +2899,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {
@@ -3041,7 +3035,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned columnNum = 0;
         unsigned rowNum = 0;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             if (spaceDim==2)
             {

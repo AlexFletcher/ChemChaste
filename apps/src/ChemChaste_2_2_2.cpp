@@ -15,7 +15,7 @@
 #include <fstream>
 #include <iostream>
 #include <chrono>
-#include "Cell_virtual.hpp"
+#include "Cell.hpp"
 //ChemChaste includes
 #include "ChemChasteExecutableHeaders.hpp"
 
@@ -218,7 +218,7 @@ std::string cell_label;
 unsigned numericalCellID;
 std::string cell_key;
 std::string given_cell_root;
-for (unsigned i=0; i<p_cell_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_cell_mesh->GetNumNodes(); ++i)
 {
 cell_label = p_Pde_field->GetCellLabelByIndex(i);
 cell_key = p_Pde_field->ReturnCellKeyFromCellLabel(cell_label);
@@ -305,8 +305,8 @@ std::vector<CellPtr> cells;
 std::vector<std::string> chemicalCellSpeciesNames;
 
 // assume cell at each node in cell layer mesh
-bool IsFirstCell = true;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+bool is_first_cell = true;
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {
 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
 
@@ -318,10 +318,10 @@ variables_map["cell_file_root"].as<std::string>()+variables_map["transport_prope
 variables_map["cell_file_root"].as<std::string>()+variables_map["membrane_property"].as<std::string>()
 );
 
-if (IsFirstCell)
+if (is_first_cell)
 {
 chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
-IsFirstCell = false;
+is_first_cell = false;
 }
 cells.push_back(p_cell_reader->GetCellPtr());
 }
@@ -399,7 +399,7 @@ std::string cell_label;
 unsigned numericalCellID;
 std::string cell_key;
 std::string given_cell_root;
-for (unsigned i=0; i<p_cell_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_cell_mesh->GetNumNodes(); ++i)
 {
 cell_label = p_Pde_field->GetCellLabelByIndex(i);
 cell_key = p_Pde_field->ReturnCellKeyFromCellLabel(cell_label);
@@ -487,8 +487,8 @@ std::vector<CellPtr> cells;
 std::vector<std::string> chemicalCellSpeciesNames;
 
 // assume cell at each node in cell layer mesh
-bool IsFirstCell = true;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+bool is_first_cell = true;
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {
 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
 
@@ -501,10 +501,10 @@ variables_map["cell_file_root"].as<std::string>()+variables_map["transport_prope
 variables_map["cell_file_root"].as<std::string>()+variables_map["membrane_property"].as<std::string>()
 );
 
-if (IsFirstCell)
+if (is_first_cell)
 {
 chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
-IsFirstCell = false;
+is_first_cell = false;
 }
 cells.push_back(p_cell_reader->GetCellPtr());
 }
@@ -609,7 +609,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 
 std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
 std::vector<boost::shared_ptr<AbstractIvpOdeSolver> > solverSystem;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
 // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
 odeSystem.push_back(p_field->GetOdeSystem()[i]);
 boost::shared_ptr<AbstractIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
@@ -708,7 +708,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -845,7 +845,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -997,7 +997,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 
 for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -1108,7 +1108,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 
 for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -1220,7 +1220,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 
 for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -1326,7 +1326,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -1461,7 +1461,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -1596,7 +1596,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -1732,7 +1732,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -1869,7 +1869,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -2006,7 +2006,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -2158,7 +2158,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 
 for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -2269,7 +2269,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 
 for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -2381,7 +2381,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 
 for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
@@ -2608,7 +2608,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -2768,7 +2768,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -2904,7 +2904,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {
@@ -3040,7 +3040,7 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
 unsigned columnNum = 0;
 unsigned rowNum = 0;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
 {   // set as being a random perturbation about the boundary values
 if (spaceDim==2)
 {

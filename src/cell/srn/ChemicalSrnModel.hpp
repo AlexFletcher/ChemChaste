@@ -33,6 +33,7 @@ public:
     virtual ~ChemicalSrnModel()
     {}
 
+    ///\todo Rename to GetSrnType()? Not needed anyway?
     virtual std::string SRNType()
     {
         return "Chemical";

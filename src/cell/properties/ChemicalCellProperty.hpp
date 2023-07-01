@@ -1,5 +1,5 @@
-#ifndef CHEMICALCELLPROPERTY_HPP
-#define CHEMICALCELLPROPERTY_HPP
+#ifndef CHEMICALCELLPROPERTY_HPP_
+#define CHEMICALCELLPROPERTY_HPP_
 
 //general includes
 #include <vector>
@@ -48,4 +48,4 @@ public:
     double GetCellConcentrationByName(std::string);
 };
 
-#endif
+#endif /* CHEMICALCELLPROPERTY_HPP_ */

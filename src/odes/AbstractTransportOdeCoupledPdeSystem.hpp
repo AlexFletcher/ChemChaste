@@ -90,17 +90,17 @@ public:
 
 AbstractTransportOdeForCoupledPdeSystem::AbstractTransportOdeForCoupledPdeSystem(AbstractTransportReactionSystem* pReactionSystem)
     : AbstractOdeSystemForCoupledPdeSystem(
-        pReactionSystem ->GetNumBulkStates() + pReactionSystem ->GetNumCellStates(),
-        pReactionSystem ->GetNumBulkStates())
+        pReactionSystem->GetNumBulkStates() + pReactionSystem->GetNumCellStates(),
+        pReactionSystem->GetNumBulkStates())
 {
     SetReactionSystem(pReactionSystem);
-    SetNumSpecies(pReactionSystem ->GetNumBulkStates()+pReactionSystem ->GetNumCellStates());
+    SetNumSpecies(pReactionSystem->GetNumBulkStates()+pReactionSystem->GetNumCellStates());
     SetNumReactions(pReactionSystem->GetNumReactions());
 
     // Initialise cell concentration vectors
-    std::vector<double> cellConcentration(pReactionSystem ->GetNumCellStates(),1.0);
+    std::vector<double> cellConcentration(pReactionSystem->GetNumCellStates(), 1.0);
     SetReservedCellConcentration(cellConcentration);
-    std::vector<double> cellConcentrationChange(pReactionSystem ->GetNumCellStates(),0.0);
+    std::vector<double> cellConcentrationChange(pReactionSystem->GetNumCellStates(), 0.0);
     SetChangeCellConcentration(cellConcentrationChange);
 
     mpSystemInfo.reset(new TransportOdeSystemInformation<AbstractTransportOdeForCoupledPdeSystem>(pReactionSystem));
@@ -123,20 +123,20 @@ AbstractTransportOdeForCoupledPdeSystem::AbstractTransportOdeForCoupledPdeSystem
 
 void AbstractTransportOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, const std::vector<double>& rY, std::vector<double>& rDY)
 {
-    unsigned number_of_bulk_states=pReactionSystem ->GetNumBulkStates();
+    unsigned num_bulk_states=pReactionSystem->GetNumBulkStates();
 
-    std::vector<double> bulkConcentrations(number_of_bulk_states,0.0);
-    std::vector<double> changeBulkConcentrations(number_of_bulk_states,0.0);
+    std::vector<double> bulkConcentrations(num_bulk_states, 0.0);
+    std::vector<double> changeBulkConcentrations(num_bulk_states, 0.0);
 
     // Parse the different concentration state vectors from the solver output to the different concentration systems
-    for (unsigned i=0; i<number_of_bulk_states; i++)
+    for (unsigned i=0; i<num_bulk_states; ++i)
     {
         bulkConcentrations[i]= rY[i];
     }
 
-    for (unsigned i=0; i<pReactionSystem ->GetNumCellStates(); i++)
+    for (unsigned i=0; i<pReactionSystem->GetNumCellStates(); ++i)
     {
-        mReservedCellConcentration[i]= rY[i+number_of_bulk_states];
+        mReservedCellConcentration[i]= rY[i+num_bulk_states];
     }
 
     if (mIsCheckConcentration)
@@ -146,7 +146,7 @@ void AbstractTransportOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, 
     }
 
     // Reset mChangeCellConc, bulkConcentrations already reset
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         mChangeCellConc[i] = 0.0;
     }
@@ -154,13 +154,13 @@ void AbstractTransportOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, 
     mpReactionSystem->ReactSystem(bulkConcentrations, mReservedCellConcentration, changeBulkConcentrations, mChangeCellConc);
 
     // Reform rDY for passing to the solver
-    for (unsigned i=0; i<number_of_bulk_states; i++)
+    for (unsigned i=0; i<num_bulk_states; ++i)
     {
         rDY[i]= changeBulkConcentrations[i];
     }
-    for (unsigned i=0; i<pReactionSystem ->GetNumCellStates(); i++)
+    for (unsigned i=0; i<pReactionSystem->GetNumCellStates(); ++i)
     {
-        rDY[i+number_of_bulk_states] = mChangeCellConc[i];
+        rDY[i+num_bulk_states] = mChangeCellConc[i];
     }
 }  
 
@@ -252,7 +252,7 @@ void AbstractTransportOdeForCoupledPdeSystem::CheckConcentration(const std::vect
 {
     // If chemical concentration gets too low then nan can occur, concentration must be +ve
 
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
@@ -309,7 +309,7 @@ template<>
 void ChemicalOdeSystemInformation<AbstractTransportOdeForCoupledPdeSystem>::Initialise()
 {
     // initialise the bulk state varibles
-    for (unsigned i=0; i<mp_reaction_system->GetBulkChemistry()->GetNumberChemicals(); i++)
+    for (unsigned i=0; i<mp_reaction_system->GetBulkChemistry()->GetNumberChemicals(); ++i)
     {
         this->mVariableNames.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalNamesByIndex(i));
         this->mVariableUnits.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalDimensionsByIndex(i));
@@ -317,7 +317,7 @@ void ChemicalOdeSystemInformation<AbstractTransportOdeForCoupledPdeSystem>::Init
     }
     
     // initialise the cell state varibles; appended onto the end of the bulk state vectors
-    for (unsigned i=0; i<mp_reaction_system->GetCellChemistry()->GetNumberChemicals(); i++)
+    for (unsigned i=0; i<mp_reaction_system->GetCellChemistry()->GetNumberChemicals(); ++i)
     {
         this->mVariableNames.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalNamesByIndex(i));
         this->mVariableUnits.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalDimensionsByIndex(i));

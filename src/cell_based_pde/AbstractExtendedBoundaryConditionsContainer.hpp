@@ -145,7 +145,7 @@ bool AbstractExtendedBoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_D
     if (!mCheckedAndCommunicatedIfDirichletBcs)
     {
         bool i_have_dirichlet=false;
-        for (unsigned i=0; i<PROBLEM_DIM; i++)
+        for (unsigned i=0; i<PROBLEM_DIM; ++i)
         {
             if (!mpDirichletMap[i]->empty())
             {
@@ -162,7 +162,7 @@ bool AbstractExtendedBoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_D
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void AbstractExtendedBoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::DeleteDirichletBoundaryConditions(std::set<const AbstractBoundaryCondition<SPACE_DIM>*> alreadyDeletedConditions)
 {
-    for (unsigned i=0; i<PROBLEM_DIM; i++)
+    for (unsigned i=0; i<PROBLEM_DIM; ++i)
     {
         if (mpDirichletMap[i])
         {

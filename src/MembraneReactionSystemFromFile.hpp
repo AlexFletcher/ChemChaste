@@ -187,12 +187,12 @@ void MembraneReactionSystemFomFile::FormReactionSystemObjectFromTuple(std::vecto
         numBulkSubstrates = ReturnSubstratesForReactionIndex(reaction)[0];
         numBulkProducts = ReturnProductsForReactionIndex(reaction)[0];
 
-        for (unsigned i=0; i<numBulkSubstrates; i++)
+        for (unsigned i=0; i<numBulkSubstrates; ++i)
         {
             bulk_substrate_name.push_back(std::get<2>(system[reaction])[i]);
             bulk_substrate_stoich.push_back(std::get<4>(system[reaction])[i]);
         }
-        for (unsigned i=0; i<numBulkProducts;i++)
+        for (unsigned i=0; i<numBulkProducts;++i)
         {
             bulk_product_name.push_back(std::get<3>(system[reaction])[i]);
             bulk_product_stoich.push_back(std::get<5>(system[reaction])[i]);
@@ -209,12 +209,12 @@ void MembraneReactionSystemFomFile::FormReactionSystemObjectFromTuple(std::vecto
             numCellSubstrates = ReturnSubstratesForReactionIndex(reaction)[1];
             numCellProducts = ReturnProductsForReactionIndex(reaction)[1];
 
-            for (unsigned i=0; i<numCellSubstrates;i++)
+            for (unsigned i=0; i<numCellSubstrates;++i)
             {
                 cell_substrate_name.push_back(std::get<2>(system[reaction])[i+numBulkSubstrates]);
                 cell_substrate_stoich.push_back(std::get<4>(system[reaction])[i+numBulkSubstrates]);
             }
-            for (unsigned i=0; i<numCellProducts;i++)
+            for (unsigned i=0; i<numCellProducts;++i)
             {
                 cell_product_name.push_back(std::get<3>(system[reaction])[i+numBulkProducts]);
                 cell_product_stoich.push_back(std::get<5>(system[reaction])[i+numBulkProducts]);
@@ -233,7 +233,7 @@ void MembraneReactionSystemFomFile::FormReactionSystemObjectFromTuple(std::vecto
 std::vector<AbstractChemical*> MembraneReactionSystemFomFile::FromChemicalNameVectorToAbstractChemicalVector(std::vector<std::string> nameVector)
 {
     std::vector<AbstractChemical*> chemicalVector = std::vector<AbstractChemical*>();
-    for (unsigned i=0; i<nameVector.size(); i++)
+    for (unsigned i=0; i<nameVector.size(); ++i)
     {
         chemicalVector.push_back(new AbstractChemical(nameVector[i]));
     }
@@ -247,13 +247,13 @@ void MembraneReactionSystemFomFile::ParseSystemChemistry(std::vector<std::string
     AbstractChemistry* bulkChemistry = new AbstractChemistry();
     AbstractChemistry* cellChemistry = new AbstractChemistry();
 
-    for (unsigned i =0; i<bulk_names.size(); i++)
+    for (unsigned i =0; i<bulk_names.size(); ++i)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(bulk_names[i]);
         bulkChemistry->AddChemical(candidate_chemical);
     }
 
-    for (unsigned i =0; i<cell_names.size(); i++)
+    for (unsigned i =0; i<cell_names.size(); ++i)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(cell_names[i]);
         cellChemistry->AddChemical(candidate_chemical);
@@ -285,15 +285,9 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
             // data structures on line by line basis
             if (!line.empty())
             {
-                if (line.at(0)=='#')
+                if (line.at(0) != '#')
                 {
-                    // line starts with escape character
-
-                    //std::cout << "Escape line: "<<line << std::endl;
-                }
-                else
-                {
-                    // check if two sub-reactions are defined (either side of the membrane)
+                    // Check if two sub-reactions are defined (either side of the membrane)
                     size_t coupled_reactions_delimiter_loc = line.find(mReactionDelimiter);
                     if (coupled_reactions_delimiter_loc != std::string::npos)
                     {
@@ -318,14 +312,13 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                         // first reaction substring
                         std::string first_reaction = line.substr(separate_point_type_reaction+3,coupled_reactions_delimiter_loc);
                         
-
                         // first reaction substring
                         std::string second_reaction = line.substr(coupled_reactions_delimiter_loc+1,std::string::npos);
 
                         // don't want to parse info in this function/class
                         
                         // test for reversibility in reaction string
-                        bool IsReversible = TestReversibility(first_reaction);
+                        bool is_reversible = TestReversibility(first_reaction);
                         // if the first reaction is reverisble then the second must also be reverisble as coupled reactions
         
                         // species, stoich
@@ -338,9 +331,9 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                         // concatenate the reaciton tuples; add the dimensions of each separate reaction tuples ot the reactionInfo for parsing within the reaction type class
                         std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsigned>>> ReactionStringTuple  = AddCoupledReactions(FirstReactionStringTuple, SecondReactionStringTuple);
 
-                        // reaction type, IsReversible, Substrates, Products, stoichSubstrates, stoichProducts, reaction information
+                        // reaction type, is_reversible, Substrates, Products, stoichSubstrates, stoichProducts, reaction information
                         // std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string 
-                        system.push_back(std::make_tuple(reactionType, IsReversible, std::get<0>(ReactionStringTuple)[0], std::get<0>(ReactionStringTuple)[1], std::get<1>(ReactionStringTuple)[0], std::get<1>(ReactionStringTuple)[1], reactionInfo));
+                        system.push_back(std::make_tuple(reactionType, is_reversible, std::get<0>(ReactionStringTuple)[0], std::get<0>(ReactionStringTuple)[1], std::get<1>(ReactionStringTuple)[0], std::get<1>(ReactionStringTuple)[1], reactionInfo));
 
                         numReactions +=1;
                     }
@@ -365,16 +358,16 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                         // don't want to parse info in this function
                         
                         // test for reversibility in reaction string
-                        bool IsReversible = TestReversibility(react);
+                        bool is_reversible = TestReversibility(react);
         
                         // species, stoich
                         std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsigned>>> ReactionStringTuple = ParseReactionString(react);
                         mNumberSubstrates.push_back({(unsigned int)std::get<0>(ReactionStringTuple)[0].size()}); 
                         mNumberProducts.push_back({(unsigned int)std::get<0>(ReactionStringTuple)[1].size()}); 
 
-                        // reaction type, IsReversible, Substrates, Products, stoichSubstrates, stoichProducts, reaction information
+                        // reaction type, is_reversible, Substrates, Products, stoichSubstrates, stoichProducts, reaction information
                         // std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string 
-                        system.push_back(std::make_tuple(reactionType, IsReversible, std::get<0>(ReactionStringTuple)[0], std::get<0>(ReactionStringTuple)[1], std::get<1>(ReactionStringTuple)[0], std::get<1>(ReactionStringTuple)[1], reactionInfo));
+                        system.push_back(std::make_tuple(reactionType, is_reversible, std::get<0>(ReactionStringTuple)[0], std::get<0>(ReactionStringTuple)[1], std::get<1>(ReactionStringTuple)[0], std::get<1>(ReactionStringTuple)[1], reactionInfo));
                         numReactions += 1;
                     }
                 }
@@ -393,13 +386,14 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
 bool MembraneReactionSystemFomFile::TestReversibility(std::string line)
 {
     // test for reversibility in reaction string
-    bool IsReversible =  false;
-    if (line.find(mReverDelimiter) != std::string::npos){
+    bool is_reversible = false;
+    if (line.find(mReverDelimiter) != std::string::npos)
+    {
         // set reversible switch
-        IsReversible =  true;
+        is_reversible =  true;
     }
 
-    return IsReversible;
+    return is_reversible;
 }
 
 std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsigned>>> MembraneReactionSystemFomFile::ParseReactionString(std::string line)
@@ -411,9 +405,9 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
     // parse into complexes, two complexes per reaction (head and tail of reaction arrows)
     std::vector<std::string> complexes;
 
-    bool IsReversible = TestReversibility(line);
+    bool is_reversible = TestReversibility(line);
     std::string delim;
-    if (IsReversible)
+    if (is_reversible)
     {
         delim = mReverDelimiter;
     }
@@ -442,8 +436,8 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
     {
         std::string str=complexes[complexNumber];
         // posiitons of characters in the reaction string to parse
-        size_t posSnew = 0;
-        size_t posSold = 0;
+        size_t delimiter_pos = 0;
+        size_t old_delimiter_pos = 0;
         
         std::vector<std::string> reactants;
         std::vector<unsigned> stoichVector;
@@ -453,14 +447,14 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             str.erase(str.begin());
         }
 
-        while (posSnew != std::string::npos){
+        while (delimiter_pos != std::string::npos){
 
             // update position of character pointer based on species separator " + " default
-            posSnew = str.find(mSpeciesSeparator,posSold);
+            delimiter_pos = str.find(mSpeciesSeparator,old_delimiter_pos);
             
-            std::string strT = str.substr(posSold,posSnew-posSold);
+            std::string strT = str.substr(old_delimiter_pos,delimiter_pos-old_delimiter_pos);
         
-            posSold=posSnew+3;
+            old_delimiter_pos=delimiter_pos+3;
 
             // determine the stoich ratio value of the species
             unsigned stoichValue = 1;
@@ -471,7 +465,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
                 unsigned i=0;
                 while (isdigit(strT.c_str()[i]))
                 {
-                    i++;
+                    ++i;
                 }
                 tempString = strT.substr(i, std::string::npos);
             }
@@ -499,7 +493,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
 
     return std::make_tuple(species, stoich);
 
-    // return reaction type, stoich, species, IsReversible, reaction info (info is dependent on reaction type)
+    // return reaction type, stoich, species, is_reversible, reaction info (info is dependent on reaction type)
 }
 
 std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsigned>>> MembraneReactionSystemFomFile::AddCoupledReactions(std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsigned>>> FirstReactionStringTuple, std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsigned>>> SecondReactionStringTuple)

@@ -115,13 +115,11 @@ void AbstractReactionSystemFromFile::SetFileDeliminator()
 
 void AbstractReactionSystemFromFile::FormReactionSystemObjectFromTuple(std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string>> system_tuple)
 {
-    //std::cout << "AbstractReactionSystemFromFile::FormReactionSystemObjectFromTuple - start" << std::endl;
     // for each reaction whose data is in the tuple, form the corresponding reaction class
     // denote in the reaction class the function necessary to parse reaction information
-
     SetNumReactions(system_tuple.size());
 
-    for ( unsigned reaction =0; reaction<mNumReactions; reaction++)
+    for (unsigned reaction =0; reaction<mNumReactions; reaction++)
     {
         AbstractReaction* p_reaction = new AbstractReaction();
 
@@ -137,7 +135,7 @@ void AbstractReactionSystemFromFile::FormReactionSystemObjectFromTuple(std::vect
 std::vector<AbstractChemical*> AbstractReactionSystemFromFile::FromChemicalNameVectorToAbstractChemicalVector(std::vector<std::string> nameVector)
 {
     std::vector<AbstractChemical*> chemicalVector = std::vector<AbstractChemical*>();
-    for (unsigned i=0; i<nameVector.size(); i++)
+    for (unsigned i=0; i<nameVector.size(); ++i)
     {
         chemicalVector.push_back(new AbstractChemical(nameVector[i]));
     }
@@ -148,7 +146,7 @@ std::vector<AbstractChemical*> AbstractReactionSystemFromFile::FromChemicalNameV
 void AbstractReactionSystemFromFile::ParseSystemChemistry(std::vector<std::string> species_names)
 {
     AbstractChemistry* mpSystemChemistry = new AbstractChemistry();
-    for (unsigned i = 0; i < species_names.size(); i++)
+    for (unsigned i = 0; i < species_names.size(); ++i)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(species_names[i]);
         mpSystemChemistry->AddChemical(candidate_chemical);
@@ -273,8 +271,8 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
         std::string str=complexes[complexNumber];
 
         // Posiitons of characters in the reaction string to parse
-        size_t posSnew = 0;
-        size_t posSold = 0;
+        size_t delimiter_pos = 0;
+        size_t old_delimiter_pos = 0;
         
         std::vector<std::string> reactants;
         std::vector<unsigned> stoichVector;
@@ -285,14 +283,14 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             str.erase(str.begin());
         }
 
-        while (posSnew != std::string::npos){
+        while (delimiter_pos != std::string::npos){
 
             // Update position of character pointer based on species separator " + " default
-            posSnew = str.find(mSpeciesSeparator,posSold);
+            delimiter_pos = str.find(mSpeciesSeparator,old_delimiter_pos);
             
-            std::string strT = str.substr(posSold,posSnew-posSold);
+            std::string strT = str.substr(old_delimiter_pos,delimiter_pos-old_delimiter_pos);
         
-            posSold = posSnew + 3;
+            old_delimiter_pos = delimiter_pos + 3;
             // determine the stoich ratio value of the species
 
             unsigned stoichValue = 1;
@@ -304,7 +302,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
                 unsigned i = 0;
                 while (isdigit(strT.c_str()[i]))
                 {
-                    i++;
+                    ++i;
                 }
                 tempString = strT.substr(i,std::string::npos);
             }

@@ -385,8 +385,7 @@ AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::AbstractDomainF
         mCartesianOdeScaleXY(cartesianOdeScale)
         
         
-{   //std::cout << "AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::AbstractDomainFieldTemplated" << std::endl;
-
+{
     if (mLabelOrigin.empty())
     {
         std::vector<double> origin(SPACE_DIM,0);
@@ -412,9 +411,8 @@ AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::AbstractDomainF
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetUpDomainFromFiles()
-{//std::cout << "AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetUpDomainFromFiles" << std::endl;
-    // read the domain labels and label keys form files
-
+{
+    // Read the domain labels and label keys form files
     SetupAndInitialiseLabelDomain();
 
     // scale the input file dimensions to the chaste rectilinear cartesian grid
@@ -436,7 +434,6 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetUpDomai
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::GenerateFeMesh()
 {
-
     // generate the finite element mesh and populate the nodes with the corrtesponding ode systems
     // and solvers populated from the domain information. Function to be called whenever the domain
     // pde mesh changes in the simulation.
@@ -448,13 +445,11 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::GenerateFe
     LabelFeMeshNodally();
 
     mIsFeMeshGenerated = true;
-
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::LabelFeMeshNodally()
 {
-
     // for a mesh that has been already defined, look at location of each node, compare with reference
     // chaste domain and populate node with corresponding property label
 
@@ -462,7 +457,6 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::LabelFeMes
     SetNodeDomains(LabelNodesWithDomains());
 
     SetNodeLabels(LabelNodesWithOdes());
-
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
@@ -495,7 +489,6 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetupAndIn
 
     // store these values
     SetCartesianOdeDimensions(cartesianOdeDimensions);
-
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
@@ -508,15 +501,18 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetupDomai
         switch (SPACE_DIM)
         {
             case 2:
+            {
                 meshScale.push_back(1.0);
                 meshScale.push_back(0.866025);
                 break;
+            }
             default:
-            
+            {            
                 for (unsigned dim=0;dim<SPACE_DIM; dim++)
                 {
                     meshScale.push_back(1.0);
                 }
+            }
         }
     }
     else
@@ -529,7 +525,6 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetupDomai
     }
     SetMeshScale(meshScale);
     
-
     std::vector<unsigned> meshDimensions(SPACE_DIM,0);
     std::vector<double> meshSegment(SPACE_DIM,0.0);
     double meshElementX = 0.0;
@@ -574,14 +569,20 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::FormMesh()
         switch (SPACE_DIM)
         {
             case 1:
+            {
                 mpFeMesh->ConstructRegularSlabMesh(mStepSize, mMeshDimensions[0]);
                 break;
+            }
             case 2:
+            {
                 mpFeMesh->ConstructRegularSlabMesh(mStepSize, mMeshDimensions[0], mMeshDimensions[1]);
                 break;
+            }
             case 3:
+            {
                 mpFeMesh->ConstructRegularSlabMesh(mStepSize, mMeshDimensions[0], mMeshDimensions[1], mMeshDimensions[2]);
                 break;
+            }
             default:
                 NEVER_REACHED;
         }
@@ -599,7 +600,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetupAndIn
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 std::vector<std::string> AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::LabelNodesWithDomains()
 {
-    // retireve the node positions and compare to domain labels in order to label the nodes
+    // retrieve the node positions and compare to domain labels in order to label the nodes
     // nodes are defined bottom-left of domain to top-right in a serialised manner
 
     unsigned numNodes = mpFeMesh->GetNumNodes();
@@ -607,15 +608,17 @@ std::vector<std::string> AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROB
     // form the serialised node label array
     std::vector<std::string> serialisedNodeDomains(numNodes,"");
     
-    for (typename AbstractTetrahedralMesh<ELEMENT_DIM,SPACE_DIM>::NodeIterator iter = mpFeMesh ->GetNodeIteratorBegin();
-             iter != mpFeMesh ->GetNodeIteratorEnd();
-             ++iter)
+    for (typename AbstractTetrahedralMesh<ELEMENT_DIM,SPACE_DIM>::NodeIterator iter = mpFeMesh >GetNodeIteratorBegin();
+         iter != mpFeMesh->GetNodeIteratorEnd();
+         ++iter)
     {
-        // for each node, retireve index and position, label with correct ode label
-        unsigned node_index = iter ->GetIndex();
-        // retireve the position of the node of index node_index
+        // For each node, retrieve index and position, label with correct ode label
+        unsigned node_index = iter->GetIndex();
+
+        // Retrieve the position of the node of index node_index
         const c_vector<double,SPACE_DIM>& position = iter->rGetLocation();
-        // search through the position ode labels for the correct label to give the node
+
+        // Search through the position ode labels for the correct label to give the node
         serialisedNodeDomains.at(node_index) = ReturnDomainLabelAtPosition(position);
     }
 
@@ -625,7 +628,7 @@ std::vector<std::string> AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROB
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 std::vector<std::string> AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::LabelNodesWithOdes()
 {
-    // retireve the node positions and compare to domain labels in order to label the nodes
+    // retrieve the node positions and compare to domain labels in order to label the nodes
     // nodes are defined bottom-left of domain to top-right in a serialised manner
    
     unsigned numNodes = mpFeMesh->GetNumNodes();
@@ -633,15 +636,17 @@ std::vector<std::string> AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROB
     // form the serialised node label array
     std::vector<std::string> serialisedNodeLabels(numNodes,"");
     
-    for (typename AbstractTetrahedralMesh<ELEMENT_DIM,SPACE_DIM>::NodeIterator iter = mpFeMesh ->GetNodeIteratorBegin();
-             iter != mpFeMesh ->GetNodeIteratorEnd();
+    for (typename AbstractTetrahedralMesh<ELEMENT_DIM,SPACE_DIM>::NodeIterator iter = mpFeMesh->GetNodeIteratorBegin();
+             iter != mpFeMesh->GetNodeIteratorEnd();
              ++iter)
     {
-        // for each node, retireve index and position, label with correct ode label
-        unsigned node_index = iter ->GetIndex();
-        // retireve the position of the node of index node_index
+        // For each node, retrieve index and position, label with correct ode label
+        unsigned node_index = iter->GetIndex();
+
+        // Retrieve the position of the node of index node_index
         const c_vector<double,SPACE_DIM>& position = iter->rGetLocation();
-        // search through the position ode labels for the correct label to give the node
+    
+        // Search through the position ode labels for the correct label to give the node
         serialisedNodeLabels.at(node_index) = ReturnNodeOdeLabelAtPosition(position);
     }
 
@@ -675,13 +680,13 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseIniti
     {   
         // each node set as being a vector of the read in state condition values
 
-        // test for the domain of the node, retireve the condition for the specific domain
+        // test for the domain of the node, retrieve the condition for the specific domain
         for (unsigned pdeDim=0; pdeDim<numStateVariables; pdeDim++)
         {   
             // determine which state the pde dimension refers to and then retrieve the condition if present
             std::string stateName = mpStateVariableVector->RetrieveStateVariableName(pdeDim);
   
-            bool IsFoundState =false;
+            bool is_found_state =false;
             // run through input data, line by line
             for (unsigned inputState=0; inputState<initialConditionsAsStrings.size();inputState++)
             {
@@ -696,7 +701,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseIniti
                         if (node_domain_labels[node_index]==initialConditionsAsStrings[inputState][1]||ReturnDomainKeyFromDomainLabel(node_domain_labels[node_index])==initialConditionsAsStrings[inputState][1])
                         {  
                             // sub domain has been found, state found, fill data record
-                            IsFoundState = true;
+                            is_found_state = true;
                            
                             // store the condition, serialised for nodes
 
@@ -717,7 +722,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseIniti
                     else
                     {
                         //state data found, but no sub domain is specied, assume present for all sub domains if sub domains are indeed present
-                        IsFoundState = true;
+                        is_found_state = true;
                         // store the condition, serialised for nodes
                         if (IsPerturbInitialConditions)
                         {
@@ -733,7 +738,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseIniti
                 }
                 // data record isn't correct for the pde state name, if at end of data record state not found then state not present in input data
             }  
-            if (!IsFoundState)
+            if (!is_found_state)
             {
                 // state in system but not in the input data, default to 0.0
                 // initialse the missing condition, serialised for nodes    
@@ -754,8 +759,7 @@ template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 bool AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PerturbInitialConditionTest(std::vector<std::string> inputVector)
 {
     // determine whether or not the initial conditions is to be perturbed
-    // perturbation on more specific basis
-        
+    // perturbation on more specific basis 
     if (inputVector.size()>3)
     {
         // then have the perturbation bool selections
@@ -767,8 +771,7 @@ bool AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PerturbIni
         else
         {
             return false;
-        }
-        
+        }        
     }
     else
     {
@@ -779,19 +782,17 @@ bool AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::PerturbIni
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnKeyValueFromNodeLabel(std::string nodeLabel)
 {
-    bool IsFound=false;
-
+    bool is_found = false;
     for (unsigned key_index=0; key_index<mOdeKeys.size(); key_index++)
     {
-        //std::cout << "key_index: "<<key_index << std::endl;
         if (mOdeKeys[key_index][0] == nodeLabel)
         {
             return mOdeKeys[key_index][1];
-            IsFound=true;
+            is_found = true;
             break;
         }
     }
-    if (!IsFound)
+    if (!is_found)
     {
         std::cout << "Error: AbstractDomainFieldTemplated::ReturnKeyValueFromNodeLabel, node label not found" << std::endl;
         return "Null";
@@ -802,19 +803,17 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Ret
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnDomainKeyFromDomainLabel(std::string domainLabel)
 {
-    bool IsFound=false;
-
+    bool is_found=false;
     for (unsigned key_index=0; key_index<mDomainKeys.size(); key_index++)
-    {
-        
+    {        
         if (mDomainKeys[key_index][0] == domainLabel)
         {
             return mDomainKeys[key_index][1];
-            IsFound=true;
+            is_found=true;
             break;
         }
     }
-    if (!IsFound)
+    if (!is_found)
     {
         std::cout << "Error: AbstractDomainFieldTemplated::ReturnDomainKeyFromDomainLabel, domain label not found" << std::endl;
         return "Null";
@@ -831,7 +830,7 @@ std::vector<std::vector<std::string>> AbstractDomainFieldTemplated<ELEMENT_DIM,S
     std::string inputName;
     std::vector<std::vector<std::string>> newMatrix;
 
-    for (unsigned i=0; i<inputMatrix.size();i++)
+    for (unsigned i=0; i<inputMatrix.size();++i)
     {
         inputName = inputMatrix[i][0];
 
@@ -854,7 +853,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseBound
     // use state name against stateVariableRegister to remove any state value not in the system
     // replace any state in register but not in boundary conditions with value of 0.0, type Derichlet
 
-    unsigned numStateVariables = GetStateVariableVector() ->GetNumStateVariables();
+    unsigned numStateVariables = GetStateVariableVector()->GetNumStateVariables();
 
     std::vector<std::string> boundaryConditionTypes(numStateVariables,"Dirichlet");
     std::vector<double> boundaryConditionValues(numStateVariables,0.0);
@@ -867,7 +866,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseBound
         for (unsigned inputState=0; inputState<boundaryConditionsAsStrings.size();inputState++)
         {
             // test whether the state variable is specified within the input data
-            if (stateName==boundaryConditionsAsStrings[inputState][0])
+            if (stateName == boundaryConditionsAsStrings[inputState][0])
             {
                 // state found, read data
                 if (boundaryConditionsAsStrings[inputState].size()>2)
@@ -908,7 +907,7 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Ret
     {
         position_in_domain = position[dim] + mLabelOrigin[dim];
 
-        for (unsigned i=1; i<(mCartesianOdeDimensions[dim]+1); i++)
+        for (unsigned i=1; i<(mCartesianOdeDimensions[dim]+1); ++i)
         {
             if (position_in_domain <= i*mCartesianOdeScaleXY[dim])
             {
@@ -936,7 +935,7 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Ret
     {
         position_in_domain = position[dim] + mLabelOrigin[dim];
 
-        for (unsigned i=1; i<(mCartesianChasteDimensions[dim]+1); i++)
+        for (unsigned i=1; i<(mCartesianChasteDimensions[dim]+1); ++i)
         {
             if (position_in_domain <= i*mCartesianChasteScaleXY[dim])
             {
@@ -1035,28 +1034,28 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::MapOdeLabe
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 double AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::GetDiffusionValueBasedOnPoint(const ChastePoint<2>& chastePoint, unsigned stateIndex)
 {
-
-    // take in the point and state index then determine the state name and domain label, then determine the diffusion value
-    if (stateIndex<mpStateVariableVector ->GetNumStateVariables())
+    // Take in the point and state index then determine the state name and domain label, then determine the diffusion value
+    if (stateIndex<mpStateVariableVector->GetNumStateVariables())
     {
-        if (mDiffusionDatabase[0].size() ==1 )
+        if (mDiffusionDatabase[0].size() == 1)
         {
-            // only a diffusion value vector
+            // Only a diffusion value vector
             return std::stod(mDiffusionDatabase[stateIndex][0]);
         }
         else
         {
-            // retrive state name from stateVariableRegister
+            // Retrive state name from stateVariableRegister
             std::string stateName = mpStateVariableVector->RetrieveStateVariableName(stateIndex);
 
-            // retrieve label from domainLabels
+            // Retrieve label from domainLabels
             std::string domainLabel = ReturnDomainLabelAtPosition(chastePoint.rGetLocation());
             return ReturnDiffusionValueFromStateNameAndDomainLabel(stateName,domainLabel);
         }
     }
     else
     {
-        // state hasn't been found therefore return a diffusion value of 0.0
+        // State hasn't been found therefore return a diffusion value of 0.0
+        ///\todo replace with EXCEPTION
         std::cout << "Error: AbstractDomainFieldTemplated::GetDiffusionValueBasedOnPoint: State not in state variable" << std::endl;
         return 0.0;
     }
@@ -1068,8 +1067,8 @@ double AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnDi
     // look for diffusion value (from diffusiondatabase) based on state name and domain label
 
     unsigned numDiffusiveEntries = mDiffusionDatabase.size();
-    bool IsStateFound=false;
-    if (mDiffusionDatabase[0].size() ==2)
+    bool is_found_state=false;
+    if (mDiffusionDatabase[0].size() == 2)
     {
         // take to be only state name, diffusion value structure
         // find stateName
@@ -1077,14 +1076,14 @@ double AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnDi
         {
             if (stateName == mDiffusionDatabase[diffusive_index][0])
             {
-                IsStateFound = true;
+                is_found_state = true;
                 return std::stod(mDiffusionDatabase[diffusive_index][1]);
                 break;
                 
             }
         }
         // if the state isn't found in the diffusion database then state cannot diffuse, return value of 0.0
-        if (!IsStateFound)
+        if (!is_found_state)
         {
             return 0.0;
         }
@@ -1100,14 +1099,14 @@ double AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnDi
                 if (domainLabel == mDiffusionDatabase[diffusive_index][1])
                 {
                     // state and domain found, return diffusivity
-                    IsStateFound = true;
+                    is_found_state = true;
                     return std::stod(mDiffusionDatabase[diffusive_index][2]);
                     break;
                 }
             }
         }
         // if the state isn't found in the diffusion database then state cannot diffuse, return value of 0.0
-        if (!IsStateFound)
+        if (!is_found_state)
         {
             return 0.0;
         }
@@ -1129,7 +1128,7 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Ret
     
     // for the y position
 
-    for (unsigned i=1; i<(mCartesianCellDimensions[1]+1); i++) // top to bottom
+    for (unsigned i=1; i<(mCartesianCellDimensions[1]+1); ++i) // top to bottom
     {
         if (positionY <= i*mCartesianCellScaleXY[1])
         {
@@ -1140,7 +1139,7 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Ret
 
     // for the x position
 
-    for (unsigned i=1; i<(mCartesianCellDimensions[0]+1); i++)
+    for (unsigned i=1; i<(mCartesianCellDimensions[0]+1); ++i)
     {
         if (positionX <= i*mCartesianCellScaleXY[0])
         {
@@ -1167,7 +1166,7 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Ret
     
     // for the y position
 
-    for (unsigned i=1; i<(mCartesianOdeDimensions[1]+1); i++) // top to bottomw
+    for (unsigned i=1; i<(mCartesianOdeDimensions[1]+1); ++i) // top to bottomw
     {
         if (positionY <= i*mCartesianOdeScaleXY[1])
         {
@@ -1178,7 +1177,7 @@ std::string AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Ret
 
     // for the x position
 
-    for (unsigned i=1; i<(mCartesianOdeDimensions[0]+1); i++)
+    for (unsigned i=1; i<(mCartesianOdeDimensions[0]+1); ++i)
     {
         if (positionX <= i*mCartesianOdeScaleXY[0])
         {
@@ -1209,12 +1208,9 @@ std::vector<std::vector<std::string>> AbstractDomainFieldTemplated<ELEMENT_DIM,S
         while (getline(inputFile,line)){
             // while the file still has lines not read.
             // read line left to right, top to bottom.
-            if (!line.empty()){
-                if (line.at(0)=='#')
-                {
-                    //std::cout << "Escape line: "<<line << std::endl;
-                }
-                else
+            if (!line.empty())
+            {
+                if (line.at(0) != '#')
                 {
                     outputMatrix.push_back(parseMatrixLineString(line));
                 }   
@@ -1223,8 +1219,11 @@ std::vector<std::vector<std::string>> AbstractDomainFieldTemplated<ELEMENT_DIM,S
         inputFile.close();
 
         return outputMatrix;
-    }else{
-        std::cout << "Error: Unable to open file: "<<filename << std::endl;
+    }
+    else
+    {
+        ///\todo replace with EXCEPTION
+        std::cout << "Error: Unable to open file: " << filename << std::endl;
         return outputMatrix;
     }
 }
@@ -1240,28 +1239,28 @@ std::vector<std::string> AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROB
     std::string matrixCell;
 
     // determine the position of the delimiter
-    size_t posSnew=line.find(delim);
+    size_t delimiter_pos=line.find(delim);
 
-    bool IsEndOfLine = false;
+    bool is_end_of_line = false;
     
-    while (!IsEndOfLine)
+    while (!is_end_of_line)
     {
         // while not at the end of the file, sample sub strings from the posiiton of the delimiter
-        if (posSnew == std::string::npos)
+        if (delimiter_pos == std::string::npos)
         {
-            IsEndOfLine = true;
+            is_end_of_line = true;
         }
         
         // sample substring from begining of the string to the delimiter positioon, store as data entry
-        matrixCell = line.substr(0,posSnew);
+        matrixCell = line.substr(0,delimiter_pos);
 
         // remove the sampled entry from the string
-        line = line.substr(posSnew+1,std::string::npos);
+        line = line.substr(delimiter_pos+1,std::string::npos);
 
         rowVector.push_back(matrixCell);
 
         // update delimiter position
-        posSnew=line.find(delim);
+        delimiter_pos=line.find(delim);
     }
     return rowVector;
 }
@@ -1330,7 +1329,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReadDiffus
     // vector to store the state variables
     std::vector<std::string> stateVector;
     std::vector<std::string> domainVector;
-    for (unsigned i=0; i<diffusionDatabase.size(); i++)
+    for (unsigned i=0; i<diffusionDatabase.size(); ++i)
     {
         // the first element of the read in database is the identifying names
         // of the state variables that diffuse
@@ -1361,20 +1360,20 @@ std::vector<std::string> AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROB
     std::vector<std::string> resultUnique = std::vector<std::string>();
     resultUnique.push_back(candidateVector.at(0));
     unsigned uniqueCount =1;
-    bool IsFound = false;
-    for (unsigned i=1; i<candidateVector.size(); i++)
+    bool is_found = false;
+    for (unsigned i=1; i<candidateVector.size(); ++i)
     {
-        IsFound = false;
+        is_found = false;
         for (unsigned j=0; j<uniqueCount; j++)
         {
 
             if (candidateVector[i] == resultUnique[j])
             {
-                IsFound =true;
+                is_found =true;
                 break;
             }
         }
-        if (!IsFound)
+        if (!is_found)
         {
             resultUnique.push_back(candidateVector[i]);
             uniqueCount++;
@@ -1390,22 +1389,22 @@ std::vector<std::string> AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROB
     std::vector<std::string> resultUnique = std::vector<std::string>();
     resultUnique.push_back(candidateMatrix[0][0]);
     unsigned uniqueCount =1;
-    bool IsFound = false;
+    bool is_found = false;
 
     for (unsigned j=0; j<candidateMatrix.size(); j++)
     {
-        for (unsigned i=0; i<candidateMatrix[j].size(); i++)
+        for (unsigned i=0; i<candidateMatrix[j].size(); ++i)
         {
-            IsFound = false;
+            is_found = false;
             for (unsigned k=0; k<uniqueCount; k++)
             {
                 if (candidateMatrix[j][i] == resultUnique[k])
                 {
-                    IsFound =true;
+                    is_found =true;
                     break;
                 }
             }
-            if (!IsFound)
+            if (!is_found)
             {
                 resultUnique.push_back(candidateMatrix[j][i]);
                 uniqueCount++;
@@ -1418,7 +1417,7 @@ std::vector<std::string> AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROB
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::printMatrix(std::vector<std::vector<std::string>> matrix)
 {
-  for (unsigned int i = 0; i < matrix.size(); i++)
+  for (unsigned int i = 0; i < matrix.size(); ++i)
   {
     for (unsigned int j = 0; j < matrix[i].size(); j++)
     {
@@ -1434,7 +1433,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::printMatri
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::printVector(std::vector<std::string> vec)
 {
-  for (unsigned int i = 0; i < vec.size(); i++)
+  for (unsigned int i = 0; i < vec.size(); ++i)
   {
     std::cout << vec[i]<< ' ';
   }

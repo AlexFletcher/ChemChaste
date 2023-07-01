@@ -310,17 +310,17 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::DeriveExte
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 double ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::GetDiffusionValueBasedOnPoint(const ChastePoint<2>& chastePoint, unsigned stateIndex)
 {
-    // take in the point and state index then determine the state name and domain label, then determine the diffusion value
-    if (stateIndex<this ->GetStateVariableVector() ->GetNumStateVariables())
+    // Take in the point and state index then determine the state name and domain label, then determine the diffusion value
+    if (stateIndex < this->GetStateVariableVector() >GetNumStateVariables())
     {
-        // retrive state name from stateVariableRegister
-        std::string stateName = this ->GetStateVariableVector()->RetrieveStateVariableName(stateIndex);
+        // Retrieve state name from stateVariableRegister
+        std::string state_name = this->GetStateVariableVector()->RetrieveStateVariableName(stateIndex);
 
-        // retrieve label from domainLabels
+        // Retrieve label from domainLabels
         std::string domainLabel = this->ReturnDomainLabelAtPosition(chastePoint.rGetLocation());
         std::string domainKeyName = this->ReturnDomainKeyFromDomainLabel(domainLabel);
 
-        return ReturnDiffusionValueFromStateNameAndDomainLabel(stateName,domainKeyName);
+        return ReturnDiffusionValueFromStateNameAndDomainLabel(state_name, domainKeyName);
     }
     else
     {

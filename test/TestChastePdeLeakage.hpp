@@ -62,7 +62,7 @@ public:
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(), 0.0);
         unsigned column_num = 0;
         unsigned row_num = 0;
-        for (unsigned i = 0; i < p_mesh->GetNumNodes(); i++)
+        for (unsigned i = 0; i < p_mesh->GetNumNodes(); ++i)
         {
             column_num = 0;
             row_num = 0;
@@ -134,7 +134,7 @@ public:
         std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
         unsigned column_num = 0;
         unsigned row_num = 0;
-        for (unsigned i = 0; i < p_mesh->GetNumNodes(); i++)
+        for (unsigned i = 0; i < p_mesh->GetNumNodes(); ++i)
         {
             // set as being a random perturbation about the boundary values
             column_num = 0;

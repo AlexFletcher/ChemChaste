@@ -211,7 +211,6 @@ AbstractFeVolumeIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM, CAN_ASSEM
     : AbstractFeAssemblerCommon<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM, CAN_ASSEMBLE_VECTOR, CAN_ASSEMBLE_MATRIX, INTERPOLATION_LEVEL>(),
       mpMesh(pMesh)
 {
-    //std::cout << "here: volume assembler" << std::endl;
     assert(pMesh);
     // Default to 2nd order quadrature.  Our default basis functions are piecewise linear
     // which means that we are integrating functions which in the worst case (mass matrix)
@@ -317,8 +316,6 @@ void AbstractFeVolumeIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM, CAN_
      * This is true for linear basis functions, but not for any other type of
      * basis function.
      */
-
-    //std::cout << "ChemChasteVolume" << std::endl;
     c_matrix<double, SPACE_DIM, ELEMENT_DIM> jacobian;
     c_matrix<double, ELEMENT_DIM, SPACE_DIM> inverse_jacobian;
     double jacobian_determinant;
@@ -364,7 +361,7 @@ void AbstractFeVolumeIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM, CAN_
         this->ResetInterpolatedQuantities();
 
         // Interpolation
-        for (unsigned i=0; i<num_nodes; i++)
+        for (unsigned i=0; i<num_nodes; ++i)
         {
             const Node<SPACE_DIM>* p_node = rElement.GetNode(i);
 

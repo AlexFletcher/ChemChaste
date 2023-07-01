@@ -245,7 +245,6 @@ c_matrix<double, PROBLEM_DIM*(ELEMENT_DIM+1), PROBLEM_DIM*(ELEMENT_DIM+1)> Inhom
     c_matrix<double, PROBLEM_DIM, SPACE_DIM>& rGradU,
     Element<ELEMENT_DIM, SPACE_DIM>* pElement)
 {
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - ComputeMatrixTerm" << std::endl;
     double timestep_inverse = PdeSimulationTime::GetPdeTimeStepInverse();
     c_matrix<double, PROBLEM_DIM*(ELEMENT_DIM+1), PROBLEM_DIM*(ELEMENT_DIM+1)> matrix_term = zero_matrix<double>(PROBLEM_DIM*(ELEMENT_DIM+1), PROBLEM_DIM*(ELEMENT_DIM+1));
 
@@ -262,7 +261,7 @@ c_matrix<double, PROBLEM_DIM*(ELEMENT_DIM+1), PROBLEM_DIM*(ELEMENT_DIM+1)> Inhom
             prod(trans(rGradPhi), c_matrix<double, SPACE_DIM, ELEMENT_DIM+1>(prod(this_pde_diffusion_term, rGradPhi)) )
                 + timestep_inverse * this_dudt_coefficient * outer_prod(rPhi, rPhi);
 
-        for (unsigned i=0; i<ELEMENT_DIM+1; i++)
+        for (unsigned i=0; i<ELEMENT_DIM+1; ++i)
         {
             for (unsigned j=0; j<ELEMENT_DIM+1; j++)
             {
@@ -270,7 +269,6 @@ c_matrix<double, PROBLEM_DIM*(ELEMENT_DIM+1), PROBLEM_DIM*(ELEMENT_DIM+1)> Inhom
             }
         }
     }
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - ComputeMatrixTerm - end" << std::endl;
     return matrix_term;
 }
 
@@ -282,7 +280,7 @@ c_vector<double, PROBLEM_DIM*(ELEMENT_DIM+1)> InhomogenousCoupledPdeOdeCoupledCe
     c_vector<double,PROBLEM_DIM>& rU,
     c_matrix<double,PROBLEM_DIM,SPACE_DIM>& rGradU,
     Element<ELEMENT_DIM, SPACE_DIM>* pElement)
-{   //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - ComputeVectorTerm - start" << std::endl;
+{
     double timestep_inverse = PdeSimulationTime::GetPdeTimeStepInverse();
     c_vector<double, PROBLEM_DIM*(ELEMENT_DIM+1)> vector_term;
     vector_term = zero_vector<double>(PROBLEM_DIM*(ELEMENT_DIM+1));
@@ -331,16 +329,9 @@ c_vector<double, PROBLEM_DIM*(ELEMENT_DIM+1)> InhomogenousCoupledPdeOdeCoupledCe
                             {
                                 // if so then add the transport contribution
                                 std::string name_of_pde_index = mpPdeSystem->GetStateVariableRegister()->RetrieveStateVariableName(pde_index);
-                                
 
-                                // if cell is on boundary add the result of the transport Ode system
-                                this_constant_source_term = extended_cell_property ->RetrieveBoundarySourceByStateName(name_of_pde_index,mX);
-
-                                if (!transport_cell_property ->GetIncludeOdeInterpolationOnBoundary())
-                                {
-                                    // override the ode source term
-                                    //this_source_term =0.0;
-                                }
+                                // if cell is on boundary add the result of the transport ODE system
+                                this_constant_source_term = extended_cell_property->RetrieveBoundarySourceByStateName(name_of_pde_index,mX);
                             }
                             else
                             {
@@ -370,16 +361,11 @@ c_vector<double, PROBLEM_DIM*(ELEMENT_DIM+1)> InhomogenousCoupledPdeOdeCoupledCe
          
                             // if cell is on boundary add the result of the transport Ode system
                             // scale the constant source term to remove the additive affect of the multiple element nodes 
-                            //this_constant_source_term += (transport_cell_property ->RetrieveBoundarySourceByStateName(name_of_pde_index)/(double)(ELEMENT_DIM+1));
+                            //this_constant_source_term += (transport_cell_property->RetrieveBoundarySourceByStateName(name_of_pde_index)/(double)(ELEMENT_DIM+1));
                             
-                            this_constant_source_term += (transport_cell_property ->RetrieveChangeBoundarySourceByStateName(name_of_pde_index)/(double)(ELEMENT_DIM+1));
+                            this_constant_source_term += (transport_cell_property->RetrieveChangeBoundarySourceByStateName(name_of_pde_index)/(double)(ELEMENT_DIM+1));
                             
-                            if (!transport_cell_property ->GetIncludeOdeInterpolationOnBoundary())
-                            {
-                                // override the ode source term
-                                //this_source_term =0.0;
-                            }
-                            isContributed =true; // as already found the only possible cell which may act as a source
+                            isContributed = true; // as already found the only possible cell which may act as a source
                         }
                         // else not this cell
                     }
@@ -399,13 +385,8 @@ c_vector<double, PROBLEM_DIM*(ELEMENT_DIM+1)> InhomogenousCoupledPdeOdeCoupledCe
                   
                         // if cell is on boundary add the result of the membrane Ode system
                         // scale the constant source term to remove the additive affect of the multiple element nodes 
-                        this_constant_source_term += (membrane_cell_property ->RetrieveChangeBoundarySourceByStateName(name_of_pde_index)/(double)(ELEMENT_DIM+1));
+                        this_constant_source_term += (membrane_cell_property->RetrieveChangeBoundarySourceByStateName(name_of_pde_index)/(double)(ELEMENT_DIM+1));
 
-                        if (!membrane_cell_property ->GetIncludeMembraneOdeInterpolationOnBoundary())
-                        {
-                            // override the ode source term
-                            //this_source_term =0.0;
-                        }
                         isContributed =true; // as already found the only possible cell which may act as a source
                     }
                     // else not this cell
@@ -414,7 +395,6 @@ c_vector<double, PROBLEM_DIM*(ELEMENT_DIM+1)> InhomogenousCoupledPdeOdeCoupledCe
                 if (isContributed)
                 {
                     // only one cell may contribute at a single point
-                    //std::cout << this_constant_source_term << std::endl;
                     break;
                 }
                 // else ignore cell; the cell has no transport property
@@ -422,24 +402,22 @@ c_vector<double, PROBLEM_DIM*(ELEMENT_DIM+1)> InhomogenousCoupledPdeOdeCoupledCe
             }
         }
 
-
         // include the cell contribution alongside the interpolated ode contribution
         c_vector<double, ELEMENT_DIM+1> this_vector_term;
         
         this_vector_term = (this_source_term + this_constant_source_term + timestep_inverse*this_dudt_coefficient*rU(pde_index))* rPhi;
         
-        for (unsigned i=0; i<ELEMENT_DIM+1; i++)
+        for (unsigned i=0; i<ELEMENT_DIM+1; ++i)
         {
             vector_term(i*PROBLEM_DIM + pde_index) = this_vector_term(i);
         }
     }
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - ComputeVectorTerm - end" << std::endl;
     return vector_term;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::ResetInterpolatedQuantities()                
-{   //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - ResetInterpolatedQuantities" << std::endl;
+{
     mInterpolatedOdeStateVariables.clear();
 
     if (mOdeSystemsPresent)
@@ -476,14 +454,12 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
             }
             // if cell has only the transport property then there is nothing needed to be reset
         }
-
     }
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - ResetInterpolatedQuantities - end" << std::endl;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::IncrementInterpolatedQuantities(double phiI, const Node<SPACE_DIM>* pNode)
-{   //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - IncrementInterpolatedQuantities" << std::endl;
+{
     // interploates a quantity from a node location to point x through the basis function phi associated with the node 
     if (mOdeSystemsPresent)
     {
@@ -491,7 +467,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
         unsigned num_state_variables = mpPdeSystem->GetStateVariableRegister()->GetNumStateVariables();
         std::vector<std::string> pde_variable_register = mpPdeSystem->GetStateVariableRegister()->GetStateVariableRegisterVector();
 
-        for (unsigned i=0; i<num_state_variables; i++)
+        for (unsigned i=0; i<num_state_variables; ++i)
         {
             // each node may not have the total number of states in the ode system
             // select using the state variable registers at the nodes, if state variable isn't present the value is 0
@@ -508,17 +484,13 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
             {
                 // if the state variable isn't a part of the ODE then interpolated the pde solution at the node
                 mInterpolatedOdeStateVariables[i] += phiI * 0.0;
-
-            }
-                                
+            }       
         }
-
     }
 
     // check whether adding cell contribution
     if (mCellTransportOdeSystemsPresent || mCellMembraneOdeSystemsPresent)
     {
-
         // interpolate mX and mU
         mX.rGetLocation() += phiI*pNode->rGetLocation();
         for (unsigned prob_dim=0; prob_dim<PROBLEM_DIM; prob_dim++)
@@ -527,28 +499,21 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
         }
         
         // store mX and mU over the interpolation; assume ELEMENT_DIM + 1 nodes for interpolation
-        //std::cout << "mInterpolationCount = "<<mInterpolationCount << std::endl;
         if (mInterpolationCount==2)
         {
             // the mX and mU are fully interpolated
-            //std::cout << "hit interpolation" << std::endl;
             // check whether point mX is associated with a cell
             bool this_point_found = false;
             for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
-            cell_iter != mrCellPopulation.End();
-            ++cell_iter)
+                 cell_iter != mrCellPopulation.End();
+                 ++cell_iter)
             {
-
                 if (cell_iter->HasCellProperty<TransportCellProperty>())
                 {
-                    //std::cout << "transport" << std::endl;
                     const ChastePoint<SPACE_DIM>& cellCentrePoint = mrCellPopulation.GetLocationOfCellCentre(*cell_iter);
-
-                    //ChastePoint<SPACE_DIM> cellCentrePoint(cell_location);
 
                     if (cell_iter->HasCellProperty<ExtendedCellProperty<SPACE_DIM>>())
                     {
-
                         boost::shared_ptr<ExtendedCellProperty<SPACE_DIM>> extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
 
                         if (extended_cell_property->IsPointInCell(cellCentrePoint, mX))
@@ -558,7 +523,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
                             {
                                 // need mU as std::vector<double>
                                 std::vector<double> mUstd(PROBLEM_DIM,0.0);
-                                for (unsigned i=0; i<PROBLEM_DIM;i++)
+                                for (unsigned i=0; i<PROBLEM_DIM;++i)
                                 {
                                     mUstd[i] = mU[i];
                                 }
@@ -573,17 +538,14 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
                         boost::shared_ptr<TransportCellProperty> transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
 
                         // check whether the interpolated point is on the cell centre
-                        //std::cout << "Check for equality" << std::endl;
                         if (CheckChastePointsForEquality(cellCentrePoint, mX))
                         {
-                            //std::cout << "IncrementInterpolatedQuantities - CheckChastePointsForEquality " << std::endl;
                             // set the value for rU as the mBulkBoundaryConcentrationVector
                             // need mU as std::vector<double>
                             std::vector<double> mUstd(PROBLEM_DIM,0.0);
-                            for (unsigned i=0; i<PROBLEM_DIM;i++)
+                            for (unsigned i=0; i<PROBLEM_DIM;++i)
                             {
-                                mUstd[i] = mU[i];
-                               
+                                mUstd[i] = mU[i];                               
                             }
                             transport_cell_property->SetBulkBoundaryConcentrationVector(mUstd);
                             transport_cell_property->SetInitBulkBoundaryConcentrationVector(mUstd); //15/10/2020
@@ -592,27 +554,22 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
 
                             this_point_found = true; // as have found the cell associated with the point interpolated
                         }
-
                     }
-                    
                 }
 
                 if (cell_iter->HasCellProperty<MembraneCellProperty>())
                 {
-
                     const ChastePoint<SPACE_DIM>& cellCentrePoint = mrCellPopulation.GetLocationOfCellCentre(*cell_iter);
 
                     boost::shared_ptr<MembraneCellProperty> membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
                     // check whether the interpolated point is on the cell centre
-
                     if (CheckChastePointsForEquality(cellCentrePoint, mX))
                     {
-
                         // set the value for rU as the mBulkBoundaryConcentrationVector
                         // need mU as std::vector<double>
-                        std::vector<double> mUstd(PROBLEM_DIM,0.0);
-                        for (unsigned i=0; i<PROBLEM_DIM;i++)
+                        std::vector<double> mUstd(PROBLEM_DIM, 0.0);
+                        for (unsigned i=0; i<PROBLEM_DIM; ++i)
                         {
                             mUstd[i] = mU[i];
                             
@@ -631,20 +588,19 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
                 }
             }
             // reset the interpolation count
-            mInterpolationCount=0;
+            mInterpolationCount = 0;
         }
         else
         {
             // not fully interpolated the point and state vector yet
-            mInterpolationCount +=1;
+            mInterpolationCount++;
         }
     }
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - IncrementInterpolatedQuantities - end" << std::endl;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::InitialiseForSolve(Vec initialSolution)
-{   //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - InitialiseForSolve" << std::endl;
+{
     if (this->mpLinearSystem == NULL)
     {
         unsigned preallocation = mpFeMesh->CalculateMaximumContainingElementsPerProcess() + ELEMENT_DIM;
@@ -709,21 +665,16 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
                 for (unsigned boundary_index=0; boundary_index<extended_cell_property->GetNumberMeshVoxelsOnBoundary(); boundary_index++)
                 {
                     extended_cell_property->RecordLocationAndStateVariable(x,initialCellConcentration);
-
                 }
             }
         }
-
     }
-
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - InitialiseForSolve -end" << std::endl;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::SetupLinearSystem(Vec currentSolution, bool computeMatrix)
-{   //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - SetupLinearSystem" << std::endl;
+{
     this->SetupGivenLinearSystem(currentSolution, computeMatrix, this->mpLinearSystem);
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - SetupLinearSystem -end" << std::endl;
 }
 
 
@@ -754,7 +705,7 @@ InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>:
       mCellTransportOdeSystemsPresent(false),
       mCellMembraneOdeSystemsPresent(false),
       mClearOutputDirectory(false)
-{   //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - InhomogenousCoupledPdeOdeCoupledCellSolver - start" << std::endl;
+{
     this->mpBoundaryConditions = pBoundaryConditions;
 
     /*
@@ -774,13 +725,13 @@ InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>:
         if (!mpOdeSolvers[0])
         {
 #ifdef CHASTE_CVODE
-            for (unsigned i=0; i<mpOdeSolvers.size(); i++)
+            for (unsigned i=0; i<mpOdeSolvers.size(); ++i)
             {
                 mpOdeSolvers[i].reset(new CvodeAdaptor);
             }
             
 #else
-            for (unsigned i=0; i<mOdeSystemsAtNodes.size(); i++)
+            for (unsigned i=0; i<mOdeSystemsAtNodes.size(); ++i)
             {
                 mpOdeSolvers.push_back(new BackwardEulerIvpOdeSolver(mOdeSystemsAtNodes[i]->GetNumStateVariables()));
             }
@@ -789,12 +740,11 @@ InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>:
         }
     }
 
-    // run through the cell popualtion for the occurance of a cell with the transport property defined
+    // Run through the cell popualtion for the occurance of a cell with the transport property defined
     for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
         cell_iter != mrCellPopulation.End();
         ++cell_iter)
     {
-
         if (cell_iter->HasCellProperty<TransportCellProperty>())
         {
             // if there exists at least one cell with the transport property then solve transport odes
@@ -803,12 +753,11 @@ InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>:
         }
     }
 
-    // run through the cell popualtion for the occurance of a cell with the membrane property defined
+    // Run through the cell popualtion for the occurance of a cell with the membrane property defined
     for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
         cell_iter != mrCellPopulation.End();
         ++cell_iter)
     {
-
         if (cell_iter->HasCellProperty<MembraneCellProperty>())
         {
             // if there exists at least one cell with the membrane property then solve transport odes
@@ -816,29 +765,16 @@ InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>:
             break;
         }
     }
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - InhomogenousCoupledPdeOdeCoupledCellSolver - end" << std::endl;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::~InhomogenousCoupledPdeOdeCoupledCellSolver()
 {
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - ~InhomogenousCoupledPdeOdeCoupledCellSolver" << std::endl;
-
-    /*  don't delete as solver will be called multiple times on same odes, assume that the ode FeMesh remains unchanged
-    if (mOdeSystemsPresent)
-    {
-        for (unsigned i=0; i<mOdeSystemsAtNodes.size(); i++)
-        {
-            delete mOdeSystemsAtNodes[i];
-        }
-    }
-    */
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::PrepareForSetupLinearSystem(Vec currentPdeSolution)
-{   
- //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - PrepareForSetupLinearSystem - strat" << std::endl;
+{
     if (mOdeSystemsPresent)
     {
         double time = PdeSimulationTime::GetTime();
@@ -869,20 +805,17 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
         }
     }
 
-    // run cell transport chemical ode
-
+    // Run cell transport chemical ODE
     if (mConditionsInterpolated && (mCellTransportOdeSystemsPresent||mCellMembraneOdeSystemsPresent))
     {
-        //std::cout << "run cell transport" << std::endl;
         double time = PdeSimulationTime::GetTime();
         double next_time = PdeSimulationTime::GetNextTime();
         double dt = PdeSimulationTime::GetPdeTimeStep();
-        //std::cout << "Here - 4 -time: "<<time << std::endl;
+    
         for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
              cell_iter != mrCellPopulation.End();
              ++cell_iter)
         {
-             //std::cout << "for cell:" << std::endl;
             if (cell_iter->HasCellProperty<TransportCellProperty>())
             {
                 
@@ -910,21 +843,21 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
                 {   
                     // cell is not exetended and as such the cell state variables are not stored in the extended cell property 
                     // no voxels to iterate over
-                    //std::cout << "transport get external" << std::endl;
                     // rY for bulk state variables at the location specified by the boundary_index
                     std::vector<double> rY = transport_property->GetExternalCellBoundaryConcentrationVector();
-                    //std::cout << "transport append internal" << std::endl;
+                    
                     // append the cell state variables
                     transport_property->AppendInternalCellBoundaryConcentrations(rY);
 
                     // need to combine the outer nad inner values of concentrations either side of the cell into one rY vector
-                    std::vector<double> rDY(rY.size(),0.0);
+                    std::vector<double> rDY(rY.size(), 0.0);
+
                     // whether we need to solve the ode or just perform the reaction system
                     //transport_property->GetTransportOdeSolver()->Solve(transport_property->GetTransportOdeSystem(), rY, time, next_time, dt);
                     transport_property->GetTransportOdeSystem()->SetPdeStateRegister(mpPdeSystem->GetStateVariableRegister());
-                    //std::cout << "transport evalualte" << std::endl;
+                    
                     transport_property->GetTransportOdeSystem()->EvaluateYDerivatives(time, rY, rDY);
-                    for (unsigned i=0; i<rDY.size(); i++)
+                    for (unsigned i=0; i<rDY.size(); ++i)
                     {
                         rDY[i] = rDY[i]*dt;
                     }
@@ -947,7 +880,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
       
                 membrane_property->GetMembraneOdeSystem()->EvaluateYDerivatives(time, rY, rDY);
          
-                for (unsigned i=0; i<rDY.size(); i++)
+                for (unsigned i=0; i<rDY.size(); ++i)
                 {
                     rDY[i] = rDY[i]*dt;
                 }
@@ -958,7 +891,6 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
             }
         }
     }
-//std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - PrepareForSetupLinearSystem - end" << std::endl;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
@@ -977,9 +909,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::SolveAndWriteResultsToFile()
-{
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - SolveAndWriteResultsToFile - start" << std::endl;
-   
+{   
     // A number of methods must have been called prior to this method
     if (this->mOutputDirectory == "")
     {
@@ -1004,14 +934,11 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
 
 #ifdef CHASTE_VTK
     // Create a .pvd output file
-
     OutputFileHandler output_file_handler(this->mOutputDirectory, mClearOutputDirectory);
     mpVtkMetaFile = output_file_handler.OpenOutputFile("results.pvd");
     *mpVtkMetaFile << "<?xml version=\"1.0\"?>\n";
     *mpVtkMetaFile << "<VTKFile type=\"Collection\" version=\"0.1\" byte_order=\"LittleEndian\" compressor=\"vtkZLibDataCompressor\">\n";
     *mpVtkMetaFile << "    <Collection>\n";
-
-    
 
     // Write initial condition to VTK
     Vec initial_condition = this->mInitialCondition;
@@ -1059,23 +986,20 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
     WARNING("VTK is not installed and is required for this functionality");
 // LCOV_EXCL_STOP
 #endif //CHASTE_VTK
-
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - SolveAndWriteResultsToFile - end" << std::endl;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::WriteVtkResultsToFile(Vec solution, unsigned numTimeStepsElapsed)
 {
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - WriteVtkResultsToFile - start" << std::endl;
 #ifdef CHASTE_VTK
-
 
     // Create a new VTK file for this time step
     std::stringstream time;
     time << numTimeStepsElapsed;
     VtkMeshWriter<ELEMENT_DIM, SPACE_DIM> mesh_writer(this->mOutputDirectory, "results_"+time.str(), false);
+
     // need to ensure StateVariableRegister is defined
-    std::vector<std::string> p_pde_stateVariableNames = mpPdeSystem->GetStateVariableRegister() ->GetStateVariableRegisterVector();
+    std::vector<std::string> p_pde_stateVariableNames = mpPdeSystem->GetStateVariableRegister()->GetStateVariableRegisterVector();
     
     /*
      * We first loop over PDEs. For each PDE we store the solution
@@ -1108,10 +1032,8 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
          * vectors', then pass each component of this vector to the mesh
          * writer.
          */
-
-
         std::vector<std::vector<double> > ode_data;
-        unsigned num_state_vars = mpPdeSystem->GetStateVariableRegister() ->GetNumStateVariables();
+        unsigned num_state_vars = mpPdeSystem->GetStateVariableRegister()->GetNumStateVariables();
         ode_data.resize(num_state_vars);
         for (unsigned state_var_index=0; state_var_index<num_state_vars; state_var_index++)
         {
@@ -1123,7 +1045,6 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
             std::vector<double> all_odes_this_node = mOdeSystemsAtNodes[node_index]->rGetStateVariables();
             // this could be of variable size, is of only the states that the ode modifies
 
-
             std::vector<std::string> ode_var_names = mOdeSystemsAtNodes[node_index]->GetStateVariableRegister()->GetStateVariableRegisterVector();
             for (unsigned ode_index=0; ode_index<ode_var_names.size(); ode_index++)
             {
@@ -1131,14 +1052,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
                 ode_data[mpPdeSystem->GetStateVariableRegister()->RetrieveStateVariableIndex(ode_var_names[ode_index])][node_index] = all_odes_this_node[ode_index];
                 
             }
-
-
-            //---------------------------------------------------------------------------------
-            // do we need to use the rPDEsolution for the other nodes or is 0 the correct (current) choice?
-            //---------------------------------------------------------------------------------
-
-
-
+            ///\todo do we need to use the rPDEsolution for the other nodes or is 0 the correct (current) choice?
         }
 
         for (unsigned ode_index=0; ode_index<num_state_vars; ode_index++)
@@ -1160,7 +1074,6 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
     *mpVtkMetaFile << numTimeStepsElapsed;
     *mpVtkMetaFile << ".vtu\"/>\n";
 #endif // CHASTE_VTK
-    //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - SolveAndWriteResultsToFile - end" << std::endl;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
@@ -1181,35 +1094,31 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
     mU = stateVector;
 }
 
-
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 bool InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::CheckChastePointsForEquality(ChastePoint<SPACE_DIM> rX1,ChastePoint<SPACE_DIM> rX2)
-{   //std::cout << "InhomogenousCoupledPdeOdeCoupledCellSolver - CheckChastePointsForEquality" << std::endl;
+{
     // function to check whether two chaste points are congruent
     // use half the scale dimension as an error
 
     // half of the voxel dimensions of the tetrahedral mesh, a value to which a point should be congruent
     std::vector<double> mesh_single_voxel_dimensions(SPACE_DIM,0.4); 
 
-    bool equality=true;
-
-    for (unsigned i=0; i<SPACE_DIM; i++)
+    bool equality = true;
+    for (unsigned i=0; i<SPACE_DIM; ++i)
     {
         if (rX1[i] < rX2[i] + mesh_single_voxel_dimensions[i] && rX1[i] >= rX2[i] - mesh_single_voxel_dimensions[i])
         {
             // both points are congruent within 0.5 of mesh scale in the ith dimension
-            equality=true;
+            equality = true;
         }
         else
         {
             // as soon as a dimension where the points are disaparate is found end the function return false
-            equality=false;
+            equality = false;
             break;
-        }
-        
+        }        
     }
     return equality;
 }
-
 
 #endif

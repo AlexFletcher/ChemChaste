@@ -125,12 +125,12 @@ void AbstractMembraneReactionSystem::ReactSystem(const std::vector<double>& curr
 
         // update the change in concentrations
         
-        for (unsigned i=0; i<mNumBulkStates; i++)
+        for (unsigned i=0; i<mNumBulkStates; ++i)
         {
             changeBulkConc.at(i) += deltaBulkConcentration.at(i);
         }
 
-        for (unsigned i=0; i<mNumCellStates; i++)
+        for (unsigned i=0; i<mNumCellStates; ++i)
         {
             changeCellConc.at(i) += deltaCellConcentration.at(i);
         }    

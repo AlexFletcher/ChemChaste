@@ -108,7 +108,7 @@ void AbstractChemicalOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, c
 {
     std::vector<double>& sol_pde  = this->rGetPdeSolution();
 
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         rDY[i] = 0.0;
     }
@@ -116,7 +116,7 @@ void AbstractChemicalOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, c
     // perform the reactions in the system updating rDY with the resultant change in concentrations
     mpReactionSystem->ReactSystem(rY, rDY);
 
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
@@ -126,12 +126,12 @@ void AbstractChemicalOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, c
         }
     }
 
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         const_cast<double&>(rY[i]) = rDY[i]; // this can't be correct?
     }
 
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         rDY[i] = 0.0;
     }
@@ -140,7 +140,7 @@ void AbstractChemicalOdeForCoupledPdeSystem::EvaluateYDerivatives(double time, c
 void AbstractChemicalOdeForCoupledPdeSystem::CheckConcentration(const std::vector<double>& rY)
 {
     // if chemical concentration gets too low then nan can occur, concentration must be +ve
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
@@ -206,7 +206,7 @@ void ChemicalOdeSystemInformation<AbstractChemicalOdeForCoupledPdeSystem>::Initi
 {
     // initilaise the ode information required by Chaste for all ode systems
     // derive the states from the chemical vectors of the system chemistry
-    for (unsigned i=0; i<mp_reaction_system->GetSystemChemistry()->GetNumberChemicals(); i++)
+    for (unsigned i=0; i<mp_reaction_system->GetSystemChemistry()->GetNumberChemicals(); ++i)
     {
         this->mVariableNames.push_back(mp_reaction_system->GetSystemChemistry()->GetChemicalNamesByIndex(i));
         this->mVariableUnits.push_back(mp_reaction_system->GetSystemChemistry()->GetChemicalDimensionsByIndex(i));

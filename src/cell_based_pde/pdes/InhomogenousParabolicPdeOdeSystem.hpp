@@ -36,7 +36,7 @@ protected:
 public:
 
     InhomogenousParabolicPdeOdeSystem()
-        :   AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>()  
+        : AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>()  
     {
     }
 
@@ -54,7 +54,7 @@ public:
         mIsDomainDiffusionField = true;
         if (mpDomainField->GetFieldType()=="ChemicalDomainField")
         {
-            SetStateVariableRegister(dynamic_cast<ChemicalDomainField*>(mpDomainField) ->GetStateVariableVector());
+            SetStateVariableRegister(dynamic_cast<ChemicalDomainField*>(mpDomainField)->GetStateVariableVector());
         }
     }
 

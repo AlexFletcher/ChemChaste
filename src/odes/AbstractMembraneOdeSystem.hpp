@@ -103,17 +103,17 @@ public:
 };
 
 AbstractMembraneOdeSystem::AbstractMembraneOdeSystem(AbstractMembraneReactionSystem* pReactionSystem)
-    : AbstractOdeSystem(pReactionSystem ->GetNumBulkStates()+pReactionSystem ->GetNumCellStates()),
+    : AbstractOdeSystem(pReactionSystem->GetNumBulkStates() + pReactionSystem->GetNumCellStates()),
       mpMembraneReactionSystem(pReactionSystem)
 {
     SetReactionSystem(mpMembraneReactionSystem);
-    SetNumSpecies(mpMembraneReactionSystem ->GetNumBulkStates()+mpMembraneReactionSystem ->GetNumCellStates());
+    SetNumSpecies(mpMembraneReactionSystem->GetNumBulkStates()+mpMembraneReactionSystem->GetNumCellStates());
     SetNumReactions(mpMembraneReactionSystem->GetNumReactions());
 
     // Initialsie cell concentration vectors
-    std::vector<double> cellConcentration(mpMembraneReactionSystem ->GetNumCellStates(),1.0);
+    std::vector<double> cellConcentration(mpMembraneReactionSystem->GetNumCellStates(),1.0);
     SetReservedCellConcentration(cellConcentration);
-    std::vector<double> cellConcentrationChange(mpMembraneReactionSystem ->GetNumCellStates(),0.0);
+    std::vector<double> cellConcentrationChange(mpMembraneReactionSystem->GetNumCellStates(),0.0);
     SetChangeCellConcentration(cellConcentrationChange);
 
     mpSystemInfo.reset(new MembraneOdeSystemInformation<AbstractMembraneOdeSystem>(mpMembraneReactionSystem));
@@ -136,17 +136,17 @@ AbstractMembraneOdeSystem::AbstractMembraneOdeSystem(const AbstractMembraneOdeSy
 
 void AbstractMembraneOdeSystem::EvaluateYDerivatives(double time, const std::vector<double>& rY, std::vector<double>& rDY)
 {
-    unsigned number_of_bulk_states=mpMembraneReactionSystem ->GetNumBulkStates();
-    unsigned number_of_cell_states=mpMembraneReactionSystem ->GetNumCellStates();
+    unsigned num_bulk_states = mpMembraneReactionSystem->GetNumBulkStates();
+    unsigned num_cell_states = mpMembraneReactionSystem->GetNumCellStates();
 
-    std::vector<double> bulkConcentrations(number_of_bulk_states,0.0);
-    std::vector<double> changeBulkConcentrations(number_of_bulk_states,0.0);
+    std::vector<double> bulkConcentrations(num_bulk_states, 0.0);
+    std::vector<double> changeBulkConcentrations(num_bulk_states, 0.0);
 
-    std::vector<double> cellConcentrations(number_of_cell_states,0.0);
-    std::vector<double> changeCellConcentrations(number_of_cell_states,0.0);
+    std::vector<double> cellConcentrations(num_cell_states, 0.0);
+    std::vector<double> changeCellConcentrations(num_cell_states, 0.0);
 
     // Reset rDY
-    for (unsigned i=0; i<rDY.size();i++)
+    for (unsigned i=0; i<rDY.size();++i)
     {
         rDY[i] = 0.0;
     }
@@ -160,13 +160,13 @@ void AbstractMembraneOdeSystem::EvaluateYDerivatives(double time, const std::vec
     mpMembraneReactionSystem->ReactSystem(bulkConcentrations, cellConcentrations, changeBulkConcentrations, changeCellConcentrations);
 
     // Reform rDY for passing to the solver
-    for (unsigned i=0; i<number_of_bulk_states; i++)
+    for (unsigned i=0; i<num_bulk_states; ++i)
     {
         rDY.at(i)= changeBulkConcentrations.at(i);
     }
-    for (unsigned i=0; i<number_of_cell_states; i++)
+    for (unsigned i=0; i<num_cell_states; ++i)
     {
-        rDY.at(i+number_of_bulk_states) = changeCellConcentrations.at(i);
+        rDY.at(i+num_bulk_states) = changeCellConcentrations.at(i);
     }
 }  
 
@@ -260,7 +260,7 @@ void AbstractMembraneOdeSystem::SetPdeStateRegister(StateVariableRegister* pRegi
 void AbstractMembraneOdeSystem::CheckConcentration(const std::vector<double>& rY)
 {
     // If chemical concentration gets too low then NaNs can occur, concentration must be +ve
-    for (unsigned i=0; i<rY.size(); i++)
+    for (unsigned i=0; i<rY.size(); ++i)
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
@@ -323,7 +323,7 @@ template<>
 void MembraneOdeSystemInformation<AbstractMembraneOdeSystem>::Initialise()
 {
     // Initialise the bulk state varibles
-    for (unsigned i=0; i<mp_reaction_system->GetBulkChemistry()->GetNumberChemicals(); i++)
+    for (unsigned i=0; i<mp_reaction_system->GetBulkChemistry()->GetNumberChemicals(); ++i)
     {
         this->mVariableNames.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalNamesByIndex(i));
         this->mVariableUnits.push_back(mp_reaction_system->GetBulkChemistry()->GetChemicalDimensionsByIndex(i));
@@ -331,7 +331,7 @@ void MembraneOdeSystemInformation<AbstractMembraneOdeSystem>::Initialise()
     }
     
     // Initialise the cell state varibles; appended onto the end of the bulk state vectors
-    for (unsigned i=0; i<mp_reaction_system->GetCellChemistry()->GetNumberChemicals(); i++)
+    for (unsigned i=0; i<mp_reaction_system->GetCellChemistry()->GetNumberChemicals(); ++i)
     {
         this->mVariableNames.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalNamesByIndex(i));
         this->mVariableUnits.push_back(mp_reaction_system->GetCellChemistry()->GetChemicalDimensionsByIndex(i));

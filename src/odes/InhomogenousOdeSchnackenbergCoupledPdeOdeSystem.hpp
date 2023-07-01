@@ -48,9 +48,7 @@ public:
     {
         //rY is the same as the pde solution at the point, so pde is updated first then the ode is followed
         rDY[0] = mKappa1 - mKappa_1*rY[0] + mKappa3*rY[1]*rY[0]*rY[0];
-        rDY[1] = mKappa2 - mKappa3*rY[1]*rY[0]*rY[0];
-
-        
+        rDY[1] = mKappa2 - mKappa3*rY[1]*rY[0]*rY[0];        
     }
 
     /**

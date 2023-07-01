@@ -172,7 +172,7 @@ void AbstractChemicalOdeSystem::EvaluateYDerivatives(double time, const std::vec
     }
 
     // Reset rDY
-    for (unsigned i = 0; i < mNumSpecies; i++)
+    for (unsigned i = 0; i < mNumSpecies; ++i)
     {
         rDY[i] = 0.0;
     }
@@ -184,7 +184,7 @@ void AbstractChemicalOdeSystem::EvaluateYDerivatives(double time, const std::vec
 void AbstractChemicalOdeSystem::CheckConcentration(const std::vector<double>& rY)
 {
     // If chemical concentration gets too low then nan can occur, concentration must be +ve
-    for (unsigned i = 0; i < mNumSpecies; i++)
+    for (unsigned i = 0; i < mNumSpecies; ++i)
     {
         // Due to the discrete nature, rY can evaluate to < 0; ensure rY >= 0
         if (rY[i] < mDeltaError)
@@ -248,7 +248,7 @@ double AbstractChemicalOdeSystem::GetDeltaError()
 template<>
 void ChemicalOdeSystemInformation<AbstractChemicalOdeSystem>::Initialise()
 {
-    for (unsigned i = 0; i < mp_reaction_system->GetSystemChemistry()->GetNumberChemicals(); i++)
+    for (unsigned i = 0; i < mp_reaction_system->GetSystemChemistry()->GetNumberChemicals(); ++i)
     {
         this->mVariableNames.push_back(mp_reaction_system->GetSystemChemistry()->GetChemicalNamesByIndex(i));
         this->mVariableUnits.push_back(mp_reaction_system->GetSystemChemistry()->GetChemicalDimensionsByIndex(i));

@@ -393,7 +393,7 @@ BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::~BoundaryConditi
 {
     // Keep track of what boundary condition objects we've deleted
     std::set<const AbstractBoundaryCondition<SPACE_DIM>*> deleted_conditions;
-    for (unsigned i=0; i<PROBLEM_DIM; i++)
+    for (unsigned i=0; i<PROBLEM_DIM; ++i)
     {
         NeumannMapIterator neumann_iterator = mpNeumannMap[i]->begin();
         while (neumann_iterator != mpNeumannMap[i]->end() )
@@ -450,7 +450,7 @@ void BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::AddPeriodic
     // will assume the periodic BC is to be applied to ALL unknowns, can't really imagine a
     // situation where this isn't going to be true. If necessary can easily change this method
     // to take in the index of the unknown
-    for (unsigned i=0; i<PROBLEM_DIM; i++)
+    for (unsigned i=0; i<PROBLEM_DIM; ++i)
     {
         (*(this->mpPeriodicBcMap[i]))[pNode1] = pNode2;
     }
@@ -626,7 +626,7 @@ void BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ApplyDirich
             lo = lo_s; hi = hi_s;
         }
         // Initialise all local entries to DBL_MAX, i.e. don't know if there's a condition
-        for (unsigned i=lo; i<hi; i++)
+        for (unsigned i=lo; i<hi; ++i)
         {
             dirichlet_conditions[i] = DBL_MAX;
         }
@@ -653,7 +653,7 @@ void BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ApplyDirich
 
         // Which rows have conditions?
         std::vector<unsigned> rows_to_zero;
-        for (unsigned i=0; i<dirichlet_conditions.GetSize(); i++)
+        for (unsigned i=0; i<dirichlet_conditions.GetSize(); ++i)
         {
             if (dirichlet_conditions[i] != DBL_MAX)
             {
@@ -664,7 +664,7 @@ void BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ApplyDirich
         if (matrix_is_symmetric)
         {
             // Modify the matrix columns
-            for (unsigned i=0; i<rows_to_zero.size(); i++)
+            for (unsigned i=0; i<rows_to_zero.size(); ++i)
             {
                 unsigned col = rows_to_zero[i];
                 double minus_value = -dirichlet_conditions[col];
@@ -747,7 +747,7 @@ void BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ApplyPeriod
                                                                                                      bool applyToRhsVector)
 {
     bool has_periodic_bcs = false;
-    for (unsigned i=0; i<PROBLEM_DIM; i++)
+    for (unsigned i=0; i<PROBLEM_DIM; ++i)
     {
         if (!mpPeriodicBcMap[i]->empty())
         {
@@ -883,7 +883,7 @@ bool BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Validate(Ab
             if (!HasNeumannBoundaryCondition(*elt_iter, index_of_unknown))
             {
                 // Check for Dirichlet conditions on this element's nodes
-                for (unsigned i=0; i<(*elt_iter)->GetNumNodes(); i++)
+                for (unsigned i=0; i<(*elt_iter)->GetNumNodes(); ++i)
                 {
                     if (!this->HasDirichletBoundaryCondition((*elt_iter)->GetNode(i)))
                     {

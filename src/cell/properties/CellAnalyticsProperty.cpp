@@ -9,14 +9,14 @@ CellAnalyticsProperty::~CellAnalyticsProperty()
 {
 }
 
-CellAnalyticsProperty::CellAnalyticsProperty(const CellAnalyticsProperty& existingProperty)
+CellAnalyticsProperty::CellAnalyticsProperty(const CellAnalyticsProperty& rOtherProperty)
 {
-    mCellID = existingProperty.mCellID;
+    mCellId = rOtherProperty.mCellId;
 }
 
-void CellAnalyticsProperty::SetUp(CellPtr pCell,unsigned cellID)
+void CellAnalyticsProperty::SetUp(CellPtr pCell, unsigned cellId)
 {
-    SetCellID(cellID);
+    SetCellId(cellId);
     SetCellPtr(pCell);
 }
 
@@ -24,7 +24,7 @@ void CellAnalyticsProperty::PreparePostDivisionParent(double splitRatio)
 {
 }
     
-void CellAnalyticsProperty::PreparePostDivisionDaughter(const CellAnalyticsProperty& parentProperty, double splitRatio)
+void CellAnalyticsProperty::PreparePostDivisionDaughter(const CellAnalyticsProperty& rParentProperty, double splitRatio)
 {
 }
 
@@ -33,9 +33,9 @@ void CellAnalyticsProperty::SetCellPtr(CellPtr pCell)
     mpCell = pCell;
 }
 
-void CellAnalyticsProperty::SetCellID(unsigned cellID)
+void CellAnalyticsProperty::SetCellId(unsigned cellId)
 {
-    mCellID = cellID;
+    mCellId = cellId;
 }
 
 CellPtr CellAnalyticsProperty::GetCellPtr()
@@ -43,7 +43,7 @@ CellPtr CellAnalyticsProperty::GetCellPtr()
     return mpCell;
 }
 
-unsigned CellAnalyticsProperty::GetCellID()
+unsigned CellAnalyticsProperty::GetCellId()
 {
-    return mCellID;
+    return mCellId;
 }

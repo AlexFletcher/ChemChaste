@@ -23,7 +23,7 @@ std::vector<std::string> StateVariableRegister::GetStateVariableRegisterVector()
 
 void StateVariableRegister::AddStateVariableVector(std::vector<std::string> variableRegister)
 {
-    for (unsigned i=0; i<variableRegister.size(); i++)
+    for (unsigned i=0; i<variableRegister.size(); ++i)
     {
         // check candidate variable is indeed new, prevent duplicates
         if (!IsStateVariablePresent(variableRegister[i]))
@@ -57,16 +57,16 @@ void StateVariableRegister::RemoveStateVariable(std::string remove_variable_name
 bool StateVariableRegister::IsStateVariablePresent(std::string variable_name)
 {
     // function to test if a variable is present in the vairable register, used to locate or add new variable
-    bool IsPresent = false;
+    bool is_present = false;
     for (unsigned variable_index=0; variable_index<this->mStateVariableRegister.size(); variable_index++)
     {
         if (this->mStateVariableRegister[variable_index] == variable_name)
         {
-            IsPresent = true;
+            is_present = true;
             break;
         }
     }
-    return IsPresent;
+    return is_present;
 }
 
 unsigned StateVariableRegister::RetrieveStateVariableIndex(std::string variable_name)
@@ -112,7 +112,7 @@ std::vector<unsigned> StateVariableRegister::FindIndicesInThisRegister(StateVari
     // need to implment check for this
     std::vector<unsigned> matchedIndices(p_new_register->GetNumStateVariables(),this->mNumberSystemStateVariables);
 
-    for (unsigned i=0; i<p_new_register->GetNumStateVariables(); i++)
+    for (unsigned i=0; i<p_new_register->GetNumStateVariables(); ++i)
     {
         
         if (IsStateVariablePresent(p_new_register->RetrieveStateVariableName(i)))
@@ -130,7 +130,7 @@ std::vector<unsigned> StateVariableRegister::FindIndicesInThatRegister(StateVari
     // need to implment check for this
     std::vector<unsigned> matchedIndices(this->mNumberSystemStateVariables,p_new_register->GetNumStateVariables());
 
-    for (unsigned i=0; i<this->mNumberSystemStateVariables; i++)
+    for (unsigned i=0; i<this->mNumberSystemStateVariables; ++i)
     {
         if (p_new_register->IsStateVariablePresent(this->mStateVariableRegister[i]))
         {
@@ -145,7 +145,7 @@ std::vector<std::string> StateVariableRegister::FindCommonNamesInRegisters(State
 {
     std::vector<std::string> matchedNames;
 
-    for (unsigned i=0; i<this->mNumberSystemStateVariables; i++)
+    for (unsigned i=0; i<this->mNumberSystemStateVariables; ++i)
     {
         if (p_new_register->IsStateVariablePresent(this->mStateVariableRegister[i]))
         {

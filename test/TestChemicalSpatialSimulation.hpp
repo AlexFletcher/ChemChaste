@@ -66,10 +66,10 @@ public:
         ChemicalDomainField* p_field = new ChemicalDomainField(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
 
         // check that the file input problem dimension is the same as the user defined problem dimension
-        std::cout << "File probDim: "<<p_field ->GetProblemDimensions() << std::endl;
+        std::cout << "File probDim: "<<p_field->GetProblemDimensions() << std::endl;
         std::cout << "User probDim: "<<probDim << std::endl;
 
-        MutableMesh<2,2>* p_mesh = p_field ->GetMeshGenerator()->GetMesh();
+        MutableMesh<2,2>* p_mesh = p_field->GetMeshGenerator()->GetMesh();
         const unsigned spaceDim=2;
         const unsigned elementDim=2;
     
@@ -124,14 +124,14 @@ public:
             }
         }       
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         InhomogenousParabolicPdeOdeSystem<elementDim, spaceDim, probDim> pde(p_field);
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver>> odeSolverSystem;
         std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             odeSystem.push_back(p_field->GetOdeSystem()[i]);
             boost::shared_ptr<EulerIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
@@ -186,10 +186,10 @@ public:
         ChemicalDomainField* p_field = new ChemicalDomainField(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
 
         // check that the file input problem dimension is the same as the user defined problem dimension
-        std::cout << "File probDim: "<<p_field ->GetProblemDimensions() << std::endl;
+        std::cout << "File probDim: "<<p_field->GetProblemDimensions() << std::endl;
         std::cout << "User probDim: "<<probDim << std::endl;
 
-        MutableMesh<2,2>* p_mesh = p_field ->GetMeshGenerator()->GetMesh();
+        MutableMesh<2,2>* p_mesh = p_field->GetMeshGenerator()->GetMesh();
         const unsigned spaceDim=2;
         const unsigned elementDim=2;
         
@@ -245,14 +245,14 @@ public:
             }
         }
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         InhomogenousParabolicPdeOdeSystem<elementDim, spaceDim, probDim> pde(p_field);
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver>> odeSolverSystem;
         std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             std::cout << "node number: "<<i << std::endl;
             for (unsigned j=0; j<p_field->GetOdeSystem()[i]->GetReactionSystem()->GetReactionVector().size();j++)

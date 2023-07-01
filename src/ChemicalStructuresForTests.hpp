@@ -572,22 +572,20 @@ class ChemicalStructuresForTests
             std::string boundaryConditionsFilename = "BoundaryConditionFile.csv";
             
             // System properties
-            const unsigned probDim =2; // need to set manually to the number of diffusive variables for the pde solver to solve
-            const unsigned spaceDim=2;
-            const unsigned elementDim=2;
+            const unsigned prob_dim = 2; // need to set manually to the number of diffusive variables for the pde solver to solve
+            const unsigned space_dim = 2;
+            const unsigned element_dim = 2;
     
             //TetrahedralMesh<elementDim,spaceDim>* p_field = new TetrahedralMesh<elementDim,spaceDim>();
             // generate domain
             // run the domain field set up and parse files
-            ChemicalDomainFieldTemplated<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldTemplated<elementDim,spaceDim,probDim>(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
-            //std::cout << "chemical structure number of mesh nodes: "<<p_Pde_field ->rGetDomainFeMesh()->GetNumNodes() << std::endl;
-            
+            ChemicalDomainFieldTemplated<element_dim,space_dim,prob_dim>* p_Pde_field = new ChemicalDomainFieldTemplated<element_dim,space_dim,prob_dim>(dataFileRoot,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename);
+
             SetPtrChemicalDomain(p_Pde_field);
         }
 
         void SetUpChemicalDomainFieldForCellCoupling()
         {
-            //std::cout << "SetUpChemicalDomainFieldForCellCoupling()" << std::endl; 
             // Variables for the user modify
             std::string dataFileRoot = "/home/chaste/projects/ChemChaste/src/Data/TemplateChemicalSimulation/";
             std::string cellLabelFilename = "";
@@ -599,24 +597,16 @@ class ChemicalStructuresForTests
             std::string diffusionFilename = "DiffusionDatabaseFile.csv";
             std::string initialConditionsFilename = "InitialConditionFile.csv";
             std::string boundaryConditionsFilename = "BoundaryConditionFile.csv";
-            
-            // System properties
-            const unsigned probDim =2; // need to set manually to the number of diffusive variables for the pde solver to solve
-            const unsigned spaceDim=2;
-            const unsigned elementDim=2;
-    
-            //TetrahedralMesh<elementDim,spaceDim>* p_field = new TetrahedralMesh<elementDim,spaceDim>();
+
             // generate domain
             // run the domain field set up and parse files
-            ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>(dataFileRoot,dataFileRoot+cellLabelFilename,dataFileRoot+cellKeyFilename,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename, dataFileRoot+initialConditionsFilename, dataFileRoot+boundaryConditionsFilename);
+            ChemicalDomainFieldForCellCoupling<2, 2, 2>* p_pde_field = new ChemicalDomainFieldForCellCoupling<2, 2, 2>(dataFileRoot,dataFileRoot+cellLabelFilename,dataFileRoot+cellKeyFilename,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename, dataFileRoot+initialConditionsFilename, dataFileRoot+boundaryConditionsFilename);
 
-            SetPtrChemicalDomainFieldForCellCoupling(p_Pde_field);
-            //std::cout << "SetUpChemicalDomainFieldForCellCoupling() - end" << std::endl; 
+            SetPtrChemicalDomainFieldForCellCoupling(p_pde_field);
         }
 
         void SetUpSrnChemicalReactionSystem()
         {
-
             AbstractChemistry* p_cell_system_chemistry = new AbstractChemistry();
 
             std::vector<AbstractChemical*> p_substrates_1 = std::vector<AbstractChemical*>();
@@ -661,7 +651,7 @@ class ChemicalStructuresForTests
             SetPtrSrnChemicalOdeSystem(p_chemical_ode);
         }
 
-        void SetUpChemicalSRNModel()
+        void SetUpChemicalSrnModel()
         {
 
             SetUpSrnChemicalOdeSystem();
@@ -712,7 +702,7 @@ class ChemicalStructuresForTests
 
         void SetUpCellInitialConditions(CellPtr p_cell, std::vector<std::string> speciesNames, std::vector<double> initValue)
         {
-            for (unsigned i=0; i<speciesNames.size();i++)
+            for (unsigned i=0; i<speciesNames.size();++i)
             {
                 p_cell->GetCellData()->SetItem(speciesNames[i],initValue[i]);
             }
@@ -864,7 +854,7 @@ class ChemicalStructuresForTests
             SimpleChemicalThresholdCellCycleModel* p_cell_cycle = rGetPtrSimpleChemicalThresholdCellCycleModel();
 
             // set up SRN model
-            SetUpChemicalSRNModel();
+            SetUpChemicalSrnModel();
             ChemicalSrnModel* p_srn_model = rGetPtrChemicalSrnModel();
 
             // set up cell properties of the Chemical Cell Property(not needed?)

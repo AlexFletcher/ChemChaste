@@ -88,14 +88,14 @@ void AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::EvaluateYDerivati
         CheckConcentration(rY);
     }
 
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         rDY[i] = 0.0;
     }
 
     mpReactionSystem->ReactSystem(rY, rDY);
 
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
@@ -105,12 +105,12 @@ void AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::EvaluateYDerivati
         }
     }
 
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         const_cast<double&>(rY[i]) = rDY[i];
     }
 
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         rDY[i] = 0.0;
     }
@@ -159,7 +159,7 @@ double AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::GetDeltaError()
 void AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::CheckConcentration(const std::vector<double>& rY)
 {
     // if chemical concentration gets too low then nan can occur, concentration must be +ve
-    for (unsigned i=0; i<mNumSpecies; i++)
+    for (unsigned i=0; i<mNumSpecies; ++i)
     {
         // due to the discrete nature occasionally rY can evaluate to <0
         // ensure rY >= 0
@@ -183,7 +183,7 @@ bool AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::GetIsCheckConcent
 template<>
 void ChemicalOdeSystemInformation<AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem>::Initialise()
 {
-    for (unsigned i=0; i<mp_reaction_system->GetSystemChemistry()->GetNumberChemicals(); i++)
+    for (unsigned i=0; i<mp_reaction_system->GetSystemChemistry()->GetNumberChemicals(); ++i)
     {
         this->mVariableNames.push_back(mp_reaction_system->GetSystemChemistry()->GetChemicalNamesByIndex(i));
         this->mVariableUnits.push_back(mp_reaction_system->GetSystemChemistry()->GetChemicalDimensionsByIndex(i));

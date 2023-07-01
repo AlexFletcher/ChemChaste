@@ -165,7 +165,6 @@ void AbstractFeSurfaceIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::As
             const BoundaryElement<ELEMENT_DIM-1,SPACE_DIM>& rSurfaceElement,
             c_vector<double, PROBLEM_DIM*ELEMENT_DIM>& rBSurfElem)
 {
-    //std::cout << "ChemChasteSurface" << std::endl;
     c_vector<double, SPACE_DIM> weighted_direction;
     double jacobian_determinant;
     mpMesh->GetWeightedDirectionForBoundaryElement(rSurfaceElement.GetIndex(), weighted_direction, jacobian_determinant);
@@ -190,7 +189,7 @@ void AbstractFeSurfaceIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::As
         ChastePoint<SPACE_DIM> x(0,0,0);
 
         this->ResetInterpolatedQuantities();
-        for (unsigned i=0; i<rSurfaceElement.GetNumNodes(); i++)
+        for (unsigned i=0; i<rSurfaceElement.GetNumNodes(); ++i)
         {
             const c_vector<double, SPACE_DIM> node_loc = rSurfaceElement.GetNode(i)->rGetLocation();
             x.rGetLocation() += phi(i)*node_loc;
@@ -200,7 +199,7 @@ void AbstractFeSurfaceIntegralAssembler<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::As
 
         SetStateVariable(zero_vector<double>(PROBLEM_DIM));
 
-        for (unsigned i=0; i<rSurfaceElement.GetNumNodes(); i++)
+        for (unsigned i=0; i<rSurfaceElement.GetNumNodes(); ++i)
         {
             // Allow the concrete version of the assembler to interpolate any desired quantities
             this->IncrementInterpolatedQuantities(phi(i), rSurfaceElement.GetNode(i));

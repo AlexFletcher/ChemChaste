@@ -48,7 +48,7 @@ public:
 
         if (nameVector.empty())
         {
-            for (unsigned i = 0; i < PROBLEM_DIM; i++)
+            for (unsigned i = 0; i < PROBLEM_DIM; ++i)
             {
                 nameVector.push_back(std::to_string(i));
             } 
@@ -70,17 +70,16 @@ public:
         : AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(),
           mpDomainField(p_domainField)
     {
-
         mIsDomainDiffusionField = true;
         if (mpDomainField->GetFieldType() == "ChemicalDomainFieldTemplated")
         {
 
-            SetStateVariableRegister(dynamic_cast<ChemicalDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>*>(mpDomainField) ->GetStateVariableVector());
+            SetStateVariableRegister(dynamic_cast<ChemicalDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>*>(mpDomainField)->GetStateVariableVector());
         }
 
         if (mpDomainField->GetFieldType() == "ChemicalDomainFieldForCellCoupling")
         {
-            SetStateVariableRegister(mpDomainField ->GetStateVariableVector());
+            SetStateVariableRegister(mpDomainField->GetStateVariableVector());
         }
     }
 
@@ -95,22 +94,21 @@ public:
 
     virtual double ComputeSourceTerm(const ChastePoint<SPACE_DIM>& rX, c_vector<double,PROBLEM_DIM>& rU, std::vector<double>& rOdeSolution, unsigned pdeIndex)
     {
+        std::string odeLabel = mpDomainField->ReturnNodeOdeLabelAtPosition(rX.rGetLocation());
 
-        std::string odeLabel = mpDomainField ->ReturnNodeOdeLabelAtPosition(rX.rGetLocation());
-
-        std::vector<std::string> node_labels = mpDomainField ->GetNodeLabels();
+        std::vector<std::string> node_labels = mpDomainField->GetNodeLabels();
 
         std::vector<double> rUvec(PROBLEM_DIM, 0.0);
-        for (unsigned i = 0; i < PROBLEM_DIM; i++)
+        for (unsigned i = 0; i < PROBLEM_DIM; ++i)
         {
             rUvec[i] = rU(i);
         }
 
         AbstractInhomogenousOdeSystemForCoupledPdeSystem* p_system = dynamic_cast<ChemicalDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>*>(mpDomainField)->GetOdeSystem()[0];
         AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem* p_system_cast = dynamic_cast<AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem*>(p_system);
-        std::vector<AbstractReaction*>  p_reactionVector = p_system_cast ->GetReactionSystem()->GetReactionVector();
+        std::vector<AbstractReaction*>  p_reactionVector = p_system_cast->GetReactionSystem()->GetReactionVector();
         
-        for (unsigned i = 0; i < node_labels.size(); i++)
+        for (unsigned i = 0; i < node_labels.size(); ++i)
         {
             if (node_labels[i] == odeLabel)
             {
@@ -146,7 +144,6 @@ public:
         assert(index < PROBLEM_DIM);
         return mDiffusionRateConstantVector[index];
     }
-
 
     virtual double DiffusionFunction(const ChastePoint<SPACE_DIM>& rX, unsigned pdeIndex, Element<ELEMENT_DIM,SPACE_DIM>* pElement=NULL)
     {

@@ -67,7 +67,7 @@ public:
         std::vector<CellPtr> cells;
         boost::shared_ptr<WildTypeCellMutationState> p_state(new WildTypeCellMutationState);
         boost::shared_ptr<StemCellProliferativeType> p_stem_type(new StemCellProliferativeType);
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             SimpleOxygenBasedCellCycleModel* p_model = new SimpleOxygenBasedCellCycleModel();
             p_model->SetDimension(2);
@@ -128,7 +128,7 @@ public:
 
         // Make cells with x<5.0 apoptotic (so no source term), assume cell at each node in cell layer mesh
         boost::shared_ptr<AbstractCellProperty> p_apoptotic_property = cells[0]->rGetCellPropertyCollection().GetCellPropertyRegistry()->Get<ApoptoticCellProperty>();
-        for (unsigned i=0; i<cells.size(); i++)
+        for (unsigned i=0; i<cells.size(); ++i)
         {
             c_vector<double,2> cell_location;
             cell_location = p_mesh->GetNode(i)->rGetLocation();
@@ -166,7 +166,7 @@ public:
         p_pde_modifier->SetupSolve(cell_population,"TestAveragedParabolicPdeWithNeumannWithMeshOnSquare_test");
 
         // Run for 10 time steps
-        for (unsigned i=0; i<10; i++)
+        for (unsigned i=0; i<10; ++i)
         {
             SimulationTime::Instance()->IncrementTimeOneStep();
             p_pde_modifier->UpdateAtEndOfTimeStep(cell_population);
@@ -325,12 +325,12 @@ public:
         change_cell_concentration_vector= {0.0,0.0,0.0};
         p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration,change_environment_concentration_vector,change_cell_concentration_vector);
 
-        for (unsigned i=0; i<environment_concentration_at_point.size();i++)
+        for (unsigned i=0; i<environment_concentration_at_point.size();++i)
         {
             std::cout << "Bulk State "<<environment_states[i]<<": initial: "<<environment_concentration_at_point[i]<<" change: "<<change_environment_concentration_vector[i] << std::endl;
         }
 
-        for (unsigned i=0; i<cell_concentration.size();i++)
+        for (unsigned i=0; i<cell_concentration.size();++i)
         {
             std::cout << "Cell State "<<cell_states[i]<<": initial: "<<cell_concentration[i]<<" change: "<<change_cell_concentration_vector[i] << std::endl;
         }
@@ -355,7 +355,7 @@ public:
 
         change_environment_concentration_vector= {0.0,0.0,0.0};
 
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             std::vector<std::string> membrane_states = {"U", "V"};
             std::vector<double> cell_concentration = {1.0,1.0};
@@ -395,7 +395,7 @@ public:
                 boost::shared_ptr<MembraneCellProperty> property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
                 std::cout << "Cell "<<cell_count<<": Membrane thickness: "<<property->GetMembraneThickness() << std::endl;
-                for (unsigned i=0; i<property->GetStateVariableRegister()->GetNumStateVariables();i++)
+                for (unsigned i=0; i<property->GetStateVariableRegister()->GetNumStateVariables();++i)
                 {
                     std::cout << "State: "<<property->GetStateVariableRegister()->RetrieveStateVariableName(i)<<" Concentration: "<< property->GetCellConcentrationByIndex(i) << std::endl;
                 }
@@ -507,7 +507,7 @@ public:
 
         change_environment_concentration_vector= {0.0,0.0};
 
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             CellPropertyCollection collection;
             boost::shared_ptr<MembraneCellProperty> p_cell_membrane_iter(new MembraneCellProperty());
@@ -647,7 +647,7 @@ public:
         ChemicalDomainField* p_Pde_field = new ChemicalDomainField(data_file_root,data_file_root+domain_file_name, data_file_root+domain_key_file_name, data_file_root+ode_label_file_name, data_file_root+ode_key_file_name, data_file_root+diffusion_file_name);
 
         // check that the file input problem dimension is the same as the user defined problem dimension
-        std::cout << "File prob_dim: "<<p_Pde_field ->GetProblemDimensions() << std::endl;
+        std::cout << "File prob_dim: "<<p_Pde_field->GetProblemDimensions() << std::endl;
         std::cout << "User prob_dim: "<<prob_dim << std::endl;
 
         std::vector<std::string> stateVariableNames = p_Pde_field->GetStateVariableVector()->GetStateVariableRegisterVector();
@@ -659,7 +659,7 @@ public:
 
         // Make cells with x<5.0 apoptotic (so no source term)
         boost::shared_ptr<AbstractCellProperty> p_apoptotic_property = cells[0]->rGetCellPropertyCollection().GetCellPropertyRegistry()->Get<ApoptoticCellProperty>();
-        for (unsigned i=0; i<cells.size(); i++)
+        for (unsigned i=0; i<cells.size(); ++i)
         {
             c_vector<double,2> cell_location;
             cell_location = p_cell_mesh->GetNode(i)->rGetLocation();
@@ -669,7 +669,7 @@ public:
             }
 
             // Set initial condition for PDE
-            for (unsigned i=0; i<prob_dim; i++)
+            for (unsigned i=0; i<prob_dim; ++i)
             {
                 cells[i]->GetCellData()->SetItem(stateVariableNames[0],initialCellValuesOfStateVariables[0]);
                 cells[i]->GetCellData()->SetItem(stateVariableNames[1],initialCellValuesOfStateVariables[1]);
@@ -691,7 +691,7 @@ public:
         p_pde_modifier->SetupSolve(cell_population,output_filename);
 
         // Run for 10 time steps
-        for (unsigned i=0; i<10; i++)
+        for (unsigned i=0; i<10; ++i)
         {
             SimulationTime::Instance()->IncrementTimeOneStep();
             p_pde_modifier->UpdateAtEndOfTimeStep(cell_population);

@@ -191,8 +191,6 @@ void AbstractReversibleTransportReaction::UpdateReactionRate(AbstractChemistry* 
 
 void AbstractReversibleTransportReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=true)
 {
-    //std::cout << "AbstractReversibleTransportReaction::ParseReactionInformation - start" << std::endl;
-
     if (!IsReversible)
     {
         AbstractTransportReaction::ParseReactionInformation(reaction_information, false);
@@ -240,10 +238,8 @@ void AbstractReversibleTransportReaction::ParseReactionInformation(std::string r
             SetForwardReactionRate(atof(reaction_information.substr(posForward+mIrreversibleRateName.size()+1,std::string::npos).c_str()));
         }
     }
-    //std::cout << "AbstractReversibleTransportReaction::ParseReactionInformation - end" << std::endl;
 }
 
-// file read functions
 void AbstractReversibleTransportReaction::SetReversibleDelimiter(std::string delim)
 {
     mReversibleDelimiter = delim;

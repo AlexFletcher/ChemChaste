@@ -127,7 +127,6 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
     // a basic multiplicative rate constant, Michaelis-Menten constant and enzyme (catalytic) identifiers (names)
     // There may be multiple spectator species but only one catalytic reaction rate or 
     // Michaelis-Menten constant, they can be in any order
-    //std::cout << "MichaelisMentenReaction::ParseReactionInformation( - start" << std::endl;
     // form the vector of delimiters
     unsigned numDelimiters = 3;
     std::vector<std::string> delimiterVector(numDelimiters,"");
@@ -216,7 +215,6 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
         
         // replace the string with the substring
         reaction_information = tempString;
-        //delimiterIndex++;
     }
 
     SetReactionRateConstant(reactionRate);
@@ -224,7 +222,6 @@ void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_info
     SetSpectatorNames(spectatorNames);
     SetNumSpectators(spectatorNames.size());
     UpdateSystemChemistry(spectatorNames);
-    //std::cout << "MichaelisMentenReaction::ParseReactionInformation( - end" << std::endl;
 }
 
 void MichaelisMentenReaction::SetKm(double Km)

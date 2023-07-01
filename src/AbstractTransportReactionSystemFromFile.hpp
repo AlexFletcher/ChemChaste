@@ -131,7 +131,7 @@ void AbstractTransportReactionSystemFromFile::FormReactionSystemObjectFromTuple(
 std::vector<AbstractChemical*> AbstractTransportReactionSystemFromFile::FromChemicalNameVectorToAbstractChemicalVector(std::vector<std::string> nameVector)
 {
     std::vector<AbstractChemical*> chemicalVector = std::vector<AbstractChemical*>();
-    for (unsigned i=0; i<nameVector.size(); i++)
+    for (unsigned i=0; i<nameVector.size(); ++i)
     {
         chemicalVector.push_back(new AbstractChemical(nameVector[i]));
     }
@@ -144,7 +144,7 @@ void AbstractTransportReactionSystemFromFile::ParseSystemChemistry(std::vector<s
     AbstractChemistry* mpBulkChemistry = new AbstractChemistry();
     AbstractChemistry* mpCellChemistry = new AbstractChemistry();
     
-    for (unsigned i =0; i<bulk_species_names.size(); i++)
+    for (unsigned i =0; i<bulk_species_names.size(); ++i)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(bulk_species_names[i]);
         mpBulkChemistry->AddChemical(candidate_chemical);
@@ -152,7 +152,7 @@ void AbstractTransportReactionSystemFromFile::ParseSystemChemistry(std::vector<s
 
     SetBulkChemistry(mpBulkChemistry);
 
-    for (unsigned i =0; i<cell_species_names.size(); i++)
+    for (unsigned i =0; i<cell_species_names.size(); ++i)
     {
         AbstractChemical* candidate_chemical = new AbstractChemical(cell_species_names[i]);
         mpCellChemistry->AddChemical(candidate_chemical);
@@ -183,13 +183,9 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
             // data structures on line by line basis
             if (!line.empty())
             {
-                if (line.at(0)=='#')
+                if (line.at(0) != '#')
                 {
-                    //std::cout << "Escape line: "<<line << std::endl;
-                }
-                else
-                {
-                    // assume the enxt line is a reacton line
+                    // Assume the next line is a reacton line
 
                     // point at which the reaction type text and the reaction string deliniate
                     size_t separate_point_type_reaction = line.find(mTypeDelimiter);
@@ -206,8 +202,7 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                     line.erase(separate_point_reaction_info, std::string::npos);
                     std::string react = line.substr(separate_point_type_reaction+3,std::string::npos);
       
-                    // don't want to parse info in this function
-                    
+                    // don't want to parse info in this function                    
                     
                     // test for reversibility in reaction string
                     bool IsReversible = TestReversibility(react);
@@ -285,8 +280,8 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
     {
         std::string str=complexes[complexNumber];
         // posiitons of characters in the reaction string to parse
-        size_t posSnew = 0;
-        size_t posSold = 0;
+        size_t delimiter_pos = 0;
+        size_t old_delimiter_pos = 0;
         
         std::vector<std::string> reactants;
         std::vector<unsigned> stoichVector;
@@ -297,15 +292,15 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             str.erase(str.begin());
         }
 
-        while (posSnew != std::string::npos)
+        while (delimiter_pos != std::string::npos)
         {
 
             // update position of character pointer based on species separator " + " default
-            posSnew = str.find(mSpeciesSeparator,posSold);
+            delimiter_pos = str.find(mSpeciesSeparator,old_delimiter_pos);
             
-            std::string strT = str.substr(posSold,posSnew-posSold);
+            std::string strT = str.substr(old_delimiter_pos,delimiter_pos-old_delimiter_pos);
         
-            posSold=posSnew+3;
+            old_delimiter_pos=delimiter_pos+3;
             // determine the stoich ratio value of the species
 
             unsigned stoichValue=1;
@@ -314,7 +309,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
                 stoichValue=std::stoul(strT.c_str());
                 
                 unsigned i=0;
-                while (isdigit(strT.c_str()[i])){i++;}
+                while (isdigit(strT.c_str()[i])){++i;}
                     tempString=strT.substr(i,std::string::npos);
             }else{tempString=strT;}
 

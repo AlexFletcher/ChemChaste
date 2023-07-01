@@ -1,10 +1,9 @@
 #ifndef TESTCHEMCHASTE_HPP_
 #define TESTCHEMCHASTE_HPP_
 
-#include "Cell_virtual.hpp"
-#include "BoundaryConditionsContainer_extended.hpp"
 #include <cxxtest/TestSuite.h>
-#include "UblasIncludes.hpp"
+
+#include "BoundaryConditionsContainer_extended.hpp"
 #include "AbstractCellBasedTestSuite.hpp"
 #include "CheckpointArchiveTypes.hpp"
 #include "PetscSetupAndFinalize.hpp"
@@ -41,6 +40,8 @@
 #include "CellAgesWriter.hpp"
 #include "CellAncestorWriter.hpp"
 #include "CellAppliedForceWriter.hpp"
+#include "UblasIncludes.hpp"
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -100,7 +101,8 @@
 #include "InhomogenousFisherPde.hpp"
 #include "InhomogenousFisherDiffusiveInhibitionPde.hpp"
 
-struct ControlStruct {
+struct ControlStruct
+{
     bool ReactionSystemWithoutCells = false;
     bool Fisher = true;
     bool FisherDiffusiveInhibition = false;
@@ -127,44 +129,42 @@ public:
 
             // form ode system
             std::cout << "SchnackenbergCoupledPdeOdeSystem  -As AbstractChemicalODeSystem" << std::endl;
+
             // system properties
-            const unsigned probDim =2;
-            const unsigned spaceDim=2;
-            const unsigned elementDim=2;
             std::vector<double> initValues = {2.0, 0.75};
             std::vector<double> bcValues = {0.0, 0.0};
 
             // mesh
             HoneycombMeshGenerator generator(100, 100, 0);
-            MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
+            MutableMesh<2, 2>* p_mesh = generator.GetMesh();
 
 
             std::cout << "number mesh nodes: "<<p_mesh->GetNumNodes() << std::endl;
 
             // Process Boundary Conditions
-            BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
-            std::vector<bool> areNeumannBoundaryConditions(probDim, true);
-            std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
-            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
-                vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
-            }
-            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+            BoundaryConditionsContainer<2, 2, 2> bcc;
+            std::vector<bool> areNeumannBoundaryConditions(2, true);
+            std::vector<ConstBoundaryCondition<2>*> vectorConstBCs;
+            for (unsigned pdeDim=0; pdeDim < 2; pdeDim++)
             {
-                if (areNeumannBoundaryConditions[pdeDim]==false)
+                vectorConstBCs.push_back(new ConstBoundaryCondition<2>(bcValues[pdeDim]));
+            }
+            for (unsigned pdeDim=0; pdeDim < 2; pdeDim++)
+            {
+                if (areNeumannBoundaryConditions[pdeDim] == false)
                 {
-                    for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
-                    node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
-                    ++node_iter)
+                    for (TetrahedralMesh<2, 2>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
+                         node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
+                         ++node_iter)
                     {
-
                         bcc.AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[pdeDim], pdeDim);
                     }
                 }
                 else
                 {
-                    for (TetrahedralMesh<elementDim,spaceDim>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
-                    boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
-                    boundary_iter++)
+                    for (TetrahedralMesh<2, 2>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
+                         boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
+                         boundary_iter++)
                     {
                         bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
                     }
@@ -172,12 +172,14 @@ public:
             }
             std::cout << "Initial conditions" << std::endl;
             // initial conditions
-            std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
-            {   // set as being a random perturbation about the boundary values
-                for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
-                {   // serialised for nodes
-                    init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim]+ RandomNumberGenerator::Instance()->ranf());
+            std::vector<double> init_conds(2*p_mesh->GetNumNodes());
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+            {
+                // set as being a random perturbation about the boundary values
+                for (unsigned pdeDim=0; pdeDim < 2; pdeDim++)
+                {
+                       // serialised for nodes
+                    init_conds[2*i + pdeDim] = fabs(initValues[pdeDim]+ RandomNumberGenerator::Instance()->ranf());
                 }
             }
             // PETSc Vec
@@ -187,18 +189,18 @@ public:
             // coupled ode system
             std::cout << "Ode loop" << std::endl;
             std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+            {
                 // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
                 odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(chemicalReactionSystem));
             }
 
-            // pde system
-            PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
-            //EulerIvpOdeSolver euler_solver; 
+            // PDE system
+            PdeSchnackenbergCoupledPdeOdeSystem<2, 2, 2> pde(odeSystem[0], 1e-4, 1e-2);
             boost::shared_ptr<EulerIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
 
             // solver
-            LinearParabolicPdeSystemWithCoupledOdeSystemSolver<elementDim,spaceDim,probDim> solver(p_mesh, &pde, &bcc,odeSystem,p_solver);
+            LinearParabolicPdeSystemWithCoupledOdeSystemSolver<2, 2, 2> solver(p_mesh, &pde, &bcc,odeSystem,p_solver);
 
             // solver properties        
             solver.SetTimes(0, 30);
@@ -217,9 +219,6 @@ public:
         if (control.Fisher)
         {
             // system properties
-            const unsigned probDim =1;
-            const unsigned spaceDim=2;
-            const unsigned elementDim=2;
             double MeshStepSize = 1.0;
             std::vector<unsigned> MeshDimensions = {100,100,0};
             std::vector<double> initValuesHigh = {0.5};
@@ -231,48 +230,36 @@ public:
             std::vector<double> carryingCapacities = {1.0};
 
             // mesh
-            TetrahedralMesh<elementDim,spaceDim>* p_mesh = new TetrahedralMesh<elementDim,spaceDim>();
-
-            switch (spaceDim)
-            {
-                case 1:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0]);
-                    break;
-                case 2:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1]);
-                    break;
-                case 3:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1], MeshDimensions[2]);
-                    break;
-                default:
-                    NEVER_REACHED;
-            }            
+            TetrahedralMesh<2, 2>* p_mesh = new TetrahedralMesh<2, 2>();
+            p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1]);
 
             // Process Boundary Conditions
             std::cout << "Process Boundary Conditions" << std::endl;
-            BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
-            std::vector<bool> areNeumannBoundaryConditions(probDim, true);
-            std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
+            BoundaryConditionsContainer<2, 2, 1> bcc;
+            std::vector<bool> areNeumannBoundaryConditions(1, true);
+            std::vector<ConstBoundaryCondition<2>*> vectorConstBCs;
             
-            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
-                vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
+            for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+                vectorConstBCs.push_back(new ConstBoundaryCondition<2>(bcValues[pdeDim]));
             }
             
-            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+            for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
             {
-                if (areNeumannBoundaryConditions[pdeDim]==false)
+                if (areNeumannBoundaryConditions[pdeDim] == false)
                 {
-                    for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
-                    node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
-                    ++node_iter)
+                    for (TetrahedralMesh<2, 2>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
+                         node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
+                         ++node_iter)
                     {
 
                         bcc.AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[pdeDim], pdeDim);
                     }
-                }else{
-                    for (TetrahedralMesh<elementDim,spaceDim>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
-                    boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
-                    boundary_iter++)
+                }
+                else
+                {
+                    for (TetrahedralMesh<2, 2>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
+                         boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
+                         boundary_iter++)
                     {
                         bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
                     }
@@ -280,67 +267,49 @@ public:
             }
 
             // initial conditions
-            std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
-            unsigned columnNum = 0;
-            unsigned rowNum = 0;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
-            {   // set as being a random perturbation about the boundary values
-               
-                if (spaceDim==2)
+            std::vector<double> init_conds(1*p_mesh->GetNumNodes(), 0.0);
+            unsigned column_num = 0;
+            unsigned row_num = 0;
+            for (unsigned i = 0; i < p_mesh->GetNumNodes(); ++i)
+            {   
+                // Set as being a random perturbation about the boundary values
+                column_num = 0;
+                row_num = 0;
+                while (i >= row_num*(MeshDimensions[0]+1))
                 {
-                    columnNum = 0;
-                    rowNum = 0;
-                    //std::cout << i-rowNum*(MeshDimensions[0]+1) << std::endl;
-                    while (i >= rowNum*(MeshDimensions[0]+1))
-                    {
-                        rowNum = rowNum + 1;                    
-                    }
-                    
-                    columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                 
-                    if (columnNum<10)
-                    {
-                        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
-                        {   // serialised for nodes
-                            init_conds[probDim*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
-                        }
-                    }
-                    else
-                    {
-                        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
-                        {   // serialised for nodes
-                            init_conds[probDim*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
-                        }
+                    row_num = row_num + 1;                    
+                }
+                
+                column_num = i - (row_num-1)*(MeshDimensions[0]+1);
+                
+                if (column_num < 10)
+                {
+                    for (unsigned pdeDim = 0; pdeDim < 1; pdeDim++)
+                    {   
+                        // serialised for nodes
+                        init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
                     }
                 }
                 else
                 {
-                    for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
-                    {   // serialised for nodes
-                        init_conds[probDim*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
+                    for (unsigned pdeDim = 0; pdeDim < 1; pdeDim++)
+                    {   
+                        // serialised for nodes
+                        init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
                     }
                 }
-
             }
             // PETSc Vec
             Vec initial_condition = PetscTools::CreateVec(init_conds);
 
             std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
             std::vector<boost::shared_ptr<AbstractIvpOdeSolver> > solverSystem;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
-                // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
-            //    odeSystem.push_back(new AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem(chemicalReactionSystem));
-            //    boost::shared_ptr<AbstractIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
-            //    solverSystem.push_back(p_solver);
-            }
     
-            // pde system
-            //InhomogenousParabolicPdeForCoupledOdeSystemTemplated<elementDim, spaceDim, probDim> pde(chemical_structure->rGetPtrChemicalDomain());
-
-            InhomogenousFisherPde<elementDim, spaceDim, probDim> pde(diffusionRates,growthRates,carryingCapacities);
+            // PDE system
+            InhomogenousFisherPde<2, 2, 1> pde(diffusionRates,growthRates,carryingCapacities);
 
             // solver
-            InhomogenousCoupledPdeOdeSolverTemplated<elementDim,spaceDim,probDim> solver(p_mesh, &pde, &bcc);
+            InhomogenousCoupledPdeOdeSolverTemplated<2, 2,1> solver(p_mesh, &pde, &bcc);
 
             // solver properties        
             solver.SetTimes(0, 200);
@@ -359,9 +328,6 @@ public:
         if (control.FisherDiffusiveInhibition)
         {
             // system properties
-            const unsigned probDim =1;
-            const unsigned spaceDim=2;
-            const unsigned elementDim=2;
             double MeshStepSize = 1.0;
             std::vector<unsigned> MeshDimensions = {100,100,0};
             std::vector<double> initValuesHigh = {0.5};
@@ -373,38 +339,25 @@ public:
             std::vector<double> carryingCapacities = {1.0};
 
             // mesh
-            TetrahedralMesh<elementDim,spaceDim>* p_mesh = new TetrahedralMesh<elementDim,spaceDim>();
-
-            switch (spaceDim)
-            {
-                case 1:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0]);
-                    break;
-                case 2:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1]);
-                    break;
-                case 3:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1], MeshDimensions[2]);
-                    break;
-                default:
-                    NEVER_REACHED;
-            }            
+            TetrahedralMesh<2, 2>* p_mesh = new TetrahedralMesh<2, 2>();
+             p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1]);
 
             // Process Boundary Conditions
             std::cout << "Process Boundary Conditions" << std::endl;
-            BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
-            std::vector<bool> areNeumannBoundaryConditions(probDim, true);
-            std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
+            BoundaryConditionsContainer<2, 2, 1> bcc;
+            std::vector<bool> areNeumannBoundaryConditions(1, true);
+            std::vector<ConstBoundaryCondition<2>*> vectorConstBCs;
             
-            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
-                vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
+            for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+            {
+                vectorConstBCs.push_back(new ConstBoundaryCondition<2>(bcValues[pdeDim]));
             }
             
-            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+            for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
             {
-                if (areNeumannBoundaryConditions[pdeDim]==false)
+                if (areNeumannBoundaryConditions[pdeDim] == false)
                 {
-                    for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
+                    for (TetrahedralMesh<2, 2>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
                          node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
                          ++node_iter)
                     {
@@ -414,9 +367,9 @@ public:
                 }
                 else
                 {
-                    for (TetrahedralMesh<elementDim,spaceDim>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
-                    boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
-                    boundary_iter++)
+                    for (TetrahedralMesh<2, 2>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
+                         boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
+                         boundary_iter++)
                     {
                         bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
                     }
@@ -424,44 +377,33 @@ public:
             }
 
             // initial conditions
-            std::vector<double> init_conds(probDim*p_mesh->GetNumNodes(),0.0);
-            unsigned columnNum = 0;
-            unsigned rowNum = 0;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+            std::vector<double> init_conds(1*p_mesh->GetNumNodes(),0.0);
+            unsigned column_num = 0;
+            unsigned row_num = 0;
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // set as being a random perturbation about the boundary values
-              
-                if (spaceDim==2)
+                column_num = 0;
+                row_num = 0;
+                while (i >= row_num*(MeshDimensions[0]+1))
                 {
-                    columnNum = 0;
-                    rowNum = 0;
-                    //std::cout << i-rowNum*(MeshDimensions[0]+1) << std::endl;
-                    while (i >= rowNum*(MeshDimensions[0]+1))
+                    row_num = row_num + 1;
+                }
+                
+                column_num = i - (row_num-1)*(MeshDimensions[0]+1);
+                if (column_num<10)
+                {
+                    for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {
-                        rowNum = rowNum + 1;
-                    }
-                    
-                    columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                    if (columnNum<10)
-                    {
-                        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
-                        {   // serialised for nodes
-                            init_conds[probDim*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
-                        }
-                    }
-                    else
-                    {
-                        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
-                        {   // serialised for nodes
-                            init_conds[probDim*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
-                        }
+                        // serialised for nodes
+                        init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
                     }
                 }
                 else
                 {
-                    for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+                    for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
-                        init_conds[probDim*i + pdeDim] = fabs(initValuesLow[pdeDim] + RandomNumberGenerator::Instance()->ranf());
+                        init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
                     }
                 }
 
@@ -472,11 +414,11 @@ public:
             std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
             std::vector<boost::shared_ptr<AbstractIvpOdeSolver> > solverSystem;
 
-            // pde system
-            InhomogenousFisherDiffusiveInhibitionPde<elementDim, spaceDim, probDim> pde(diffusionRates,growthRates,carryingCapacities);
+            // PDE system
+            InhomogenousFisherDiffusiveInhibitionPde<2, 2, 1> pde(diffusionRates,growthRates,carryingCapacities);
 
             // solver
-            InhomogenousCoupledPdeOdeSolverTemplated<elementDim,spaceDim,probDim> solver(p_mesh, &pde, &bcc);
+            InhomogenousCoupledPdeOdeSolverTemplated<2, 2, 1> solver(p_mesh, &pde, &bcc);
 
             // solver properties
             solver.SetTimes(0,      00);
@@ -501,10 +443,8 @@ public:
 
             // form ode system
             std::cout << "SchnackenbergCoupledPdeOdeSystem  -As AbstractChemicalODeSystem" << std::endl;
+        
             // system properties
-            const unsigned probDim =2;
-            const unsigned spaceDim=2;
-            const unsigned elementDim=2;
             double MeshStepSize = 1.0;
             std::vector<unsigned> MeshDimensions = {100,100,0};
             std::vector<double> initValues = {2.0, 0.75};
@@ -512,62 +452,51 @@ public:
             std::vector<double> diffusionRates = {0.05, 0.05};
 
             // mesh
-            TetrahedralMesh<elementDim,spaceDim>* p_mesh = new TetrahedralMesh<elementDim,spaceDim>();
+            TetrahedralMesh<2, 2>* p_mesh = new TetrahedralMesh<2, 2>();
+            p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1]);
 
-            switch (spaceDim)
-            {
-                case 1:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0]);
-                    break;
-                case 2:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1]);
-                    break;
-                case 3:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1], MeshDimensions[2]);
-                    break;
-                default:
-                    NEVER_REACHED;
-            }
 
             // Process Boundary Conditions
             std::cout << "Process Boundary Conditions" << std::endl;
-            BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
-            std::vector<bool> areNeumannBoundaryConditions(probDim, true);
-            std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
+            BoundaryConditionsContainer<2, 2, 2> bcc;
+            std::vector<bool> areNeumannBoundaryConditions(2, true);
+            std::vector<ConstBoundaryCondition<2>*> vectorConstBCs;
             
-            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+            for (unsigned pdeDim=0; pdeDim<2; pdeDim++)
             {
-                vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
+                vectorConstBCs.push_back(new ConstBoundaryCondition<2>(bcValues[pdeDim]));
             }
             
-            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+            for (unsigned pdeDim=0; pdeDim<2; pdeDim++)
             {
                 if (areNeumannBoundaryConditions[pdeDim]==false)
                 {
-                    for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
-                    node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
-                    ++node_iter)
+                    for (TetrahedralMesh<2, 2>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
+                         node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
+                         ++node_iter)
                     {
 
                         bcc.AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[pdeDim], pdeDim);
                     }
                 }else{
-                    for (TetrahedralMesh<elementDim,spaceDim>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
-                    boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
-                    boundary_iter++)
+                    for (TetrahedralMesh<2, >::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
+                         boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
+                         boundary_iter++)
                     {
                         bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
                     }
                 }
             }
 
-            // initial conditions
-            std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
-            {   // set as being a random perturbation about the boundary values
-                for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
-                {   // serialised for nodes
-                    init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
+            // Initial conditions
+            std::vector<double> init_conds(2*p_mesh->GetNumNodes());
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+            {
+                // set as being a random perturbation about the boundary values
+                for (unsigned pdeDim=0; pdeDim<2; pdeDim++)
+                {
+                    // serialised for nodes
+                    init_conds[2*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
                 }
             }
             // PETSc Vec
@@ -575,7 +504,7 @@ public:
             std::cout << "Here" << std::endl;
             std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
             std::vector<boost::shared_ptr<AbstractIvpOdeSolver> > solverSystem;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
                 odeSystem.push_back(new AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem(chemicalReactionSystem));
@@ -583,11 +512,11 @@ public:
                 solverSystem.push_back(p_solver);//std::dynamic_pointer_cast<AbstractIvpOdeSolver>(p_solver));
             }
 
-            // pde system
-            InhomogenousParabolicPdeForCoupledOdeSystemTemplated<elementDim, spaceDim, probDim> pde(chemical_structure->rGetPtrChemicalDomain());
+            // PDE system
+            InhomogenousParabolicPdeForCoupledOdeSystemTemplated<2, 2, 2> pde(chemical_structure->rGetPtrChemicalDomain());
 
             // solver
-            InhomogenousCoupledPdeOdeSolverTemplated<elementDim,spaceDim,probDim> solver(p_mesh, &pde, &bcc,odeSystem,solverSystem);
+            InhomogenousCoupledPdeOdeSolverTemplated<2, 2, 2> solver(p_mesh, &pde, &bcc,odeSystem,solverSystem);
 
             // solver properties
             solver.SetTimes(0, 20);
@@ -612,10 +541,8 @@ public:
 
             // form ode system
             std::cout << "SchnackenbergCoupledPdeOdeSystem  -As AbstractChemicalODeSystem" << std::endl;
+
             // system properties
-            const unsigned probDim =2;
-            const unsigned spaceDim=2;
-            const unsigned elementDim=2;
             double MeshStepSize = 1.0;
             std::vector<unsigned> MeshDimensions = {100,100,0};
             std::vector<double> initValues = {2.0, 0.75};
@@ -623,48 +550,36 @@ public:
             std::vector<double> diffusionRates = {0.05, 0.05};
 
             // mesh
-            TetrahedralMesh<elementDim,spaceDim>* p_mesh = new TetrahedralMesh<elementDim,spaceDim>();
-
-            switch (spaceDim)
-            {
-                case 1:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0]);
-                    break;
-                case 2:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1]);
-                    break;
-                case 3:
-                    p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1], MeshDimensions[2]);
-                    break;
-                default:
-                    NEVER_REACHED;
-            }
+            TetrahedralMesh<2, 2>* p_mesh = new TetrahedralMesh<2, 2>();
+            p_mesh->ConstructRegularSlabMesh(MeshStepSize, MeshDimensions[0], MeshDimensions[1]);
+            
             // Process Boundary Conditions
-            std::cout << "Process Boundary Conditions" << std::endl;
-            BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
-            std::vector<bool> areNeumannBoundaryConditions(probDim, true);
-            std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
+            BoundaryConditionsContainer<2, 2, 2> bcc;
+            std::vector<bool> areNeumannBoundaryConditions(2, true);
+            std::vector<ConstBoundaryCondition<2>*> vectorConstBCs;
             
-            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+            for (unsigned pdeDim=0; pdeDim< 2; pdeDim++)
             {
-                vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
+                vectorConstBCs.push_back(new ConstBoundaryCondition<2>(bcValues[pdeDim]));
             }
             
-            for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+            for (unsigned pdeDim=0; pdeDim< 2; pdeDim++)
             {
-                if (areNeumannBoundaryConditions[pdeDim]==false)
+                if (areNeumannBoundaryConditions[pdeDim] == false)
                 {
-                    for (TetrahedralMesh<elementDim,spaceDim>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
-                    node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
-                    ++node_iter)
+                    for (TetrahedralMesh<2, 2>::BoundaryNodeIterator node_iter = p_mesh->GetBoundaryNodeIteratorBegin();
+                         node_iter != p_mesh->GetBoundaryNodeIteratorEnd();
+                         ++node_iter)
                     {
 
                         bcc.AddDirichletBoundaryCondition(*node_iter, vectorConstBCs[pdeDim], pdeDim);
                     }
-                }else{
-                    for (TetrahedralMesh<elementDim,spaceDim>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
-                    boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
-                    boundary_iter++)
+                }
+                else
+                {
+                    for (TetrahedralMesh<2, 2>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
+                         boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
+                         boundary_iter++)
                     {
                         bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
                     }
@@ -672,12 +587,14 @@ public:
             }
 
             // initial conditions
-            std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
-            {   // set as being a random perturbation about the boundary values
-                for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
-                {   // serialised for nodes
-                    init_conds[probDim*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
+            std::vector<double> init_conds(2*p_mesh->GetNumNodes());
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+            {   
+                // set as being a random perturbation about the boundary values
+                for (unsigned pdeDim=0; pdeDim<2; pdeDim++)
+                {   
+                    // serialised for nodes
+                    init_conds[2*i + pdeDim] = fabs(initValues[pdeDim] + RandomNumberGenerator::Instance()->ranf());
                 }
             }
             // PETSc Vec
@@ -685,18 +602,18 @@ public:
 
             std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
             std::vector<boost::shared_ptr<AbstractIvpOdeSolver> > solverSystem;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++){
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
                 // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
                 odeSystem.push_back(new AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem(chemicalReactionSystem));
                 boost::shared_ptr<AbstractIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
                 solverSystem.push_back(p_solver);//std::dynamic_pointer_cast<AbstractIvpOdeSolver>(p_solver));
             }
 
-            // pde system
-            InhomogenousParabolicPdeForCoupledOdeSystemInhibitedDiffusionTemplated<elementDim, spaceDim, probDim> pde(chemical_structure->rGetPtrChemicalDomain());
+            // PDE system
+            InhomogenousParabolicPdeForCoupledOdeSystemInhibitedDiffusionTemplated<2, 2, 2> pde(chemical_structure->rGetPtrChemicalDomain());
 
             // solver
-            InhomogenousCoupledPdeOdeSolverTemplated<elementDim,spaceDim,probDim> solver(p_mesh, &pde, &bcc,odeSystem,solverSystem);
+            InhomogenousCoupledPdeOdeSolverTemplated<2, 2, 2> solver(p_mesh, &pde, &bcc,odeSystem,solverSystem);
 
             // solver properties        
             solver.SetTimes(0, 20);
@@ -722,7 +639,7 @@ public:
 
             std::vector<CellPtr> cells;
             // assume cell at each node in cell layer mesh
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
                 ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
@@ -756,7 +673,7 @@ public:
 
             std::cout << "initial conditions" << std::endl;
             std::vector<double> init_conditions = p_Pde_field->GetInitialNodeConditions();
-            for (unsigned i=0; i<init_conditions.size(); i++)
+            for (unsigned i=0; i<init_conditions.size(); ++i)
             {
                 std::cout << init_conditions[i] << std::endl;
             }
@@ -775,7 +692,7 @@ public:
 
             std::vector<std::string> chemicalCellASpeciesNames = chemical_structure->GetChemicalCellASpeciesNames();
 
-            for (unsigned i=0; i<chemicalCellASpeciesNames.size(); i++)
+            for (unsigned i=0; i<chemicalCellASpeciesNames.size(); ++i)
             {
                 boost::shared_ptr<CellDataItemWriter<2,2>> dataWriter(new CellDataItemWriter<2,2>(chemicalCellASpeciesNames[i]));
                 cell_population.AddCellWriter(dataWriter);
@@ -811,7 +728,7 @@ public:
 
             std::vector<CellPtr> cells;
             // assume cell at each node in cell layer mesh
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
                 ChemicalStructuresForTests* chemical_structure = new ChemicalStructuresForTests();
@@ -845,7 +762,7 @@ public:
 
             std::cout << "initial conditions" << std::endl;
             std::vector<double> init_conditions = p_Pde_field->GetInitialNodeConditions();
-            for (unsigned i=0; i<init_conditions.size(); i++)
+            for (unsigned i=0; i<init_conditions.size(); ++i)
             {
                 std::cout << init_conditions[i] << std::endl;
             }
@@ -885,33 +802,21 @@ public:
         std::string initialConditionsFilename = "InitialConditionFile.csv";
         std::string boundaryConditionsFilename = "BoundaryConditionFile.csv";
         
-        // System properties
-        const unsigned probDim =4; // need to set manually to the number of diffusive variables for the pde solver to solve
-        const unsigned spaceDim=2;
-        const unsigned elementDim=2;
-
-        //TetrahedralMesh<elementDim,spaceDim>* p_field = new TetrahedralMesh<elementDim,spaceDim>();
         // generate domain
         // run the domain field set up and parse files
-        ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>(dataFileRoot,cellFileRoot+cellLabelFilename,cellFileRoot+cellKeyFilename,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename, dataFileRoot+initialConditionsFilename, dataFileRoot+boundaryConditionsFilename);
+        ChemicalDomainFieldForCellCoupling<2, 2, 4>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<2, 2, 4>(dataFileRoot,cellFileRoot+cellLabelFilename,cellFileRoot+cellKeyFilename,dataFileRoot+domainFilename, dataFileRoot+domainKeyFilename, dataFileRoot+odeLabelFilename, dataFileRoot+odeKeyFilename, dataFileRoot+diffusionFilename, dataFileRoot+initialConditionsFilename, dataFileRoot+boundaryConditionsFilename);
 
-        //TetrahedralMesh<elementDim,spaceDim>* p_cell_mesh = p_Pde_field->rGetCellMesh();
-    std::cout << "here" << std::endl;
-        TetrahedralMesh<elementDim,spaceDim>* p_cell_mesh = p_Pde_field->rGetCellMesh();
-        //std::vector<unsigned> location_indices = generator.GetCellLocationIndices();
-  std::cout << "here" << std::endl;
-
-        NodesOnlyMesh<spaceDim> mesh;
+        TetrahedralMesh<2, 2>* p_cell_mesh = p_Pde_field->rGetCellMesh();
+        NodesOnlyMesh<2> mesh;
         mesh.ConstructNodesWithoutMesh(*p_cell_mesh, 1.5);
 
-        std::cout << "here" << std::endl;
         std::vector<CellPtr> cells;
+
         // assume cell at each node in cell layer mesh
-        std::cout << "here" << std::endl;
         std::string cell_label;
         std::string cell_key;
         std::string given_cell_root;
-        for (unsigned i=0; i<p_cell_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_cell_mesh->GetNumNodes(); ++i)
         {
             cell_label = p_Pde_field->GetCellLabelByIndex(i);
             cell_key = p_Pde_field->ReturnCellKeyFromCellLabel(cell_label);
@@ -939,12 +844,12 @@ public:
 
         std::cout << "initial conditions" << std::endl;
         std::vector<double> init_conditions = p_Pde_field->GetInitialNodeConditions();
-        for (unsigned i=0; i<init_conditions.size(); i++)
+        for (unsigned i=0; i<init_conditions.size(); ++i)
         {
             std::cout << init_conditions[i] << std::endl;
         }
         
-        boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
+        boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<2, 2, 4>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<2, 2, 4>(p_Pde_field, p_cuboid));
         
         boost::shared_ptr<ChemicalTrackingModifier<2,2>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<2,2>()); //= chemical_structure->rGetPtrChemicalTrackingModifier();
         

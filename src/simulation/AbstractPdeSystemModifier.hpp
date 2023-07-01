@@ -299,7 +299,7 @@ void AbstractPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::UpdateAtEndOf
 
             assert(mpFeMesh != nullptr);
 
-            for (unsigned i=0; i<mpFeMesh->GetNumNodes(); i++)
+            for (unsigned i=0; i<mpFeMesh->GetNumNodes(); ++i)
             {
                 (*mpVizPdeSolutionResultsFile) << i << " ";
                 const c_vector<double,SPACE_DIM>& r_location = mpFeMesh->GetNode(i)->rGetLocation();
@@ -337,7 +337,7 @@ void AbstractPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::UpdateAtEndOf
             VtkMeshWriter<ELEMENT_DIM,SPACE_DIM>* p_vtk_mesh_writer = new VtkMeshWriter<ELEMENT_DIM,SPACE_DIM>(mOutputDirectory, results_file, false);
             std::vector<double> pde_solution;
 
-            for (unsigned i = 0; i < mpFeMesh->GetNumNodes(); i++)
+            for (unsigned i = 0; i < mpFeMesh->GetNumNodes(); ++i)
             {
                 pde_solution.push_back(solution_repl[i*PROBLEM_DIM+pdeDim]); 
             }

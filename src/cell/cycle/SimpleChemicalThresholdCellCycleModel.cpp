@@ -114,7 +114,7 @@ void SimpleChemicalThresholdCellCycleModel::UpdateStarvationDuration()
     std::vector<std::string> chemicalNames = mpThresholdChemistry->GetChemicalNames();
 
     // Get concentration vector
-    for (unsigned species=0; species<mNumberThresholdSpecies; species++)
+    for (unsigned species = 0; species < mNumberThresholdSpecies; species++)
     {
         SetSpeciesConcentrationsByIndex(mpCell->GetCellData()->GetItem(mpThresholdChemistry->GetChemicalNamesByIndex(species)), species);
     }
@@ -168,8 +168,8 @@ bool SimpleChemicalThresholdCellCycleModel::ConcentrationAboveMaxThreshold()
 
 bool SimpleChemicalThresholdCellCycleModel::ConcentrationBelowMinThreshold()
 {
-    // search through all the threhsold species for whether nay are above the maximum threshold
-    for (unsigned species=0; species<mNumberThresholdSpecies; species++)
+    // Search through all the threhsold species for whether nay are above the maximum threshold
+    for (unsigned species = 0; species < mNumberThresholdSpecies; species++)
     {
         if (GetMinimumThresholdCheckByIndex(species) && GetSpeciesConcentrationsByIndex(species)<GetMinimumThresholdByIndex(species))
         {

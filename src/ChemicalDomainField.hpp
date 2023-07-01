@@ -277,20 +277,20 @@ void ChemicalDomainField::DeriveExtendedSystemProperties()
 double ChemicalDomainField::GetDiffusionValueBasedOnPoint(const ChastePoint<2>& chastePoint, unsigned stateIndex)
 {
     // take in the point and state index then determine the state name and domain label, then determine the diffusion value
-    if (stateIndex<mStateVariableVector ->GetNumStateVariables())
+    if (stateIndex<mStateVariableVector->GetNumStateVariables())
     {
         // retrive state name from stateVariableRegister
-        std::string stateName = mStateVariableVector->RetrieveStateVariableName(stateIndex);
+        std::string state_name = mStateVariableVector->RetrieveStateVariableName(stateIndex);
 
         // retrieve label from domainLabels
-        std::string domainLabel = ReturnDomainLabelAtPosition(chastePoint.rGetLocation());
-        std::string domainKeyName = ReturnDomainKeyFromDomainLabel(domainLabel);
+        std::string domain_label = ReturnDomainLabelAtPosition(chastePoint.rGetLocation());
+        std::string domain_key_name = ReturnDomainKeyFromDomainLabel(domain_label);
 
-        return ReturnDiffusionValueFromStateNameAndDomainLabel(stateName,domainKeyName);
-    
+        return ReturnDiffusionValueFromStateNameAndDomainLabel(state_name, domain_key_name);    
     }
     else
     {
+        ///\todo replace with EXCEPTION
         std::cout << "Error: ChemicalDomainField::GetDiffusionValueBasedOnPoint: State not in state variable" << std::endl;
         return 0.0;
     }
@@ -298,15 +298,14 @@ double ChemicalDomainField::GetDiffusionValueBasedOnPoint(const ChastePoint<2>& 
 
 double ChemicalDomainField::ReturnDiffusionValueFromStateNameAndDomainLabel(std::string stateName, std::string domainLabel)
 {
-    // look for diffusion value (from diffusiondatabase) based on state name and domain label
+    // Look for diffusion value (from diffusiondatabase) based on state name and domain label
     if (domainLabel != "")
     {
-
-        return mpDiffusiveChemistry->GetDiffusivityValueByChemicalAndDomainName(stateName,domainLabel);
+        return mpDiffusiveChemistry->GetDiffusivityValueByChemicalAndDomainName(stateName, domainLabel);
     }
     else
     {
-        //diffusivity is non-domain specific
+        // Diffusivity is non-domain specific
         return mpDiffusiveChemistry->GetDiffusivityValueByChemicalName(stateName);
     }
 }
@@ -316,9 +315,9 @@ void ChemicalDomainField::SetDomainStateVariableRegister(StateVariableRegister* 
     mpDomainRegister = pRegister;
 }
 
-void ChemicalDomainField::SetChemistry(AbstractDiffusiveChemistry* p_chemistry)
+void ChemicalDomainField::SetChemistry(AbstractDiffusiveChemistry* pChemistry)
 {
-    mpDiffusiveChemistry = p_chemistry;
+    mpDiffusiveChemistry = pChemistry;
 }
 
 void ChemicalDomainField::SetOdeSystem(std::vector<AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem*> odeSystem)
@@ -326,7 +325,6 @@ void ChemicalDomainField::SetOdeSystem(std::vector<AbstractInhomogenousChemicalO
     mOdeSystem = odeSystem;
 }
 
-// get methods
 StateVariableRegister* ChemicalDomainField::GetDomainStateVariableRegister()
 {
     return mpDomainRegister;

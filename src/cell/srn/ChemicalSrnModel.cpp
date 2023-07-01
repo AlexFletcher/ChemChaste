@@ -3,10 +3,8 @@
 ChemicalSrnModel::ChemicalSrnModel(AbstractReactionSystem* pReactionSystem,boost::shared_ptr<AbstractCellCycleModelOdeSolver> pOdeSolver)
     : AbstractOdeSrnModel(pReactionSystem->GetSystemChemistry()->GetNumberChemicals(), pOdeSolver),
     mpReactionSystem(pReactionSystem),
-    //mpChemicalOdeSystem(new AbstractChemicalOdeSystem(pReactionSystem)),
     mpCellChemistry(pReactionSystem->GetSystemChemistry())
 {
-    //std::cout << "ChemicalSrnModel::ChemicalSrnModel - start" << std::endl;
     if (mpOdeSolver == boost::shared_ptr<AbstractCellCycleModelOdeSolver>())
     {
 #ifdef CHASTE_CVODE
@@ -20,7 +18,6 @@ ChemicalSrnModel::ChemicalSrnModel(AbstractReactionSystem* pReactionSystem,boost
 #endif //CHASTE_CVODE
     }
     assert(mpOdeSolver->IsSetUp());
-    //std::cout << "ChemicalSrnModel::ChemicalSrnModel - end" << std::endl;
 }
 
 ChemicalSrnModel::ChemicalSrnModel(const ChemicalSrnModel& rModel)
@@ -83,7 +80,7 @@ void ChemicalSrnModel::UpdateOdeStatesFromCellData()
     double species_value = 0.0;
     std::string species_name = "";
     std::vector<double> current_state_values(numSpecies, 0.0);
-    for (unsigned i = 0; i < numSpecies; i++)
+    for (unsigned i = 0; i < numSpecies; ++i)
     {
         species_name = mpCellChemistry->GetChemicalNamesByIndex(i);
         species_value = mpCell->GetCellData()->GetItem(species_name);

@@ -305,8 +305,8 @@ public:
             std::vector<std::string> chemicalCellSpeciesNames;
 
             // assume cell at each node in cell layer mesh
-            bool IsFirstCell = true;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+            bool is_first_cell = true;
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
 
@@ -317,10 +317,10 @@ public:
                                     VDCC.cellDataFileRoot+VDCC.transportPropertyFilename,
                                     VDCC.cellDataFileRoot+VDCC.membranePropertyFilename);
                 
-                if (IsFirstCell)
+                if (is_first_cell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
-                    IsFirstCell = false;
+                    is_first_cell = false;
                 }
                 cells.push_back(p_cell_reader->GetCellPtr());
             }
@@ -361,7 +361,7 @@ public:
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
 
-                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); ++i)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -394,7 +394,7 @@ public:
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
 
-                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); ++i)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -464,8 +464,8 @@ public:
             std::vector<std::string> chemicalCellSpeciesNames;
 
             // assume cell at each node in cell layer mesh
-            bool IsFirstCell = true;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+            bool is_first_cell = true;
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
 
@@ -476,10 +476,10 @@ public:
                                     VDSC.cellDataFileRoot+VDSC.transportPropertyFilename,
                                     VDSC.cellDataFileRoot+VDSC.membranePropertyFilename);
                 
-                if (IsFirstCell)
+                if (is_first_cell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
-                    IsFirstCell = false;
+                    is_first_cell = false;
                 }
                 cells.push_back(p_cell_reader->GetCellPtr());
             }
@@ -519,7 +519,7 @@ public:
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
 
-                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); ++i)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -549,7 +549,7 @@ public:
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
 
-                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); ++i)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -619,8 +619,8 @@ public:
             std::vector<std::string> chemicalCellSpeciesNames;
 
             // assume cell at each node in cell layer mesh
-            bool IsFirstCell = true;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+            bool is_first_cell = true;
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
 
@@ -631,10 +631,10 @@ public:
                                     ER.cellDataFileRoot+ER.transportPropertyFilename,
                                     ER.cellDataFileRoot+ER.membranePropertyFilename);
                 
-                if (IsFirstCell)
+                if (is_first_cell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
-                    IsFirstCell = false;
+                    is_first_cell = false;
                 }
                 cells.push_back(p_cell_reader->GetCellPtr());
             }
@@ -674,7 +674,7 @@ public:
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
 
-                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); ++i)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -706,7 +706,7 @@ public:
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();
 
-                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); ++i)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -770,8 +770,8 @@ public:
             std::vector<std::string> chemicalCellSpeciesNames;
 
             // assume cell at each node in cell layer mesh
-            bool IsFirstCell = true;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+            bool is_first_cell = true;
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
                 ChemicalCellFromFile* p_cell_reader = new ChemicalCellFromFile(
@@ -781,10 +781,10 @@ public:
                                     ML.cellDataFileRoot+ML.transportPropertyFilename,
                                     ML.cellDataFileRoot+ML.membranePropertyFilename);
                 
-                if (IsFirstCell)
+                if (is_first_cell)
                 {
                     chemicalCellSpeciesNames =  p_cell_reader->GetFullChemicalNamesVector();
-                    IsFirstCell = false;
+                    is_first_cell = false;
                 }
                 cells.push_back(p_cell_reader->GetCellPtr());
             }
@@ -825,7 +825,7 @@ public:
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();                
 
-                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); ++i)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);
@@ -857,7 +857,7 @@ public:
                 cell_population.AddCellWriter<CellAgesWriter>();
                 cell_population.AddCellWriter<CellLocationIndexWriter>();              
 
-                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); i++)
+                for (unsigned i=0; i<chemicalCellSpeciesNames.size(); ++i)
                 {
                     boost::shared_ptr<CellDataItemWriter<elementDim,spaceDim>> dataWriter(new CellDataItemWriter<elementDim,spaceDim>(chemicalCellSpeciesNames[i]));
                     cell_population.AddCellWriter(dataWriter);

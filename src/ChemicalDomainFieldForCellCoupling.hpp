@@ -437,7 +437,7 @@ void ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetU
     std::vector<boost::shared_ptr<AbstractIvpOdeSolver>> odeSolverSystem;
     std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
 
-    for (unsigned i=0; i<this->mpFeMesh->GetNumNodes(); i++)
+    for (unsigned i=0; i<this->mpFeMesh->GetNumNodes(); ++i)
     {
         odeSystem.push_back(this->GetOdeSystem()[i]);
         boost::shared_ptr<EulerIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
@@ -580,7 +580,7 @@ void ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Form
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 std::vector<std::string> ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::LabelNodesWithCells()
 {
-    // retireve the node positions and compare to domain labels in order to label the nodes
+    // retrieve the node positions and compare to domain labels in order to label the nodes
     // nodes are defined bottom-left of domain to top-right in a serialised manner
 
     unsigned numNodes = mpCellMesh->GetNumNodes();
@@ -588,16 +588,17 @@ std::vector<std::string> ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DI
     // form the serialised node label array
     std::vector<std::string> serialisedNodeCells(numNodes,"");
     
-    for (typename AbstractTetrahedralMesh<ELEMENT_DIM,SPACE_DIM>::NodeIterator iter = mpCellMesh ->GetNodeIteratorBegin();
-            iter != mpCellMesh ->GetNodeIteratorEnd();
-            ++iter)
+    for (typename AbstractTetrahedralMesh<ELEMENT_DIM,SPACE_DIM>::NodeIterator iter = mpCellMesh->GetNodeIteratorBegin();
+         iter != mpCellMesh->GetNodeIteratorEnd();
+         ++iter)
     {
-        // for each node, retireve index and position, label with correct ode label
-        unsigned node_index = iter ->GetIndex();
-        // retireve the position of the node of index node_index
-        const c_vector<double,SPACE_DIM>& position = iter->rGetLocation();
-        // search through the position ode labels for the correct label to give the node
+        // For each node, retrieve index and position, label with correct ode label
+        unsigned node_index = iter->GetIndex();
 
+        // Retrieve the position of the node of index node_index
+        const c_vector<double,SPACE_DIM>& position = iter->rGetLocation();
+
+        // Search through the position ode labels for the correct label to give the node
         serialisedNodeCells.at(node_index) = ReturnCellLabelAtPosition(position);
     }
 
@@ -616,7 +617,7 @@ std::string ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM
     {
         position_in_domain = position[dim] + mCellLabelOrigin[dim];
 
-        for (unsigned i=0; i<(mCartesianChasteCellDimensions[dim]); i++)
+        for (unsigned i=0; i<(mCartesianChasteCellDimensions[dim]); ++i)
         {
             if (position_in_domain <= i*mCartesianChasteCellScaleXY[dim])
             {
@@ -635,7 +636,7 @@ unsigned ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::
 {
     std::vector<std::string> keyVector = GetCellKeyVector();
 
-    for (unsigned i=0; i<keyVector.size();i++)
+    for (unsigned i=0; i<keyVector.size();++i)
     {
         if (keyVector[i] == keyString)
         {
@@ -756,7 +757,7 @@ std::string ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM
     double positionX = xindex*scaleFactor[0];
     double positionY = yindex*scaleFactor[1];
 
-    for (unsigned i=0; i<(mCartesianCellLayerDimensions[1]+1); i++) // top to bottom
+    for (unsigned i=0; i<(mCartesianCellLayerDimensions[1]+1); ++i) // top to bottom
     {
         if (positionY <= i*mCartesianCellLayerScaleXY[1])
         {
@@ -766,7 +767,7 @@ std::string ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM
     }
 
     // for the x position
-    for (unsigned i=0; i<(mCartesianCellLayerDimensions[0]+1); i++)
+    for (unsigned i=0; i<(mCartesianCellLayerDimensions[0]+1); ++i)
     {
         if (positionX <= i*mCartesianCellLayerScaleXY[0])
         {
@@ -791,7 +792,7 @@ void ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Prin
 {
     std::vector<std::string> keyVector = GetCellKeyVector();
     std::cout << "CellID,CellKey" << std::endl;
-    for (unsigned i=0; i<keyVector.size(); i++)
+    for (unsigned i=0; i<keyVector.size(); ++i)
     {
         std::cout << ReturnUnsignedIDFromCellKeyString(keyVector[i])<<","<<keyVector[i] << std::endl;
     }
@@ -802,7 +803,7 @@ void ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Prin
 {
     std::vector<std::string> labelVector = GetCellLabelVector();
     std::cout << "CellID,CellKey" << std::endl;
-    for (unsigned i=0; i<labelVector.size(); i++)
+    for (unsigned i=0; i<labelVector.size(); ++i)
     {
         std::cout << ReturnUnsignedIDFromCellKeyString(ReturnCellKeyFromCellLabel(labelVector[i]))<<","<<labelVector[i] << std::endl;
     }

@@ -49,7 +49,7 @@ public:
         StateVariableRegister* register_1_2  = new StateVariableRegister(system_1); 
 
         std::cout << "Read state variable register:" << std::endl;
-        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
+        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); ++i)
         {
             std::cout << register_1_2->RetrieveStateVariableName(i) << std::endl;
         }
@@ -59,7 +59,7 @@ public:
         register_1_2->AddStateVariableVector(system_2);
 
         std::cout << "Read state variable register:" << std::endl;
-        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
+        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); ++i)
         {
             std::cout << register_1_2->RetrieveStateVariableName(i) << std::endl;
         }
@@ -69,7 +69,7 @@ public:
         register_1_2->AddStateVariable("D");
 
         std::cout << "Read state variable register:" << std::endl;
-        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
+        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); ++i)
         {
             std::cout << register_1_2->RetrieveStateVariableName(i) << std::endl;
         }
@@ -77,7 +77,7 @@ public:
         std::cout << "Read index of variable in state register" << std::endl;
 
         std::vector<std::string> variable_set = {"A","C"};
-        for (unsigned i=0; i<variable_set.size(); i++)
+        for (unsigned i=0; i<variable_set.size(); ++i)
         {
             std::cout << variable_set[i]<<": "<<register_1_2->RetrieveStateVariableIndex(variable_set[i]) << std::endl;
         }
@@ -87,7 +87,7 @@ public:
         register_1_2->RemoveStateVariable("B");
 
         std::cout << "Read state variable register:" << std::endl;
-        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); i++)
+        for (unsigned i=0; i<register_1_2->GetNumStateVariables(); ++i)
         {
             std::cout << register_1_2->RetrieveStateVariableName(i) << std::endl;
         }
@@ -97,26 +97,26 @@ public:
         StateVariableRegister* register_3  = new StateVariableRegister(system_3); 
 
         std::cout << "Read state variable register_3:" << std::endl;
-        for (unsigned i=0; i<register_3->GetNumStateVariables(); i++)
+        for (unsigned i=0; i<register_3->GetNumStateVariables(); ++i)
         {
             std::cout << register_3->RetrieveStateVariableName(i) << std::endl;
         }
 
         std::cout << "Common variables: " << std::endl;
-        std::vector<std::string> matchedNames = register_1_2 ->FindCommonNamesInRegisters(register_3);
-        for (unsigned i=0; i<matchedNames.size(); i++)
+        std::vector<std::string> matchedNames = register_1_2->FindCommonNamesInRegisters(register_3);
+        for (unsigned i=0; i<matchedNames.size(); ++i)
         {
             std::cout << matchedNames[i] << std::endl;
         }
         std::cout << "System_3 variables locations in systems_1_2: " << std::endl;
-        std::vector<unsigned> matchedIndicesThis = register_1_2 ->FindIndicesInThisRegister(register_3);
-        for (unsigned i=0; i<matchedIndicesThis.size(); i++)
+        std::vector<unsigned> matchedIndicesThis = register_1_2->FindIndicesInThisRegister(register_3);
+        for (unsigned i=0; i<matchedIndicesThis.size(); ++i)
         {
             std::cout << matchedIndicesThis[i] << std::endl;
         }
         std::cout << "System_1_2 variables locations in systems_3: " << std::endl;
-        std::vector<unsigned> matchedIndicesThat = register_1_2 ->FindIndicesInThatRegister(register_3);
-        for (unsigned i=0; i<matchedIndicesThat.size(); i++)
+        std::vector<unsigned> matchedIndicesThat = register_1_2->FindIndicesInThatRegister(register_3);
+        for (unsigned i=0; i<matchedIndicesThat.size(); ++i)
         {
             std::cout << matchedIndicesThat[i] << std::endl;
         }
@@ -177,7 +177,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_mesh->GetNumNodes());
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
@@ -188,7 +188,7 @@ public:
         std::cout << "PETSc Vec" << std::endl;
         Vec initial_condition = PetscTools::CreateVec(init_conds);
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         InhomogenousParabolicPdeOdeSystem<elementDim, spaceDim, probDim> pde(diffusionVector);
         pde.SetStateVariableRegister(new StateVariableRegister({"A","U","V"}));
@@ -201,7 +201,7 @@ public:
 
         //std::vector<boost::shared_ptr<EulerIvpOdeSolver>> &odeSolverSystemr = *odeSolverSystem;
 
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             if (i==22 || i==77)
@@ -268,12 +268,12 @@ public:
         std::vector<double> boundaryConditions = p_field->GetBoundaryConditionValues();
         std::vector<std::string> boundaryTypes = p_field->GetBoundaryConditionTypes();
         
-        for (unsigned i=0; i<initialConditions.size();i++)
+        for (unsigned i=0; i<initialConditions.size();++i)
         {
             std::cout << "init: "<<initialConditions[i] << std::endl;
         }
 
-        for (unsigned i=0; i<boundaryConditions.size();i++)
+        for (unsigned i=0; i<boundaryConditions.size();++i)
         {
             std::cout << "value: "<<boundaryConditions[i] << std::endl;
             std::cout << "type : "<<boundaryTypes[i] << std::endl;
@@ -351,8 +351,8 @@ public:
 
         ChemicalDomainField* p_field = new ChemicalDomainField(reactionFileRoot,domainFilename, domainKeyFilename, odeLabelFilename, odeKeyFilename, diffusionFilename);
 
-        std::cout << "File probDim: "<<p_field ->GetProblemDimensions() << std::endl;
-        MutableMesh<2,2>* p_mesh = p_field ->GetMeshGenerator()->GetMesh();
+        std::cout << "File probDim: "<<p_field->GetProblemDimensions() << std::endl;
+        MutableMesh<2,2>* p_mesh = p_field->GetMeshGenerator()->GetMesh();
         std::cout << "File mesh number nodes: "<<p_mesh->GetNumNodes() << std::endl;
         
         // System properties
@@ -397,7 +397,7 @@ public:
         std::cout << "Initial conditions" << std::endl;
         // initial conditions
         std::vector<double> init_conds(probDim*p_field->GetDomainMesh()->GetNumNodes());
-        for (unsigned i=0; i<p_field->GetDomainMesh()->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_field->GetDomainMesh()->GetNumNodes(); ++i)
         {   // set as being a random perturbation about the boundary values
             for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
             {   // serialised for nodes
@@ -409,14 +409,14 @@ public:
         std::cout << "PETSc Vec" << std::endl;
         Vec initial_condition = PetscTools::CreateVec(init_conds);
 
-        // pde system
+        // PDE system
         std::cout << "Pde" << std::endl;
         InhomogenousParabolicPdeOdeSystem<elementDim, spaceDim, probDim> pde(p_field);
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver>> odeSolverSystem;
         std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); i++)
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
         {
             odeSystem.push_back(p_field->GetOdeSystem()[i]);
             boost::shared_ptr<EulerIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
@@ -465,7 +465,7 @@ public:
             vectorConstBCs.push_back(new ConstBoundaryCondition<2>(pdeDim*bcValues[pdeDim]));
         }
         
-        for (unsigned i=0; i<num_nodes; i++)
+        for (unsigned i=0; i<num_nodes; ++i)
         {
             nodes[i] = new Node<2>(i,true,0,0); //Node(unsigned index, bool isBoundaryNode=false, double v1=0, double v2=0, double v3=0);
 
@@ -475,7 +475,7 @@ public:
             }
         }
 
-        for (unsigned i=0; i<num_nodes; i++)
+        for (unsigned i=0; i<num_nodes; ++i)
         {
             
             for (unsigned j=0; j<probDim;j++)
@@ -486,7 +486,7 @@ public:
             
         }
 
-        for (unsigned i=0; i<num_nodes; i++)
+        for (unsigned i=0; i<num_nodes; ++i)
         {
             delete nodes[i];
         }

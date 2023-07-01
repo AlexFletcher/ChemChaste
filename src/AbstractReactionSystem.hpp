@@ -90,7 +90,7 @@ void AbstractReactionSystem::ReactSystem(const std::vector<double>& currentChemi
        
         // update the change in concentration
         
-        for (unsigned i=0; i<number_of_species; i++)
+        for (unsigned i=0; i<number_of_species; ++i)
         {
             changeChemistryConc[i] += deltaConcentration[i];
 

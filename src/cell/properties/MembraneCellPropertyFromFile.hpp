@@ -22,13 +22,13 @@ protected:
 
 public:
 
-    MembraneCellPropertyFromFile(std::string filename ="");
+    MembraneCellPropertyFromFile(std::string filename="");
 
     ~MembraneCellPropertyFromFile()
     {
     };
 
-    void SetUpMembraneProperty(CellPtr);
+    void SetUpMembraneProperty(CellPtr pCell);
 
     void SetMembraneFilename(std::string);
 
@@ -38,43 +38,5 @@ public:
 
     boost::shared_ptr<MembraneCellProperty> GetMembraneProperty();
 };
-
-MembraneCellPropertyFromFile::MembraneCellPropertyFromFile(std::string filename)
-    : mMembraneFilename(filename)
-{
-    if (filename != "")
-    {
-        SetMembraneFilename(filename);
-    }
-}
-
-void MembraneCellPropertyFromFile::SetUpMembraneProperty(CellPtr p_cell)
-{
-    boost::shared_ptr<MembraneCellProperty> p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
-    AbstractMembraneReactionSystemFromFile* p_membrane_system_from_file = new AbstractMembraneReactionSystemFromFile(mMembraneFilename);
-
-    p_membrane->SetUp(p_membrane_system_from_file, p_cell);
-    SetMembraneProperty(p_membrane);
-}
-
-void MembraneCellPropertyFromFile::SetMembraneFilename(std::string filename)
-{
-    mMembraneFilename = filename;
-}
-
-void MembraneCellPropertyFromFile::SetMembraneProperty(boost::shared_ptr<MembraneCellProperty> pMembraneProperty)
-{
-    mpMembraneProperty = pMembraneProperty;
-}
-
-std::string MembraneCellPropertyFromFile::GetMembraneFilename()
-{
-    return mMembraneFilename;
-}
-
-boost::shared_ptr<MembraneCellProperty> MembraneCellPropertyFromFile::GetMembraneProperty()
-{
-    return mpMembraneProperty;
-}
 
 #endif

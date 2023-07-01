@@ -437,7 +437,7 @@ unsigned AbstractReaction::FindIndexOfLastDelimiterPosition(std::vector<std::str
     bool areAllNPOS = true; 
     size_t delimiterPosition=0;
 
-    for (unsigned i=0; i<numDelimiters; i++)
+    for (unsigned i=0; i<numDelimiters; ++i)
     {
         // find the positions of the last occurance of each delimiter
         delimiterPosition = textString.rfind(delimiterVector[i]);
@@ -453,7 +453,7 @@ unsigned AbstractReaction::FindIndexOfLastDelimiterPosition(std::vector<std::str
     bool IsNotFound=true;
     if (!areAllNPOS)
     {
-        for (unsigned i=0; i<numDelimiters; i++)
+        for (unsigned i=0; i<numDelimiters; ++i)
         {
             if (delimiterPositions[i] != std::string::npos)
             {
@@ -491,7 +491,7 @@ unsigned AbstractReaction::FindIndexOfFirstDelimiterPosition(std::vector<std::st
     bool areAllNPOS = true; 
     size_t delimiterPosition=0;
     
-    for (unsigned i=0; i<numDelimiters; i++)
+    for (unsigned i=0; i<numDelimiters; ++i)
     {
         // find the positions of the first occurance of each delimiter
         delimiterPosition = textString.find(delimiterVector[i]);
@@ -506,7 +506,7 @@ unsigned AbstractReaction::FindIndexOfFirstDelimiterPosition(std::vector<std::st
     // if at least one of the delimiters 
     if (!areAllNPOS)
     {
-        for (unsigned i=1; i<numDelimiters; i++)
+        for (unsigned i=1; i<numDelimiters; ++i)
         {
             if (delimiterPositions[index] == std::string::npos || delimiterPositions[i]<delimiterPositions[index])
             {

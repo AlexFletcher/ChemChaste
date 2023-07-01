@@ -141,12 +141,12 @@ void TransportCellProperty::ReplaceBoundaryStateVariables(std::vector<double>& r
     unsigned num_bulk_states = mBulkBoundaryConcentrationVector.size();
     unsigned num_cell_states = mCellBoundaryConcentrationVector.size();
 
-    for (unsigned i = 0; i < num_bulk_states; i++)
+    for (unsigned i = 0; i < num_bulk_states; ++i)
     {
         mBulkBoundaryConcentrationVector[i] = rY[i];
     }
 
-    for (unsigned i = 0; i < num_cell_states; i++)
+    for (unsigned i = 0; i < num_cell_states; ++i)
     {
         mCellBoundaryConcentrationVector[i] = rY[i + num_bulk_states];
     }
@@ -162,12 +162,12 @@ void TransportCellProperty::ReplaceChangeBoundaryStateVariables(std::vector<doub
     unsigned num_bulk_states = mBulkBoundaryConcentrationVector.size();
     unsigned num_cell_states = mCellBoundaryConcentrationVector.size();
 
-    for (unsigned i = 0; i < num_bulk_states; i++)
+    for (unsigned i = 0; i < num_bulk_states; ++i)
     {
         mChangeBulkBoundaryConcentrationVector[i] = rDY[i];
     }
 
-    for (unsigned i=0; i<num_cell_states; i++)
+    for (unsigned i=0; i<num_cell_states; ++i)
     {
 
         mChangeCellBoundaryConcentrationVector[i] = rDY[i + num_bulk_states];

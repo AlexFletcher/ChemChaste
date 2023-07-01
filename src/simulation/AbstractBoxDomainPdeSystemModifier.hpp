@@ -250,7 +250,7 @@ void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Up
             std::vector<double> this_cell_next_total_boundary_concentration = extended_cell_property->GetNextTimestepConcentrationVector();
             unsigned number_cell_states =this_cell_next_total_boundary_concentration.size();
             std::vector<double> this_cell_total_concentration(number_cell_states,0.0);
-            for (unsigned i=0; i<number_cell_states;i++)
+            for (unsigned i=0; i<number_cell_states;++i)
             {
                 // add the change in cell concentration due to the effects of the internal end of the cell boundary 
                 double next_state_value = cell_iter->GetCellData()->GetItem(extended_cell_property->GetStateVariableRegister()->RetrieveStateVariableName(i)) + this_cell_next_total_concentration_change[i];
@@ -263,7 +263,7 @@ void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Up
             extended_cell_property->UpdateCellConcentrationVector(this_cell_total_concentration);
 
             // remove this reserved concentration vector from the cell data
-            for (unsigned i=0; i<number_cell_states;i++)
+            for (unsigned i=0; i<number_cell_states;++i)
             {
                 double cell_value = cell_iter->GetCellData()->GetItem(extended_cell_property->GetStateVariableRegister()->RetrieveStateVariableName(i))
                 cell_iter->GetCellData()->SetItem(extended_cell_property->GetStateVariableRegister()->RetrieveStateVariableName(i), cell_value - this_cell_total_concentration[i]);
@@ -295,7 +295,7 @@ void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Up
             for (unsigned pd = 0; pd < PROBLEM_DIM; pd++)
             {         
                 // Start with whatever was left over from the transport ode call
-                for (unsigned i = 0; i < SPACE_DIM+1; i++)
+                for (unsigned i = 0; i < SPACE_DIM+1; ++i)
                 {                    
                     double nodal_value = solution_repl[p_element->GetNodeGlobalIndex(i) + pd]; // serialised [node number * pde_index]
                     solution_vector_at_cell[pd] += nodal_value * weights(i);
@@ -312,7 +312,7 @@ void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Up
                 StateVariableRegister* p_bulk_register_cell = transport_cell_property->GetBulkStateVariableRegister();
                 std::vector<double> subset_vector_at_cell(p_bulk_register_cell->GetNumStateVariables(), 0.0);
                 unsigned domain_index = 0;
-                for (unsigned i = 0; i < p_bulk_register_cell->GetNumStateVariables(); i++)
+                for (unsigned i = 0; i < p_bulk_register_cell->GetNumStateVariables(); ++i)
                 {
                     if (p_bulk_register_pde->IsStateVariablePresent(p_bulk_register_cell->RetrieveStateVariableName(i)))
                     {
@@ -333,7 +333,7 @@ void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Up
                 StateVariableRegister* p_bulk_register_cell = membrane_cell_property->GetBulkStateVariableRegister();
                 std::vector<double> subset_vector_at_cell(p_bulk_register_cell->GetNumStateVariables(), 0.0);
                 unsigned domain_index = 0;
-                for (unsigned i = 0; i < p_bulk_register_cell->GetNumStateVariables(); i++)
+                for (unsigned i = 0; i < p_bulk_register_cell->GetNumStateVariables(); ++i)
                 {
                     if (p_bulk_register_pde->IsStateVariablePresent(p_bulk_register_cell->RetrieveStateVariableName(i)))
                     {
