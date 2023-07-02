@@ -1,17 +1,17 @@
 #include "AbstractChemical.hpp"
 
-AbstractChemical::AbstractChemical(std::string chemicalName, 
-    double size,
-    double mass,
-    int valence,
-    std::string chemicalDimensions)
+AbstractChemical::AbstractChemical(std::string chemicalName,
+                                   double size,
+                                   double mass,
+                                   int valence,
+                                   std::string chemicalDimensions)
     : mChemicalName(chemicalName),
       mSize(size),
       mMass(mass),
       mValence(valence),
       mChemicalDimensions(chemicalDimensions)
 {
-    // default to not knowing the formation energy
+    // Default to not knowing the formation energy
     SetChemicalFormationGibbs(0.0);
     SetChemicalFormationKnown(false);
 }
@@ -26,9 +26,9 @@ void AbstractChemical::SetChemicalSize(double size)
     mSize = size;
 }
 
-void AbstractChemical::SetChemicalMass(double Mass)
+void AbstractChemical::SetChemicalMass(double mass)
 {
-    mMass = Mass;
+    mMass = mass;
 }
 
 void AbstractChemical::SetChemicalValence(int valence)
@@ -83,7 +83,7 @@ bool AbstractChemical::IsChemicalFormationKnown()
 
 double AbstractChemical::GetChemicalFormationGibbs()
 {
-    return mFormationKnown;
+    return mFormationGibbs;
 }
 
 std::string GetChemicalType()
