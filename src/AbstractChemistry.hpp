@@ -1,12 +1,8 @@
 #ifndef ABSTRACTCHEMISTRY_HPP_
 #define ABSTRACTCHEMISTRY_HPP_
 
-#include "AbstractChemical.hpp"
-
-#include <string>
-#include <tuple>
-#include <vector>
 #include <iostream>
+#include "AbstractChemical.hpp"
 
 /**
  * Abstract property to contain information about the collection of chemical 
