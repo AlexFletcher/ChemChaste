@@ -2,101 +2,103 @@
 
 AbstractChemistry::AbstractChemistry()
 {
-    mpChemicalVector = std::vector<AbstractChemical*>();
+    mChemicalVector = std::vector<AbstractChemical*>();
     mChemicalNames = std::vector<std::string>();
-    mChemicalDimensions  =std::vector<std::string>();
+    mChemicalDimensions = std::vector<std::string>();
     mNumberChemicals = 0;
 }
 
-void AbstractChemistry::AddChemistry(AbstractChemistry *newChemistry)
+AbstractChemistry::~AbstractChemistry()
 {
-    // function to combine the chemistries in the effort to form an overall union of  chemistries, for use as domain
-    // domain chemistry determines the solver state varaible ordering.  chemistry classes need not be of the same type, 
-    // hence derived classes will need to dertermine the "highest class" define the highest class to be the parent chemistry
+}
 
-    // want to add the chemical vectors while preventing duplicates
-
-    std::vector<AbstractChemical*> :: iterator chemical_iter;
-    std::vector<AbstractChemical*> chemicalVector = newChemistry->rGetChemicalVector();
-
-    for (chemical_iter = chemicalVector.begin(); chemical_iter != chemicalVector.end(); ++chemical_iter)
+void AbstractChemistry::AddChemistry(AbstractChemistry* pChemistry)
+{
+    /*
+     * Function to combine the chemistries in the effort to form an overall 
+     * union of chemistries, for use as domain. Domain chemistry determines 
+     * the solver state variable ordering. Chemistry classes need not be of 
+     * the same type, hence derived classes will need to determine the 
+     * "highest class" define the highest class to be the parent chemistry. 
+     * Want to add the chemical vectors while preventing duplicates.
+     */
+    std::vector<AbstractChemical*> chemical_vector = pChemistry->rGetChemicalVector();
+    for (auto chemical_iter = chemical_vector.begin(); 
+         chemical_iter != chemical_vector.end();
+         ++chemical_iter)
     {
-        // add each of the chemicals from the additional chemistry in turn.  This checks for duplicates implicitly
+        /* 
+         * Add each of the chemicals from the additional chemistry in turn 
+         * (this checks for duplicates implicitly).
+         */
         AddChemical(dynamic_cast<AbstractChemical*>(*chemical_iter));
     }
 }
 
-void AbstractChemistry::AddChemical(AbstractChemical *chemical)
+void AbstractChemistry::AddChemical(AbstractChemical* pChemical)
 {
-    // function to check whether a chemical is present, if not add to mChemicalVector
-
-    bool newChem = false;
-    if (mpChemicalVector.empty())
+    bool new_chem = false;
+    if (mChemicalVector.empty())
     {
-        newChem = true;
+        new_chem = true;
     }
     else
     {
-    
-        newChem = CheckChemical(chemical);
+        new_chem = CheckChemical(chemical);
     }
 
-    if (newChem)
-    {
-    
+    if (new_chem)
+    {    
         UpdateChemicalVectors(chemical);
     }
-
 }
 
-bool AbstractChemistry::CheckChemical(AbstractChemical* chemical)
+bool AbstractChemistry::CheckChemical(AbstractChemical* pChemical)
 {
-    // function to return true if chemical is already in class chemical vector
-
-    bool newChem  = true;
-
-    for (std::vector<AbstractChemical*> :: iterator chemical_iter = mpChemicalVector.begin(); 
-        chemical_iter != mpChemicalVector.end();
+    bool new_chem  = true;
+    for (auto chemical_iter = mChemicalVector.begin(); 
+         chemical_iter != mChemicalVector.end();
          ++chemical_iter)
     {    
-        if (chemical->GetChemicalName() ==  dynamic_cast<AbstractChemical*>(*chemical_iter)->GetChemicalName())
+        if (pChemical->GetChemicalName() == dynamic_cast<AbstractChemical*>(*chemical_iter)->GetChemicalName())
         {
-            newChem = false;
+            new_chem = false;
             break;
         }
     }
-    return newChem;
+    return new_chem;
 }
 
-void AbstractChemistry::UpdateChemicalVectors(AbstractChemical* chemical)
+void AbstractChemistry::UpdateChemicalVectors(AbstractChemical* pChemical)
 {
-    mpChemicalVector.push_back(chemical);
-    // properties needed for general function
-    mChemicalNames.push_back(chemical->GetChemicalName()); // may remove this, will lead to duplicates
-    mChemicalDimensions.push_back(chemical->GetChemicalDimensions()); // may remove this, will lead to duplicates
-    // further properties, to be overridded in derived classes
-    mNumberChemicals +=1;
-    return;
+    mChemicalVector.push_back(pChemical);
+
+    // Properties needed for general function
+    mChemicalNames.push_back(pChemical->GetChemicalName()); // may remove this, will lead to duplicates
+    mChemicalDimensions.push_back(pChemical->GetChemicalDimensions()); // may remove this, will lead to duplicates
+
+    // Further properties, to be overridded in derived classes
+    mNumberChemicals++;
 }
 
 void AbstractChemistry::SetChemicalVector(std::vector<AbstractChemical*> chemicalVector)
 {
-    mpChemicalVector=chemicalVector;
+    mChemicalVector = chemicalVector;
 }
 
 void AbstractChemistry::SetChemicalNames(std::vector<std::string> chemicalNames)
 {
-    mChemicalNames=chemicalNames;
+    mChemicalNames = chemicalNames;
 }
 
 void AbstractChemistry::SetChemicalDimensions(std::vector<std::string> chemicalDimensions)
 {
-    mChemicalDimensions=chemicalDimensions;
+    mChemicalDimensions = chemicalDimensions;
 }
 
 std::vector<AbstractChemical*> AbstractChemistry::rGetChemicalVector()
 {
-    return mpChemicalVector;
+    return mChemicalVector;
 }
 
 std::vector<std::string> AbstractChemistry::GetChemicalNames()
@@ -112,6 +114,7 @@ std::string AbstractChemistry::GetChemicalNamesByIndex(unsigned index)
     }
     else
     {
+        ///\todo replace with EXCEPTION
         std::cout << "Error: AbstractChemistry::GetChemicalNamesByIndex(unsigned index), index out of bounds" << std::endl;
         return "Null";
     } 
@@ -119,20 +122,19 @@ std::string AbstractChemistry::GetChemicalNamesByIndex(unsigned index)
 
 unsigned AbstractChemistry::GetChemicalIndexByName(std::string name)
 {
-    unsigned index=0;
-    for (std::vector<AbstractChemical*> :: iterator chemical_iter = mpChemicalVector.begin(); 
-        chemical_iter != mpChemicalVector.end();
+    unsigned index = 0;
+    for (auto chemical_iter = mChemicalVector.begin(); 
+         chemical_iter != mChemicalVector.end();
          ++chemical_iter)
     {
-    
-        if (name ==  dynamic_cast<AbstractChemical*>(*chemical_iter)->GetChemicalName())
+        if (name == dynamic_cast<AbstractChemical*>(*chemical_iter)->GetChemicalName())
         {
             break;
         }
-        index +=1;
+        index++;
     }
 
-    // if name is not one of the chemicals then index== mNumberChemicals; would throw error later on
+    // If name is not one of the chemicals then index == mNumberChemicals; would throw error later on
     return index;
 }
 
@@ -149,15 +151,14 @@ std::string AbstractChemistry::GetChemicalDimensionsByIndex(unsigned index)
     }
     else
     {
+        ///\todo replace with EXCEPTION
         std::cout << "Error: AbstractChemistry::GetChemicalDimensionsByIndex(unsigned index), index out of bounds" << std::endl;
-       return "Null";
+        return "Null";
     } 
-    
 }
 
 std::string AbstractChemistry::GetChemistryType()
 {
-    // virtual function to be overriden in derived classes, used to identify properties to compy when adding chemistries
     return "AbstractChemistry";
 }
 
