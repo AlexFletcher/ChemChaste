@@ -63,9 +63,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~AbstractChemical()
-    {
-    };
+    virtual ~AbstractChemical();
 
     /**
      * Set mChemicalName.
