@@ -47,10 +47,7 @@ public:
         // Process boundary conditions
         BoundaryConditionsContainer<2,2,1> bcc;
         std::vector<ConstBoundaryCondition<2>*> vector_const_bcs;
-        for (unsigned pde_dim = 0; pde_dim < 1; pde_dim++)
-        {
-            vector_const_bcs.push_back(new ConstBoundaryCondition<2>(params.bcValuesNeu[pde_dim]));
-        }
+        vector_const_bcs.push_back(new ConstBoundaryCondition<2>(params.bcValuesNeu[0]));
         for (TetrahedralMesh<2,2>::BoundaryElementIterator boundary_iter = p_mesh->GetBoundaryElementIteratorBegin();
              boundary_iter != p_mesh->GetBoundaryElementIteratorEnd();
              boundary_iter++)
@@ -72,7 +69,7 @@ public:
             }
             
             column_num = i - (row_num - 1)*(params.MeshDimensions[0] + 1);
-            if ((column_num==3 || column_num==4 || column_num==5 || column_num==6) && (row_num ==3 || row_num ==4 || row_num ==5 || row_num ==6 ))
+            if ((column_num==3 || column_num==4 || column_num==5 || column_num==6) && (row_num ==3 || row_num ==4 || row_num ==5 || row_num ==6))
             {
                 // Serialised for nodes
                 init_conds[i] = fabs(params.initValuesHigh[0]);
@@ -146,7 +143,7 @@ public:
             }
             
             column_num = i - (row_num-1)*(params.MeshDimensions[0]+1);
-            if ((column_num==3 || column_num==4 || column_num==5 || column_num==6) && (row_num ==3 || row_num ==4 || row_num ==5 || row_num ==6 ))
+            if ((column_num==3 || column_num==4 || column_num==5 || column_num==6) && (row_num ==3 || row_num ==4 || row_num ==5 || row_num ==6))
             {
                 for (unsigned pde_dim=0; pde_dim<1; pde_dim++)
                 {   // serialised for nodes

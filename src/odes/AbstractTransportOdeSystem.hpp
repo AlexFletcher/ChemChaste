@@ -282,9 +282,9 @@ void AbstractTransportOdeSystem::CheckConcentration(const std::vector<double>& r
     }
 }
 
-void AbstractTransportOdeSystem::SetIsCheckConcentration(bool IsCheckConcentration)
+void AbstractTransportOdeSystem::SetIsCheckConcentration(bool isCheckConcentration)
 {
-    mIsCheckConcentration = IsCheckConcentration;
+    mIsCheckConcentration = isCheckConcentration;
 }
 
 bool AbstractTransportOdeSystem::GetIsCheckConcentration()

@@ -239,7 +239,8 @@ public:
             std::vector<bool> areNeumannBoundaryConditions(1, true);
             std::vector<ConstBoundaryCondition<2>*> vectorConstBCs;
             
-            for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+            for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
                 vectorConstBCs.push_back(new ConstBoundaryCondition<2>(bcValues[pdeDim]));
             }
             
@@ -284,19 +285,13 @@ public:
                 
                 if (column_num < 10)
                 {
-                    for (unsigned pdeDim = 0; pdeDim < 1; pdeDim++)
-                    {   
-                        // serialised for nodes
-                        init_conds[1*i + pdeDim] = fabs(initValuesHigh[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
-                    }
+                    // Serialised for nodes
+                    init_conds[i] = fabs(initValuesHigh[0]);
                 }
                 else
                 {
-                    for (unsigned pdeDim = 0; pdeDim < 1; pdeDim++)
-                    {   
-                        // serialised for nodes
-                        init_conds[1*i + pdeDim] = fabs(initValuesLow[pdeDim]);// + RandomNumberGenerator::Instance()->ranf());
-                    }
+                    // Serialised for nodes
+                    init_conds[i] = fabs(initValuesLow[0]);
                 }
             }
             // PETSc Vec
@@ -602,7 +597,8 @@ public:
 
             std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
             std::vector<boost::shared_ptr<AbstractIvpOdeSolver> > solverSystem;
-            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+            for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
                 // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
                 odeSystem.push_back(new AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem(chemicalReactionSystem));
                 boost::shared_ptr<AbstractIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
@@ -829,8 +825,7 @@ public:
                                 given_cell_root+"Srn.txt",
                                 given_cell_root+"InitialCellConcentrations.csv",
                                 given_cell_root+"TransportReactions.txt",
-                                given_cell_root+"MembraneReactions.txt"
-                                );
+                                given_cell_root+"MembraneReactions.txt");
 
             cells.push_back(p_cell_reader->GetCellPtr());
         }   

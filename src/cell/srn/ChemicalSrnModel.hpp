@@ -66,4 +66,4 @@ public:
     void OutputSrnModelParameters(out_stream& rParamsFile);
 };
 
-#endif
+#endif /* CHEMICALSRNMODEL_HPP_ */

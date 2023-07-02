@@ -71,4 +71,4 @@ public:
     }
 };
 
-#endif
+#endif /* INHOMOGENOUSSCHNACKENBERGPDE_HPP_ */

@@ -1,13 +1,11 @@
-#ifndef InhomogenousParabolicPdeForCoupledOdeSystemInhibitedDiffusion_templated_HPP_
-#define InhomogenousParabolicPdeForCoupledOdeSystemInhibitedDiffusion_templated_HPP_
-
+#ifndef INHOMOGENOUSPARABOLICPDEFORCOUPLEDODESYSTEMINHIBITEDDIFFUSION_TEMPLATED_HPP_
+#define INHOMOGENOUSPARABOLICPDEFORCOUPLEDODESYSTEMINHIBITEDDIFFUSION_TEMPLATED_HPP_
 
 #include "InhomogenousParabolicPdeForCoupledOdeSystem_templated.hpp"
 #include "ChastePoint.hpp"
 #include "Element.hpp"
 #include <string>
 #include "StateVariableRegister.hpp"
-//#include "ChemicalDomainFieldForCellCoupling.hpp"
 #include "ChemicalDomainField_templated.hpp"
 #include "AbstractDomainField_templated.hpp"
 
@@ -90,4 +88,4 @@ public:
     }
 };
 
-#endif 
+#endif /* INHOMOGENOUSPARABOLICPDEFORCOUPLEDODESYSTEMINHIBITEDDIFFUSION_TEMPLATED_HPP_ */

@@ -332,16 +332,16 @@ public:
 
             // set up chemical domain field
             ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>
-                                    (   VDCC.bulkDataFileRoot,
-                                        VDCC.bulkDataFileRoot+cellLabelFilename,
-                                        VDCC.bulkDataFileRoot+cellKeyFilename,
-                                        VDCC.bulkDataFileRoot+VDCC.domainFilename, 
-                                        VDCC.bulkDataFileRoot+VDCC.domainKeyFilename, 
-                                        VDCC.bulkDataFileRoot+VDCC.odeLabelFilename, 
-                                        VDCC.bulkDataFileRoot+VDCC.odeKeyFilename, 
-                                        VDCC.bulkDataFileRoot+VDCC.diffusionFilename, 
-                                        VDCC.bulkDataFileRoot+VDCC.initialConditionsFilename, 
-                                        VDCC.bulkDataFileRoot+VDCC.boundaryConditionsFilename);
+                                    (VDCC.bulkDataFileRoot,
+                                     VDCC.bulkDataFileRoot+cellLabelFilename,
+                                     VDCC.bulkDataFileRoot+cellKeyFilename,
+                                     VDCC.bulkDataFileRoot+VDCC.domainFilename, 
+                                     VDCC.bulkDataFileRoot+VDCC.domainKeyFilename, 
+                                     VDCC.bulkDataFileRoot+VDCC.odeLabelFilename, 
+                                     VDCC.bulkDataFileRoot+VDCC.odeKeyFilename, 
+                                     VDCC.bulkDataFileRoot+VDCC.diffusionFilename, 
+                                     VDCC.bulkDataFileRoot+VDCC.initialConditionsFilename, 
+                                     VDCC.bulkDataFileRoot+VDCC.boundaryConditionsFilename);
 
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
@@ -491,16 +491,16 @@ public:
 
             // set up chemical domain field
             ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>
-                                    (   VDSC.bulkDataFileRoot,
-                                        VDSC.bulkDataFileRoot+cellLabelFilename,
-                                        VDSC.bulkDataFileRoot+cellKeyFilename,
-                                        VDSC.bulkDataFileRoot+VDSC.domainFilename, 
-                                        VDSC.bulkDataFileRoot+VDSC.domainKeyFilename, 
-                                        VDSC.bulkDataFileRoot+VDSC.odeLabelFilename, 
-                                        VDSC.bulkDataFileRoot+VDSC.odeKeyFilename, 
-                                        VDSC.bulkDataFileRoot+VDSC.diffusionFilename, 
-                                        VDSC.bulkDataFileRoot+VDSC.initialConditionsFilename, 
-                                        VDSC.bulkDataFileRoot+VDSC.boundaryConditionsFilename);
+                                   (VDSC.bulkDataFileRoot,
+                                    VDSC.bulkDataFileRoot+cellLabelFilename,
+                                    VDSC.bulkDataFileRoot+cellKeyFilename,
+                                    VDSC.bulkDataFileRoot+VDSC.domainFilename, 
+                                    VDSC.bulkDataFileRoot+VDSC.domainKeyFilename, 
+                                    VDSC.bulkDataFileRoot+VDSC.odeLabelFilename, 
+                                    VDSC.bulkDataFileRoot+VDSC.odeKeyFilename, 
+                                    VDSC.bulkDataFileRoot+VDSC.diffusionFilename, 
+                                    VDSC.bulkDataFileRoot+VDSC.initialConditionsFilename, 
+                                    VDSC.bulkDataFileRoot+VDSC.boundaryConditionsFilename);
 
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
@@ -646,7 +646,7 @@ public:
 
             // set up chemical domain field
             ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>
-                                    (   ER.bulkDataFileRoot,
+                                       (ER.bulkDataFileRoot,
                                         ER.bulkDataFileRoot+cellLabelFilename,
                                         ER.bulkDataFileRoot+cellKeyFilename,
                                         ER.bulkDataFileRoot+ER.domainFilename, 
@@ -797,7 +797,7 @@ public:
 
             // set up chemical domain field
             ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>
-                                    (   ML.bulkDataFileRoot,
+                                       (ML.bulkDataFileRoot,
                                         ML.bulkDataFileRoot+cellLabelFilename,
                                         ML.bulkDataFileRoot+cellKeyFilename,
                                         ML.bulkDataFileRoot+ML.domainFilename, 

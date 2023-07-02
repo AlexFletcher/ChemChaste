@@ -40,4 +40,4 @@ public:
 
 };
 
-#endif
+#endif /* CHEMICALSRNFROMFILE_HPP_ */

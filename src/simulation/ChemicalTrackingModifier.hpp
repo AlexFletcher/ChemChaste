@@ -90,7 +90,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::SetupSRNFromCellData(Abstr
 {
     rCellPopulation.Update();
 
-    for (typename AbstractCellPopulation<SPACE_DIM>::Iterator cell_iter = rCellPopulation.Begin();
+    for (auto cell_iter = rCellPopulation.Begin();
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {   
@@ -121,9 +121,9 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCel
     // Make sure the cell population is updated, i.e cell cycle, cell state
     rCellPopulation.Update();
 
-    unsigned count=0;
-    /// run through each cell in the population and update the internal chemical concentrations in cellData
-    for (typename AbstractCellPopulation<SPACE_DIM>::Iterator cell_iter = rCellPopulation.Begin();
+    // Run through each cell in the population and update the internal chemical concentrations in cellData
+    unsigned count = 0;
+    for (auto cell_iter = rCellPopulation.Begin();
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {   
@@ -147,7 +147,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCel
         // Update the cell data based on any transport properties
         if (cell_iter->template HasCellProperty<TransportCellProperty>())
         {
-            boost::shared_ptr<TransportCellProperty> transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->template rGetCellPropertyCollection(). template GetPropertiesType<TransportCellProperty>().GetProperty());
+            auto transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->template rGetCellPropertyCollection(). template GetPropertiesType<TransportCellProperty>().GetProperty());
 
             AbstractChemistry* this_cell_transport_chemistry = transport_cell_property->GetTransportReactionSystem()->GetCellChemistry();
             unsigned numTransportChemicals = this_cell_transport_chemistry->GetNumberChemicals();
@@ -167,7 +167,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCel
         // Update the cell data based on any membrane properties
         if (cell_iter->template HasCellProperty<MembraneCellProperty>())
         {
-            boost::shared_ptr<MembraneCellProperty> membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->template rGetCellPropertyCollection(). template GetPropertiesType<MembraneCellProperty>().GetProperty());
+            auto membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->template rGetCellPropertyCollection(). template GetPropertiesType<MembraneCellProperty>().GetProperty());
 
             AbstractChemistry* this_cell_membrane_chemistry = membrane_cell_property->GetMembraneReactionSystem()->GetCellChemistry();
             unsigned numMembraneChemicals = this_cell_membrane_chemistry->GetNumberChemicals();
@@ -187,7 +187,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCel
         // update the internal cell states for the properties
         if (cell_iter->template HasCellProperty<TransportCellProperty>())
         {
-            boost::shared_ptr<TransportCellProperty> transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->template rGetCellPropertyCollection(). template GetPropertiesType<TransportCellProperty>().GetProperty());
+            auto transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->template rGetCellPropertyCollection(). template GetPropertiesType<TransportCellProperty>().GetProperty());
 
             AbstractChemistry* this_cell_transport_chemistry = transport_cell_property->GetTransportReactionSystem()->GetCellChemistry();
             unsigned numTransportChemicals = this_cell_transport_chemistry->GetNumberChemicals();
@@ -207,7 +207,7 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCel
 
         if (cell_iter->template HasCellProperty<MembraneCellProperty>())
         {
-            boost::shared_ptr<MembraneCellProperty> membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->template rGetCellPropertyCollection(). template GetPropertiesType<MembraneCellProperty>().GetProperty());
+            auto membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->template rGetCellPropertyCollection(). template GetPropertiesType<MembraneCellProperty>().GetProperty());
 
             AbstractChemistry* this_cell_membrane_chemistry = membrane_cell_property->GetMembraneReactionSystem()->GetCellChemistry();
             unsigned numMembraneChemicals = this_cell_membrane_chemistry->GetNumberChemicals();
@@ -279,9 +279,9 @@ void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::CheckConcentration(const d
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::SetIsCheckConcentration(bool IsCheckConcentration)
+void ChemicalTrackingModifier<ELEMENT_DIM,SPACE_DIM>::SetIsCheckConcentration(bool isCheckConcentration)
 {
-    mIsCheckConcentration = IsCheckConcentration;
+    mIsCheckConcentration = isCheckConcentration;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>

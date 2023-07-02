@@ -1,13 +1,11 @@
 #ifndef EXTENDEDCELLPROPERTY_HPP_
 #define EXTENDEDCELLPROPERTY_HPP_
 
-//general includes
 #include <vector>
 #include <string>
 #include <math.h>
 #include <boost/shared_ptr.hpp>
 
-// chaste includes
 #include "ChemicalCellProperty.hpp"
 
 // base case assume spherical geometry

@@ -443,11 +443,13 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
         std::vector<unsigned> stoichVector;
 
         // remove potential whitespace from zeroth character, seen in case <->
-        if (isspace(str.c_str()[0])){
+        if (isspace(str.c_str()[0]))
+{
             str.erase(str.begin());
         }
 
-        while (delimiter_pos != std::string::npos){
+        while (delimiter_pos != std::string::npos)
+{
 
             // update position of character pointer based on species separator " + " default
             delimiter_pos = str.find(mSpeciesSeparator,old_delimiter_pos);

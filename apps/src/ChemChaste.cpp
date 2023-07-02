@@ -197,16 +197,16 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
    
             // run the domain field set up and parse files
             ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>
-                                    (   variables_map["domain_file_root"].as<std::string>(),
-                                        variables_map["cell_file_root"].as<std::string>()+variables_map["cell_file"].as<std::string>(),
-                                        variables_map["cell_file_root"].as<std::string>()+variables_map["cell_key_file"].as<std::string>(),
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["domain_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["domain_key_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["ode_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["ode_key_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["boundary_conditions"].as<std::string>());
+                                    (variables_map["domain_file_root"].as<std::string>(),
+                                     variables_map["cell_file_root"].as<std::string>()+variables_map["cell_file"].as<std::string>(),
+                                     variables_map["cell_file_root"].as<std::string>()+variables_map["cell_key_file"].as<std::string>(),
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["domain_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["domain_key_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["ode_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["ode_key_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["boundary_conditions"].as<std::string>());
             
             TetrahedralMesh<elementDim,spaceDim>* p_cell_mesh = p_Pde_field->rGetCellMesh();
 
@@ -233,12 +233,10 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                                     given_cell_root+"TransportReactions.txt",
                                     given_cell_root+"MembraneReactions.txt",
                                     numericalCellID,
-                                    true                                                                    
-                                    );
+                                    true);
 
                 cells.push_back(p_cell_reader->GetCellPtr());
             }   
-
 
             NodeBasedCellPopulation<spaceDim> cell_population(mesh, cells);
             
@@ -246,8 +244,6 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             ChastePoint<spaceDim> lower(variables_map["cell_mesh_origin"].as<double>(),variables_map["cell_mesh_origin"].as<double>());
             ChastePoint<spaceDim> upper(10.0, 10.0);
             MAKE_PTR_ARGS(ChasteCuboid<spaceDim>, p_cuboid, (lower, upper));
-
-
             
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
@@ -257,8 +253,6 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             cell_population.AddCellWriter<CellAgesWriter>();
             cell_population.AddCellWriter<CellLocationIndexWriter>();
             cell_population.AddCellWriter<CellAnalyticsWriter>();
-
-
 
             OffLatticeSimulation<spaceDim> simulator(cell_population);
 
@@ -275,29 +269,25 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             simulator.AddForce(p_linear_force);
 
             simulator.Solve();
-
         }
         else
         {
             // set up chemical domain field
             ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>
-                                    (   variables_map["domain_file_root"].as<std::string>(),
-                                        variables_map["domain_file_root"].as<std::string>()+"",
-                                        variables_map["domain_file_root"].as<std::string>()+"",
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["domain_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["domain_key_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["ode_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["ode_key_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["boundary_conditions"].as<std::string>());
+                                    (variables_map["domain_file_root"].as<std::string>(),
+                                     variables_map["domain_file_root"].as<std::string>()+"",
+                                     variables_map["domain_file_root"].as<std::string>()+"",
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["domain_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["domain_key_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["ode_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["ode_key_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["boundary_conditions"].as<std::string>());
             
-
-
             // make mesh of cell with associated mesh based cell population
             HoneycombMeshGenerator generator(variables_map["number_cells_across"].as<unsigned>(),variables_map["number_cells_high"].as<unsigned>());    // Parameters are: cells across, cells up
             MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
-
 
             std::vector<unsigned> location_indices = generator.GetCellLocationIndices();
 
@@ -316,8 +306,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["srn_file"].as<std::string>(),
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["cell_initial_conditions"].as<std::string>(),
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["transport_property"].as<std::string>(),
-                                    variables_map["cell_file_root"].as<std::string>()+variables_map["membrane_property"].as<std::string>()
-                                    );
+                                    variables_map["cell_file_root"].as<std::string>()+variables_map["membrane_property"].as<std::string>());
 
                 if (is_first_cell)
                 {
@@ -364,30 +353,27 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             p_linear_force->SetCutOffLength(variables_map["linear_force_cutoff"].as<double>());
             simulator.AddForce(p_linear_force);
 
-    
             simulator.Solve();
         }
-
     }
     else if (variables_map["simulation_type"].as<std::string>()=="complex_cell")
     {
-
         if (variables_map["cell_file"].as<std::string>()!="")
         {
             // cell population topology is defined so read cell layer from files
    
             // run the domain field set up and parse files
             ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>
-                                    (   variables_map["domain_file_root"].as<std::string>(),
-                                        variables_map["cell_file_root"].as<std::string>()+variables_map["cell_file"].as<std::string>(),
-                                        variables_map["cell_file_root"].as<std::string>()+variables_map["cell_key_file"].as<std::string>(),
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["domain_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["domain_key_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["ode_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["ode_key_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["boundary_conditions"].as<std::string>());
+                                    (variables_map["domain_file_root"].as<std::string>(),
+                                     variables_map["cell_file_root"].as<std::string>()+variables_map["cell_file"].as<std::string>(),
+                                     variables_map["cell_file_root"].as<std::string>()+variables_map["cell_key_file"].as<std::string>(),
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["domain_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["domain_key_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["ode_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["ode_key_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["boundary_conditions"].as<std::string>());
             
             TetrahedralMesh<elementDim,spaceDim>* p_cell_mesh = p_Pde_field->rGetCellMesh();
 
@@ -415,12 +401,10 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                                     given_cell_root+"TransportReactions.txt",
                                     given_cell_root+"MembraneReactions.txt",
                                     numericalCellID,
-                                    true                                                                    
-                                    );
+                                    true);
 
                 cells.push_back(p_cell_reader->GetCellPtr());
             }   
-
 
             NodeBasedCellPopulation<spaceDim> cell_population(mesh, cells);
             
@@ -428,9 +412,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             ChastePoint<spaceDim> lower(variables_map["cell_mesh_origin"].as<double>(),variables_map["cell_mesh_origin"].as<double>());
             ChastePoint<spaceDim> upper(10.0, 10.0);
             MAKE_PTR_ARGS(ChasteCuboid<spaceDim>, p_cuboid, (lower, upper));
-
-
-            
+           
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
             boost::shared_ptr<ChemicalTrackingModifier<spaceDim,elementDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<spaceDim,elementDim>()); //= chemical_structure->rGetPtrChemicalTrackingModifier();
@@ -439,8 +421,6 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             cell_population.AddCellWriter<CellAgesWriter>();
             cell_population.AddCellWriter<CellLocationIndexWriter>();
             cell_population.AddCellWriter<CellAnalyticsWriter>();
-
-
 
             OffLatticeSimulation<spaceDim> simulator(cell_population);
 
@@ -457,29 +437,25 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             simulator.AddForce(p_linear_force);
 
             simulator.Solve();
-
         }
         else
         {
             // set up chemical domain field
             ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>* p_Pde_field = new ChemicalDomainFieldForCellCoupling<elementDim,spaceDim,probDim>
-                                    (   variables_map["domain_file_root"].as<std::string>(),
-                                        variables_map["domain_file_root"].as<std::string>()+"",
-                                        variables_map["domain_file_root"].as<std::string>()+"",
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["domain_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["domain_key_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["ode_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["ode_key_file"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>(), 
-                                        variables_map["domain_file_root"].as<std::string>()+variables_map["boundary_conditions"].as<std::string>());
+                                    (variables_map["domain_file_root"].as<std::string>(),
+                                     variables_map["domain_file_root"].as<std::string>()+"",
+                                     variables_map["domain_file_root"].as<std::string>()+"",
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["domain_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["domain_key_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["ode_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["ode_key_file"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["initial_conditions"].as<std::string>(), 
+                                     variables_map["domain_file_root"].as<std::string>()+variables_map["boundary_conditions"].as<std::string>());
             
-
-
             // make mesh of cell with associated mesh based cell population
             HoneycombMeshGenerator generator(variables_map["number_cells_across"].as<unsigned>(),variables_map["number_cells_high"].as<unsigned>());    // Parameters are: cells across, cells up
             MutableMesh<elementDim,spaceDim>* p_mesh = generator.GetMesh();
-
 
             std::vector<unsigned> location_indices = generator.GetCellLocationIndices();
 
@@ -492,15 +468,13 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
             {
                 // provide each cell with a transport cell property and membrane property, cell cycle, wild type states
-
                 ComplexCellFromFile* p_cell_reader = new ComplexCellFromFile(
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["cell_cycle_file"].as<std::string>(), 
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["cell_division_rules"].as<std::string>(),
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["srn_file"].as<std::string>(),
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["cell_initial_conditions"].as<std::string>(),
                                     variables_map["cell_file_root"].as<std::string>()+variables_map["transport_property"].as<std::string>(),
-                                    variables_map["cell_file_root"].as<std::string>()+variables_map["membrane_property"].as<std::string>()
-                                    );
+                                    variables_map["cell_file_root"].as<std::string>()+variables_map["membrane_property"].as<std::string>());
 
                 if (is_first_cell)
                 {
@@ -515,12 +489,9 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             ChastePoint<spaceDim> upper(10.0, 10.0);
             MAKE_PTR_ARGS(ChasteCuboid<spaceDim>, p_cuboid, (lower, upper));
 
-            
-            
             boost::shared_ptr<ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>> p_pde_modifier(new ParabolicBoxDomainPdeSystemModifier<elementDim,spaceDim,probDim>(p_Pde_field, p_cuboid));
             
             boost::shared_ptr<ChemicalTrackingModifier<elementDim,spaceDim>> p_chemical_tracking_modifier(new ChemicalTrackingModifier<elementDim,spaceDim>());
-            
 
             NodesOnlyMesh<spaceDim> mesh;
 
@@ -529,7 +500,6 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             NodeBasedCellPopulation<spaceDim> cell_population(mesh, cells);   
 
             // writers
-
             cell_population.AddCellWriter<CellIdWriter>();
             cell_population.AddCellWriter<CellAgesWriter>();
             cell_population.AddCellWriter<CellLocationIndexWriter>();
@@ -547,14 +517,11 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
             p_linear_force->SetCutOffLength(variables_map["linear_force_cutoff"].as<double>());
             simulator.AddForce(p_linear_force);
 
-    
             simulator.Solve();
         }
-
     }
     else if (variables_map["simulation_type"].as<std::string>()=="domain_only")
     {
-
         // run the domain field set up and parse files
         ChemicalDomainFieldTemplated<elementDim,spaceDim,probDim>* p_field = new ChemicalDomainFieldTemplated<elementDim,spaceDim,probDim>(
                     variables_map["domain_file_root"].as<std::string>(),
@@ -562,8 +529,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                     variables_map["domain_file_root"].as<std::string>()+variables_map["domain_key_file"].as<std::string>(), 
                     variables_map["domain_file_root"].as<std::string>()+variables_map["ode_file"].as<std::string>(), 
                     variables_map["domain_file_root"].as<std::string>()+variables_map["ode_key_file"].as<std::string>(), 
-                    variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>() 
-                    );
+                    variables_map["domain_file_root"].as<std::string>()+variables_map["diffusion_database"].as<std::string>());
 
         TetrahedralMesh<elementDim,spaceDim>* p_mesh = p_field->rGetDomainFeMesh();
 
@@ -582,7 +548,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
 
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+        {
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(boundaryConditionValues[pdeDim]));
         }
 
@@ -610,7 +577,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
 
         std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
         std::vector<boost::shared_ptr<AbstractIvpOdeSolver> > solverSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(p_field->GetOdeSystem()[i]);
             boost::shared_ptr<AbstractIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
@@ -680,7 +648,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -817,7 +786,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -969,7 +939,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         //std::vector<bool> areNeumannBoundaryConditions(probDim, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -1080,7 +1051,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -1192,7 +1164,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
   
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -1298,7 +1271,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -1433,7 +1407,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -1569,7 +1544,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -1704,7 +1680,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -1841,7 +1818,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -1978,7 +1956,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -2130,7 +2109,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         //std::vector<bool> areNeumannBoundaryConditions(probDim, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -2241,7 +2221,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -2353,7 +2334,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
   
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -2622,7 +2604,7 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
                 }
                 
                 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-                if (columnNum==2 && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
+                if (columnNum==2 && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6))
                 {
                     for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
                     {   // serialised for nodes
@@ -2734,7 +2716,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -2871,7 +2854,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -3006,7 +2990,8 @@ void SetupAndRunSimulation(unsigned simulation_id, boost::program_options::varia
         std::vector<bool> areNeumannBoundaryConditions(1, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         

@@ -227,7 +227,7 @@ bool AbstractDiffusiveChemistry::CheckChemical(AbstractDiffusiveChemical* pChemi
     bool is_new_chem  = true;
     for (std::vector<AbstractChemical*>::iterator chem_iter = mpChemicalVector.begin();
          chem_iter != mpChemicalVector.end();
-         ++chem_iter )
+         ++chem_iter)
     {
         if (pChemical->GetChemicalName() == dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->GetChemicalName())
         {   
@@ -242,7 +242,7 @@ void AbstractDiffusiveChemistry::UpdateDomainVector(AbstractDiffusiveChemical* p
 {
     for (std::vector<AbstractChemical*>::iterator chem_iter = mpChemicalVector.begin();
          chem_iter != mpChemicalVector.end();
-         ++chem_iter )
+         ++chem_iter)
     {
         // Assume the new chemical is known in the system
         if (pChemical->GetChemicalName() == dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter)->GetChemicalName())

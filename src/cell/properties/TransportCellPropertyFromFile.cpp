@@ -11,7 +11,7 @@ TransportCellPropertyFromFile::TransportCellPropertyFromFile(std::string filenam
 
 void TransportCellPropertyFromFile::SetUpTransportProperty(CellPtr pCell)
 {
-    boost::shared_ptr<TransportCellProperty> p_transport = boost::static_pointer_cast<TransportCellProperty>(pCell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+    auto p_transport = boost::static_pointer_cast<TransportCellProperty>(pCell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
     AbstractTransportReactionSystemFromFile* p_transport_system_from_file = new AbstractTransportReactionSystemFromFile(mTransportFilename);
 
     p_transport->SetUp(p_transport_system_from_file, pCell);

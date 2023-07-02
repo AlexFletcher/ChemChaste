@@ -75,4 +75,4 @@ public:
     void SetChemicalDivsionRules(std::vector<std::string>);
 };
 
-#endif
+#endif /* COMPLEXCELL_HPP_ */

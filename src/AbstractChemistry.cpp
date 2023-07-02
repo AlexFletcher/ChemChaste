@@ -5,7 +5,7 @@ AbstractChemistry::AbstractChemistry()
     mpChemicalVector = std::vector<AbstractChemical*>();
     mChemicalNames = std::vector<std::string>();
     mChemicalDimensions  =std::vector<std::string>();
-    mNumberChemicals =0;
+    mNumberChemicals = 0;
 }
 
 void AbstractChemistry::AddChemistry(AbstractChemistry *newChemistry)
@@ -19,7 +19,7 @@ void AbstractChemistry::AddChemistry(AbstractChemistry *newChemistry)
     std::vector<AbstractChemical*> :: iterator chemical_iter;
     std::vector<AbstractChemical*> chemicalVector = newChemistry->rGetChemicalVector();
 
-    for (chemical_iter = chemicalVector.begin(); chemical_iter != chemicalVector.end(); ++chemical_iter )
+    for (chemical_iter = chemicalVector.begin(); chemical_iter != chemicalVector.end(); ++chemical_iter)
     {
         // add each of the chemicals from the additional chemistry in turn.  This checks for duplicates implicitly
         AddChemical(dynamic_cast<AbstractChemical*>(*chemical_iter));

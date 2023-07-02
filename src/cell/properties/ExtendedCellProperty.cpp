@@ -1200,5 +1200,3 @@ std::vector<double> ExtendedCellProperty<SPACE_DIM>::GetNextTimestepConcentratio
 {
     return mNextTimestepConcentrationVector;
 }
-
-#endif /* EXTENDEDCELLPROPERTY_HPP_ */

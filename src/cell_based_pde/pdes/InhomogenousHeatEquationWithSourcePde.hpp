@@ -22,10 +22,8 @@ private:
 
 public:
 
-    InhomogenousHeatEquationWithSourcePde(
-        std::vector<double> diffusionRates,
-        double source = 1.0
-                        )
+    InhomogenousHeatEquationWithSourcePde(std::vector<double> diffusionRates,
+                                          double source = 1.0)
         : InhomogenousParabolicPdeForCoupledOdeSystemTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(diffusionRates),
           mDiffusionRates(diffusionRates),
           mSource(source)
@@ -44,14 +42,11 @@ public:
 
     c_matrix<double, SPACE_DIM, SPACE_DIM> ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>& rX, unsigned pdeIndex, Element<ELEMENT_DIM,SPACE_DIM>* pElement=NULL)
     {
-        assert(pdeIndex<PROBLEM_DIM);
-
+        assert(pdeIndex < PROBLEM_DIM);
         c_matrix<double, SPACE_DIM, SPACE_DIM> diffusion_term;
-
-        diffusion_term = mDiffusionRates[pdeIndex]*identity_matrix<double>(SPACE_DIM);
-        
+        diffusion_term = mDiffusionRates[pdeIndex]*identity_matrix<double>(SPACE_DIM);       
         return diffusion_term;
     }
 };
 
-#endif
+#endif /* INHOMOGENOUSHEATSOURCEPDE_HPP_ */

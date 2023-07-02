@@ -385,7 +385,8 @@ boost::shared_ptr<BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>
     boost::shared_ptr<BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>> p_bcc(new BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>());
     std::vector<ConstBoundaryCondition<SPACE_DIM>*> vectorConstBCs;
 
-    for (unsigned pdeDim=0; pdeDim<PROBLEM_DIM; pdeDim++){
+    for (unsigned pdeDim=0; pdeDim<PROBLEM_DIM; pdeDim++)
+{
         vectorConstBCs.push_back(new ConstBoundaryCondition<SPACE_DIM>(boundaryConditionValues[pdeDim]));
     }
 
@@ -520,8 +521,8 @@ void ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Setu
 
     for (unsigned dim=0; dim<SPACE_DIM; dim++)
     {
-        unsigned count=0;
-        while ( meshSegment[dim] < mCartesianCellLayerDimensions[dim]*mCartesianCellLayerScaleXY[dim])
+        unsigned count = 0;
+        while (meshSegment[dim] < mCartesianCellLayerDimensions[dim]*mCartesianCellLayerScaleXY[dim])
         {
             meshSegment[dim]  = count*meshScale[dim];
             count=count+1;
@@ -726,19 +727,20 @@ void ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::MapT
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 std::string ChemicalDomainFieldForCellCoupling<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ReturnCellKeyFromCellLabel(std::string cellLabel)
 {
-    bool IsFound = false;
+    bool is_found = false;
 
     for (unsigned key_index=0; key_index<mCellKeys.size(); key_index++)
     {
         if (mCellKeys[key_index][0] == cellLabel)
         {
             return mCellKeys[key_index][1];
-            IsFound=true;
+            is_found  =true;
             break;
         }
     }
-    if (!IsFound)
+    if (!is_found)
     {
+        ///\todo replace with EXCEPTION
         std::cout << "Error: ChemicalDomainFieldForCellCoupling::ReturnCellKeyFromCellLabel, cell label not found" << std::endl;
         return "Null";
     }

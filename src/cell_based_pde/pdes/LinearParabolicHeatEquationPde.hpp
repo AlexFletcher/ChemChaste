@@ -48,4 +48,4 @@ public:
     }
 };
 
-#endif
+#endif /* LINEARPARABOLICHEATPDE_HPP_ */

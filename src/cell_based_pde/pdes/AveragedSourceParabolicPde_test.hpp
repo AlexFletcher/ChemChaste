@@ -185,4 +185,4 @@ inline void load_construct_data(
 }
 } // namespace ...
 
-#endif /*AVERAGESOURCEPARABOLICPDE_HPP_*/
+#endif /* AVERAGESOURCEPARABOLICPDE_TEST_HPP_ */

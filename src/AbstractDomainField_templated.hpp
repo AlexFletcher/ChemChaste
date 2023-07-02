@@ -113,25 +113,19 @@ protected:
 
     std::vector<double> mBoundaryConditionValues;
 
-
     bool mIsHoneyCombMesh;
-
-
 
 public:
 
-    AbstractDomainFieldTemplated(
-                        //TetrahedralMesh<ELEMENT_DIM,SPACE_DIM>*,
-                        std::string domainLabelFilename="", 
-                        std::string domainKeyFilename="", 
-                        std::string odeLabelFilename="", 
-                        std::string odeKeyFilename="", 
-                        std::string diffusionFilename="",
-                        bool isHoneyCombMesh=false,
-                        std::vector<double> labelOrigin = std::vector<double>(),
-                        std::vector<double> cartesianCellScaleXY = std::vector<double>(),
-                        std::vector<double> cartesianOdeScaleXY = std::vector<double>()
-                        );
+    AbstractDomainFieldTemplated(std::string domainLabelFilename="", 
+                                 std::string domainKeyFilename="", 
+                                 std::string odeLabelFilename="", 
+                                 std::string odeKeyFilename="", 
+                                 std::string diffusionFilename="",
+                                 bool isHoneyCombMesh=false,
+                                 std::vector<double> labelOrigin = std::vector<double>(),
+                                 std::vector<double> cartesianCellScaleXY = std::vector<double>(),
+                                 std::vector<double> cartesianOdeScaleXY = std::vector<double>());
 
     virtual ~AbstractDomainFieldTemplated()
     {
@@ -166,7 +160,7 @@ public:
 
     virtual double ReturnDiffusionValueFromStateNameAndDomainLabel(std::string stateName, std::string domainLabel = "");
 
-    virtual void ParseInitialConditionsFromFile(std::string initialConditionsFilename, bool IsPerturbInitialConditions=false );
+    virtual void ParseInitialConditionsFromFile(std::string initialConditionsFilename, bool isPerturbInitialConditions=false);
 
     virtual void ParseBoundaryConditionsFromFile(std::string);
 
@@ -177,8 +171,6 @@ public:
         return "AbstractDomainFieldTemplated";
     };
 
-
-    // return methods
     std::string ReturnNodeOdeLabelAtPosition(const c_vector<double,2>&);
 
     std::string ReturnDomainLabelAtPosition(const c_vector<double,2>&);
@@ -191,8 +183,6 @@ public:
 
     std::string ReturnDomainKeyFromDomainLabel(std::string);
 
-   
-    // file read methods
     std::vector<std::vector<std::string>> ReadMatrix(std::string);
 
     std::vector<std::string> parseMatrixLineString(std::string);
@@ -207,8 +197,6 @@ public:
 
     void ReadDiffusionDatabase();
 
-
-    // auxiliary methods
     std::vector<std::string> ReturnUnique(std::vector<std::string>);
 
     std::vector<std::string> ReturnUnique(std::vector<std::vector<std::string>>);
@@ -218,8 +206,6 @@ public:
     void printVector(std::vector<std::string>);
 
     bool PerturbInitialConditionTest(std::vector<std::string>);
-
-    // display methods
 
     void PrintDiffusionDomain();
 
@@ -235,7 +221,6 @@ public:
 
     void PrintDiffusionDatabase();
 
-    // set methods
     void SetNumDomains(unsigned);
 
     void SetDomainLabels(std::vector<std::vector<std::string>>);
@@ -294,7 +279,6 @@ public:
 
     void SetLabelOrigin(std::vector<double>);
 
-    // get methods
     unsigned GetNumDomains();
 
     std::vector<std::vector<std::string>> GetDomainLabels();
@@ -354,12 +338,7 @@ public:
     std::vector<double> GetBoundaryConditionValues();
 
     std::vector<double> GetLabelOrigin();
-
 };
-
-//======================================================================//
-//                          IMPLEMENTATION                              //  
-//======================================================================//
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
 AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::AbstractDomainFieldTemplated(
@@ -654,7 +633,7 @@ std::vector<std::string> AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROB
 }
 
 template<unsigned ELEMENT_DIM,unsigned SPACE_DIM,unsigned PROBLEM_DIM>
-void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseInitialConditionsFromFile(std::string initialConditionsFilename, bool IsPerturbInitialConditions)
+void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseInitialConditionsFromFile(std::string initialConditionsFilename, bool isPerturbInitialConditions)
 {
 
     // read the input intial conditions file as a matrix of strings, first column state name, 
@@ -705,7 +684,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseIniti
                            
                             // store the condition, serialised for nodes
 
-                            if (PerturbInitialConditionTest(initialConditionsAsStrings[inputState])||IsPerturbInitialConditions)
+                            if (PerturbInitialConditionTest(initialConditionsAsStrings[inputState])||isPerturbInitialConditions)
                             {
                             
                                 init_conds[numStateVariables*node_index + pdeDim] =fabs(std::stod(initialConditionsAsStrings[inputState][2]) + RandomNumberGenerator::Instance()->ranf());
@@ -724,7 +703,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseIniti
                         //state data found, but no sub domain is specied, assume present for all sub domains if sub domains are indeed present
                         is_found_state = true;
                         // store the condition, serialised for nodes
-                        if (IsPerturbInitialConditions)
+                        if (isPerturbInitialConditions)
                         {
                             init_conds[numStateVariables*node_index + pdeDim] =fabs(std::stod(initialConditionsAsStrings[inputState][2]) + RandomNumberGenerator::Instance()->ranf());
                         }
@@ -742,7 +721,7 @@ void AbstractDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::ParseIniti
             {
                 // state in system but not in the input data, default to 0.0
                 // initialse the missing condition, serialised for nodes    
-                if (IsPerturbInitialConditions)
+                if (isPerturbInitialConditions)
                 {
                     // initialise to a small perturbation, otherwise leave as intitialised 0.0
                     init_conds[numStateVariables*node_index + pdeDim] =fabs(RandomNumberGenerator::Instance()->ranf());
@@ -1203,9 +1182,11 @@ std::vector<std::vector<std::string>> AbstractDomainFieldTemplated<ELEMENT_DIM,S
     std::vector<std::vector<std::string>> outputMatrix = std::vector<std::vector<std::string>>();
 
     // check file exists and is openable
-    if (inputFile.is_open()){
+    if (inputFile.is_open())
+{
         // open the matrix file
-        while (getline(inputFile,line)){
+        while (getline(inputFile,line))
+{
             // while the file still has lines not read.
             // read line left to right, top to bottom.
             if (!line.empty())

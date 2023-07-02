@@ -8,7 +8,7 @@ CellAnalyticsPropertyFromCellId::CellAnalyticsPropertyFromCellId(unsigned cellId
 
 void CellAnalyticsPropertyFromCellId::SetUpCellAnalyticsProperty(CellPtr p_cell)
 {
-    boost::shared_ptr<CellAnalyticsProperty> p_analytics = boost::static_pointer_cast<CellAnalyticsProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<CellAnalyticsProperty>().GetProperty());
+    auto p_analytics = boost::static_pointer_cast<CellAnalyticsProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<CellAnalyticsProperty>().GetProperty());
     p_analytics->SetUp(p_cell, mCellId);
     SetCellAnalyticsProperty(p_analytics);
 }

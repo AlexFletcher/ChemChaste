@@ -205,12 +205,12 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
                     
                     // don't want to parse info in this function
                     // test for reversibility in reaction string
-                    bool IsReversible = TestReversibility(react);
+                    bool is_reversible = TestReversibility(react);
                     // species, stoich
                     std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsigned>>> ReactionStringTuple = ParseReactionString(react);
-                    // reaction type, IsReversible, Substrates, Products, stoichSubstrates, stoichProducts, reaction information
+                    // reaction type, is_reversible, Substrates, Products, stoichSubstrates, stoichProducts, reaction information
                     // std::string, bool, std::vector<std::string>, std::vector<std::string>, std::vector<unsigned>, std::vector<unsigned>, std::string 
-                    system.push_back(std::make_tuple(reactionType, IsReversible, std::get<0>(ReactionStringTuple)[0], std::get<0>(ReactionStringTuple)[1], std::get<1>(ReactionStringTuple)[0], std::get<1>(ReactionStringTuple)[1], reactionInfo));
+                    system.push_back(std::make_tuple(reactionType, is_reversible, std::get<0>(ReactionStringTuple)[0], std::get<0>(ReactionStringTuple)[1], std::get<1>(ReactionStringTuple)[0], std::get<1>(ReactionStringTuple)[1], reactionInfo));
                     numReactions += 1;
                 }
             }
@@ -228,14 +228,14 @@ std::vector<std::tuple<std::string, bool, std::vector<std::string>, std::vector<
 bool AbstractReactionSystemFromFile::TestReversibility(std::string line)
 {
     // test for reversibility in reaction string
-    bool IsReversible =  false;
+    bool is_reversible =  false;
     if (line.find(mReverDelimiter) != std::string::npos)
     {
         // set reversible switch
-        IsReversible =  true;
+        is_reversible =  true;
     }
 
-    return IsReversible;
+    return is_reversible;
 }
 
 std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsigned>>> AbstractReactionSystemFromFile::ParseReactionString(std::string line)
@@ -248,9 +248,9 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
     // parse into complexes, two complexes per reaction (head and tail of reaction arrows)
     std::vector<std::string> complexes;
 
-    bool IsReversible = TestReversibility(line);
+    bool is_reversible = TestReversibility(line);
     std::string delim;
-    if (IsReversible)
+    if (is_reversible)
     {
         delim = mReverDelimiter;
     }
@@ -283,7 +283,8 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             str.erase(str.begin());
         }
 
-        while (delimiter_pos != std::string::npos){
+        while (delimiter_pos != std::string::npos)
+{
 
             // Update position of character pointer based on species separator " + " default
             delimiter_pos = str.find(mSpeciesSeparator,old_delimiter_pos);
@@ -314,7 +315,8 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
             // remove whitespace and memory container size to ensure like for like comparisons are consistent
             tempString.erase(remove_if (tempString.begin(), tempString.end(), isspace), tempString.end());
 
-            if (stoichValue==0){
+            if (stoichValue==0)
+{
                 // skip the push_back of the zero entry
             }
             else
@@ -330,7 +332,7 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
 
     return std::make_tuple(species, stoich);
 
-    // return reaction type, stoich, species, IsReversible, reaction info (info is dependent on reaction type)
+    // return reaction type, stoich, species, is_reversible, reaction info (info is dependent on reaction type)
 }
 
 std::string AbstractReactionSystemFromFile::ParseReactionInformation(std::string line)

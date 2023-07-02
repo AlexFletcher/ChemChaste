@@ -1,5 +1,5 @@
-#ifndef TRANSPORTCELLPROPERTY_HPP
-#define TRANSPORTCELLPROPERTY_HPP
+#ifndef TRANSPORTCELLPROPERTY_HPP_
+#define TRANSPORTCELLPROPERTY_HPP_
 
 #include <vector>
 #include <boost/shared_ptr.hpp>

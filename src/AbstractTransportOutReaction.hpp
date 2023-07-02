@@ -29,19 +29,16 @@ private:
 public:
 
     // constructor
-    AbstractTransportOutReaction(   std::vector<AbstractChemical*> bulkReactionSpecies = std::vector<AbstractChemical*>(),
-                                    std::vector<AbstractChemical*> cellReactionSpecies = std::vector<AbstractChemical*>(),
-                                    std::vector<unsigned> stoichBulk = std::vector<unsigned>(),
-                                    std::vector<unsigned> stoichCell = std::vector<unsigned>(),
-                                    double reactionRate = 1.0
-    );
+    AbstractTransportOutReaction(std::vector<AbstractChemical*> bulkReactionSpecies = std::vector<AbstractChemical*>(),
+                                 std::vector<AbstractChemical*> cellReactionSpecies = std::vector<AbstractChemical*>(),
+                                 std::vector<unsigned> stoichBulk = std::vector<unsigned>(),
+                                 std::vector<unsigned> stoichCell = std::vector<unsigned>(),
+                                 double reactionRate = 1.0);
     
-
     // destructor
     virtual ~AbstractTransportOutReaction()
     {
     };
-
 
     // function to take in pointer to current concentration state vector of the state vector for change in cocnentration.  Basic update via multiplying by constant reaction rate
     virtual void React(AbstractChemistry*, AbstractChemistry*,const std::vector<double>&, const std::vector<double>&, std::vector<double>&, std::vector<double>&);
@@ -51,12 +48,11 @@ public:
     virtual void ParseReactionInformation(std::string, bool);
 
     // file read functions
-    void SetIrreversibleDelimiter(std::string );
-
+    void SetIrreversibleDelimiter(std::string);
 
     std::string GetIrreversibleDelimiter();
 
-    void SetIrreversibleRateName(std::string );
+    void SetIrreversibleRateName(std::string);
 
     std::string GetIrreversibleRateName();
 };
@@ -71,8 +67,7 @@ AbstractTransportOutReaction::AbstractTransportOutReaction(     std::vector<Abst
                             cellReactionSpecies,
                             stoichBulk,
                             stoichCell,
-                            reactionRate
-                            )
+                            reactionRate)
 {
     mIrreversibleDelimiter = "<-";
     mIrreversibleRateName = "kr =";
@@ -95,7 +90,7 @@ void AbstractTransportOutReaction::React(AbstractChemistry* bulkChemistry, Abstr
             chem_iter != p_bulk_chemical_vector.end();
             ++chem_iter, ++index)
     {
-        AbstractChemical *p_bulk_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+        AbstractChemical* p_bulk_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         // for each system chemical, parse whether it is involved in this reaction.
         for (unsigned j=0; j<mNumBulkSpecies; j++)
@@ -114,7 +109,7 @@ void AbstractTransportOutReaction::React(AbstractChemistry* bulkChemistry, Abstr
             chem_iter != p_cell_chemical_vector.end();
             ++chem_iter, ++index)
     {
-        AbstractChemical *p_cell_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+        AbstractChemical* p_cell_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         // for each cell chemical, parse whether it is involved in this reaction.
         for (unsigned j=0; j<mNumCellSpecies; j++)

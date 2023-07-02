@@ -1,5 +1,5 @@
-#ifndef TRANSPORTCELLPROPERTYFROMFILE_HPP
-#define TRANSPORTCELLPROPERTYFROMFILE_HPP
+#ifndef TRANSPORTCELLPROPERTYFROMFILE_HPP_
+#define TRANSPORTCELLPROPERTYFROMFILE_HPP_
 
 #include <vector>
 #include <boost/shared_ptr.hpp>
@@ -38,4 +38,4 @@ public:
     boost::shared_ptr<TransportCellProperty> GetTransportProperty();
 };
 
-#endif
+#endif /* TRANSPORTCELLPROPERTYFROMFILE_HPP_ */

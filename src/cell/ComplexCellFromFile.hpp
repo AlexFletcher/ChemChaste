@@ -1,5 +1,5 @@
-#ifndef COMPLEXCELLFROMFILE_HPP
-#define COMPLEXCELLFROMFILE_HPP
+#ifndef COMPLEXCELLFROMFILE_HPP_
+#define COMPLEXCELLFROMFILE_HPP_
 
 #include "ComplexCell.hpp"
 #include "SimpleChemicalThresholdCellCycleFromFile.hpp"
@@ -438,7 +438,7 @@ void ComplexCellFromFile::SetUpCellDivisionRules(CellPtr p_cell)
         chemicalDivisionRules.push_back(divisionDatabase[row][1]);
     }
 
-    boost::shared_ptr<ComplexCell> p_cell_new = boost::static_pointer_cast<ComplexCell>(p_cell);
+    auto p_cell_new = boost::static_pointer_cast<ComplexCell>(p_cell);
     p_cell_new->SetChemicalNames(chemicalNames);
 
     p_cell_new->SetChemicalDivsionRules(chemicalDivisionRules);
@@ -704,4 +704,4 @@ void ComplexCellFromFile::SetFullChemicalStateRegister(StateVariableRegister* pR
     mpFullChemicalStateRegister = pRegister;
 }
 
-#endif
+#endif /* COMPLEXCELLFROMFILE_HPP_ */

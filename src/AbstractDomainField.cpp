@@ -177,7 +177,7 @@ std::vector<std::string> AbstractDomainField::LabelNodesWithOdes()
     return serialisedNodeLabels;
 }
 
-void AbstractDomainField::ParseInitialConditionsFromFile(std::string initialConditionsFilename, bool IsPerturbInitialConditions)
+void AbstractDomainField::ParseInitialConditionsFromFile(std::string initialConditionsFilename, bool isPerturbInitialConditions)
 {
     // read the input intial conditions file as a matrix of strings, first column state name, 
     // 2nd column subdomain, 3rd column value.
@@ -225,7 +225,7 @@ void AbstractDomainField::ParseInitialConditionsFromFile(std::string initialCond
                            
                             // store the condition, serialised for nodes
 
-                            if (PerturbInitialConditionTest(initialConditionsAsStrings[inputState])||IsPerturbInitialConditions)
+                            if (PerturbInitialConditionTest(initialConditionsAsStrings[inputState])||isPerturbInitialConditions)
                             {
                             
                                 init_conds[num_state_variables*node_index + pdeDim] =fabs(std::stod(initialConditionsAsStrings[inputState][2]) + RandomNumberGenerator::Instance()->ranf());
@@ -243,7 +243,7 @@ void AbstractDomainField::ParseInitialConditionsFromFile(std::string initialCond
                         //state data found, but no sub domain is specied, assume present for all sub domains if sub domains are indeed present
                         is_found_state = true;
                         // store the condition, serialised for nodes
-                        if (IsPerturbInitialConditions)
+                        if (isPerturbInitialConditions)
                         {
                             init_conds[num_state_variables*node_index + pdeDim] =fabs(std::stod(initialConditionsAsStrings[inputState][2]) + RandomNumberGenerator::Instance()->ranf());
                         }
@@ -260,7 +260,7 @@ void AbstractDomainField::ParseInitialConditionsFromFile(std::string initialCond
             {
                 // state in system but not in the input data, default to 0.0
                 // initialse the missing condition, serialised for nodes    
-                if (IsPerturbInitialConditions)
+                if (isPerturbInitialConditions)
                 {
                     // initialise to a small perturbation, otherwise leave as intitialised 0.0
                     init_conds[num_state_variables*node_index + pdeDim] =fabs(RandomNumberGenerator::Instance()->ranf());

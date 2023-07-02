@@ -68,7 +68,7 @@ CellPtr ChemicalCell::Divide()
     // Transport property
     if (mCellPropertyCollection.HasProperty<TransportCellProperty>())
     {
-        boost::shared_ptr<TransportCellProperty> p_transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(mCellPropertyCollection.GetPropertiesType<TransportCellProperty>().GetProperty());
+        auto p_transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(mCellPropertyCollection.GetPropertiesType<TransportCellProperty>().GetProperty());
         AbstractChemistry* p_transport_chemistry = p_transport_cell_property->GetTransportReactionSystem()->GetCellChemistry();
 
         // Add the cell chemistry due to transport
@@ -78,7 +78,7 @@ CellPtr ChemicalCell::Divide()
     // Membrane property
     if (mCellPropertyCollection.HasProperty<MembraneCellProperty>())
     {
-        boost::shared_ptr<MembraneCellProperty> p_membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(mCellPropertyCollection.GetPropertiesType<MembraneCellProperty>().GetProperty());
+        auto p_membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(mCellPropertyCollection.GetPropertiesType<MembraneCellProperty>().GetProperty());
         AbstractChemistry* membraneChemistry = p_membrane_cell_property->GetMembraneReactionSystem()->GetCellChemistry();
 
         // Add the cell chemistry due to membrane
@@ -115,14 +115,14 @@ CellPtr ChemicalCell::Divide()
     if (mCellPropertyCollection.HasProperty<TransportCellProperty>())
     {
         // Parent property
-        boost::shared_ptr<TransportCellProperty> p_transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(mCellPropertyCollection.GetPropertiesType<TransportCellProperty>().GetProperty());
+        auto p_transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(mCellPropertyCollection.GetPropertiesType<TransportCellProperty>().GetProperty());
         AbstractChemistry* p_transport_chemistry = p_transport_cell_property->GetTransportReactionSystem()->GetCellChemistry();
 
         // Create new transport property
         daughter_property_collection.RemoveProperty(p_transport_cell_property);
 
         // Use copy construtor
-        boost::shared_ptr<TransportCellProperty> p_daughter_transport_property(new TransportCellProperty(*p_transport_cell_property));
+        auto p_daughter_transport_property(new TransportCellProperty(*p_transport_cell_property));
         daughter_property_collection.AddProperty(p_daughter_transport_property);
 
         // Split the properties betwene the two cells
@@ -134,7 +134,7 @@ CellPtr ChemicalCell::Divide()
     if (mCellPropertyCollection.HasProperty<MembraneCellProperty>())
     {
         // Parent property
-        boost::shared_ptr<MembraneCellProperty> p_membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(mCellPropertyCollection.GetPropertiesType<MembraneCellProperty>().GetProperty());
+        auto p_membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(mCellPropertyCollection.GetPropertiesType<MembraneCellProperty>().GetProperty());
 
         // Create new membrane property
         daughter_property_collection.RemoveProperty(p_membrane_cell_property);
@@ -150,7 +150,7 @@ CellPtr ChemicalCell::Divide()
     if (mCellPropertyCollection.HasProperty<CellAnalyticsProperty>())
     {
         // Parent property
-        boost::shared_ptr<CellAnalyticsProperty> p_cell_analytics_property = boost::static_pointer_cast<CellAnalyticsProperty>(mCellPropertyCollection.GetPropertiesType<CellAnalyticsProperty>().GetProperty());
+        auto p_cell_analytics_property = boost::static_pointer_cast<CellAnalyticsProperty>(mCellPropertyCollection.GetPropertiesType<CellAnalyticsProperty>().GetProperty());
 
         // Create new cell analytics property
         daughter_property_collection.RemoveProperty(p_cell_analytics_property);

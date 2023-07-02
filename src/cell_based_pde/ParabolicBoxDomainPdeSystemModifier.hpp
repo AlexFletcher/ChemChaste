@@ -181,10 +181,10 @@ boost::shared_ptr<BoundaryConditionsContainer<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void ParabolicBoxDomainPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::SetupInitialSolutionVector(AbstractCellPopulation<ELEMENT_DIM,SPACE_DIM>& rCellPopulation)
 { 
-    // set up the initial conditions for the pde mesh
+    // Set up the initial conditions for the pde mesh
 
-    // set up cell initial conditions
-    for (typename AbstractCellPopulation<SPACE_DIM>::Iterator cell_iter = rCellPopulation.Begin();
+    // Set up cell initial conditions
+    for (auto cell_iter = rCellPopulation.Begin();
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
@@ -192,8 +192,8 @@ void ParabolicBoxDomainPdeSystemModifier<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::Set
 
         if (prop_collection.HasProperty<ChemicalCellProperty>())
         {   
-            // the cell has it's own concentration vector that may be related to the domain
-            boost::shared_ptr<ChemicalCellProperty> property = boost::static_pointer_cast<ChemicalCellProperty>(prop_collection.GetPropertiesType<ChemicalCellProperty>().GetProperty());
+            // The cell has its own concentration vector that may be related to the domain
+            auto property = boost::static_pointer_cast<ChemicalCellProperty>(prop_collection.GetPropertiesType<ChemicalCellProperty>().GetProperty());
 
             std::vector<std::string> cell_species_names = property->GetStateVariableRegister()->GetStateVariableRegisterVector();
   

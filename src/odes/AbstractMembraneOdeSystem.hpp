@@ -271,9 +271,9 @@ void AbstractMembraneOdeSystem::CheckConcentration(const std::vector<double>& rY
     }
 }
 
-void AbstractMembraneOdeSystem::SetIsCheckConcentration(bool IsCheckConcentration)
+void AbstractMembraneOdeSystem::SetIsCheckConcentration(bool isCheckConcentration)
 {
-    mIsCheckConcentration = IsCheckConcentration;
+    mIsCheckConcentration = isCheckConcentration;
 }
 
 bool AbstractMembraneOdeSystem::GetIsCheckConcentration()

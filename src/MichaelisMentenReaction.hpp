@@ -99,7 +99,7 @@ void MichaelisMentenReaction::UpdateReactionRate(AbstractChemistry* systemChemis
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
-        AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+        AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         for (unsigned j=0; j<mNumSubstrates; j++)
         {
@@ -121,7 +121,7 @@ std::string MichaelisMentenReaction::GetReactionType()
     return "MichaelisMentenReaction";
 }
 
-void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=false)
+void MichaelisMentenReaction::ParseReactionInformation(std::string reaction_information, bool isReversible=false)
 {
     // read in from the reaction information string the necessary information for the Michaelis-Menten kinetics;
     // a basic multiplicative rate constant, Michaelis-Menten constant and enzyme (catalytic) identifiers (names)

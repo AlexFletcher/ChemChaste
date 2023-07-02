@@ -62,4 +62,4 @@ public:
     void SetSplitRatio(double);
 };
 
-#endif
+#endif /* CHEMICALCELL_HPP_ */

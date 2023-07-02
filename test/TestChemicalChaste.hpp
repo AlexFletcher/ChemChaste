@@ -54,8 +54,8 @@ class TestChemicalChaste : public AbstractCellBasedTestSuite
 public:
     void TestChemicalClass()
     {
-        AbstractChemical *p_chemical = new AbstractChemical("A");
-        AbstractDiffusiveChemical *p_chemical_diffusive = new AbstractDiffusiveChemical("B");
+        AbstractChemical* p_chemical = new AbstractChemical("A");
+        AbstractDiffusiveChemical* p_chemical_diffusive = new AbstractDiffusiveChemical("B");
         p_chemical_diffusive->AddDiffusiveDomain("test",1.0);
 
         std::cout << "Name: "<<p_chemical->GetChemicalName()  << std::endl;
@@ -76,7 +76,7 @@ public:
 
         // get the diffusive value for [1]
         std::cout << "dynamic casting" << std::endl;
-        AbstractDiffusiveChemical *p_chemical_diffusive_2 = dynamic_cast<AbstractDiffusiveChemical*>(p_chemicalVector[1]);
+        AbstractDiffusiveChemical* p_chemical_diffusive_2 = dynamic_cast<AbstractDiffusiveChemical*>(p_chemicalVector[1]);
         std::cout << p_chemical_diffusive_2->GetChemicalDiffusivityVector()[0]  << std::endl;
     }
 
@@ -92,7 +92,7 @@ public:
 
         for (unsigned species=0; species<Number_of_species; species++)
         {
-            AbstractChemical *p_chemical = new AbstractChemical(ChemicalNames[species]);
+            AbstractChemical* p_chemical = new AbstractChemical(ChemicalNames[species]);
             p_chemistry->AddChemical(p_chemical);
             
         }
@@ -111,7 +111,7 @@ public:
 
         for (unsigned species=0; species<Number_of_species; species++)
         {
-            AbstractDiffusiveChemical *p_chemical = new AbstractDiffusiveChemical(ChemicalNamesDiffusive[species]);
+            AbstractDiffusiveChemical* p_chemical = new AbstractDiffusiveChemical(ChemicalNamesDiffusive[species]);
             p_chemical->AddDiffusiveDomain(DiffusionDomains[species],DiffusionRates[species]);
             p_diffusive_chemistry->AddChemical(p_chemical);
         }
@@ -128,7 +128,7 @@ public:
 
         // upcast AbstractDiffusiveChemistry to AbstractChemistry
         // maybe need to template this function? currently add to the highest class to avoid object splicing
-        AbstractChemistry *p_newChemistry = dynamic_cast<AbstractChemistry*>(p_diffusive_chemistry);
+        AbstractChemistry* p_newChemistry = dynamic_cast<AbstractChemistry*>(p_diffusive_chemistry);
 
         p_chemistry->AddChemistry(p_newChemistry);
         std::vector<std::string> ChemistryNames = p_chemistry->GetChemicalNames();
@@ -142,12 +142,12 @@ public:
 
         // upcast AbstractDiffusiveChemistry to AbstractChemistry
         // maybe need to template this function? currently add to the highest class to avoid object splicing
-        AbstractDiffusiveChemistry *p_newDiffusiveChemistry = new AbstractDiffusiveChemistry();
+        AbstractDiffusiveChemistry* p_newDiffusiveChemistry = new AbstractDiffusiveChemistry();
         std::vector<std::string> NewChemicalNamesDiffusive = {"Ud", "Y"};
         std::vector<double> NewDiffusionRates = {3,4};
         for (unsigned species=0; species<Number_of_species; species++)
         {
-            AbstractDiffusiveChemical *p_chemical = new AbstractDiffusiveChemical(NewChemicalNamesDiffusive[species]);
+            AbstractDiffusiveChemical* p_chemical = new AbstractDiffusiveChemical(NewChemicalNamesDiffusive[species]);
             p_chemical->AddDiffusiveDomain(DiffusionDomains[species],NewDiffusionRates[species]);
             p_newDiffusiveChemistry->AddChemical(p_chemical); //shouldn't add the first species Ud as is a duplicate of name and domain
         }
@@ -180,13 +180,13 @@ public:
             if (IsDiffusing[species])
             {
                 // use the diffusive chemical root
-                AbstractDiffusiveChemical *p_chemical = new AbstractDiffusiveChemical(ChemicalNames[species]);
+                AbstractDiffusiveChemical* p_chemical = new AbstractDiffusiveChemical(ChemicalNames[species]);
                 p_chemical->AddDiffusiveDomain(DiffusionDomains[species],DiffusionRates[species]);
                 p_chemicalVector.push_back(p_chemical);
             }
             else{
                 // use the non-diffusive chemical root
-                AbstractChemical *p_chemical = new AbstractChemical(ChemicalNames[species]);
+                AbstractChemical* p_chemical = new AbstractChemical(ChemicalNames[species]);
 
                 p_chemicalVector.push_back(p_chemical);
             }
@@ -201,11 +201,11 @@ public:
             double Diffusivity = 0.0;
             std::string Domain = "None";
             
-            AbstractChemical *p_2 = dynamic_cast<AbstractChemical*>(*chem_iter);
+            AbstractChemical* p_2 = dynamic_cast<AbstractChemical*>(*chem_iter);
             
-            if ( p_2->GetChemicalType() == "AbstractDiffusiveChemical")
+            if (p_2->GetChemicalType() == "AbstractDiffusiveChemical")
             {
-                AbstractDiffusiveChemical *p_chemical = dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter);
+                AbstractDiffusiveChemical* p_chemical = dynamic_cast<AbstractDiffusiveChemical*>(*chem_iter);
                 ChemicalName = p_chemical->GetChemicalName();
                 Diffusivity = p_chemical->GetChemicalDiffusivityVector()[0];
                 Domain = p_chemical->GetDiffusiveDomainVector()[0];
@@ -244,7 +244,7 @@ public:
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
         // r3: 0->V           forwardRate = 0.3
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -254,7 +254,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -358,7 +358,7 @@ public:
         // r2: 0 <-> U          forwardRate = 0.1 reverseRate = 0.2
         // r3: 0->V           forwardRate = 0.3
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -368,7 +368,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -455,7 +455,8 @@ public:
         std::vector<bool> areNeumannBoundaryConditions(probDim, false);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
         
@@ -500,7 +501,8 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             if (i==22 || i==77)
             {
@@ -577,7 +579,8 @@ public:
         std::vector<bool> areNeumannBoundaryConditions(probDim, false);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
 
@@ -622,7 +625,8 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             if (i==22)
             {
@@ -691,7 +695,7 @@ public:
         std::vector<unsigned> stoich_substrates_3 = std::vector<unsigned>();
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -701,7 +705,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -775,7 +779,7 @@ public:
         std::vector<unsigned> stoich_substrates_3 = std::vector<unsigned>();
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -785,7 +789,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -845,7 +849,8 @@ public:
         std::vector<bool> areNeumannBoundaryConditions(probDim, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
 
@@ -889,7 +894,8 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
@@ -897,7 +903,7 @@ public:
 
         // PDE system
         std::cout << "Pde" << std::endl;
-        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
+        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2);
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
 
@@ -968,7 +974,7 @@ public:
         std::vector<unsigned> stoich_substrates_3 = std::vector<unsigned>();
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -978,7 +984,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -1038,7 +1044,7 @@ public:
             std::cout << chemNames[i] << std::endl;
         }
 
-        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); ++i )
+        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); ++i)
         {
             AbstractReaction* p_reaction = p_file_reaction_system->GetReactionByIndex(i);
 
@@ -1075,7 +1081,7 @@ public:
             std::cout << chemNames_hard_coded[i] << std::endl;
         }
 
-        for (unsigned i=0; i<p_mass_action_reaction_system->GetNumReactions(); ++i )
+        for (unsigned i=0; i<p_mass_action_reaction_system->GetNumReactions(); ++i)
         {
             AbstractReaction* p_reaction = p_mass_action_reaction_system->GetReactionByIndex(i);
 
@@ -1161,7 +1167,8 @@ public:
         std::vector<bool> areNeumannBoundaryConditions(probDim, false);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
 
@@ -1206,7 +1213,8 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             if (i==22)
             {
@@ -1282,8 +1290,7 @@ public:
 
             
             double birth_time = - RandomNumberGenerator::Instance()->ranf() *
-                                 (  p_model->GetStemCellG1Duration()
-                                  + p_model->GetSG2MDuration() );
+                                 (p_model->GetStemCellG1Duration() + p_model->GetSG2MDuration());
             
             p_cell->SetBirthTime(birth_time);
             cells.push_back(p_cell);
@@ -1438,7 +1445,7 @@ public:
             std::cout << chemNames[i] << std::endl;
         }
 
-        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); ++i )
+        for (unsigned i=0; i<p_file_reaction_system->GetNumReactions(); ++i)
         {
             AbstractReaction* p_reaction = p_file_reaction_system->GetReactionByIndex(i);
 
@@ -1452,7 +1459,6 @@ public:
             {
                 std::cout << "Product: "<<p_reaction->GetProductsByIndex(j)->GetChemicalName()<<" Stoich: "<<p_reaction->GetStoichProductsByIndex(j) << std::endl;
             }
-
         }
 
         std::cout << "-----------------------------" << std::endl;
@@ -1503,7 +1509,7 @@ public:
         std::vector<unsigned> stoich_substrates_3 = std::vector<unsigned>();
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -1513,7 +1519,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -1573,7 +1579,8 @@ public:
         std::vector<bool> areNeumannBoundaryConditions(probDim, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
 
@@ -1617,7 +1624,8 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
@@ -1625,7 +1633,7 @@ public:
 
         // PDE system
         std::cout << "Pde" << std::endl;
-        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
+        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2);
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
 
@@ -1763,7 +1771,7 @@ public:
         std::vector<unsigned> stoich_substrates_3 = std::vector<unsigned>();
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -1773,7 +1781,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -1833,7 +1841,8 @@ public:
         std::vector<bool> areNeumannBoundaryConditions(probDim, true);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
 
@@ -1877,7 +1886,8 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
@@ -1885,7 +1895,7 @@ public:
 
         // PDE system
         std::cout << "Pde" << std::endl;
-        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
+        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2);
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
 
@@ -1938,7 +1948,7 @@ public:
         std::vector<unsigned> stoich_substrates_3 = std::vector<unsigned>();
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -1948,7 +1958,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -2051,7 +2061,8 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
@@ -2059,7 +2070,7 @@ public:
 
         // PDE system
         std::cout << "Pde" << std::endl;
-        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
+        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2);
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
 
@@ -2111,7 +2122,7 @@ public:
         std::vector<unsigned> stoich_substrates_3 = std::vector<unsigned>();
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -2121,7 +2132,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -2225,7 +2236,8 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
@@ -2233,7 +2245,7 @@ public:
 
         // PDE system
         std::cout << "Pde" << std::endl;
-        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2 );
+        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-4, 1e-2);
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
 
@@ -2283,7 +2295,7 @@ public:
         std::vector<unsigned> stoich_substrates_3 = std::vector<unsigned>();
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -2293,7 +2305,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -2396,7 +2408,8 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
@@ -2404,7 +2417,7 @@ public:
 
         // PDE system
         std::cout << "Pde" << std::endl;
-        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-3, 1e-1 );
+        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0], 1e-3, 1e-1);
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
 
@@ -2454,7 +2467,7 @@ public:
         std::vector<unsigned> stoich_substrates_3 = std::vector<unsigned>();
         std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_substrates_1.push_back(p_chemical_U);
@@ -2464,7 +2477,7 @@ public:
         p_products_2.push_back(p_chemical_U);
         stoich_products_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add V to reactions
         p_substrates_1.push_back(p_chemical_V);
@@ -2569,7 +2582,8 @@ public:
         // coupled ode system
         std::cout << "Ode loop" << std::endl;
         std::vector<AbstractOdeSystemForCoupledPdeSystem*> odeSystem;
-        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+        for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
             // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
             odeSystem.push_back(new AbstractChemicalOdeForCoupledPdeSystem(p_mass_action_reaction_system));
         }
@@ -2577,7 +2591,7 @@ public:
 
         // PDE system
         std::cout << "Pde" << std::endl;
-        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0],1e-2, 1 );
+        PdeSchnackenbergCoupledPdeOdeSystem<elementDim, spaceDim, probDim> pde(odeSystem[0], 1e-2, 1);
 
         // used the explicitly defined EulerIvpOdeSolver rather than the default defined BackwardEuler method
 

@@ -145,7 +145,7 @@ public:
 
     virtual double ReturnDiffusionValueFromStateNameAndDomainLabel(std::string stateName, std::string domainLabel = "");
 
-    virtual void ParseInitialConditionsFromFile(std::string initialConditionsFilename, bool IsPerturbInitialConditions=false );
+    virtual void ParseInitialConditionsFromFile(std::string initialConditionsFilename, bool isPerturbInitialConditions=false);
 
     virtual void ParseBoundaryConditionsFromFile(std::string);
 

@@ -24,7 +24,6 @@ private:
     // carrying capacity
     std::vector<double> mCarryingCapacities;
 
-
 public:
 
     LinearParabolicFisherPde(
@@ -68,4 +67,4 @@ public:
     }
 };
 
-#endif
+#endif /* LINEARPARABOLICFISHERPDE_HPP_ */

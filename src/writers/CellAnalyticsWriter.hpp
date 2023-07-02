@@ -67,11 +67,12 @@ void CellAnalyticsWriter<ELEMENT_DIM, SPACE_DIM>::VisitCell(CellPtr pCell, Abstr
 
     if (pCell->HasCellProperty<CellAnalyticsProperty>())
     {
-        boost::shared_ptr<CellAnalyticsProperty> cellAnalyticsProperty = boost::static_pointer_cast<CellAnalyticsProperty>(pCell->rGetCellPropertyCollection().GetPropertiesType<CellAnalyticsProperty>().GetProperty());
+        auto cellAnalyticsProperty = boost::static_pointer_cast<CellAnalyticsProperty>(pCell->rGetCellPropertyCollection().GetPropertiesType<CellAnalyticsProperty>().GetProperty());
         unsigned typeID = cellAnalyticsProperty->GetCellID();
 
         *this->mpOutStream << typeID << " ";
-    }else
+    }
+    else
     {
         *this->mpOutStream << 0 << " ";
     }

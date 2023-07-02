@@ -48,10 +48,10 @@ public:
                         std::vector<AbstractChemical*> cellReactionSpecies = std::vector<AbstractChemical*>(),
                         std::vector<unsigned> stoichBulk = std::vector<unsigned>(),
                         std::vector<unsigned> stoichCell = std::vector<unsigned>(),
-                        bool IsGibbs = false,
-                        bool IsReversible = true,
-                        double ForwardReactionRateConstant = 1.0,
-                        double ReverseReactionRateConstant = 1.0);
+                        bool isGibbs = false,
+                        bool isReversible = true,
+                        double forwardReactionRateConstant = 1.0,
+                        double reverseReactionRateConstant = 1.0);
 
     virtual ~OsmoticTransportReaction()
     {
@@ -102,10 +102,10 @@ OsmoticTransportReaction::OsmoticTransportReaction(
                         std::vector<AbstractChemical*> cellReactionSpecies,
                         std::vector<unsigned> stoichBulk,
                         std::vector<unsigned> stoichCell,
-                        bool IsGibbs,
-                        bool IsReversible,
-                        double ForwardReactionRateConstant, // takes the form of the gibbs energy
-                        double ReverseReactionRateConstant)
+                        bool isGibbs,
+                        bool isReversible,
+                        double forwardReactionRateConstant, // takes the form of the gibbs energy
+                        double reverseReactionRateConstant)
     : AbstractReversibleTransportReaction(
           bulkReactionSpecies,
           cellReactionSpecies,
@@ -113,10 +113,10 @@ OsmoticTransportReaction::OsmoticTransportReaction(
           stoichCell,
           ForwardReactionRateConstant,
           ReverseReactionRateConstant),
-      mIsGibbs(IsGibbs),
-      mIsReversible(IsReversible),
-      mForwardReactionRateConstant(ForwardReactionRateConstant),
-      mReverseReactionRateConstant(ReverseReactionRateConstant)
+      mIsGibbs(isGibbs),
+      mIsReversible(isReversible),
+      mForwardReactionRateConstant(forwardReactionRateConstant),
+      mReverseReactionRateConstant(reverseReactionRateConstant)
 {
     if (mIsGibbs)
     {
@@ -155,7 +155,7 @@ void OsmoticTransportReaction::UpdateReactionRate(AbstractChemistry* systemChemi
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
-        AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+        AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         for (unsigned j=0; j<mNumBulkSpecies; j++)
         {
@@ -234,7 +234,7 @@ double OsmoticTransportReaction::CalculateReactionQuotient(AbstractChemistry* sy
                 chem_iter != p_chemical_vector.end();
                 ++chem_iter, ++index)
         {
-            AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+            AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
             for (unsigned j=0; j<mNumBulkSpecies; j++)
             {

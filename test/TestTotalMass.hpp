@@ -85,7 +85,7 @@ public:
             }
             
             column_num = i - (row_num-1)*(params.MeshDimensions[0]+1);
-            if ((column_num==3 || column_num==4 || column_num==5 || column_num==6) && (row_num ==3 || row_num ==4 || row_num ==5 || row_num ==6 ))
+            if ((column_num==3 || column_num==4 || column_num==5 || column_num==6) && (row_num ==3 || row_num ==4 || row_num ==5 || row_num ==6))
             {
                 for (unsigned pde_dim=0; pde_dim<1; pde_dim++)
                 {

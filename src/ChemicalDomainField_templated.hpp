@@ -238,23 +238,23 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::DeriveSyst
                 int chemicalValence = ode_chemical_vector[ode_system_chemical_index]->GetChemicalValence();
 
                 // diffusion database may be larger than the active chemicals in the system, the chemical vector
-                bool IsInDatabase = false;
+                bool is_in_database = false;
 
                 // for a diffusive chemical object through the information given in the chemical
                 // change the pointer of the original chemical to point to the diffusive chemical
-                AbstractDiffusiveChemical *p_chemical = new AbstractDiffusiveChemical(chemicalName,chemicalSize,chemicalMass,chemicalValence);
+                AbstractDiffusiveChemical* p_chemical = new AbstractDiffusiveChemical(chemicalName,chemicalSize,chemicalMass,chemicalValence);
              
                 for (unsigned record_index=0; record_index<this.mDiffusionDatabase.size(); record_index++)
                 {
                     if (this.mDiffusionDatabase[record_index][0] == chemicalName)
                     {   
                         p_chemical->AddDiffusiveDomain(this.mDiffusionDatabase[record_index][1],std::stod(this.mDiffusionDatabase[record_index][2]));
-                        IsInDatabase = true;
+                        is_in_database = true;
                     }
                     // run through the rest of the database incase another domain type is specified
                 }
                 // if not in the database then don't add to diffusive chemistry as cannot diffuse
-                if (IsInDatabase)
+                if (is_in_database)
                 {
                     p_diffusive_chemistry->AddChemical(p_chemical);
                 }
@@ -285,19 +285,19 @@ void ChemicalDomainFieldTemplated<ELEMENT_DIM,SPACE_DIM,PROBLEM_DIM>::DeriveExte
         {
             std::string domainLabel = this->GetDomainLabelByIndex(domain_index);
 
-            AbstractDiffusiveChemical *p_chemical = new AbstractDiffusiveChemical(chemicalName);
-            bool IsInDatabase = false;
+            AbstractDiffusiveChemical* p_chemical = new AbstractDiffusiveChemical(chemicalName);
+            bool is_in_database = false;
             // test whether the chemical and domain match, expecting at least one match
             for (unsigned record_index=0; record_index<this->GetDiffusionDatabase().size(); record_index++)
             {
                 if (this->GetDiffusionDatabase()[record_index][0] == chemicalName)
                 {   
                     p_chemical->AddDiffusiveDomain(this->GetDiffusionDatabase()[record_index][1],std::stod(this->GetDiffusionDatabase()[record_index][2]));
-                    IsInDatabase = true;
+                    is_in_database = true;
                 }
                 // run through the rest of the database incase another domain type is specified
             }
-            if (IsInDatabase)
+            if (is_in_database)
             {
                 p_diffusive_chemistry->AddChemical(p_chemical);
             }

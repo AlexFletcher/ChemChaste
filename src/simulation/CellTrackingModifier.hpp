@@ -64,7 +64,7 @@ void CellTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCellPop
     // Make sure the cell population is updated
     rCellPopulation.Update();
 
-    for (typename AbstractCellPopulation<SPACE_DIM>::Iterator cell_iter = rCellPopulation.Begin();
+    for (auto cell_iter = rCellPopulation.Begin();
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
@@ -74,20 +74,20 @@ void CellTrackingModifier<ELEMENT_DIM,SPACE_DIM>::UpdateCellData(AbstractCellPop
         if (transport_active)
         {
             CellPropertyCollection transport_collection = collection.GetPropertiesType<TransportCellProperty>();
-            boost::shared_ptr<TransportCellProperty> transportProp = boost::static_pointer_cast<TransportCellProperty>(transport_collection.GetProperty());
+            auto transportProp = boost::static_pointer_cast<TransportCellProperty>(transport_collection.GetProperty());
     
-            std::vector<double> transportIn =  transportProp->GetTransportIn();
+            std::vector<double> transportIn = transportProp->GetTransportIn();
             std::vector<double> transportOut = transportProp->GetTransportOut();
             std::vector<std::string> speciesNameVector = transportProp->GetSpeciesNameVector();
 
             unsigned numberSpecies = transportIn.size();
-            double tempCell=0;
-            double tempNode=0;
-            double cellVal=0;
-            double nodeVal=0;
+            double tempCell = 0;
+            double tempNode = 0;
+            double cellVal = 0;
+            double nodeVal = 0;
 
-            for (unsigned species=0; species<numberSpecies; species++){
-      
+            for (unsigned species=0; species<numberSpecies; species++)
+            {      
                 cellVal = cell_iter->GetCellData()->GetItem("var_cell_"+speciesNameVector[species]);
 
                 nodeVal = cell_iter->GetCellData()->GetItem("var_node_"+speciesNameVector[species]);

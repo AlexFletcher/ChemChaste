@@ -16,7 +16,6 @@ private:
     double mD1;     
     double mD2;      
 
-
 public:
 
     PdeConsumerProducer(double d1=1.0,
@@ -54,4 +53,4 @@ public:
     }
 };
 
-#endif
+#endif /* PDECONSUMERPRODUCER_HPP_ */

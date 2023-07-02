@@ -1,12 +1,10 @@
 #ifndef CHEMICALCELLPROPERTY_HPP_
 #define CHEMICALCELLPROPERTY_HPP_
 
-//general includes
 #include <vector>
 #include <string>
 #include <boost/shared_ptr.hpp>
 
-// chaste includes
 #include "AbstractCellProperty.hpp"
 #include "StateVariableRegister.hpp"
 

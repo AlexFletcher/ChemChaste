@@ -41,7 +41,6 @@ public:
     CellSourceInhomogenousParabolicPdeOdeSystem(AbstractCellPopulation<ELEMENT_DIM,SPACE_DIM>& rCellPopulation)
         :   InhomogenousParabolicPdeForCoupledOdeSystemTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(),
         mrCellPopulation(rCellPopulation)
-            
     {
     }
 
@@ -121,9 +120,9 @@ public:
         }
 
         // Loop over cells, find which coarse element it is in, and add 1 to mSourceTermOnCoarseElements[elem_index]
-        for (typename AbstractCellPopulation<SPACE_DIM>::Iterator cell_iter = mrCellPopulation.Begin();
-            cell_iter != mrCellPopulation.End();
-            ++cell_iter)
+        for (auto cell_iter = mrCellPopulation.Begin();
+             cell_iter != mrCellPopulation.End();
+             ++cell_iter)
         {
             unsigned elem_index = 0;
             const ChastePoint<SPACE_DIM>& r_position_of_cell = mrCellPopulation.GetLocationOfCellCentre(*cell_iter);
@@ -166,11 +165,8 @@ public:
         // input args different? pElement need to add as argument Element<ELEMENT_DIM,SPACE_DIM>* pElement=nullptr?
         
         double cell_contribution_at_rX = 0;
-
-
         return ode_contribution_at_rX + cell_contribution_at_rX;
     }
 };
 
-
-#endif 
+#endif /* AVERAGEDSOURCEINHOMOGENOUSPARABOLICPDEODESYSTEM_HPP_ */

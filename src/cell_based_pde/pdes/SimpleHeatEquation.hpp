@@ -1,6 +1,6 @@
 
-#ifndef _SIMPLEHEATEQUATION_HPP_
-#define _SIMPLEHEATEQUATION_HPP_
+#ifndef SIMPLEHEATEQUATION_HPP_
+#define SIMPLEHEATEQUATION_HPP_
 
 #include "AbstractLinearParabolicPde.hpp"
 #include "ChastePoint.hpp"
@@ -29,4 +29,4 @@ public:
     }
 };
 
-#endif 
+#endif /* SIMPLEHEATEQUATION_HPP_ */

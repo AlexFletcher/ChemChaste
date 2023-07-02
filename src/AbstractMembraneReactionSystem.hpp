@@ -119,7 +119,7 @@ void AbstractMembraneReactionSystem::ReactSystem(const std::vector<double>& curr
         deltaBulkConcentration.resize(mNumBulkStates, 0.0);
         deltaCellConcentration.resize(mNumCellStates, 0.0);
 
-        AbstractMembraneReaction *p_system_reaction = static_cast<AbstractMembraneReaction*>(*reaction_iter);
+        AbstractMembraneReaction* p_system_reaction = static_cast<AbstractMembraneReaction*>(*reaction_iter);
 
         p_system_reaction->React(mpBulkChemistry, mpCellChemistry, currentBulkConcentration, currentCellConcentration, deltaBulkConcentration, deltaCellConcentration);
 

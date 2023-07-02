@@ -112,7 +112,7 @@ void SpectatorDependentReaction::UpdateReactionRate(AbstractChemistry* systemChe
         }
         else
         {
-            AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+            AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
             for (unsigned i=0; i<mNumSpectators; ++i)
             {
@@ -140,7 +140,7 @@ std::string SpectatorDependentReaction::GetReactionType()
     return "SpectatorDependentReaction";
 }
 
-void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=false)
+void SpectatorDependentReaction::ParseReactionInformation(std::string reaction_information, bool isReversible=false)
 {
     // read in from the reaction information string the necessary information for the basic multiplicative constant
     // and the spectator species, may be multiple spectator species but only one reaction rate, they can be in any order

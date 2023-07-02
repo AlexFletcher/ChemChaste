@@ -1,5 +1,5 @@
-#ifndef InhomogenousParabolicPdeForCoupledOdeSystem_templated_HPP_
-#define InhomogenousParabolicPdeForCoupledOdeSystem_templated_HPP_
+#ifndef INHOMOGENOUSPARABOLICPDEFORCOUPLEDODESYSTEM_TEMPLATED_HPP_
+#define INHOMOGENOUSPARABOLICPDEFORCOUPLEDODESYSTEM_TEMPLATED_HPP_
 
 #include "AbstractLinearParabolicPdeSystemForCoupledOdeSystem.hpp"
 #include "ChastePoint.hpp"
@@ -181,18 +181,15 @@ public:
         return diffusion_term;
     }
 
-
-    void SetStateVariableRegister(StateVariableRegister* p_stateVariableRegister)
+    void SetStateVariableRegister(StateVariableRegister* pStateVariableRegister)
     {
-        mpStateVariableRegister = p_stateVariableRegister;
-    };
+        mpStateVariableRegister = pStateVariableRegister;
+    }
 
     StateVariableRegister* GetStateVariableRegister()
     {
         return mpStateVariableRegister;
     }
-
-    
 
     void SetIsDomainDiffusionVector(bool isDomainDiffusionVector)
     {
@@ -219,11 +216,11 @@ public:
         return mpDomainField;
     }
 
-    void SetDomainField(AbstractDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>* p_domainField)
+    void SetDomainField(AbstractDomainFieldTemplated<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>* pDomainField)
     {
         mIsDomainDiffusionField = true;
-        mpDomainField = p_domainField;
+        mpDomainField = pDomainField;
     }
 };
 
-#endif 
+#endif /* INHOMOGENOUSPARABOLICPDEFORCOUPLEDODESYSTEM_TEMPLATED_HPP_ */

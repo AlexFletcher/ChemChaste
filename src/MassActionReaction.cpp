@@ -56,7 +56,7 @@ void MassActionReaction::UpdateReactionRate(AbstractChemistry* systemChemistry, 
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
-        AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+        AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         for (unsigned j=0; j<mNumSubstrates; j++)
         {
@@ -85,10 +85,9 @@ std::string MassActionReaction::GetReactionType()
     return "MassActionReaction";
 }
 
-
-void MassActionReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible=false)
+void MassActionReaction::ParseReactionInformation(std::string reaction_information, bool isReversible=false)
 {
-    mIsReversible = IsReversible;
+    mIsReversible = isReversible;
 
     if (!mIsReversible)
     {
@@ -140,7 +139,7 @@ double MassActionReaction::CalculateReactionQuotient(AbstractChemistry* systemCh
                 chem_iter != p_chemical_vector.end();
                 ++chem_iter, ++index)
         {
-            AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+            AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
             for (unsigned j=0; j<mNumSubstrates; j++)
             {

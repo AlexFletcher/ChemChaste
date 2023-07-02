@@ -78,4 +78,4 @@ public:
     }
 };
 
-#endif
+#endif /* INHOMOGENOUSSCHNACKENBERGNONDIMPDE_HPP_ */

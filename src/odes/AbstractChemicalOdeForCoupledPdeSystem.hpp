@@ -171,9 +171,9 @@ void AbstractChemicalOdeForCoupledPdeSystem::SetDeltaError(double deltaError)
     mDeltaError = deltaError;
 }
 
-void AbstractChemicalOdeForCoupledPdeSystem::SetIsCheckConcentration(bool IsCheckConcentration)
+void AbstractChemicalOdeForCoupledPdeSystem::SetIsCheckConcentration(bool isCheckConcentration)
 {
-    mIsCheckConcentration = IsCheckConcentration;
+    mIsCheckConcentration = isCheckConcentration;
 }
 
 unsigned AbstractChemicalOdeForCoupledPdeSystem::GetNumSpecies()

@@ -295,32 +295,29 @@ c_vector<double, PROBLEM_DIM*(ELEMENT_DIM+1)> InhomogenousCoupledPdeOdeCoupledCe
         // property of the ode systems; returns indexed state of the interpolated state variables, odes already solved
         double this_source_term = mpPdeSystem->ComputeSourceTerm(rX, rU, mInterpolatedOdeStateVariables, pde_index);
 
-        double this_constant_source_term =0.0;
+        double this_constant_source_term = 0.0;
 
         // check whether adding cell contribution
         if (mCellTransportOdeSystemsPresent || mCellMembraneOdeSystemsPresent)
-        {  
-          
+        {          
             // at least one of the cells has the transport property and can run an transport ode system which needs to be considered
             // check whether point rX is associated with a cell
-            bool isContributed=false;
-            unsigned cell_count=0;
-            for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
-             cell_iter != mrCellPopulation.End();
-             ++cell_iter)
+            bool isContributed = false;
+            unsigned cell_count = 0;
+            for (auto cell_iter = mrCellPopulation.Begin();
+                 cell_iter != mrCellPopulation.End();
+                 ++cell_iter)
             {   
-
                 unsigned cell_location_index = mrCellPopulation.GetLocationIndexUsingCell(*cell_iter);
                 const ChastePoint<SPACE_DIM>& cellCentrePoint = mrCellPopulation.GetLocationOfCellCentre(*cell_iter);
                 
                 if (cell_iter->HasCellProperty<TransportCellProperty>())
-                {
-                   
-                    boost::shared_ptr<TransportCellProperty> transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+                {                   
+                    auto transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
  
                     if (cell_iter->HasCellProperty<ExtendedCellProperty<SPACE_DIM>>())
                     {
-                        boost::shared_ptr<ExtendedCellProperty<SPACE_DIM>> extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
+                        auto extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
 
                         if (extended_cell_property->IsPointInCell(cellCentrePoint, rX))
                         {
@@ -374,8 +371,7 @@ c_vector<double, PROBLEM_DIM*(ELEMENT_DIM+1)> InhomogenousCoupledPdeOdeCoupledCe
                 // check for membrane system
                 if (cell_iter->HasCellProperty<MembraneCellProperty>())
                 {
-                   
-                    boost::shared_ptr<MembraneCellProperty> membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+                    auto membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
                     // check that rX is close to cell_location
                     // then use the concentrations, bulk and cell, with the membrane property
                     if (CheckChastePointsForEquality(cellCentrePoint,rX))
@@ -438,19 +434,18 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
 
         SetCurrentStateVector(u);
 
-        mInterpolationCount=0;
-        for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
-        cell_iter != mrCellPopulation.End();
-        ++cell_iter)
+        mInterpolationCount = 0;
+        for (auto cell_iter = mrCellPopulation.Begin();
+             cell_iter != mrCellPopulation.End();
+             ++cell_iter)
         {
             if (cell_iter->HasCellProperty<ExtendedCellProperty<SPACE_DIM>>())
             {
-                boost::shared_ptr<ExtendedCellProperty<SPACE_DIM>> extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
+                auto extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
 
                 extended_cell_property->ResetVectorOfBoundaryStateVariables();
                 extended_cell_property->ResetVectorOfInternalBoundaryStateVariables();
                 extended_cell_property->ResetVectorOfBoundaryLocations();
-
             }
             // if cell has only the transport property then there is nothing needed to be reset
         }
@@ -504,7 +499,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
             // the mX and mU are fully interpolated
             // check whether point mX is associated with a cell
             bool this_point_found = false;
-            for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
+            for (auto cell_iter = mrCellPopulation.Begin();
                  cell_iter != mrCellPopulation.End();
                  ++cell_iter)
             {
@@ -514,7 +509,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
 
                     if (cell_iter->HasCellProperty<ExtendedCellProperty<SPACE_DIM>>())
                     {
-                        boost::shared_ptr<ExtendedCellProperty<SPACE_DIM>> extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
+                        auto extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
 
                         if (extended_cell_property->IsPointInCell(cellCentrePoint, mX))
                         {
@@ -535,7 +530,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
                     }
                     else
                     {
-                        boost::shared_ptr<TransportCellProperty> transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+                        auto transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
 
                         // check whether the interpolated point is on the cell centre
                         if (CheckChastePointsForEquality(cellCentrePoint, mX))
@@ -561,7 +556,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
                 {
                     const ChastePoint<SPACE_DIM>& cellCentrePoint = mrCellPopulation.GetLocationOfCellCentre(*cell_iter);
 
-                    boost::shared_ptr<MembraneCellProperty> membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+                    auto membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
                     // check whether the interpolated point is on the cell centre
                     if (CheckChastePointsForEquality(cellCentrePoint, mX))
@@ -625,8 +620,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
 
     // set up each of the cells
     if (mCellTransportOdeSystemsPresent)
-    {
-       
+    {       
         // reset the point and current state vector
         ChastePoint<SPACE_DIM> x(0,0,0);
 
@@ -636,13 +630,13 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
 
         SetCurrentStateVector(u);
      
-        for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
-        cell_iter != mrCellPopulation.End();
-        ++cell_iter)
+        for (auto cell_iter = mrCellPopulation.Begin();
+             cell_iter != mrCellPopulation.End();
+             ++cell_iter)
         {   
             if (cell_iter->HasCellProperty<ExtendedCellProperty<SPACE_DIM>>())
             {
-                boost::shared_ptr<ExtendedCellProperty<SPACE_DIM>> extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
+                auto extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
 
                 unsigned num_voxels = extended_cell_property->GetTotalNumberMeshVoxels();
                 if (num_voxels == 0)
@@ -729,7 +723,6 @@ InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>:
             {
                 mpOdeSolvers[i].reset(new CvodeAdaptor);
             }
-            
 #else
             for (unsigned i=0; i<mOdeSystemsAtNodes.size(); ++i)
             {
@@ -741,27 +734,27 @@ InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>:
     }
 
     // Run through the cell popualtion for the occurance of a cell with the transport property defined
-    for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
-        cell_iter != mrCellPopulation.End();
-        ++cell_iter)
+    for (auto cell_iter = mrCellPopulation.Begin();
+         cell_iter != mrCellPopulation.End();
+         ++cell_iter)
     {
         if (cell_iter->HasCellProperty<TransportCellProperty>())
         {
-            // if there exists at least one cell with the transport property then solve transport odes
-            mCellTransportOdeSystemsPresent=true;
+            // If there exists at least one cell with the transport property then solve transport odes
+            mCellTransportOdeSystemsPresent = true;
             break;
         }
     }
 
     // Run through the cell popualtion for the occurance of a cell with the membrane property defined
-    for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
-        cell_iter != mrCellPopulation.End();
-        ++cell_iter)
+    for (auto cell_iter = mrCellPopulation.Begin();
+         cell_iter != mrCellPopulation.End();
+         ++cell_iter)
     {
         if (cell_iter->HasCellProperty<MembraneCellProperty>())
         {
-            // if there exists at least one cell with the membrane property then solve transport odes
-            mCellMembraneOdeSystemsPresent=true;
+            // If there exists at least one cell with the membrane property then solve transport odes
+            mCellMembraneOdeSystemsPresent = true;
             break;
         }
     }
@@ -801,7 +794,6 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
 
             // Solve ODE system at this node
             mpOdeSolvers[node_index]->SolveAndUpdateStateVariable(mOdeSystemsAtNodes[node_index], time, next_time, dt);
-
         }
     }
 
@@ -812,18 +804,17 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
         double next_time = PdeSimulationTime::GetNextTime();
         double dt = PdeSimulationTime::GetPdeTimeStep();
     
-        for (AbstractCellPopulation<2>::Iterator cell_iter = mrCellPopulation.Begin();
+        for (auto cell_iter = mrCellPopulation.Begin();
              cell_iter != mrCellPopulation.End();
              ++cell_iter)
         {
             if (cell_iter->HasCellProperty<TransportCellProperty>())
             {
-                
-                boost::shared_ptr<TransportCellProperty> transport_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+                auto transport_property = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
 
                 if (cell_iter->HasCellProperty<ExtendedCellProperty<SPACE_DIM>>())
                 {
-                    boost::shared_ptr<ExtendedCellProperty<SPACE_DIM>> extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
+                    auto extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
     
                     for (unsigned boundary_index=0; boundary_index<extended_cell_property->GetNumberMeshVoxelsOnBoundary(); boundary_index++)
                     {
@@ -869,8 +860,7 @@ void InhomogenousCoupledPdeOdeCoupledCellSolver<ELEMENT_DIM, SPACE_DIM, PROBLEM_
    
             if (cell_iter->HasCellProperty<MembraneCellProperty>())
             {
-                    
-                boost::shared_ptr<MembraneCellProperty> membrane_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+                auto membrane_property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
                 // rY for bulk state variables at the location specified by the boundary_index
                 std::vector<double> rY = membrane_property->GetExternalCellBoundaryConcentrationVector();
  

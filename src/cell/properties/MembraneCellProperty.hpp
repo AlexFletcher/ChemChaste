@@ -1,12 +1,10 @@
-#ifndef MEMBRANECELLPROPERTY_HPP
-#define MEMBRANECELLPROPERTY_HPP
+#ifndef MEMBRANECELLPROPERTY_HPP_
+#define MEMBRANECELLPROPERTY_HPP_
 
-//general includes
 #include <vector>
 #include <string>
 #include <boost/shared_ptr.hpp>
 
-// chaste includes
 #include "Cell.hpp"
 #include "AbstractCellProperty.hpp"
 #include "StateVariableRegister.hpp"
@@ -195,4 +193,4 @@ public:
     double GetMembraneConcentrationByName(std::string);
 };
 
-#endif
+#endif /* MEMBRANECELLPROPERTY_HPP_ */

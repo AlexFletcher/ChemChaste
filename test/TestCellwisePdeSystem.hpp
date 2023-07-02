@@ -132,7 +132,7 @@ public:
         {
             c_vector<double,2> cell_location;
             cell_location = p_mesh->GetNode(i)->rGetLocation();
-            if (cell_location(0) < 3.0 || cell_location(0) < 3.6 )
+            if (cell_location(0) < 3.0 || cell_location(0) < 3.6)
             {
                 cells[i]->AddCellProperty(p_apoptotic_property);
             }
@@ -242,7 +242,7 @@ public:
         // r2: U <-> U          forwardRate = 0.1 reverseRate = 0.2
         // r3: V <- V           forwardRate = 0.3
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_bulk_system_chemistry->AddChemical(p_chemical_U);
         p_cell_system_chemistry->AddChemical(p_chemical_U);
 
@@ -256,7 +256,7 @@ public:
         p_cell_2.push_back(p_chemical_U);
         stoich_cell_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_bulk_system_chemistry->AddChemical(p_chemical_V);
         p_cell_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
@@ -268,7 +268,7 @@ public:
         stoich_cell_3.push_back(1);
 
         // for the sake of testing multiple species in the bulk which do not take part in the transport
-        AbstractChemical *p_chemical_C = new AbstractChemical("C");
+        AbstractChemical* p_chemical_C = new AbstractChemical("C");
         p_bulk_system_chemistry->AddChemical(p_chemical_C);
 
         double reaction_1_rate = 0.1;
@@ -386,13 +386,13 @@ public:
 
         // iterate through the cells
         unsigned cell_count=0;
-        for (AbstractCellPopulation<2>::Iterator cell_iter = cell_population.Begin();
+        for (auto cell_iter = cell_population.Begin();
              cell_iter != cell_population.End();
              ++cell_iter)
         {
             if (cell_iter->HasCellProperty<MembraneCellProperty>())
             {
-                boost::shared_ptr<MembraneCellProperty> property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+                auto property = boost::static_pointer_cast<MembraneCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
                 std::cout << "Cell "<<cell_count<<": Membrane thickness: "<<property->GetMembraneThickness() << std::endl;
                 for (unsigned i=0; i<property->GetStateVariableRegister()->GetNumStateVariables();++i)
@@ -403,7 +403,7 @@ public:
 
             if (cell_iter->HasCellProperty<TransportCellProperty>())
             {
-                boost::shared_ptr<TransportCellProperty> p_cell_transport = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+                auto p_cell_transport = boost::static_pointer_cast<TransportCellProperty>(cell_iter->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
 
                 p_cell_transport->PerformTransportSystem(environment_concentration_at_point,cell_concentration_vector[cell_count],change_environment_concentration_vector,change_cell_concentration_cell_vector[cell_count]);
             }
@@ -435,7 +435,7 @@ public:
         // r2: U <-> U          forwardRate = 0.1 reverseRate = 0.2
         // r3: V <- V           forwardRate = 0.3
 
-        AbstractChemical *p_chemical_U = new AbstractChemical("U");
+        AbstractChemical* p_chemical_U = new AbstractChemical("U");
         p_system_chemistry->AddChemical(p_chemical_U);
         // add U to reactions
         p_bulk_1.push_back(p_chemical_U);
@@ -447,7 +447,7 @@ public:
         p_cell_2.push_back(p_chemical_U);
         stoich_cell_2.push_back(1);
 
-        AbstractChemical *p_chemical_V = new AbstractChemical("V");
+        AbstractChemical* p_chemical_V = new AbstractChemical("V");
         p_system_chemistry->AddChemical(p_chemical_V);
         // add U to reactions
         p_bulk_1.push_back(p_chemical_V);

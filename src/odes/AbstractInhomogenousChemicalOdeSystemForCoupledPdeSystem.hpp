@@ -170,9 +170,9 @@ void AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::CheckConcentratio
     }
 }
 
-void AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::SetIsCheckConcentration(bool IsCheckConcentration)
+void AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::SetIsCheckConcentration(bool isCheckConcentration)
 {
-    mIsCheckConcentration = IsCheckConcentration;
+    mIsCheckConcentration = isCheckConcentration;
 }
 
 bool AbstractInhomogenousChemicalOdeSystemForCoupledPdeSystem::GetIsCheckConcentration()

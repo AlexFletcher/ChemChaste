@@ -468,11 +468,13 @@ std::tuple<std::vector<std::vector<std::string>>, std::vector<std::vector<unsign
 
             unsigned stoichValue=1;
 
-            if (isdigit(strT.c_str()[0])){
+            if (isdigit(strT.c_str()[0]))
+{
                 stoichValue=std::stoul(strT.c_str());
                 
                 unsigned i=0;
-                while (isdigit(strT.c_str()[i])){++i;}
+                while (isdigit(strT.c_str()[i]))
+{++i;}
                     tempString=strT.substr(i,std::string::npos);
             }else{tempString=strT;}
 

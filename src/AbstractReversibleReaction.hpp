@@ -133,7 +133,7 @@ void AbstractReversibleReaction::React(AbstractChemistry* systemChemistry, const
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
-        AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+        AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         // for each system chemical, parse whether it is involved in this reaction.
         for (unsigned j=0; j<mNumSubstrates; j++)
@@ -177,47 +177,46 @@ std::string AbstractReversibleReaction::GetReactionType()
     return "ZerothOrderReversibleReaction";
 }
 
-void AbstractReversibleReaction::ParseReactionInformation(std::string reaction_information, bool IsReversible = true)
+void AbstractReversibleReaction::ParseReactionInformation(std::string reaction_information, bool isReversible = true)
 {
-    if (!IsReversible)
+    if (!isReversible)
     {
         AbstractReaction::ParseReactionInformation(reaction_information, false);
         SetReverseReactionRate(0.0);
     }
     else
     {
-        bool IsForward = reaction_information.find(mIrreversibleRateName);
-        bool IsReverse = reaction_information.find(mReversibleName);
-        size_t posForward;
-        size_t posReverse;
-        unsigned length_string_forward =0;
-        unsigned length_string_reverse =0;
+        bool is_forward = reaction_information.find(mIrreversibleRateName);
+        bool is_reverse = reaction_information.find(mReversibleName);
+        size_t pos_forward;
+        size_t pos_reverse;
+        unsigned length_string_forward = 0;
+        unsigned length_string_reverse = 0;
 
-        if (IsForward)
+        if (is_forward)
         {
-            posForward = reaction_information.find(mIrreversibleRateName);
+            pos_forward = reaction_information.find(mIrreversibleRateName);
 
-            length_string_forward = reaction_information.substr(posForward,std::string::npos).length();
+            length_string_forward = reaction_information.substr(pos_forward,std::string::npos).length();
         }
         
-        if (IsReverse)
+        if (is_reverse)
         {
-            posReverse = reaction_information.find(mReversibleName);
-
-            length_string_reverse = reaction_information.substr(posReverse,std::string::npos).length();
+            pos_reverse = reaction_information.find(mReversibleName);
+            length_string_reverse = reaction_information.substr(pos_reverse,std::string::npos).length();
         }
 
-        if ( length_string_forward<length_string_reverse )
+        if (length_string_forward < length_string_reverse)
         {
-            SetForwardReactionRate(atof(reaction_information.substr(posForward+mIrreversibleRateName.size()+1,std::string::npos).c_str()));
-            reaction_information.erase(posForward,std::string::npos);
-            SetReverseReactionRate(atof(reaction_information.substr(posReverse+mReversibleName.size()+1,std::string::npos).c_str()));
+            SetForwardReactionRate(atof(reaction_information.substr(pos_forward+mIrreversibleRateName.size()+1,std::string::npos).c_str()));
+            reaction_information.erase(pos_forward,std::string::npos);
+            SetReverseReactionRate(atof(reaction_information.substr(pos_reverse+mReversibleName.size()+1,std::string::npos).c_str()));
         }
         else
         {
-            SetReverseReactionRate(atof(reaction_information.substr(posReverse+mReversibleName.size()+1,std::string::npos).c_str()));
-            reaction_information.erase(posReverse,std::string::npos);
-            SetForwardReactionRate(atof(reaction_information.substr(posForward+mIrreversibleRateName.size()+1,std::string::npos).c_str()));
+            SetReverseReactionRate(atof(reaction_information.substr(pos_reverse+mReversibleName.size()+1,std::string::npos).c_str()));
+            reaction_information.erase(pos_reverse,std::string::npos);
+            SetForwardReactionRate(atof(reaction_information.substr(pos_forward+mIrreversibleRateName.size()+1,std::string::npos).c_str()));
         }
     }
 }

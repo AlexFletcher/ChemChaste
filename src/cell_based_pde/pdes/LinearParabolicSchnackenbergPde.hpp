@@ -77,4 +77,4 @@ public:
     }
 };
 
-#endif
+#endif /* LINEARPARABOLICSCHNACKENBERGPDE_HPP_ */

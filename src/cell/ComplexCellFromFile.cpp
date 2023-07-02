@@ -1,5 +1,5 @@
-#ifndef COMPLEXCELLFROMFILE_HPP
-#define COMPLEXCELLFROMFILE_HPP
+#ifndef COMPLEXCELLFROMFILE_HPP_
+#define COMPLEXCELLFROMFILE_HPP_
 
 #include "ComplexCell.hpp"
 #include "SimpleChemicalThresholdCellCycleFromFile.hpp"
@@ -173,4 +173,4 @@ public:
     void SetFullChemicalStateRegister(StateVariableRegister*);
 };
 
-#endif
+#endif /* COMPLEXCELLFROMFILE_HPP_ */

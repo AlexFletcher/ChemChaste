@@ -1,7 +1,6 @@
-#ifndef MEMBRANECELLPROPERTYFROMFILE_HPP
-#define MEMBRANECELLPROPERTYFROMFILE_HPP
+#ifndef MEMBRANECELLPROPERTYFROMFILE_HPP_
+#define MEMBRANECELLPROPERTYFROMFILE_HPP_
 
-//general includes
 #include <vector>
 #include <boost/shared_ptr.hpp>
 
@@ -39,4 +38,4 @@ public:
     boost::shared_ptr<MembraneCellProperty> GetMembraneProperty();
 };
 
-#endif
+#endif /* MEMBRANECELLPROPERTYFROMFILE_HPP_ */

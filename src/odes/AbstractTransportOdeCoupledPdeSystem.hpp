@@ -263,9 +263,9 @@ void AbstractTransportOdeForCoupledPdeSystem::CheckConcentration(const std::vect
     }
 }
 
-void AbstractTransportOdeForCoupledPdeSystem::SetIsCheckConcentration(bool IsCheckConcentration)
+void AbstractTransportOdeForCoupledPdeSystem::SetIsCheckConcentration(bool isCheckConcentration)
 {
-    mIsCheckConcentration = IsCheckConcentration;
+    mIsCheckConcentration = isCheckConcentration;
 }
 
 bool AbstractTransportOdeForCoupledPdeSystem::GetIsCheckConcentration()

@@ -150,7 +150,7 @@ class ChemicalStructuresForTests
             std::vector<unsigned> stoich_substrates_3 = std::vector<unsigned>();
             std::vector<unsigned> stoich_products_3 = std::vector<unsigned>();
 
-            AbstractChemical *p_chemical_U = new AbstractChemical("U");
+            AbstractChemical* p_chemical_U = new AbstractChemical("U");
             p_system_chemistry->AddChemical(p_chemical_U);
             // add U to reactions
             p_substrates_1.push_back(p_chemical_U);
@@ -160,7 +160,7 @@ class ChemicalStructuresForTests
             p_products_2.push_back(p_chemical_U);
             stoich_products_2.push_back(1);
 
-            AbstractChemical *p_chemical_V = new AbstractChemical("V");
+            AbstractChemical* p_chemical_V = new AbstractChemical("V");
             p_system_chemistry->AddChemical(p_chemical_V);
             // add V to reactions
             p_substrates_1.push_back(p_chemical_V);
@@ -213,7 +213,7 @@ class ChemicalStructuresForTests
             // r2: U <-> U          forwardRate = 0.1 reverseRate = 0.2
             // r3: V <- V           forwardRate = 0.3
 
-            AbstractChemical *p_chemical_U = new AbstractChemical("U");
+            AbstractChemical* p_chemical_U = new AbstractChemical("U");
             p_bulk_system_chemistry->AddChemical(p_chemical_U);
             p_cell_system_chemistry->AddChemical(p_chemical_U);
             // add U to reactions
@@ -223,7 +223,7 @@ class ChemicalStructuresForTests
             p_cell_2.push_back(p_chemical_U);
             stoich_cell_2.push_back(1);
 
-            AbstractChemical *p_chemical_V = new AbstractChemical("V");
+            AbstractChemical* p_chemical_V = new AbstractChemical("V");
             p_bulk_system_chemistry->AddChemical(p_chemical_V);
             p_cell_system_chemistry->AddChemical(p_chemical_V);
             // add U to reactions
@@ -234,7 +234,7 @@ class ChemicalStructuresForTests
             stoich_cell_3.push_back(1);
 
             // for the sake of testing multiple species in the bulk which do not take part in the transport process
-            //AbstractChemical *p_chemical_C = new AbstractChemical("C");
+            //AbstractChemical* p_chemical_C = new AbstractChemical("C");
             //p_bulk_system_chemistry->AddChemical(p_chemical_C);
 
             double reaction_2_forward_rate = 0.3;
@@ -280,7 +280,7 @@ class ChemicalStructuresForTests
             // r2: U <-> U          forwardRate = 0.1 reverseRate = 0.2
             // r3: V <- V           forwardRate = 0.3
 
-            AbstractChemical *p_chemical_U = new AbstractChemical("U");
+            AbstractChemical* p_chemical_U = new AbstractChemical("U");
             p_bulk_system_chemistry->AddChemical(p_chemical_U);
             p_cell_system_chemistry->AddChemical(p_chemical_U);
             // add U to reactions
@@ -293,7 +293,7 @@ class ChemicalStructuresForTests
             p_cell_2.push_back(p_chemical_U);
             stoich_cell_2.push_back(1);
 
-            AbstractChemical *p_chemical_V = new AbstractChemical("V");
+            AbstractChemical* p_chemical_V = new AbstractChemical("V");
             p_bulk_system_chemistry->AddChemical(p_chemical_V);
             p_cell_system_chemistry->AddChemical(p_chemical_V);
             // add U to reactions
@@ -305,7 +305,7 @@ class ChemicalStructuresForTests
             stoich_cell_3.push_back(1);
 
             // for the sake of testing multiple species in the bulk which do not take part in the transport process
-            //AbstractChemical *p_chemical_C = new AbstractChemical("C");
+            //AbstractChemical* p_chemical_C = new AbstractChemical("C");
             //p_bulk_system_chemistry->AddChemical(p_chemical_C);
 
             double reaction_1_rate = 0.0;
@@ -343,7 +343,7 @@ class ChemicalStructuresForTests
             std::vector<unsigned> stoich_bulk_products_1 = std::vector<unsigned>();
             std::vector<unsigned> stoich_cell_products_1 = std::vector<unsigned>();
 
-            AbstractChemical *p_chemical_U = new AbstractChemical("U");
+            AbstractChemical* p_chemical_U = new AbstractChemical("U");
             p_cell_system_chemistry->AddChemical(p_chemical_U);
             // add U to reactions
             p_cell_substrates_1.push_back(p_chemical_U);
@@ -351,7 +351,7 @@ class ChemicalStructuresForTests
             stoich_cell_substrates_1.push_back(2);
             stoich_cell_products_1.push_back(1);
 
-            AbstractChemical *p_chemical_V = new AbstractChemical("V");
+            AbstractChemical* p_chemical_V = new AbstractChemical("V");
             p_cell_system_chemistry->AddChemical(p_chemical_V);
 
 
@@ -363,7 +363,7 @@ class ChemicalStructuresForTests
             stoich_bulk_substrates_1.push_back(1);
             stoich_bulk_products_1.push_back(2);
 
-            //AbstractChemical *p_chemical_C = new AbstractChemical("C");
+            //AbstractChemical* p_chemical_C = new AbstractChemical("C");
             //p_bulk_system_chemistry->AddChemical(p_chemical_C);
 
             //double reaction_1_forward_rate = 2.0;
@@ -399,7 +399,7 @@ class ChemicalStructuresForTests
             std::vector<unsigned> stoich_bulk_products_1 = std::vector<unsigned>();
             std::vector<unsigned> stoich_cell_products_1 = std::vector<unsigned>();
 
-            AbstractChemical *p_chemical_U = new AbstractChemical("U");
+            AbstractChemical* p_chemical_U = new AbstractChemical("U");
             p_cell_system_chemistry->AddChemical(p_chemical_U);
             // add U to reactions
             p_cell_substrates_1.push_back(p_chemical_U);
@@ -408,7 +408,7 @@ class ChemicalStructuresForTests
             stoich_cell_products_1.push_back(1);
 
 
-            AbstractChemical *p_chemical_V = new AbstractChemical("V");
+            AbstractChemical* p_chemical_V = new AbstractChemical("V");
             p_bulk_system_chemistry->AddChemical(p_chemical_V);
             // add U to reactions
             p_cell_substrates_1.push_back(p_chemical_V);
@@ -417,7 +417,7 @@ class ChemicalStructuresForTests
             stoich_bulk_products_1.push_back(1);
 
             // for the sake of testing multiple species in the bulk which do not take part in the transport process
-            //AbstractChemical *p_chemical_C = new AbstractChemical("C");
+            //AbstractChemical* p_chemical_C = new AbstractChemical("C");
             //p_bulk_system_chemistry->AddChemical(p_chemical_C);
 
             double reaction_1_rate = 0.0;
@@ -543,14 +543,14 @@ class ChemicalStructuresForTests
             std::vector<unsigned> stoich_substrates_1 = std::vector<unsigned>();
             std::vector<unsigned> stoich_products_1 = std::vector<unsigned>();
             
-            AbstractChemical *p_chemical_U = new AbstractChemical("U");
+            AbstractChemical* p_chemical_U = new AbstractChemical("U");
             p_cell_system_chemistry->AddChemical(p_chemical_U);
             // add U to reactions
             p_substrates_1.push_back(p_chemical_U);
             stoich_substrates_1.push_back(1);
 
 
-            AbstractChemical *p_chemical_biomass = new AbstractChemical("Biomass");
+            AbstractChemical* p_chemical_biomass = new AbstractChemical("Biomass");
             p_cell_system_chemistry->AddChemical(p_chemical_biomass);
             // add V to reactions
             p_products_1.push_back(p_chemical_biomass);
@@ -670,7 +670,7 @@ class ChemicalStructuresForTests
             MAKE_PTR(StemCellProliferativeType, p_stem_type);
             p_cell->SetCellProliferativeType(p_stem_type);
             
-            boost::shared_ptr<TransportCellProperty> p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+            auto p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
 
             SetUpTransportReactionSystem();
 
@@ -678,7 +678,7 @@ class ChemicalStructuresForTests
 
             p_transport->SetUp(p_transport_reaction_system,p_cell);
 
-            boost::shared_ptr<MembraneCellProperty> p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+            auto p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
             SetUpMembraneReactionSystem();
 
@@ -716,7 +716,7 @@ class ChemicalStructuresForTests
             MAKE_PTR(StemCellProliferativeType, p_stem_type);
             p_cell->SetCellProliferativeType(p_stem_type);
 
-            boost::shared_ptr<TransportCellProperty> p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+            auto p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
 
             SetUpTransportReactionSystem();
 
@@ -724,7 +724,7 @@ class ChemicalStructuresForTests
 
             p_transport->SetUp(p_transport_reaction_system,p_cell);
 
-            boost::shared_ptr<MembraneCellProperty> p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+            auto p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
             SetUpMembraneReactionSystem();
 
@@ -760,8 +760,8 @@ class ChemicalStructuresForTests
             MAKE_PTR(StemCellProliferativeType, p_stem_type);
             p_cell->SetCellProliferativeType(p_stem_type);
 
-            boost::shared_ptr<TransportCellProperty> p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
-            boost::shared_ptr<MembraneCellProperty> p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+            auto p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+            auto p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
             SetUpNullTransportReactionSystem();
 
@@ -819,13 +819,13 @@ class ChemicalStructuresForTests
             p_cell->SetCellProliferativeType(p_stem_type);
 
             // set up the transport property
-            boost::shared_ptr<TransportCellProperty> p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+            auto p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
             SetUpTransportReactionSystem();
             AbstractTransportReactionSystem* p_transport_reaction_system = rGetPtrTransportReactionSystem();
             p_transport->SetUp(p_transport_reaction_system,p_cell);
 
             // set up the membrane property
-            boost::shared_ptr<MembraneCellProperty> p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+            auto p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
             SetUpMembraneReactionSystem();
             AbstractMembraneReactionSystem* p_membrane_reaction_system = rGetPtrMembraneReactionSystem();
             p_membrane->SetUp(p_membrane_reaction_system,p_cell);
@@ -865,13 +865,13 @@ class ChemicalStructuresForTests
             p_cell->SetCellProliferativeType(p_stem_type);
 
             // set up the transport property
-            boost::shared_ptr<TransportCellProperty> p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+            auto p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
             SetUpTransportReactionSystem();
             AbstractTransportReactionSystem* p_transport_reaction_system = rGetPtrTransportReactionSystem();
             p_transport->SetUp(p_transport_reaction_system,p_cell);
 
             // set up the membrane property
-            boost::shared_ptr<MembraneCellProperty> p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+            auto p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
             SetUpMembraneReactionSystem();
             AbstractMembraneReactionSystem* p_membrane_reaction_system = rGetPtrMembraneReactionSystem();
             p_membrane->SetUp(p_membrane_reaction_system,p_cell);
@@ -904,8 +904,8 @@ class ChemicalStructuresForTests
             MAKE_PTR(StemCellProliferativeType, p_stem_type);
             p_cell->SetCellProliferativeType(p_stem_type);
 
-            boost::shared_ptr<TransportCellProperty> p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
-            boost::shared_ptr<MembraneCellProperty> p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+            auto p_transport = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+            auto p_membrane = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
             SetUpNullTransportReactionSystem();
 
@@ -1513,10 +1513,10 @@ public:
    
         CellPtr p_cell = chemical_structure->SetUpCellObjectA();
 
-        boost::shared_ptr<TransportCellProperty> p_transport_test = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
-        boost::shared_ptr<MembraneCellProperty> p_cell_membrane_test = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+        auto p_transport_test = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+        auto p_cell_membrane_test = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
-        //boost::shared_ptr<ChemicalCellProperty> p_cell_chemical_test = boost::static_pointer_cast<ChemicalCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<ChemicalCellProperty>().GetProperty());
+        //auto p_cell_chemical_test = boost::static_pointer_cast<ChemicalCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<ChemicalCellProperty>().GetProperty());
         //std::cout << std::endl;
         //std::cout << "Chemical cell property" << std::endl;
         //std::cout << std::endl;
@@ -1610,10 +1610,10 @@ public:
    
         CellPtr p_cell = chemical_structure->SetUpChemicalCellObjectA();
 
-        boost::shared_ptr<TransportCellProperty> p_transport_test = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
-        boost::shared_ptr<MembraneCellProperty> p_cell_membrane_test = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
+        auto p_transport_test = boost::static_pointer_cast<TransportCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<TransportCellProperty>().GetProperty());
+        auto p_cell_membrane_test = boost::static_pointer_cast<MembraneCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<MembraneCellProperty>().GetProperty());
 
-        //boost::shared_ptr<ChemicalCellProperty> p_cell_chemical_test = boost::static_pointer_cast<ChemicalCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<ChemicalCellProperty>().GetProperty());
+        //auto p_cell_chemical_test = boost::static_pointer_cast<ChemicalCellProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<ChemicalCellProperty>().GetProperty());
         //std::cout << std::endl;
         //std::cout << "Chemical cell property" << std::endl;
         //std::cout << std::endl;

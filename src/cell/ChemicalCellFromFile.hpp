@@ -1,5 +1,5 @@
-#ifndef CHEMICALCELLFROMFILE_HPP
-#define CHEMICALCELLFROMFILE_HPP
+#ifndef CHEMICALCELLFROMFILE_HPP_
+#define CHEMICALCELLFROMFILE_HPP_
 
 #include "ChemicalCell.hpp"
 #include "SimpleChemicalThresholdCellCycleFromFile.hpp"
@@ -156,4 +156,4 @@ public:
     void SetFullChemicalStateRegister(StateVariableRegister*);
 };
 
-#endif
+#endif /* CHEMICALCELLFROMFILE_HPP_ */

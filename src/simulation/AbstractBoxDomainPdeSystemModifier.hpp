@@ -223,7 +223,7 @@ void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Up
     // Store the PDE solution in an accessible form
     ReplicatableVector solution_repl(this->mSolution); // nodal solution from pdeSolver
 
-    for (typename AbstractCellPopulation<SPACE_DIM>::Iterator cell_iter = rCellPopulation.Begin();
+    for (auto cell_iter = rCellPopulation.Begin();
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
@@ -243,7 +243,7 @@ void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Up
 
             // the cells have a spatial extent where the state varibales are sorted with location keys in the extended cell property
             // therefore no need to interpolate form the nodes but need to recover and set the CellData
-            boost::shared_ptr<ExtendedCellProperty<SPACE_DIM>> extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(prop_collection.GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
+            auto extended_cell_property = boost::static_pointer_cast<ExtendedCellProperty<SPACE_DIM>>(prop_collection.GetPropertiesType<ExtendedCellProperty<SPACE_DIM>>().GetProperty());
                     
             // for each state variable in the cell data, retrieve the stored cell data value and add the total internal cell concetration
             
@@ -306,7 +306,7 @@ void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Up
 
             if (prop_collection.HasProperty<TransportCellProperty>())
             { 
-                boost::shared_ptr<TransportCellProperty> transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(prop_collection.GetPropertiesType<TransportCellProperty>().GetProperty());
+                auto transport_cell_property = boost::static_pointer_cast<TransportCellProperty>(prop_collection.GetPropertiesType<TransportCellProperty>().GetProperty());
         
                 // Only a subset of the solution vector at the cell are used by the transport property
                 StateVariableRegister* p_bulk_register_cell = transport_cell_property->GetBulkStateVariableRegister();
@@ -327,7 +327,7 @@ void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::Up
 
             if (prop_collection.HasProperty<MembraneCellProperty>())
             {
-                boost::shared_ptr<MembraneCellProperty> membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(prop_collection.GetPropertiesType<MembraneCellProperty>().GetProperty());
+                auto membrane_cell_property = boost::static_pointer_cast<MembraneCellProperty>(prop_collection.GetPropertiesType<MembraneCellProperty>().GetProperty());
 
                 // Only a subset of the solution vector at the cell are used by the transport property
                 StateVariableRegister* p_bulk_register_cell = membrane_cell_property->GetBulkStateVariableRegister();
@@ -392,7 +392,7 @@ void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::In
     mCellPdeElementMap.clear();
 
     // Find the element of mpFeMesh that contains each cell and populate mCellPdeElementMap
-    for (typename AbstractCellPopulation<SPACE_DIM>::Iterator cell_iter = rCellPopulation.Begin();
+    for (auto cell_iter = rCellPopulation.Begin();
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
@@ -406,7 +406,7 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM, unsigned PROBLEM_DIM>
 void AbstractBoxDomainPdeSystemModifier<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>::UpdateCellPdeElementMap(AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>& rCellPopulation)
 {
     // Find the element of mpCoarsePdeMesh that contains each cell and populate mCellPdeElementMap
-    for (typename AbstractCellPopulation<SPACE_DIM>::Iterator cell_iter = rCellPopulation.Begin();
+    for (auto cell_iter = rCellPopulation.Begin();
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {

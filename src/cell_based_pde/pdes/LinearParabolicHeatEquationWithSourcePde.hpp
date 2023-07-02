@@ -20,13 +20,10 @@ private:
 
     double mSource;
 
-
 public:
 
-    LinearParabolicHeatEquationWithSourcePde(
-        std::vector<double> diffusionRates,
-        double source = 1.0
-                        )
+    LinearParabolicHeatEquationWithSourcePde(std::vector<double> diffusionRates,
+                                             double source=1.0)
         : AbstractLinearParabolicPdeSystemForCoupledOdeSystem<ELEMENT_DIM, SPACE_DIM, PROBLEM_DIM>(),
           mDiffusionRates(diffusionRates),
           mSource(source)
@@ -46,13 +43,10 @@ public:
     c_matrix<double, SPACE_DIM, SPACE_DIM> ComputeDiffusionTerm(const ChastePoint<SPACE_DIM>& rX, unsigned pdeIndex, Element<ELEMENT_DIM,SPACE_DIM>* pElement=NULL)
     {
         assert(pdeIndex<PROBLEM_DIM);
-
         c_matrix<double, SPACE_DIM, SPACE_DIM> diffusion_term;
-
         diffusion_term = mDiffusionRates[pdeIndex]*identity_matrix<double>(SPACE_DIM);
-        
         return diffusion_term;
     }
 };
 
-#endif
+#endif /* LINEARPARABOLICHEATSOURCEPDE_HPP_ */

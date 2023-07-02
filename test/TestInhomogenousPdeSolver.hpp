@@ -369,7 +369,8 @@ public:
         std::vector<bool> areNeumannBoundaryConditions(probDim, false);
         std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
         
-        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+        for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
             vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
         }
 

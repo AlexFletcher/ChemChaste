@@ -164,7 +164,7 @@ void MassActionCoupledMembraneReaction::UpdateReactionRate(AbstractChemistry* bu
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
-        AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+        AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
         
         for (unsigned j=0; j<mNumBulkSubstrates; j++)
         {
@@ -191,7 +191,7 @@ void MassActionCoupledMembraneReaction::UpdateReactionRate(AbstractChemistry* bu
             chem_iter != p_chemical_vector.end();
             ++chem_iter, ++index)
     {
-        AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+        AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
         for (unsigned j=0; j<mNumCellSubstrates; j++)
         {
@@ -274,7 +274,7 @@ double MassActionCoupledMembraneReaction::CalculateReactionQuotient(AbstractChem
                 chem_iter != p_chemical_vector.end();
                 ++chem_iter, ++index)
         {
-            AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+            AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
             for (unsigned j=0; j<mNumBulkSubstrates; j++)
             {
@@ -299,7 +299,7 @@ double MassActionCoupledMembraneReaction::CalculateReactionQuotient(AbstractChem
                 chem_iter != p_chemical_vector.end();
                 ++chem_iter, ++index)
         {
-            AbstractChemical *p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
+            AbstractChemical* p_system_chemical = dynamic_cast<AbstractChemical*>(*chem_iter);
 
             for (unsigned j=0; j<mNumCellSubstrates; j++)
             {

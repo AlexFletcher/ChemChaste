@@ -581,7 +581,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(boundaryConditionValues[pdeDim]));
 }
 
@@ -609,7 +610,8 @@ bcc.AddNeumannBoundaryCondition(*boundary_iter, vectorConstBCs[pdeDim], pdeDim);
 
 std::vector<AbstractInhomogenousOdeSystemForCoupledPdeSystem*> odeSystem;
 std::vector<boost::shared_ptr<AbstractIvpOdeSolver> > solverSystem;
-for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i){
+for (unsigned i=0; i<p_mesh->GetNumNodes(); ++i)
+{
 // number of ode system objects must match the number of nodes, i.e the individual odes may be multi-dimensional
 odeSystem.push_back(p_field->GetOdeSystem()[i]);
 boost::shared_ptr<AbstractIvpOdeSolver> p_solver(new EulerIvpOdeSolver);
@@ -679,7 +681,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -816,7 +819,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -968,7 +972,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 //std::vector<bool> areNeumannBoundaryConditions(probDim, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -1079,7 +1084,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -1191,7 +1197,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -1297,7 +1304,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -1432,7 +1440,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -1568,7 +1577,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -1703,7 +1713,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -1840,7 +1851,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -1977,7 +1989,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -2129,7 +2142,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 //std::vector<bool> areNeumannBoundaryConditions(probDim, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -2240,7 +2254,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -2352,7 +2367,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,probDim> bcc;
 
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<probDim; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -2557,7 +2573,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 //std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -2622,7 +2639,7 @@ rowNum = rowNum + 1;
 }
 
 columnNum = i - (rowNum-1)*(MeshDimensions[0]+1);
-if (columnNum==2 && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6 ))
+if (columnNum==2 && (rowNum ==3 || rowNum ==4 || rowNum ==5 || rowNum ==6))
 {
 for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
 {   // serialised for nodes
@@ -2739,7 +2756,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -2876,7 +2894,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 
@@ -3011,7 +3030,8 @@ BoundaryConditionsContainer<elementDim,spaceDim,1> bcc;
 std::vector<bool> areNeumannBoundaryConditions(1, true);
 std::vector<ConstBoundaryCondition<spaceDim>*> vectorConstBCs;
 
-for (unsigned pdeDim=0; pdeDim<1; pdeDim++){
+for (unsigned pdeDim=0; pdeDim<1; pdeDim++)
+{
 vectorConstBCs.push_back(new ConstBoundaryCondition<spaceDim>(bcValues[pdeDim]));
 }
 

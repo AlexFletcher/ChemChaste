@@ -190,7 +190,7 @@ void AbstractTransportReaction::React(AbstractChemistry* bulkChemistry, Abstract
          chem_iter != p_bulk_chemical_vector.end();
          ++chem_iter, ++index)
     {
-        AbstractChemical *p_bulk_chemical = static_cast<AbstractChemical*>(*chem_iter);
+        AbstractChemical* p_bulk_chemical = static_cast<AbstractChemical*>(*chem_iter);
 
         // for each bulk chemical, parse whether it is involved in this reaction.
         for (unsigned j=0; j<mNumBulkSpecies; j++)
@@ -209,7 +209,7 @@ void AbstractTransportReaction::React(AbstractChemistry* bulkChemistry, Abstract
          chem_iter != p_cell_chemical_vector.end();
          ++chem_iter, ++index)
     {
-        AbstractChemical *p_cell_chemical = static_cast<AbstractChemical*>(*chem_iter);
+        AbstractChemical* p_cell_chemical = static_cast<AbstractChemical*>(*chem_iter);
    
         for (unsigned j=0; j<mNumCellSpecies; j++)
         {
