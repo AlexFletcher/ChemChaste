@@ -16,6 +16,10 @@ AbstractChemical::AbstractChemical(std::string chemicalName,
     SetChemicalFormationKnown(false);
 }
 
+AbstractChemical::~AbstractChemical()
+{
+}
+
 void AbstractChemical::SetChemicalName(std::string chemicalName)
 {
     mChemicalName = chemicalName;
