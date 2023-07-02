@@ -2,8 +2,6 @@
 #define ABSTRACTCHEMICAL_HPP_
 
 #include <string>
-#include <tuple>
-#include <vector>
 
 /**
  * Abstract class used to contain information about a chemical species in 
