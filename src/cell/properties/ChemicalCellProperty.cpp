@@ -16,16 +16,16 @@ void ChemicalCellProperty::InitialiseCell(std::vector<std::string> stateNameVect
     UpdateCellConcentrationVector(concentrationVector);
 }
 
-void ChemicalCellProperty::InitialiseCell(StateVariableRegister* p_StateVariableRegister, std::vector<double> concentrationVector)
+void ChemicalCellProperty::InitialiseCell(StateVariableRegister* pRegister, std::vector<double> concentrationVector)
 {
-    SetStateVariableRegister(p_StateVariableRegister);
+    SetStateVariableRegister(pRegister);
 
     UpdateCellConcentrationVector(concentrationVector);
 }
 
-void ChemicalCellProperty::UpdateCellConcentrationVector(std::vector<double>& concentrationVector)
+void ChemicalCellProperty::UpdateCellConcentrationVector(std::vector<double>& rConcentrationVector)
 {
-    mConcentrationVector = concentrationVector;
+    mConcentrationVector = rConcentrationVector;
 }
 
 void ChemicalCellProperty::SetStateVariableRegister(StateVariableRegister* pRegister)

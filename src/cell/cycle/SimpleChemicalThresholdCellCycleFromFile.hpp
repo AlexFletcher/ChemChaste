@@ -31,16 +31,14 @@ public:
      * 
      * \todo Document method.
      * 
-     * @param 
+     * @param fileName
     */
-    SimpleChemicalThresholdCellCycleFromFile(std::string);
+    SimpleChemicalThresholdCellCycleFromFile(std::string fileName);
 
     /**
      * Destructor.
      */
-    virtual ~SimpleChemicalThresholdCellCycleFromFile()
-    {
-    };
+    virtual ~SimpleChemicalThresholdCellCycleFromFile();
 
     /**
      * \todo Document method.
@@ -49,13 +47,17 @@ public:
 
     /**
      * \todo Document method.
+     * 
+     * @param fileName
      */
-    std::vector<std::vector<std::string> > ReadMatrix(std::string);
+    std::vector<std::vector<std::string> > ReadMatrix(std::string fileName);
 
     /**
      * \todo Document method.
+     * 
+     * @param line 
      */
-    std::vector<std::string> parseMatrixLineString(std::string);
+    std::vector<std::string> ParseMatrixLineString(std::string line);
 };
 
 #endif /* SIMPLECHEMICALTHRESHOLDCELLCYCLEFROMFILE_HPP_ */

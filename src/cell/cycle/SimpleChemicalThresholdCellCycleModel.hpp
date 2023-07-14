@@ -143,11 +143,11 @@ public:
     /**
      * \todo Document method.
      * 
-     * @param
+     * @param parameters
      * 
      * @return 
      */
-    double CellDeathProbability(std::vector<double>);
+    double CellDeathProbability(std::vector<double> parameters);
 
     /**
      * \todo Document method.
@@ -171,89 +171,89 @@ public:
     /**
      * \todo Document method.
      * 
-     * @param  
+     * @param maxThreshold
      */
-    void SetMaximumSpeciesThreshold(std::vector<double>);
+    void SetMaximumSpeciesThreshold(std::vector<double> maxThreshold);
 
     /**
      * \todo Document method.
      * 
-     * @param  
+     * @param minThreshold
      */
-    void SetMinimumSpeciesThreshold(std::vector<double>);
+    void SetMinimumSpeciesThreshold(std::vector<double> minThreshold);
 
     /**
      * \todo Document method.
      * 
-     * @param  
-     * @param 
+     * @param threshold
+     * @param index
      */
-    void SetMaximumThresholdByIndex(double, unsigned);
+    void SetMaximumThresholdByIndex(double threshold, unsigned index);
 
     /**
      * \todo Document method.
      * 
-     * @param  
-     * @param 
+     * @param threshold
+     * @param index
      */
-    void SetMinimumThresholdByIndex(double, unsigned);
+    void SetMinimumThresholdByIndex(double threshold, unsigned index);
 
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param concentrations
      */
-    void SetSpeciesConcentrations(std::vector<double>);
+    void SetSpeciesConcentrations(std::vector<double> concentrations);
 
     /**
      * \todo Document method.
      * 
-     * @param  
-     * @param 
+     * @param threshold
+     * @param index
      */
-    void SetSpeciesConcentrationsByIndex(double, unsigned);
+    void SetSpeciesConcentrationsByIndex(double threshold, unsigned index);
 
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param speciesNumber
      */
-    void SetNumberThresholdSpecies(unsigned);
+    void SetNumberThresholdSpecies(unsigned speciesNumber);
 
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param thresholdCheck
      */
-    void SetMaximumThresholdCheck(std::vector<bool>);
+    void SetMaximumThresholdCheck(std::vector<bool> thresholdCheck);
 
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param thresholdCheck
      */
-    void SetMinimumThresholdCheck(std::vector<bool>);
+    void SetMinimumThresholdCheck(std::vector<bool> thresholdCheck);
 
     /**
      * \todo Document method.
      * 
-     * @param 
-     * @param 
+     * @param thresholdCheck
+     * @param index
      */
-    void SetMaximumThresholdCheckByIndex(bool, unsigned);
+    void SetMaximumThresholdCheckByIndex(bool thresholdCheck, unsigned index);
 
     /**
      * \todo Document method.
      * 
-     * @param 
-     * @param 
+     * @param thresholdCheck
+     * @param index
      */
-    void SetMinimumThresholdCheckByIndex(bool, unsigned);
+    void SetMinimumThresholdCheckByIndex(bool thresholdCheck, unsigned index);
 
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param pChemistry
      */
     void SetThresholdChemistry(AbstractChemistry* pChemistry);
 
@@ -281,20 +281,20 @@ public:
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param index
      * 
      * @return 
      */
-    double GetMaximumThresholdByIndex(unsigned);
+    double GetMaximumThresholdByIndex(unsigned index);
 
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param index
      * 
      * @return 
      */
-    double GetMinimumThresholdByIndex(unsigned);
+    double GetMinimumThresholdByIndex(unsigned index);
 
     /**
      * \todo Document method.
@@ -306,11 +306,11 @@ public:
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param index
      * 
      * @return 
      */
-    double GetSpeciesConcentrationsByIndex(unsigned);
+    double GetSpeciesConcentrationsByIndex(unsigned index);
 
     /**
      * \todo Document method.
@@ -336,20 +336,20 @@ public:
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param index
      * 
      * @return 
      */
-    bool GetMaximumThresholdCheckByIndex(unsigned);
+    bool GetMaximumThresholdCheckByIndex(unsigned index);
 
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param index
      * 
      * @return 
      */
-    bool GetMinimumThresholdCheckByIndex(unsigned);
+    bool GetMinimumThresholdCheckByIndex(unsigned index);
 
     /**
      * \todo Document method.
@@ -361,7 +361,7 @@ public:
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param criticalStarvationDuration
      * 
      * @return 
      */
@@ -370,7 +370,7 @@ public:
     /**
      * \todo Document method.
      * 
-     * @param 
+     * @param currentStarvationOnsetTime
      * 
      * @return 
      */

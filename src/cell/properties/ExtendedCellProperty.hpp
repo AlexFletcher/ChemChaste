@@ -18,7 +18,7 @@ class ExtendedCellProperty : public ChemicalCellProperty
 {
 private:
 
-    // inhertied:
+    // inherited:
     //StateVariableRegister* mpStateVariableRegister;
     //std::vector<double> mConcentrationVector;
 

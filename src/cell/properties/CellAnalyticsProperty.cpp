@@ -9,7 +9,8 @@ CellAnalyticsProperty::~CellAnalyticsProperty()
 {
 }
 
-CellAnalyticsProperty::CellAnalyticsProperty(const CellAnalyticsProperty& rOtherProperty)
+CellAnalyticsProperty::CellAnalyticsProperty(
+    const CellAnalyticsProperty& rOtherProperty)
 {
     mCellId = rOtherProperty.mCellId;
 }
@@ -24,7 +25,9 @@ void CellAnalyticsProperty::PreparePostDivisionParent(double splitRatio)
 {
 }
     
-void CellAnalyticsProperty::PreparePostDivisionDaughter(const CellAnalyticsProperty& rParentProperty, double splitRatio)
+void CellAnalyticsProperty::PreparePostDivisionDaughter(
+    const CellAnalyticsProperty& rParentProperty,
+    double splitRatio)
 {
 }
 

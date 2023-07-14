@@ -9,41 +9,84 @@
 #include "StateVariableRegister.hpp"
 
 /**
- * Cell porperty to handle the basic chemical property required for cell 
+ * Cell property to handle the basic chemical property required for cell 
  * simulations.
  */
 class ChemicalCellProperty : public AbstractCellProperty
 {
 protected:
 
-    // register for the state variables present in the cell
-
+    /** Register for the state variables present in the cell. */
     StateVariableRegister* mpStateVariableRegister;
 
-    // concentration vector of the cell, would be derived from the CellData property
+    /** Concentration vector of the cell, would be derived from CellData. */
     std::vector<double> mConcentrationVector;
 
 public:
 
+    /**
+     * Constructor.
+     */
     ChemicalCellProperty();
 
+    /**
+     * Destructor.
+     */
     virtual ~ChemicalCellProperty();
 
-    virtual void InitialiseCell(std::vector<std::string>, std::vector<double>);
+    /**
+     * \todo document method
+     * 
+     * @param
+     */
+    virtual void InitialiseCell(std::vector<std::string> pRegister, 
+                                std::vector<double> concentrationVector);
 
+    /**
+     * \todo document method
+     * 
+     * @param
+     */
     virtual void InitialiseCell(StateVariableRegister*, std::vector<double>);
 
-    virtual void UpdateCellConcentrationVector(std::vector<double>&);
+    /**
+     * \todo document method
+     * 
+     * @param rConcentrationVector
+     */
+    virtual void UpdateCellConcentrationVector(
+        std::vector<double>& rConcentrationVector);
 
-    void SetStateVariableRegister(StateVariableRegister*);
+    /**
+     * \todo document method
+     * 
+     * @param pRegister
+     */
+    void SetStateVariableRegister(StateVariableRegister* pRegister);
 
+    /**
+     * @return mpStateVariableRegister
+     */
     StateVariableRegister* GetStateVariableRegister();
 
+    /**
+     * @return mConcentrationVector
+     */
     std::vector<double> GetCellConcentrationVector();
 
-    double GetCellConcentrationByIndex(unsigned);
+    /**
+     * \todo document method
+     * 
+     * @param index
+     */
+    double GetCellConcentrationByIndex(unsigned index);
 
-    double GetCellConcentrationByName(std::string);
+    /**
+     * \todo document method
+     * 
+     * @param name
+     */
+    double GetCellConcentrationByName(std::string name);
 };
 
 #endif /* CHEMICALCELLPROPERTY_HPP_ */

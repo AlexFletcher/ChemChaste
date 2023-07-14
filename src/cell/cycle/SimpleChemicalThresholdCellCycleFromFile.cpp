@@ -1,8 +1,12 @@
 #include "SimpleChemicalThresholdCellCycleFromFile.hpp"
 
-SimpleChemicalThresholdCellCycleFromFile::SimpleChemicalThresholdCellCycleFromFile(std::string thresholdFilename) 
+SimpleChemicalThresholdCellCycleFromFile::SimpleChemicalThresholdCellCycleFromFile(std::string fileName) 
     : SimpleChemicalThresholdCellCycleModel(),
-      mCellCycleFilename(thresholdFilename)
+      mCellCycleFilename(fileName)
+{
+}
+
+SimpleChemicalThresholdCellCycleFromFile::~SimpleChemicalThresholdCellCycleFromFile()
 {
 }
 
@@ -85,14 +89,14 @@ void SimpleChemicalThresholdCellCycleFromFile::SetUp()
     SetMinimumThresholdCheck(min_threshold_check);
 }
 
-std::vector<std::vector<std::string>> SimpleChemicalThresholdCellCycleFromFile::ReadMatrix(std::string filename)
+std::vector<std::vector<std::string>> SimpleChemicalThresholdCellCycleFromFile::ReadMatrix(std::string fileName)
 {
     /*
      * Parse a matrix file (.csv) line by line, ignore escape lines, containing 
      * file information that is lines starting with '#' 
      */    
     std::string line;
-    std::ifstream inputFile(filename);
+    std::ifstream inputFile(fileName);
 
     /*
      * Read all data types as std::string therefore return the matrix of strings 
@@ -111,7 +115,7 @@ std::vector<std::vector<std::string>> SimpleChemicalThresholdCellCycleFromFile::
             {
                 if (line.at(0) != '#')
                 {
-                    output_matrix.push_back(parseMatrixLineString(line));
+                    output_matrix.push_back(ParseMatrixLineString(line));
                 }   
             }
         }
@@ -121,12 +125,12 @@ std::vector<std::vector<std::string>> SimpleChemicalThresholdCellCycleFromFile::
     else
     {
         ///\todo replace with EXCEPTION
-        std::cout << "Error: Unable to open file: " << filename << std::endl;
+        std::cout << "Error: Unable to open file: " << fileName << std::endl;
         return output_matrix;
     }
 }
 
-std::vector<std::string> SimpleChemicalThresholdCellCycleFromFile::parseMatrixLineString(std::string line)
+std::vector<std::string> SimpleChemicalThresholdCellCycleFromFile::ParseMatrixLineString(std::string line)
 {
     // For a line string in the matrix read, parse into vector data entries based on delimiters ','
     std::vector<std::string> row_vector = std::vector<std::string>();

@@ -6,10 +6,14 @@ CellAnalyticsPropertyFromCellId::CellAnalyticsPropertyFromCellId(unsigned cellId
     SetCellId(cellId);
 }
 
-void CellAnalyticsPropertyFromCellId::SetUpCellAnalyticsProperty(CellPtr p_cell)
+CellAnalyticsPropertyFromCellId::~CellAnalyticsPropertyFromCellId()
 {
-    auto p_analytics = boost::static_pointer_cast<CellAnalyticsProperty>(p_cell->rGetCellPropertyCollection().GetPropertiesType<CellAnalyticsProperty>().GetProperty());
-    p_analytics->SetUp(p_cell, mCellId);
+}
+
+void CellAnalyticsPropertyFromCellId::SetUpCellAnalyticsProperty(CellPtr pCell)
+{
+    auto p_analytics = boost::static_pointer_cast<CellAnalyticsProperty>(pCell->rGetCellPropertyCollection().GetPropertiesType<CellAnalyticsProperty>().GetProperty());
+    p_analytics->SetUp(pCell, mCellId);
     SetCellAnalyticsProperty(p_analytics);
 }
 
@@ -18,9 +22,10 @@ void CellAnalyticsPropertyFromCellId::SetCellId(unsigned cellId)
     mCellId = cellId;
 }
 
-void CellAnalyticsPropertyFromCellId::SetCellAnalyticsProperty(boost::shared_ptr<CellAnalyticsProperty> pCellAnalyticsProperty)
+void CellAnalyticsPropertyFromCellId::SetCellAnalyticsProperty(
+    boost::shared_ptr<CellAnalyticsProperty> pProperty)
 {
-    mpCellAnalyticsProperty = pCellAnalyticsProperty;
+    mpCellAnalyticsProperty = pProperty;
 }
 
 unsigned CellAnalyticsPropertyFromCellId::GetCellId()

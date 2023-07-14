@@ -1,12 +1,9 @@
 #ifndef CELLANALYTICSPROPERTYFROMCELLID_HPP_
 #define CELLANALYTICSPROPERTYFROMCELLID_HPP_
 
-#include <vector>
 #include <boost/shared_ptr.hpp>
 
 #include "CellAnalyticsProperty.hpp"
-#include "ChemicalCell.hpp"
-#include "AbstractTransportReactionSystemFromFile.hpp"
 
 /**
  * \todo Document class.
@@ -15,26 +12,56 @@ class CellAnalyticsPropertyFromCellId
 {
 protected:
 
+    /** The cell ID. */
     unsigned mCellId;
 
+    /** \todo document member variable */
     boost::shared_ptr<CellAnalyticsProperty> mpCellAnalyticsProperty;
 
 public:
 
-    CellAnalyticsPropertyFromCellId(unsigned);
+    /**
+     * \todo document method
+     * 
+     * @param cellId
+     */
+    CellAnalyticsPropertyFromCellId(unsigned cellId);
 
-    ~CellAnalyticsPropertyFromCellId()
-    {
-    };
+     /**
+      * Destructor.
+      */
+    ~CellAnalyticsPropertyFromCellId();
 
-    void SetUpCellAnalyticsProperty(CellPtr);
+    /**
+     * \todo document method
+     * 
+     * @param pCell
+     */
+    void SetUpCellAnalyticsProperty(CellPtr pCell);
 
-    void SetCellId(unsigned);
+    /**
+     * Set mCellId.
+     * 
+     * @param cellID the new cell ID
+     */
+    void SetCellId(unsigned cellId);
 
-    void SetCellAnalyticsProperty(boost::shared_ptr<CellAnalyticsProperty>);
+    /**
+     * Set mpCellAnalyticsProperty.
+     * 
+     * @param pProperty \todo
+     */
+    void SetCellAnalyticsProperty(
+        boost::shared_ptr<CellAnalyticsProperty> pProperty);
 
+    /**
+     * @return mCellId
+     */
     unsigned GetCellId();
 
+    /**
+     * @return mpCellAnalyticsProperty
+     */
     boost::shared_ptr<CellAnalyticsProperty> GetCellAnalyticsProperty();
 };
 
